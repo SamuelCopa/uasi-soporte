@@ -1,0 +1,129 @@
+@page {
+    margin: 25px 30px;
+    font-family: DejaVu Sans, sans-serif;
+}
+
+body {
+    font-size: 10px;
+    color: #2c3e50;
+}
+
+/* HEADER */
+.header {
+    display: table;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+
+.header-center,
+.header-right {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.header-left {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+}
+
+
+.header-left img,
+.header-right img {
+    width: 80px;
+}
+
+.header-center {
+    text-align: center;
+}
+
+.header-center h1 {
+    font-size: 14px;
+    margin: 0;
+    font-weight: bold;
+}
+
+.header-center h2 {
+    font-size: 12px;
+    margin: 2px 0;
+}
+
+.header-center span {
+    font-size: 10px;
+    color: #555;
+}
+
+/* TITULO */
+.titulo {
+    text-align: center;
+    background: #f4f6f9;
+    padding: 8px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 6px;
+}
+
+/* TABLA */
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla thead {
+    background: #2f80ed;
+    color: #fff;
+}
+
+.tabla th {
+    padding: 6px;
+    font-size: 9px;
+    text-transform: uppercase;
+}
+
+.tabla td {
+    padding: 6px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.tabla tbody tr:nth-child(even) {
+    background: #f9fbfd;
+}
+
+.small {
+    font-size: 8px;
+}
+
+.fecha-entrega {
+    font-size: 8px;
+    color: #555;
+}
+
+/* FOOTER */
+.footer {
+    position: fixed;
+    bottom: 15px;
+    right: 30px;
+    font-size: 9px;
+    text-align: right;
+    color: #555;
+}
+
+.table12 {
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.table12 p {
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0;
+    background: #f4f6f9;
+}
+
+.fecha {
+    font-size: 9px;
+    color: #6b7280;
+}

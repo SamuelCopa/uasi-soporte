@@ -1,0 +1,105 @@
+@page {
+    margin: 25px;
+    margin-bottom: 60px;
+}
+
+body {
+    font-family: DejaVu Sans, sans-serif;
+    font-size: 11px;
+}
+
+
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #0052cc;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 18px;
+            color: #0052cc;
+        }
+
+        .header h2 {
+            margin: 5px 0;
+            font-size: 13px;
+        }
+
+        .datos {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .datos td {
+            padding: 5px;
+        }
+
+        .titulo-equipo {
+            background: #0052cc;
+            color: white;
+            padding: 7px;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f0f0f0;
+            font-weight: bold;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px;
+        }
+
+        .total {
+            text-align: right;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .barra {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+        }
+
+        .relleno {
+            height: 8px;
+        }
+
+        .estado-1 {
+            background: #17a2b8;
+        }
+
+        .estado-2 {
+            background: #ffc107;
+        }
+
+        .estado-3 {
+            background: #dc3545;
+        }
+
+        .estado-4 {
+            background: #28a745;
+        }
+
+        .estado-5 {
+            background: #007bff;
+        }
+
+.footer {
+    text-align: center;
+    font-size: 9px;
+    margin-top: 30px;
+    padding-top: 8px;
+    border-top: 1px solid #999;
+}

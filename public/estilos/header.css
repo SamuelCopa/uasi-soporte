@@ -1,0 +1,143 @@
+/* =========================
+   HEADER PANEL 
+========================= */
+
+.header-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 24px;
+    margin-bottom: 22px;
+    border: 1px solid #d7dde5;
+    border-left: 5px solid #8b1e2d;
+    border-radius: 10px;
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.04),
+        0 8px 18px rgba(0, 0, 0, 0.03);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Línea decorativa superior */
+.header-panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(
+        90deg,
+        #8b1e2d,
+        #b38b59,
+        #8b1e2d
+    );
+}
+
+/* =========================
+   CONTENIDO IZQUIERDO
+========================= */
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.header-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+.header-subtitle {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.header-meta {
+    margin-top: 4px;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+}
+
+/* =========================
+   ACCIONES
+========================= */
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* =========================
+   BOTONES INSTITUCIONALES
+========================= */
+
+.btn-header {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 7px;
+    border: 1px solid #8b1e2d;
+    background: #ffffff;
+    color: #8b1e2d;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.btn-header:hover {
+    background: #8b1e2d;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(139, 30, 45, 0.18);
+}
+
+/* Variante secundaria */
+.btn-header.secondary {
+    border: 1px solid #b38b59;
+    color: #8a6a42;
+}
+
+.btn-header.secondary:hover {
+    background: #b38b59;
+    color: #ffffff;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+    .header-panel {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 18px;
+    }
+
+    .header-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .btn-header {
+        flex: 1;
+        min-width: 140px;
+    }
+
+    .header-title {
+        font-size: 18px;
+    }
+}

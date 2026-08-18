@@ -1,0 +1,124 @@
+/* ===================================
+   CARD ESTADÍSTICA 
+=================================== */
+.chart-card-prof {
+    background: linear-gradient(180deg, #ffffff 0%, #f9fbfd 100%);
+
+    border: 1px solid #d8dee6;
+    border-left: 5px solid #8b1e2d;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.04),
+        0 10px 22px rgba(0, 0, 0, 0.03);
+
+    overflow: hidden;
+
+    transition: all 0.25s ease;
+}
+
+.chart-card-prof:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 14px rgba(0, 0, 0, 0.06),
+        0 14px 28px rgba(0, 0, 0, 0.05);
+}
+
+/* ===================================
+   HEADER
+=================================== */
+
+.chart-card-header {
+    position: relative;
+
+    padding: 14px 18px;
+
+    background: linear-gradient(
+        90deg,
+        #f8fafc 0%,
+        #eef3f8 100%
+    );
+
+    border-bottom: 1px solid #e4e9ef;
+}
+
+/* Línea decorativa superior */
+.chart-card-header::before {
+    content: "";
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 3px;
+
+    background: linear-gradient(
+        90deg,
+        #8b1e2d,
+        #b38b59,
+        #8b1e2d
+    );
+}
+
+/* ===================================
+   TÍTULO
+=================================== */
+
+.chart-title {
+    margin: 0;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    color: #1f2937;
+
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+
+    font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+/* ===================================
+   BODY
+=================================== */
+
+.chart-card-body {
+    padding: 18px;
+    background: #ffffff;
+}
+
+/* ===================================
+   CANVAS
+=================================== */
+
+.chart-card-body canvas {
+    width: 100% !important;
+    height: 320px !important;
+    border-radius: 6px;
+}
+
+/* ===================================
+   RESPONSIVE
+=================================== */
+
+@media (max-width: 768px) {
+
+    .chart-card-header {
+        padding: 12px 14px;
+    }
+
+    .chart-card-body {
+        padding: 14px;
+    }
+
+    .chart-title {
+        font-size: 13px;
+    }
+
+    .chart-card-body canvas {
+        height: 260px !important;
+    }
+}

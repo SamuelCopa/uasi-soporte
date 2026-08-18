@@ -1,0 +1,77 @@
+.main-sidebar {
+
+  color: #fff !important;
+}
+
+.main-sidebar .nav-link {
+  color: #e3f2fd !important;
+  border-radius: 10px;
+  margin: 2px 8px;
+  transition: all 0.3s ease;
+}
+
+.main-sidebar .nav-link:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff !important;
+  transform: translateX(3px);
+}
+
+.main-sidebar .nav-link.active {
+  background: #1565c0 !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.main-sidebar .brand-link {
+  background: rgba(0,0,0,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.main-sidebar .brand-text {
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.5px;
+  color: #fff;
+}
+
+.main-sidebar .nav-link i {
+  transition: transform 0.3s ease;
+}
+
+.main-sidebar .nav-link:hover i {
+  transform: scale(1.2);
+}
+
+.navbar-nav {
+    flex-wrap: wrap !important;
+}
+
+/* Texto largo adaptable */
+.navbar-nav .nav-link {
+    white-space: normal !important;
+    word-break: break-word;
+    line-height: 1.3;
+}
+
+/* Contenedor responsive */
+.main-header.navbar {
+    height: auto !important;
+    min-height: 57px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+/* En móviles */
+@media (max-width: 768px) {
+
+    .navbar-nav {
+        width: 100%;
+    }
+
+    .navbar-nav .nav-item {
+        width: 100%;
+    }
+
+    .navbar-nav .nav-link {
+        font-size: 12px;
+    }
+}

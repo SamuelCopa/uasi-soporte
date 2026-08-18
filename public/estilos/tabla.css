@@ -1,0 +1,98 @@
+/* Contenedor principal */
+.table-modern {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  font-size: 0.9rem;
+}
+
+/* Encabezado */
+.table-modern thead {
+  background: #1f3c88; /* azul institucional */
+  color: #ffffff;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+/* Pie de tabla */
+.table-modern tfoot {
+  background: #1f3c88;
+  color: #ffffff;
+  font-size: 0.75rem;
+}
+
+/* Celdas */
+.table-modern th,
+.table-modern td {
+  padding: 12px 14px;
+  vertical-align: middle;
+  border-bottom: 1px solid #edf2f7;
+
+}
+
+/* Encabezados más definidos */
+.table-modern th {
+  font-weight: 600;
+  white-space: nowrap;
+      text-align: center;
+    vertical-align: middle;
+    white-space: normal; /* permite saltos */
+}
+
+/* Filas */
+.table-modern tbody tr {
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Efecto hover institucional (sutil) */
+.table-modern tbody tr:hover {
+  background-color: #f4f7fb;
+}
+
+
+/* Primera columna (índice) destacada */
+.table-modern td:first-child {
+  font-weight: 600;
+  color: #1f3c88;
+}
+
+/* Estados (para badges si usas) */
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Botones dentro de tabla */
+.table-modern .btn {
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  border-radius: 6px;
+}
+
+/* Responsive mejora */
+.table-responsive {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+
+
+/* Mejora visual en columnas importantes */
+.table-modern td:nth-child(3), /* Nombre */
+.table-modern td:nth-child(7) { /* Dependencia */
+  font-weight: 500;
+  color: #2d3748;
+}
+
+/* Scroll horizontal más limpio */
+.table-responsive::-webkit-scrollbar {
+  height: 6px;
+}
+

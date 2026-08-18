@@ -1,0 +1,247 @@
+/* =========================================================
+   SIDEBAR INSTITUCIONAL ELEGANTE — ADMINLTE
+========================================================= */
+
+/* SIDEBAR */
+.main-sidebar{
+    background: linear-gradient(180deg, #17212b 0%, #111927 100%) !important;
+    font-family: 'Segoe UI', sans-serif;
+    border-right: 1px solid rgba(255,255,255,0.04);
+    box-shadow: 4px 0 18px rgba(0,0,0,0.18);
+}
+
+/* LOGO */
+.brand-link{
+    background: rgba(255,255,255,0.02) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 14px 16px;
+    backdrop-filter: blur(6px);
+}
+
+.brand-text{
+    color: #f8fafc !important;
+    font-weight: 600;
+    letter-spacing: .4px;
+    font-size: 15px;
+}
+
+/* PANEL USUARIO */
+.user-panel{
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding-bottom: 14px;
+}
+
+.user-panel .info a{
+    color: #e2e8f0 !important;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* LINKS */
+.nav-sidebar .nav-link{
+    color: #cbd5e1;
+    border-radius: 12px;
+    margin: 6px 10px;
+    padding: 11px 14px;
+    transition: all .25s ease;
+    position: relative;
+    overflow: hidden;
+    font-weight: 500;
+}
+
+/* EFECTO SUAVE */
+.nav-sidebar .nav-link::before{
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0.05),
+        transparent
+    );
+    opacity: 0;
+    transition: opacity .25s ease;
+}
+
+.nav-sidebar .nav-link:hover::before{
+    opacity: 1;
+}
+
+/* HOVER */
+.nav-sidebar .nav-link:hover{
+    background: rgba(255,255,255,0.05);
+    color: #ffffff;
+    transform: translateX(3px);
+}
+
+/* ACTIVO */
+.nav-sidebar .nav-link.active{
+    background: linear-gradient(
+        135deg,
+        #b91c1c 0%,
+        #7f1d1d 100%
+    );
+    color: #ffffff;
+    box-shadow:
+        0 4px 14px rgba(127,29,29,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+/* LÍNEA LATERAL ACTIVA */
+.nav-sidebar .nav-link.active::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10%;
+    width: 4px;
+    height: 80%;
+    border-radius: 0 4px 4px 0;
+    background: #feffff;
+}
+
+/* ICONOS */
+.nav-sidebar .nav-icon{
+    color: #94a3b8;
+    transition: all .25s ease;
+    font-size: 15px;
+}
+
+.nav-sidebar .nav-link:hover .nav-icon,
+.nav-sidebar .nav-link.active .nav-icon{
+    color: #ffffff;
+    transform: scale(1.05);
+}
+
+/* SUBMENÚ */
+.nav-treeview{
+    padding-left: 10px;
+}
+
+.nav-treeview .nav-link{
+    font-size: 13.5px;
+    background: rgba(255,255,255,0.02);
+}
+
+.nav-treeview .nav-link:hover{
+    background: rgba(255,255,255,0.04);
+}
+
+/* HEADER DE SECCIÓN */
+.nav-header{
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 18px;
+    margin-left: 14px;
+    opacity: .8;
+}
+
+/* SCROLL */
+.sidebar{
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.18) transparent;
+}
+
+.sidebar::-webkit-scrollbar{
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track{
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb{
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+}
+
+/* =========================================================
+   TOP NAVBAR
+========================================================= */
+
+.main-header.navbar{
+
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(15,23,42,0.06);
+    box-shadow: 0 2px 10px rgba(15,23,42,0.04);
+}
+
+/* TÍTULO */
+.titulo-panel{
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f172a;
+    letter-spacing: .3px;
+}
+
+/* ICONO HEADER */
+.icon-header{
+    color: #991b1b;
+    font-size: 18px;
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+
+
+.btn-institucional:hover{
+    transform: translateY(-2px);
+    box-shadow:
+        0 8px 18px rgba(127,29,29,0.35);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px){
+
+    .brand-text{
+        font-size: 13px;
+    }
+
+    .nav-sidebar .nav-link{
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+
+    .nav-treeview .nav-link{
+        font-size: 13px;
+    }
+
+    .titulo-panel{
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px){
+
+    .main-sidebar{
+        box-shadow: none;
+    }
+
+    .brand-link{
+        padding: 12px;
+    }
+
+    .nav-sidebar .nav-link{
+        margin: 4px 8px;
+        border-radius: 10px;
+    }
+
+    .titulo-panel{
+        line-height: 1.4;
+    }
+
+    .btn-institucional{
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -1,0 +1,190 @@
+/* CONTENEDOR GENERAL */
+.bg-effects {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* TODOS LOS EFECTOS */
+.effect {
+    display: none;
+    position: absolute;
+    inset: 0;
+}
+
+/* CONTENIDO SIEMPRE ENCIMA */
+.logInForm30,
+table,
+button,
+img {
+    position: relative;
+    z-index: 2;
+}
+/* --------------------------------------------------------------- */
+
+.estado-1 .effect-recepcionado {
+    display: flex;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* CÍRCULOS INDIVIDUALES */
+.pulse {
+    position: absolute;
+    color: #0d6efd; /* azul AdminLTE */
+    opacity: 0.06;  /* baja opacidad para fondo */
+    animation: pulseAnim 4s ease-in-out infinite;
+}
+
+/* Tamaños y posiciones */
+.pulse.big {
+    font-size: 300px;
+    top: 10%;
+    left: 5%;
+}
+
+.pulse.medium {
+    font-size: 300px;
+    top: 50%;
+    right: 10%;
+}
+
+.pulse.small {
+    font-size: 500px;
+    bottom: 50%;
+    left: 40%;
+}
+
+/* ANIMACIÓN DE PULSO SUAVE */
+@keyframes pulseAnim {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+/* --------------------------------------------------------- */
+.estado-2 .effect-proceso {
+    display: block;
+}
+
+.effect-proceso .gear {
+    position: absolute;
+    color: #eabd0a;
+
+}
+
+.gear.big {
+    font-size: 300px;
+    top: 8%;
+    left: 5%;
+    animation: spin 60s linear infinite;
+}
+
+.gear.medium {
+    font-size: 180px;
+    top: 45%;
+    right: 8%;
+    animation: spin-reverse 45s linear infinite;
+}
+
+.gear.small {
+    font-size: 500px;
+    bottom: 50%;
+    left: 40%;
+    animation: spin 30s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes spin-reverse {
+    to { transform: rotate(-360deg); }
+}
+
+
+
+.estado-3 .effect-alerta {
+    display: flex;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* ALERTAS INDIVIDUALES */
+.alerta {
+    position: absolute;
+    color: #de0b0b; /* rojo intenso */
+    opacity: 0.08;
+    animation: moveAlert 8s linear infinite;
+}
+
+/* Tamaños y posiciones */
+.alerta.big {
+    font-size: 300px;
+    top: 10%;
+    left: 5%;
+}
+
+.alerta.medium {
+    font-size: 300px;
+    top: 50%;
+    right: 10%;
+}
+
+.alerta.small {
+    font-size: 500px;
+    bottom: 50%;
+    left: 40%;
+}
+
+/* Movimiento diagonal / efecto pulso */
+@keyframes moveAlert {
+    0%   { transform: translate(0,0); opacity: 0.3; }
+    50%  { transform: translate(30px,30px); opacity: 0.7; }
+    100% { transform: translate(0,0); opacity: 0.3; }
+}
+
+
+/* -------------------------------------------------- */
+.estado-4 .effect-ok {
+    display: flex;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* ICONOS INDIVIDUALES */
+.ok {
+    position: absolute;
+    color: #0ad514; /* verde claro */
+    opacity: 0.06;  /* baja opacidad para fondo */
+    animation: glow 5s ease-in-out infinite;
+}
+
+/* Tamaños y posiciones */
+.ok.big {
+    font-size: 300px;
+    top: 10%;
+    left: 5%;
+}
+
+.ok.medium {
+    font-size: 300px;
+    top: 50%;
+    right: 10%;
+}
+
+.ok.small {
+    font-size: 500px;
+    bottom: 50%;
+    left: 40%;
+}
+
+/* ANIMACIÓN SUAVE DE LUZ */
+@keyframes glow {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+}

@@ -1,0 +1,605 @@
+
+.nivel-2 {
+  position: relative;
+  z-index: 1000;
+}
+
+.nivel-3 {
+  position: absolute;
+  z-index: 1001;
+}
+
+.nivel-4 {
+  position: relative;
+  z-index: 1002;
+}
+
+/* PROCESADOR */
+.nivel-5 {
+  position: relative;
+  z-index: 1000;
+}
+.nivel-6 {
+  position: relative;
+  z-index: 1001;
+}
+.nivel-7 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-8 {
+  position: relative;
+  z-index: 1003;
+}
+.nivel-9 {
+  position: relative;
+  z-index: 1004;
+}
+
+.nivel-10 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-11 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-12 {
+  position: relative;
+  z-index: 1002;
+}
+
+/* DISCO DURO */
+.nivel-13 {
+  position: relative;
+  z-index: 1000;
+}
+.nivel-14 {
+  position: relative;
+  z-index: 1001;
+}
+.nivel-15 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-16 {
+  position: relative;
+  z-index: 1003;
+}
+.nivel-17 {
+  position: relative;
+  z-index: 1004;
+}
+
+/* tarjeta RAM */
+.nivel-18 {
+  position: relative;
+  z-index: 1000;
+}
+.nivel-19 {
+  position: relative;
+  z-index: 1001;
+}
+.nivel-20 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-21 {
+  position: relative;
+  z-index: 1003;
+}
+.nivel-22 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-23 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-24 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-25 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-26 {
+  position: relative;
+  z-index: 1002;
+}
+
+
+/* tarjeta de video */
+.nivel-27 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-28 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-29 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-30 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-31 {
+  position: relative;
+  z-index: 1002;
+}
+
+/* TARJETA DE RED */
+.nivel-40 {
+  position: relative;
+  z-index: 1000;
+}
+.nivel-41 {
+  position: relative;
+  z-index: 1010;
+}
+.nivel-42 {
+  position: relative;
+  z-index: 1003;
+}
+
+
+.nivel-43 {
+  position: relative;
+  z-index: 1000;
+}
+.nivel-44 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-45 {
+  position: relative;
+  z-index: 1005;
+}
+.nivel-46 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-47 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-48 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-49 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-50 {
+  position: relative;
+  z-index: 1002;
+}
+
+/* memoria RAM SLOT 2 */
+.nivel-51 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-52 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-53 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-54 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-55 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-56 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-57 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-58 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-59 {
+  position: relative;
+  z-index: 1002;
+}
+/* memoria RAM SLOT 3 */
+.nivel-60 {
+  position: relative;
+  z-index: 1000;
+}
+.nivel-61 {
+  position: relative;
+  z-index: 1001;
+}
+.nivel-62 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-63 {
+  position: relative;
+  z-index: 1003;
+}
+.nivel-64 {
+  position: relative;
+  z-index: 1004;
+}
+.nivel-65 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-66 {
+  position: relative;
+  z-index: 1005;
+}
+.nivel-67 {
+  position: relative;
+  z-index: 1006;
+}
+.nivel-68 {
+  position: relative;
+  z-index: 1007;
+}
+/* memoria RAM SLOT 4*/
+.nivel-69 {
+  position: relative;
+  z-index: 1000;
+}
+.nivel-70 {
+  position: relative;
+  z-index: 1001;
+}
+.nivel-71 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-72 {
+  position: relative;
+  z-index: 1003;
+}
+.nivel-73 {
+  position: relative;
+  z-index: 1002;
+}
+.nivel-74 {
+  position: relative;
+  z-index: 1004;
+}
+.nivel-75 {
+  position: relative;
+  z-index: 1005;
+}
+.nivel-76 {
+  position: relative;
+  z-index: 1006;
+}
+.nivel-77 {
+  position: relative;
+  z-index: 1007;
+}
+.nivel-78 {
+  position: relative;
+  z-index: 1007;
+}
+.nivel-79 {
+  position: relative;
+  z-index: 1007;
+}
+.nivel-80 {
+  position: relative;
+  z-index: 1007;
+}
+.nivel-81 {
+  position: relative;
+  z-index: 1007;
+}
+
+.nivel-69.selected {
+  background-color: #ccc;
+  color: #333;
+}
+
+.nivel-70.selected {
+  background-color: #ccc;
+  color: #333;
+}
+
+.condiciones{
+  border:1px solid #ccc; 
+  padding:10px; height:200px; 
+  overflow-y:scroll; 
+  border-radius:5px; 
+  background:#fff; 
+  font-size:1rem;
+}
+.modal-xxl {
+  max-width: 80% !important; /* o lo que necesites, por ejemplo 90%, 100%, etc */
+}
+
+.modal-xxl1 {
+  max-width: 60% !important; /* o lo que necesites, por ejemplo 90%, 100%, etc */
+}
+/* -------------------------------------------------- */
+  .boton-eliminar {
+    float: right;
+  }
+
+
+
+/* ------------------------------------------------------- */
+
+/* Animación de aparición con desplazamiento lateral */
+@keyframes aparecer {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* --- Estructura base --- */
+#menu_principal {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #f8f8f8;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  width: 100%;
+}
+
+/* Items */
+#menu_principal li {
+  position: relative;
+  display: block;
+  margin: 0;
+}
+
+/* Enlaces y etiquetas */
+#menu_principal a,
+#menu_principal label {
+  display: block;
+  padding: 10px 12px;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+/* Hover */
+#menu_principal li:hover > a,
+#menu_principal li:hover > label {
+  color: #fff;
+  background-color: #0a9be3;
+}
+
+/* Submenús */
+#menu_principal .ul {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 60%;
+  width: 220px;
+  background-color: #f9f9f9;
+  border: 2px solid #0a9be3;
+  border-radius: 6px;
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15);
+  padding: 0;
+  animation: aparecer 0.4s ease;
+  z-index: 1010;
+}
+
+/* --- Principales --- */
+.principales {
+  font-weight: bold;
+  font-size: 18px;
+  padding: 12px;
+  background-color: #f3f3f3;
+  color: #555;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+
+
+/* Inputs "Otro" */
+#menu_principal input[type="text"] {
+  width: calc(100% - 20px);
+  margin: 6px 10px;
+  padding: 6px 8px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  display: none;
+}
+
+/* Scroll general */
+.nav {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100vh;
+}
+
+/* Ocultar elementos no usados */
+[id^="drop"], .mif-expand-more {
+  display: none;
+}
+
+/* --- Responsividad --- */
+@media (max-width: 768px) {
+  #menu_principal {
+    width: 100%;
+  }
+  #menu_principal li,
+  #menu_principal a,
+  #menu_principal label {
+    width: 100%;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  #menu_principal li,
+  #menu_principal a,
+  #menu_principal label {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
+
+
+/* IZQUIERDA */
+/* Animación */
+@keyframes aparecer {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Estilos generales del menú */
+#menu_principal1 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+  width: 100%;
+}
+
+#menu_principal1 li {
+  position: relative;
+  margin: 0;
+}
+
+#menu_principal1 a,
+#menu_principal1 label {
+  text-decoration: none;
+  color: #333;
+  padding: 10px;
+  display: block;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+}
+
+/* Hover sobre item principal */
+#menu_principal1 li:hover > a,
+#menu_principal1 li:hover > label {
+  background-color: #0a9be3;
+  color: #fff;
+}
+
+/* Submenús */
+#menu_principal1 .ul {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 100%; /* despliegue hacia la izquierda */
+  background-color: #fefefe;
+  border: 2px solid #0a9be3;
+  border-radius: 5px;
+  padding: 5px 0;
+  min-width: 220px;
+  box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1);
+  animation: aparecer 0.3s ease;
+  z-index: 1000;
+}
+
+
+/* Submenús anidados */
+#menu_principal1 .ul li {
+  position: relative;
+}
+
+#menu_principal1 .ul a {
+  padding: 8px 15px;
+  color: #333;
+  white-space: nowrap;
+}
+
+#menu_principal1 .ul a:hover {
+  color: #fff;
+  background-color: #0a9be3;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #menu_principal1 {
+    width: 100%;
+  }
+
+  #menu_principal1 .ul {
+    position: static;
+    display: none;
+    border: none;
+    box-shadow: none;
+  }
+
+  #menu_principal1 li:hover > .ul {
+    display: block;
+  }
+}
+
+
+.checkbox-bounce {
+  position: relative;
+  padding-left: 30px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.checkbox-bounce input {
+  opacity: 0;
+  position: absolute;
+}
+
+.checkbox-bounce span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #0a9be3;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.checkbox-bounce input:checked + span {
+  background-color: #0a9be3;
+  transform: scale(1.2);
+  box-shadow: 0 0 10px rgba(10,155,227,0.5);
+}
+
+.checkbox-bounce span::after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-bounce input:checked + span::after {
+  display: block;
+}

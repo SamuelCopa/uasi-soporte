@@ -1,0 +1,333 @@
+.swal-institucional {
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.swal-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.swal-card {
+    flex: 1 1 45%;
+    padding: 12px;
+    border: 1px solid #dfe5f2;
+    font-size: 13px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+    transition: all .2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Línea superior institucional */
+.swal-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #0c1bed, #134deb);
+}
+
+/* Hover elegante */
+.swal-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(12,27,237,0.10);
+}
+
+.swal-icon {
+    margin-right: 6px;
+    color: #0c1bed;
+}
+
+.swal-msg {
+    margin-top: 12px;
+    font-size: 12.5px;
+    border: 3px solid #0c1bed;
+    padding: 10px 12px;
+    border-radius: 8px;
+    line-height: 1.5;
+}
+
+
+/* =======================================================
+   DASHBOARD INSTITUCIONAL ELEGANTE
+======================================================= */
+
+:root{
+    --color-primario: #0c1bed;
+    --color-secundario: #134deb;
+    --color-texto: #2f3640;
+    --color-muted: #6b7280;
+    --color-border: #e5e7eb;
+    --color-bg: #ffffff;
+    --color-footer: #f8f9fb;
+
+    --success: #198754;
+    --warning: #d97706;
+    --danger: #a60d0d;
+
+    --shadow-soft: 0 4px 14px rgba(0,0,0,.05);
+    --shadow-hover: 0 10px 24px rgba(0,0,0,.08);
+    --degradado-icono: linear-gradient(135deg, #4f8edc 0%, #1d3f72 100%);
+}
+
+/* =======================================================
+   CARD PRINCIPAL
+======================================================= */
+.dashboard-card-prof{
+    position: relative;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    overflow: hidden;
+    transition: all .25s ease;
+    box-shadow: var(--shadow-soft);
+}
+
+/* Línea superior institucional */
+.dashboard-card-prof::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg,
+                var(--color-primario),
+                var(--color-secundario));
+}
+
+/* Hover elegante */
+.dashboard-card-prof:hover{
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* =======================================================
+   HEADER
+======================================================= */
+.card-header-custom{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px;
+    border-bottom: 1px solid;
+}
+
+/* Título */
+.card-title{
+    font-size: .92rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    margin: 0;
+}
+
+/* Icono */
+.card-header-custom i{
+    width: 50px;
+    height: 50px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--degradado-icono);
+    color: #fff;
+    font-size: 1.9rem;
+    box-shadow: 0 8px 20px rgba(29,63,114,0.20);
+    position: relative;
+    overflow: hidden;
+}
+.icon-box{
+    content: "";
+    position: absolute;
+    width: 120%;
+    height: 120%;
+    background: rgba(255,255,255,0.15);
+    transform: rotate(25deg);
+    top: -80%;
+    left: -80%;
+    transition: .5s;
+}
+
+/* =======================================================
+   BODY
+======================================================= */
+/* Estadísticas */
+.stat-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: .90rem;
+}
+
+/* Labels */
+.label{
+    font-weight: 500;
+}
+
+/* Valores */
+.value{
+    font-weight: 700;
+}
+
+/* =======================================================
+   MINI BARRAS
+======================================================= */
+.mini-bar{
+    height: 9px;
+    border-radius: 30px;
+    background: #edf1f5;
+    overflow: hidden;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+/* Barra interna */
+.mini-bar-fill{
+    height: 100%;
+    border-radius: 30px;
+    transition: width .6s ease;
+    background: linear-gradient(90deg,
+                var(--color-primario),
+                var(--color-secundario));
+}
+
+/* Variantes */
+.bg-success{
+    background: linear-gradient(90deg, #198754, #34c38f);
+}
+
+.bg-warning{
+    background: linear-gradient(90deg, #d97706, #f59e0b);
+}
+
+.bg-danger{
+    background: linear-gradient(90deg, #dc2626, #ef4444);
+}
+
+/* =======================================================
+   TOTAL
+======================================================= */
+.card-total{
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid;
+    font-size: .92rem;
+    font-weight: 600;
+}
+
+/* =======================================================
+   ACCIONES
+======================================================= */
+.card-actions{
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.action-item{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: .85rem;
+    color: var(--color-muted);
+}
+
+/* =======================================================
+   FOOTER
+======================================================= */
+.card-footer-custom{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 10px;
+    text-decoration: none;
+
+    background: var(--color-footer);
+    border-top: 1px solid rgba(0,0,0,.05);
+
+    color: var(--color-primario);
+    font-size: .90rem;
+    font-weight: 600;
+
+    transition: all .25s ease;
+}
+
+/* Hover footer */
+.card-footer-custom:hover{
+    background: rgba(123,17,19,.05);
+    color: var(--color-secundario);
+}
+
+/* =======================================================
+   ALERTA CRÍTICA
+======================================================= */
+.card-alert{
+    border: 2px solid #dc3545;
+    animation: pulsoInstitucional 1.4s infinite;
+}
+
+/* Línea superior crítica */
+.card-alert::before{
+    background: linear-gradient(90deg,
+                #900303,
+                #a20707);
+}
+
+/* =========================================
+   ANIMACIÓN PULSO INSTITUCIONAL INTENSO
+========================================= */
+
+@keyframes pulsoInstitucional {
+
+    0%{
+        box-shadow:
+            0 0 0 0 rgba(139, 30, 45, 0.75),
+            0 0 12px rgba(139, 30, 45, 0.45);
+    }
+
+    50%{
+        box-shadow:
+            0 0 0 10px rgba(139, 30, 45, 0.25),
+            0 0 24px rgba(139, 30, 45, 0.55);
+    }
+
+    100%{
+        box-shadow:
+            0 0 0 18px rgba(139, 30, 45, 0),
+            0 0 0 rgba(139, 30, 45, 0);
+    }
+}
+
+/* =======================================================
+   RESPONSIVE
+======================================================= */
+@media(max-width:768px){
+
+    .card-header-custom{
+        padding: 15px;
+    }
+
+    .card-body-custom{
+        padding: 15px;
+    }
+
+    .card-header-custom i{
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+
+    .card-title{
+        font-size: .85rem;
+    }
+
+}

@@ -1,0 +1,389 @@
+/*========= Importando hojas de estilo =========*/
+/* Bootstrap 3.3.7 */
+@import url('./bootstrap.min.css');
+/* Material desing for Bootstrap */
+@import url('./bootstrap-material-design.min.css');
+@import url('./ripples.min.css');
+/* Sweet Alert 2 */
+@import url('./sweetalert2.css');
+/* Malihu jQuery custom content scroller 3.1.5 */
+@import url('./jquery.mCustomScrollbar.css');
+/* Material Design Iconic Font 2.2.0 */
+@import url('./material-design-iconic-font.min.css');
+/*============ Fonts */
+@font-face {
+    font-family: 'RobotoCondensedLight';
+    src: url('../fonts/robotocondensed-light.eot');
+    src: url('../fonts/robotocondensed-light.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/robotocondensed-light.woff2') format('woff2'),
+         url('../fonts/robotocondensed-light.woff') format('woff'),
+         url('../fonts/robotocondensed-light.ttf') format('truetype'),
+         url('../fonts/robotocondensed-light.svg#roboto_condensedlight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'RobotoCondensed';
+    src: url('../fonts/robotocondensed-regular.eot');
+    src: url('../fonts/robotocondensed-regular.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/robotocondensed-regular.woff2') format('woff2'),
+         url('../fonts/robotocondensed-regular.woff') format('woff'),
+         url('../fonts/robotocondensed-regular.ttf') format('truetype'),
+         url('../fonts/robotocondensed-regular.svg#roboto_condensedregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+/*============ Estilos generales*/
+body, html{
+	background-color: #221f1f;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	position: relative;
+	font-size: 20px;
+	font-family: 'RobotoCondensed';
+	overflow: hidden;
+}
+.full-box{
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	box-sizing: border-box;
+}
+.cover{
+	background: 50% 50% no-repeat;
+	background-size: cover;
+}
+.text-titles{
+	font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+/*============ LogIn*/
+/* .logInForm{
+	position: absolute;
+	color: #fff;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	box-shadow: 0 0 3px rgba(17, 17, 18, 0.7);
+	width: 400px;
+	border-radius: 8px;
+	padding: 30px;
+	text-align: left;
+	border: 1px solid rgba(11, 12, 12, 0.5);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	background-color: rgba(4, 5, 5, 0.5);
+} */
+
+.logInForm {
+	position: relative;
+	color: #fff;
+	max-width: 400px;
+	width: 200%;
+	margin: 20px auto;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 0 3px rgba(17, 17, 18, 0.7);
+	border: 5px solid rgba(240, 12, 5, 0.5);
+	-webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+	background-color: rgba(4, 5, 5, 0.5);
+
+  }
+.logInForm30 {
+  background-color: rgba(0, 0, 0, 0.7); /* Negro con 70% de opacidad */
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  color: #fff; /* Texto blanco para contraste */
+
+  }
+
+  .logInForm li,
+  .logInForm p{
+    line-height: 1;
+  }
+
+  @media (max-width: 768px) {
+    .logInForm {
+      width: 90%;
+      margin: 20px auto;
+    }
+    }
+    
+    @media (max-width: 480px) {
+    .logInForm {
+      width: 80%;
+      margin: 10px auto;
+    }
+    }
+    
+  .logInForm p,
+  .logInForm label{
+    color: #ffffff;
+    font-size: 30px;
+  }
+  .logInForm h2,
+  .logInForm label{
+  
+    color: #ffffff;
+  }
+  .logInForm h1,
+  .logInForm label{
+  
+    color: #ffffff;
+  }
+
+  .logInForm img {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    display: block;
+}
+
+
+  /* ============================================= */
+  
+  .logInForm1 {
+    box-sizing: border-box;
+    position: relative;
+    color: #fff;
+    max-width: 800px;
+    width: 500%;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 3px rgba(17, 17, 18, 0.7);
+    border: 5px solid rgba(240, 12, 5, 0.5);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  	background-color: rgba(10, 14, 14, 0.863);
+    font-size:18px;
+  }
+  
+
+  @media (max-width: 768px) {
+	.logInForm1 {
+	  width: 90%;
+	  margin: 20px auto;
+	}
+  }
+  
+  @media (max-width: 480px) {
+	.logInForm1 {
+	  width: 80%;
+	  margin: 10px auto;
+	}
+  }
+  
+.logInForm1 p,
+.logInForm1 label{
+	color: #ffffff;
+}
+.logInForm1 h2,
+.logInForm1 label{
+
+	color: #ffffff;
+}
+.logInForm1 h1,
+.logInForm1 label{
+
+	color: #ffffff;
+}
+/*============ Partes del dashboard*/
+.dashboard-sideBar,
+.dashboard-contentPage{
+	position: absolute;
+	top: 0;
+	height: 100%;
+	transition: all .3s ease-in-out;
+}
+
+
+/* ========================================================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;300;400;500;600;700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+}
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: 0 10px;
+
+}
+/* body::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+} */
+/* .wrapper {
+  width: 400px;
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  border: 1px solid rgba(19, 147, 186, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background-color: rgba(4, 5, 5, 0.5);
+
+} */
+
+.seccion {
+  margin-top: 20px; /* Agrega un margen de 20px en la parte superior */
+  margin-bottom: 20px; /* Agrega un margen de 30px en la parte inferior */
+  margin-left: 20px; /* Agrega un margen de 40px en la parte izquierda */
+  margin-right: 20px; /* Agrega un margen de 50px en la parte derecha */
+}
+
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+li {
+
+  margin-bottom: 20px;
+  color: #fff;
+}
+.input-field {
+  position: relative;
+  border-bottom: 2px solid #ccc;
+  margin: 15px 0;
+}
+.input-field label {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  color: #fff;
+  font-size: 16px;
+  pointer-events: none;
+  transition: 0.15s ease;
+}
+.input-field input {
+  width: 100%;
+  height: 40px;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  color: #fff;
+}
+.input-field input:focus~label,
+.input-field input:valid~label {
+  font-size: 0.8rem;
+  top: 10px;
+  transform: translateY(-120%);
+}
+.forget {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 25px 0 35px 0;
+  color: #0f1011;
+}
+
+.forget label {
+  display: flex;
+  align-items: center;
+}
+.forget label p {
+  margin-left: 8px;
+}
+.wrapper a {
+  color: #efefef;
+  text-decoration: none;
+}
+.wrapper a:hover {
+  text-decoration: underline;
+}
+.button {
+  background: #d34c4c;
+  color: #0f1011;
+  font-weight: 600;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 20px;
+  border: 2px solid transparent;
+  transition: 0.3s ease;
+}
+.button:hover {
+  color: #fff;
+  border-color: #fff;
+  background: rgba(11, 149, 218, 0.941);
+}
+.button2 {
+  background: #0478ec;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 20px;
+  border: 2px solid transparent;
+  transition: 0.3s ease;
+}
+.button2:hover {
+  color: #0f1011;
+  border-color: #0615e8;
+  background: rgba(240, 243, 242, 0.941);
+}
+.button3 {
+  background: #f4331a;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 20px;
+  border: 2px solid transparent;
+  transition: 0.3s ease;
+}
+.button3:hover {
+  color: #0f1011;
+  border-color: #e20808;
+  background: rgba(240, 243, 242, 0.941);
+}
+.register {
+  text-align: center;
+  margin-top: 30px;
+  color: #fff;
+}
+/* a {
+  background: #fff;
+  color: #000;
+  font-weight: 600;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 16px;
+  border: 2px solid transparent;
+  transition: 0.3s ease;
+}
+a:hover {
+  color: #fff;
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+} */
+/* .register {
+  text-align: center;
+  margin-top: 30px;
+  color: #fff;
+} */

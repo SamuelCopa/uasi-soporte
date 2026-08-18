@@ -1,0 +1,219 @@
+.fecha{
+  font-size: 12px;
+}
+
+.fila-dividida20 td {
+    width: 0%;
+    padding: 0px;
+    table-layout: fixed;
+
+}
+.fila-dividida td {
+    width: 20%;
+    border: 1px solid #070000;
+    padding: 3px;
+    table-layout: fixed;
+
+}
+    .fila-dividida1 td{
+    width: 0%;
+    border: 1px solid #070000;
+    padding: 0px;
+    text-align: center ;
+    table-layout: fixed;
+
+}
+    .fila-dividida2 td {
+    width: 0%;
+    border: 1px solid #070000;
+    padding: 0px;
+    text-align: center ;
+    table-layout: fixed;
+    
+}
+
+
+.table {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        table-layout: fixed;
+        width: 100%;
+        page-break-before: avoid;
+        page-break-after: avoid;
+        margin-bottom: 100px;
+        border-collapse: collapse;
+}
+.table1 {
+        font-family: Arial, sans-serif;
+
+        table-layout: fixed;
+        width: 100%;
+        page-break-before: avoid;
+        page-break-after: avoid;
+}
+.table2 {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        table-layout: fixed;
+        width: 100%;
+        page-break-before: avoid;
+        page-break-after: avoid;
+}
+.table3 {
+  table-layout: fixed;
+  width: 100%;
+  page-break-before: avoid;
+  page-break-after: avoid;
+}
+.p {
+    text-align: center;
+    font-size: 16px;
+    color: #00698f;
+    line-height: 1; /* reducir el interlineado */
+    font-weight: bold; /* negrillas */
+    /* font-style: italic; */
+
+  }
+
+  .p1 {
+    text-align: center;
+    font-size: 14px;
+    color: #00698f;
+    line-height: 0.5; /* reducir el interlineado */
+    font-weight: bold; 
+    /* font-style: italic; */
+
+  }
+
+  .imagen-titulo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .imagen-titulo img {
+    width: 130px;
+    height: 130px;
+    margin-right: 80px;
+  }
+
+  .table4 {
+    font-family: Arial, sans-serif;
+    font-size: 11pt;
+    table-layout: fixed;
+    width: 100%;
+    page-break-before: avoid;
+    page-break-after: avoid;
+
+}
+
+/* PDF OTROS */
+.fila-dividida3 td {
+  width: 20%;
+  border: 1px solid #070000;
+  padding: 15px;
+  /* text-align: ; */
+  table-layout: fixed;
+
+}
+  .fila-dividida4 td{
+  width: 0%;
+  border: 1px solid #070000;
+  padding: 15px;
+  text-align: center ;
+  table-layout: fixed;
+
+}
+
+
+  .fila-dividida5 td {
+  width: 0%;
+  border: 1px solid #070000;
+  padding: 5px;
+  text-align: center ;
+  font-weight: bold; 
+  color: black;
+
+  
+}
+
+.tr {
+  padding: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+
+}
+
+/* -------------------otros reportes-------------- */
+.fila-dividida10 td{
+  width: 0%;
+  border: 1px solid #070000;
+  padding: 5px;
+  font-size: 9px;
+  /* text-align: center ; */
+  /* table-layout: fixed; */
+  max-width: 200px; /* Establece el ancho máximo de la celda */
+  max-height: 100px; /* Establece el alto máximo de la celda */
+  overflow: auto; /* Establece la propiedad overflow con valor auto */
+  /*word-wrap: break-word;  Establece la propiedad word-wrap con valor break-word */
+}
+.fila-dividida10 td p{
+  width: 0%;
+  border: 1px solid #070000;
+  padding: 5px;
+  font-size: 8px;
+  /* text-align: center ; */
+  /* table-layout: fixed; */
+  max-width: 200px; /* Establece el ancho máximo de la celda */
+  max-height: 100px; /* Establece el alto máximo de la celda */
+  overflow: auto; /* Establece la propiedad overflow con valor auto */
+  /*word-wrap: break-word;  Establece la propiedad word-wrap con valor break-word */
+}
+.fila-dividida10 th{
+  width: 0%;
+  border: 1px solid #070000;
+  padding: 5px;
+  font-size: 9px;
+  /* text-align: center ; */
+  /* table-layout: fixed; */
+  max-width: 200px; /* Establece el ancho máximo de la celda */
+  max-height: 100px; /* Establece el alto máximo de la celda */
+  overflow: auto; /* Establece la propiedad overflow con valor auto */
+  /*word-wrap: break-word;  Establece la propiedad word-wrap con valor break-word */
+}
+
+
+.table10 {
+font-family:Arial, Helvetica, sans-serif;
+  table-layout: fixed;
+  width: 100%;
+  border: 1px solid #070000;
+  border-collapse: collapse;
+  text-align: center ;
+
+}
+
+.table11 {
+font-family:Arial, Helvetica, sans-serif;
+  table-layout: fixed;
+  width: 100%;
+
+}
+
+.fila-dividida11 td{
+  width: 0%;
+  padding: 5px;
+  font-size: 9px;
+  /* text-align: center ; */
+  /* table-layout: fixed; */
+  max-width: 200px; /* Establece el ancho máximo de la celda */
+  max-height: 100px; /* Establece el alto máximo de la celda */
+
+}
+
+.table12 {
+  font-family:Arial, Helvetica, sans-serif;
+  table-layout: fixed;
+  width: 100%;
+  text-align: center ;
+  font-weight: bold; 
+}

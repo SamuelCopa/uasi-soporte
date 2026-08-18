@@ -1,0 +1,277 @@
+.swal-institucional {
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.swal-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.swal-card {
+    flex: 1 1 45%;
+    padding: 12px;
+    border: 1px solid #dfe5f2;
+    font-size: 13px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+    transition: all .2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Línea superior institucional */
+.swal-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #0c1bed, #134deb);
+}
+
+/* Hover elegante */
+.swal-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(12,27,237,0.10);
+}
+
+.swal-icon {
+    margin-right: 6px;
+    color: #0c1bed;
+}
+
+.swal-msg {
+    margin-top: 12px;
+    font-size: 12.5px;
+    border: 3px solid #0c1bed;
+    padding: 10px 12px;
+    border-radius: 8px;
+    line-height: 1.5;
+}
+
+/* =======================================================
+   DASHBOARD ELEGANTE E INSTITUCIONAL
+======================================================= */
+
+/* Barras */
+.mini-bar {
+    height: 8px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.mini-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.6s ease;
+}
+
+/* =======================================================
+   CARD BASE
+======================================================= */
+.dashboard-card-prof {
+    position: relative;
+    border: 1px solid #dfe5f2;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+    transition: all 0.25s ease;
+    overflow: hidden;
+}
+
+/* Línea superior institucional */
+.dashboard-card-prof::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #0c1bed, #134deb);
+}
+
+/* Hover elegante */
+.dashboard-card-prof:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(12,27,237,0.10);
+}
+
+/* =======================================================
+   HEADER
+======================================================= */
+.card-header-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #edf0f5;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+}
+
+/* Título */
+.card-title {
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+}
+
+/* Icono */
+.card-header-custom i {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all .2s ease;
+}
+
+/* Animación icono */
+/* =======================================================
+   ESTADÍSTICAS
+======================================================= */
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    margin-top: 6px;
+    padding: 4px 0;
+}
+
+/* Labels */
+.label {
+    font-weight: 500;
+}
+
+/* Valores */
+.value {
+    font-weight: 700;
+}
+
+/* =======================================================
+   PROGRESS
+======================================================= */
+.progress-custom {
+    height: 12px;
+    background: #dbdcde;
+    border-radius: 20px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+/* =======================================================
+   TOTAL
+======================================================= */
+.card-total {
+    margin-top: 12px;
+    font-size: 13.5px;
+    border-top: 1px solid #edf0f5;
+    padding-top: 10px;
+    font-weight: 600;
+}
+
+/* =======================================================
+   ACTIONS
+======================================================= */
+.card-actions {
+    margin-top: 10px;
+    font-size: 12.5px;
+}
+
+.action-item {
+    margin-top: 6px;
+    color: #6c757d;
+}
+
+/* =======================================================
+   FOOTER
+======================================================= */
+.card-footer-custom {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    background: #f8faff;
+    border-top: 1px solid #e5eaf3;
+    color: #0c1bed;
+    text-decoration: none;
+    transition: all .2s ease;
+}
+
+/* Hover footer */
+.card-footer-custom:hover {
+    background: #eef3ff;
+    color: #134deb;
+}
+
+/* =======================================================
+   ALERTA CRÍTICA
+======================================================= */
+.card-alert{
+    border: 2.5px solid #dc3545;
+    animation: pulsoInstitucional 1.4s infinite;
+}
+
+/* Línea superior crítica */
+.card-alert::before{
+    background: linear-gradient(90deg,
+                #680404,
+                #680404);
+}
+
+/* =========================================
+   ANIMACIÓN PULSO INSTITUCIONAL INTENSO
+========================================= */
+
+@keyframes pulsoInstitucional {
+
+    0%{
+        box-shadow:
+            0 0 0 0 rgba(139, 30, 45, 0.75),
+            0 0 12px rgba(139, 30, 45, 0.45);
+    }
+
+    50%{
+        box-shadow:
+            0 0 0 10px rgba(139, 30, 45, 0.25),
+            0 0 24px rgba(139, 30, 45, 0.55);
+    }
+
+    100%{
+        box-shadow:
+            0 0 0 18px rgba(139, 30, 45, 0),
+            0 0 0 rgba(139, 30, 45, 0);
+    }
+}
+
+/* =======================================================
+   RESPONSIVE
+======================================================= */
+@media(max-width:768px){
+
+    .card-header-custom{
+        padding: 15px;
+    }
+
+    .card-body-custom{
+        padding: 15px;
+    }
+
+    .card-header-custom i{
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+
+    .card-title{
+        font-size: .85rem;
+    }
+
+}
