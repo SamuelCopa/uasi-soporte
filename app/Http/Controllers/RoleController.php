@@ -36,14 +36,18 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(RoleRequest $request): RedirectResponse
-    {
-        Role::create($request->validated());
+public function store(RoleRequest $request): RedirectResponse
+{
+    $datos = $request->validated();
 
-        return Redirect::route('roles.index')
-        ->with('success', 'REGISTRADO CORRECTAMENTE')         
+    $datos['guard_name'] = 'web';
+
+    Role::create($datos);
+
+    return Redirect::route('roles.index')
+        ->with('success', 'REGISTRADO CORRECTAMENTE')
         ->with('icono', 'success');
-    }
+}
 
     /**
      * Display the specified resource.

@@ -30,13 +30,6 @@
                             <table id="mitabla" class="table table-modern align-middle">
 
                                 <thead>
-                                    <!-- Encabezado agrupado -->
-                                    <tr class="table-group-header text-center">
-                                        <th colspan="8" class="color2">DATOS DEL SOLICITANTE</th>
-                                        <th colspan="3" class="color3">ASIGNACIÓN</th>
-                                        <th colspan="3" class="color2">CONTROL</th>
-                                    </tr>
-
                                     <!-- Encabezado principal -->
                                     <tr class="text-center">
                                         <th>#</th>
@@ -58,102 +51,100 @@
                                 <tbody>
                                     @foreach ($registroCpus as $registroCpu)
                                         <tr>
-                                        <td>{{ ++$i }}</td>
-                                        <td  align="center">
-                                            @if($registroCpu->fecha)
-                                                {{ date('d-m-Y H:i',strtotime($registroCpu?->fecha))}}<br><br>
-                                                @role('Administrador')
-                                                @if(!($registroCpu->estado_id == '5'))
-                                                        @php
-                                                        $dias = floor(\Carbon\Carbon::parse($registroCpu->fecha)->diffInDays(\Carbon\Carbon::now()));
-                                                        @endphp
-                                                        <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Días transcurridos desde la recepción">
-                                                        {{ $dias }} DÍAS TRANSCURRIDOS
-                                                        </button>
-                                                @endif
-                                                @endrole
-                                            @elseif(! $registroCpu->fecha)	
+                                            <td class="text-center">{{ ++$i }}</td>
+                                            <td>
+                                                @if($registroCpu->fecha)
+                                                {{date('d-m-Y H:i',strtotime($registroCpu->fecha))}}<br><br>
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
+                                                            @if(!($registroCpu->estado_id == '5'))
+                                                                @php
+                                                                $dias = floor(\Carbon\Carbon::parse($registroCpu->fecha)->diffInDays(\Carbon\Carbon::now()));
+                                                                @endphp
+                                                                <button 
+                                                                class="btn btn-sm btn-estado"
+                                                                data-dias="{{ $dias }}"
+                                                                title="Días transcurridos desde la recepción">
+                                                                {{ $dias }} DÍAS 
+                                                                </button>
+                                                            @endif
+                                                        @endif
+                                                @elseif(! $registroCpu->fecha)	
                                                 {{ $registroCpu->fecha ?? ''}}
-                                            @endif	
-                                            @role('Administrador')
-                                            @if(floor(\Carbon\Carbon::parse($registroCpu->fecha)->diffInDays(\Carbon\Carbon::now())) <= 30 )
-                                                @if(!$registroCpu->boton_oculto && $registroCpu->estado_id != '5')
-                                                    <div class="div title">
-                                                        <form class="actualizaFecha" method="POST" action="{{ route('cpu.fecha',['id'=>$registroCpu->id]) }}" role="form" enctype="multipart/form-data">
-                                                            {{ method_field('PATCH') }}
-                                                            @csrf
-                                                            <input type="hidden" name="fecha" class="form-control @error('fecha') is-invalid @enderror" value="{{ old('fecha', date('Y-m-d\TH:i:s'))}}" id="fecha">
-                                                            <button type="submit" class="btn btn-primary btn-sm" title="Este botón registra la fecha actual">ACTUALIZAR FECHA</button>
-                                                        </form>
-                                                    </div>
                                                 @endif
-                                            @endif
-                                            @endrole
-                                        </td>
-                                            <td >{{ $registroCpu->funcionario?->nombre }} {{ $registroCpu->funcionario?->paterno }} {{ $registroCpu->funcionario?->materno }}</td>
+                                          
+                                            </td>
+                                            <td >{{ $registroCpu->funcionario?->nombre}} {{ $registroCpu->funcionario?->paterno}} {{ $registroCpu->funcionario?->materno}}</td>
                                             <td >{{ $registroCpu->funcionario?->ci }} {{ $registroCpu->funcionario?->expedido }}</td>
                                             <td >{{ $registroCpu->funcionario?->celular }}</td>
                                             @if(! $registroCpu->cargo == '')
                                                 <td >{{ $registroCpu->cargo }}</td>
                                             @else
                                                 <td >{{ 'EX FUNCIONARIO'}}</td>
-                                            @endif										
+                                            @endif	
                                             @if(! $registroCpu->dependencia_id == '')
-                                                <td >{{ $registroCpu->dependencia?->dependencias}}</td>
+                                            <td >{{ $registroCpu->Dependencia?->dependencias }}</td>
                                             @else
-                                                <td >{{ 'SIN DEPENDENCIA'}}</td>
-                                            @endif										
-										<td >{{ $registroCpu->cod_gamea}}</td>
-                                            @if (auth()->user()->hasRole('Administrador')) 
-										<td class="{{ empty($registroCpu->cod_registro) ? 'color1' : '' }}" >
-                                            @if($registroCpu->cod_registro)
-                                            {{ $registroCpu->cod_registro}}
-                                            @elseif(! $registroCpu->cod_registro)	
-                                            <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eRecepcion{{ $registroCpu->id }}">{{ __( 'REGISTRAR NUMERO DE RECEPCIÓN' ) }}</button>
+                                            <td >{{ 'SIN DEPENDENCIA'}}</td>
                                             @endif
-                                        </td>
-                                        <td class="{{ empty($registroCpu->user_id) ? 'color1' : '' }}">
-                                            @if($registroCpu->cod_registro)
-                                                @if($registroCpu->user_id)
-                                                {{ $registroCpu->user->name}} {{ $registroCpu->user->paterno}} {{ $registroCpu->user->materno}} 
-                                                @elseif(! $registroCpu->user_id)	
-                                                <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eTecnico{{ $registroCpu->id }}">{{ __('ASIGNAR TECNICO') }}</button>
-                                                @endif
-                                            @elseif(! $registroCpu->cod_registro)	
-                                            <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NUMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('ASIGNAR TECNICO') }}</button>
-                                            @endif
-                                        </td>
-                                        <td class="{{ empty($registroCpu->fecha_asignacion) ? 'color1' : '' }}"  align="center">
-                                            @if($registroCpu->fecha_asignacion)
-                                                {{ date('d-m-Y H:i',strtotime($registroCpu->fecha_asignacion ))}}<br><br>
-                                                @if(!($registroCpu->estado_id == '5') && !($registroCpu->estado_id == '5'))
+                                            <td >{{ $registroCpu->cod_gamea }}</td>	
+
+
+                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                'Administrador',
+                                                'SuperAdministrador'
+                                            ]))								
+                                                <td class="{{ empty($registroCpu->cod_registro) ? 'color1' : '' }}" >
+                                                    @if($registroCpu->cod_registro)
+                                                    {{$registroCpu->cod_registro }}
+                                                    @elseif(! $registroCpu->cod_registro)	
+                                                    <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eRecepcion{{ $registroCpu->id }}">{{ __( 'REGISTRAR NUMERO DE RECEPCIÓN' ) }}</button>
+                                                    @endif
+                                                </td> 
+                                                <td class="{{ empty($registroCpu->user_id) ? 'color1' : '' }}">
+                                                    @if($registroCpu->cod_registro)
+                                                        @if($registroCpu->user_id)
+                                                        {{ $registroCpu->user->name}} {{ $registroCpu->user->paterno}} {{ $registroCpu->user->materno}}
+                                                        @elseif(! $registroCpu->user_id)
+                                                        <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eTecnico{{ $registroCpu->id }}">{{ __('ASIGNAR TECNICO') }}</button>
+                                                        @endif
+                                                    @elseif(! $registroCpu->cod_registro)	
+                                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NUMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('ASIGNAR TECNICO') }}</button>
+                                                    @endif
+                                                </td>
+                                                <td class="{{ empty($registroCpu->fecha_asignacion) ? 'color1' : '' }}">
+                                                    @if($registroCpu->fecha_asignacion)
+                                                    {{ date('d-m-Y H:i',strtotime($registroCpu->fecha_asignacion ))}}<BR><BR>
+                                                    @if(!($registroCpu->estado_id == '5') && !($registroCpu->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($registroCpu->fecha_asignacion)->diffInDays(\Carbon\Carbon::now()));
                                                         @endphp
                                                         <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Dias transcurridos desde la fecha de asignación">
                                                         {{ $dias }} DÍAS TRANSCURRIDOS
                                                         </button>
-                                                @endif	
-                                            @elseif(! $registroCpu->fecha_inicio)	
-                                            <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('FECHA DE ASIGNACION') }}</button>
-                                            @endif								
-                                        </td>
-                                        <td class="{{ empty($registroCpu->fecha_inicio) ? 'color1' : '' }}"  align="center">
-                                            @if($registroCpu->fecha_inicio)
-                                                {{ date('d-m-Y H:i',strtotime($registroCpu->fecha_inicio ))}}<br><br>
-                                                @if(!($registroCpu->estado_id == '5') && !($registroCpu->estado_id == '5'))
+                                                    @endif
+                                                    @elseif(! $registroCpu->fecha_asignacion)	
+                                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('FECHA DE ASIGNACIÓN') }}</button>
+                                                    @endif							
+                                                </td>	
+                                                <td class="{{ empty($registroCpu->fecha_inicio) ? 'color1' : '' }}">
+                                                    @if($registroCpu->fecha_inicio)
+                                                    {{ date('d-m-Y H:i',strtotime($registroCpu->fecha_inicio ))}}<BR><BR>
+                                                    @if(!($registroCpu->estado_id == '5') && !($registroCpu->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($registroCpu->fecha_inicio)->diffInDays(\Carbon\Carbon::now()));
                                                         @endphp
                                                         <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Dias transcurridos desde la fecha de inico de la reparación">
                                                         {{ $dias }} DÍAS TRANSCURRIDOS
                                                         </button>
-                                                @endif	
-                                            @elseif(! $registroCpu->fecha_inicio)	
-                                            <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'EN ESPERA DEL INICIO DEL TRABAJO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('EN ESPERA') }}</button>
-                                            @endif								
-                                        </td>
-                                        @else 
+                                                    @endif
+                                                    @elseif(! $registroCpu->fecha_inicio)	
+                                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'EN ESPERA DEL INICIO DEL TRABAJO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('EN ESPERA') }}</button>
+                                                    @endif							
+                                                </td>	
+                                            @else 
                                         {{-- ----------------------user---------------------------------- --}}
                                             <td class="{{ empty($registroCpu->cod_registro) ? 'color1' : '' }}">
                                                 @if($registroCpu->cod_registro)
@@ -185,43 +176,200 @@
                                             </td>
                                         @endif
 										<td >
-                                            @if(!empty($registroCpu->cod_registro) && !empty($registroCpu->user_id) && !empty($registroCpu->fecha_asignacion) || $registroCpu->estado_id != '1')
-                                                @if($registroCpu->estado_id == '1')
-                                                <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') title="Actualizar estado" data-id="{{ $registroCpu->id }}" onclick="cambiarEstado({{ $registroCpu->id }},{{ $registroCpu->estado_id }}, {{ $registroCpu->resultado_id ? 'true' : 'false' }} )"@endrole>RECEPCIONADO</button>
-                                                @elseif($registroCpu->estado_id == '2')
-                                                    <button class="btn btn-warning btn-raised"@role('Administrador') title="Actualizar estado" data-id="{{ $registroCpu->id }}" onclick="cambiarEstado({{ $registroCpu->id }}, {{ $registroCpu->estado_id }}, {{ $registroCpu->resultado_id ? 'true' : 'false' }} )"@endrole>EN PROCESO</button>
-                                                @elseif($registroCpu->estado_id == '3')
-                                                <button class="btn btn-danger btn-raised"@role('Administrador') title="Actualizar estado" data-id="{{ $registroCpu->id }}" onclick="cambiarEstado({{ $registroCpu->id }}, {{ $registroCpu->estado_id }}, {{ $registroCpu->resultado_id ? 'true' : 'false' }} )"@endrole>APERSONARSE CON EL TECNICO</button>
-                                                @elseif($registroCpu->estado_id == '4')
-                                                <button class="btn btn-success btn-raised"@role('Administrador') title="Actualizar estado" data-id="{{ $registroCpu->id }}" onclick="cambiarEstado({{ $registroCpu->id }}, {{ $registroCpu->estado_id }}, {{ $registroCpu->resultado_id ? 'true' : 'false' }} )"@endrole>CONCLUIDO</button>
-                                                @elseif($registroCpu->estado_id == '5')
-                                                {{-- ---------------------------------------RESULTADO FINAL--------------------------------------------}}
-                                                    @if($registroCpu->resultado_id == '1')
-                                                    <button class="boton300 badge-devolucion">
-                                                    {{ $registroCpu->resultado?->nombre }}<br>  {{ date('d-m-Y H:i:s',strtotime($registroCpu->fecha_entrega ))}}</button>
-                                                    @elseif($registroCpu->resultado_id == '2')
-                                                    <button class="boton300 badge-reposicion">
-                                                    {{ $registroCpu->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($registroCpu->fecha_entrega ))}}</button>
-                                                    @elseif($registroCpu->resultado_id == '3')
-                                                    <button class="boton300  badge-repliegue">
-                                                        {{ $registroCpu->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($registroCpu->fecha_entrega ))}}</button>
-                                                    @elseif($registroCpu->resultado_id == '4')
-                                                    <button class="boton300  badge-custodio">
-                                                        {{ $registroCpu->resultado?->nombre }}  <br>  {{ date('d-m-Y H:i:s',strtotime($registroCpu->fecha_entrega ))}}</button>
-                                                    @elseif($registroCpu->resultado_id == '5')
-                                                    <button class="boton300  badge-baja" >
-                                                        {{ $registroCpu->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($registroCpu->fecha_entrega ))}}</button>
+                                                @if(
+                                                    (!empty($registroCpu->cod_registro) &&
+                                                    !empty($registroCpu->user_id) &&
+                                                    !empty($registroCpu->fecha_asignacion))
+                                                    ||
+                                                    $registroCpu->estado_id != '1'
+                                                )
+
+                                                    @if($registroCpu->estado_id == '1')
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $registroCpu->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $registroCpu->id }},
+                                                                    {{ $registroCpu->estado_id }},
+                                                                    {{ $registroCpu->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
+                                                    @elseif($registroCpu->estado_id == '2')
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            class="btn btn-warning btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $registroCpu->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $registroCpu->id }},
+                                                                    {{ $registroCpu->estado_id }},
+                                                                    {{ $registroCpu->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            EN PROCESO
+                                                        </button>
+
+
+                                                    @elseif($registroCpu->estado_id == '3')
+
+                                                        <button
+                                                            class="btn btn-danger btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $registroCpu->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $registroCpu->id }},
+                                                                    {{ $registroCpu->estado_id }},
+                                                                    {{ $registroCpu->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            APERSONARSE CON EL TECNICO
+                                                            {{ $registroCpu->resultado?->nombre }}
+                                                        </button>
+
+
+                                                    @elseif($registroCpu->estado_id == '4')
+
+                                                        <button
+                                                            class="btn btn-success btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $registroCpu->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $registroCpu->id }},
+                                                                    {{ $registroCpu->estado_id }},
+                                                                    {{ $registroCpu->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            CONCLUIDO
+                                                        </button>
+
+
+                                                    @elseif($registroCpu->estado_id == '5')
+
+                                                        {{-- ---------------------------------------RESULTADO FINAL-------------------------------------------- --}}
+
+                                                        @if($registroCpu->resultado_id == '1')
+
+                                                            <button class="boton300 badge-devolucion">
+                                                                {{ $registroCpu->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($registroCpu->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($registroCpu->resultado_id == '2')
+
+                                                            <button class="boton300 badge-reposicion">
+                                                                {{ $registroCpu->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($registroCpu->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($registroCpu->resultado_id == '3')
+
+                                                            <button class="boton300 badge-repliegue">
+                                                                {{ $registroCpu->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($registroCpu->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($registroCpu->resultado_id == '4')
+
+                                                            <button class="boton300 badge-custodio">
+                                                                {{ $registroCpu->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($registroCpu->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($registroCpu->resultado_id == '5')
+
+                                                            <button class="boton300 badge-baja">
+                                                                {{ $registroCpu->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($registroCpu->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @endif
+
                                                     @endif
+
+
+                                                @else
+
+                                                    @if(empty($registroCpu->user_id))
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $registroCpu->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UN TECNICO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
+                                                    @elseif(empty($registroCpu->fecha_asignacion))
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $registroCpu->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UNA FECHA DE INICIO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+                                                    @endif
+
                                                 @endif
-                                            @else 
-                                                @if(empty($registroCpu->cod_registro))
-                                                <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') data-id="{{ $registroCpu->id }}" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NUMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                                @elseif(empty($registroCpu->user_id))
-                                                <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') data-id="{{ $registroCpu->id }}" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                                @elseif(empty($registroCpu->fecha_asignacion))
-                                                <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') data-id="{{ $registroCpu->id }}" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UNA FECHA DE INICIO', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                                @endif
-                                            @endif
                                             <form id="form-cambiar-estado" method="POST" action="{{ route('estado-cpu') }}">
                                                 @csrf
                                                 <input type="hidden" name="id" id="id-cpu">
@@ -252,7 +400,10 @@
                                                         <i class="fa fa-eye"></i> VER
                                                     </button>
 
-                                                    @role('Administrador')
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
                                                     <!-- EDITAR -->
                                                     <button type="button" data-toggle="modal" data-target="#editar{{ $registroCpu->id }}"
                                                         class="dropdown-card card-success">
@@ -273,7 +424,7 @@
                                                             <i class="fa fa-trash"></i> ELIMINAR
                                                         </button>
                                                     </form>
-                                                    @endrole
+                                                    @endif
 
                                                 </div>
                                             </div>

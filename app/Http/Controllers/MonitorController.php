@@ -23,6 +23,7 @@ use App\Services\NotificacionService;
 use App\Mail\TecnicoAsignado;
 use App\Services\EquipoPdfService;
 use Illuminate\Support\Facades\DB;
+use App\Services\CorrelativoService;
 
 class MonitorController extends Controller
 {
@@ -79,7 +80,7 @@ class MonitorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(MonitorRequest $request): RedirectResponse
+    public function store(Request $request, CorrelativoService $correlativoService)
     {
         $request->validate([
             'ci'        => 'required',
@@ -125,14 +126,24 @@ class MonitorController extends Controller
         // Guardar los cambios
         $funcionario->save();
 
+
+    $monitor = DB::transaction(function () use (
+        $request,
+        $funcionario,
+        $correlativoService
+    ) {
+
         $monitor = new Monitor();
+
         $monitor->funcionario_id = $funcionario->id;
         $monitor->cargo = $request->input('cargo');
         $monitor->dependencia_id = $request->input('dependencia_id');
         $monitor->cod_gamea = $request->input('cod_gamea');
-        $monitor->cod_registro = $request->input('cod_registro');
-        $monitor->marca = $request->input('marca');
+        // GENERAR CORRELATIVO
+        $monitor->cod_registro = $correlativoService->generarNumeroRecepcion();
+
         $monitor->fecha = $request->input('fecha');
+        $monitor->marca = $request->input('marca');
         $monitor->modelo = $request->input('modelo');
         $monitor->tamano = $request->input('tamano');
         $monitor->falla = $request->input('falla');
@@ -140,11 +151,17 @@ class MonitorController extends Controller
         $monitor->funcionario_activo = $request->input('funcionario_activo');
         $monitor->estado_id = $request->input('estado_id');
         $monitor->reguser_id = Auth::id();
+
         $monitor->save();
 
-        return Redirect::route('monitors.index')
-        ->with('success', 'REGISTRADO CORRECTAMENTE')         
+        return $monitor;
+    });
+    return redirect()
+        ->route('monitors.index')
+        ->with('success', 'REGISTRADO CORRECTAMENTE')
+        ->with('text', 'Número de recepción: ' . $monitor->cod_registro)
         ->with('icono', 'success');
+
     }
 
     /**
@@ -456,54 +473,6 @@ public function enviar($id, EquipoPdfService $service)
         ]);
     }
 
-    public function updateRecepcion(Request $request, $id){
-    $request->validate([
-        'cod_registro' => [
-            'nullable',
-            function ($attribute, $value, $fail) {
-
-                if (empty($value)) {
-                    return;
-                }
-
-                $anio = date('Y');
-
-                $tablas = [
-                    'registro_cpus'   => 'CPU',
-                    'monitors'        => 'Monitor',
-                    'impresoras'      => 'Impresora',
-                    'laptops'         => 'Laptop',
-                    'teclados'        => 'Teclado',
-                    'ratons'          => 'Mouse',
-                    'upeses'          => 'UPS',
-                    'parlantes'       => 'Parlante',
-                    'audifonos'       => 'Audífono',
-                    'estabilizadors'  => 'Estabilizador',
-                ];
-
-                foreach ($tablas as $tabla => $nombre) {
-
-                    $existe = DB::table($tabla)
-                        ->where('cod_registro', $value)
-                        ->whereYear('created_at', $anio)
-                        ->exists();
-
-                    if ($existe) {
-                        $fail("El número de recepción ya está asignado a un {$nombre} en la gestión actual.");
-                        return;
-                    }
-                }
-            },
-        ],
-    ]);
-        $monitor = Monitor::find($id);
-        $monitor->cod_registro = $request->input('cod_registro');
-        $monitor->update();
-        return Redirect::route('monitors.index')
-        ->with('success', 'REGISTRADO CORRECTAMENTE') 
-        ->with('text', 'Numero de recepción')          
-        ->with('icono', 'success');
-    }
 
     public function updateTecnico(Request $request, $id){
 

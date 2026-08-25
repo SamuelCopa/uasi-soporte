@@ -58,21 +58,11 @@
                                                 <td class="{{ empty($parlante->fecha_asignacion) ? 'color1' : '' }}">
                                                     @if($parlante->fecha_asignacion)
                                                     {{ date('d-m-Y H:i',strtotime($parlante->fecha_asignacion ))}}<br><br>
-                                                        @if(!($parlante->estado_id == '5') && !($parlante->estado_id == '4'))
-                                                            <button class="btn btn-sm btn-danger boton-parpadea" title="Dias transcurridos desde la fecha de asignación">
-                                                            {{ floor(\Carbon\Carbon::parse($parlante->fecha_asignacion)->diffInDays(\Carbon\Carbon::now())) }} DÍAS TRANSCURRIDOS
-                                                            </button>
-                                                        @endif	
                                                     @endif								
                                                 </td>	
                                                 <td class="{{ empty($parlante->fecha_inicio) ? 'color1' : '' }}">
                                                     @if($parlante->fecha_inicio)
                                                     {{ date('d-m-Y H:i',strtotime($parlante->fecha_inicio ))}}<br><br>
-                                                        @if(!($parlante->estado_id == '5') && !($parlante->estado_id == '4'))
-                                                            <button class="btn btn-sm btn-info boton-parpadea" title="Dias transcurridos desde la fecha de inico de la reparación">
-                                                            {{ floor(\Carbon\Carbon::parse($parlante->fecha_inicio)->diffInDays(\Carbon\Carbon::now())) }} DÍAS TRANSCURRIDOS
-                                                            </button>
-                                                        @endif	
                                                     @elseif(! $parlante->fecha_inicio)	
                                                     <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Información', text: 'EN ESPERA DEL INICIO DEL TRABAJO', icon: 'info', confirmButtonText: 'ACEPTAR' });">{{ __('EN ESPERA') }}</button>
                                                     @endif								

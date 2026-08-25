@@ -27,7 +27,11 @@ class HomeController extends Controller
         $user= Auth::user();
         $nuevasSolicitudes = Servicio::where('visto', false)->count();
 
+        $nuevasSolicitudesTecnico = Servicio::where('user_id', Auth::id())
+        ->where('visto', 0)
+        ->count();
 
-        return view('home', compact('user', 'nuevasSolicitudes'));
+
+        return view('home', compact('user', 'nuevasSolicitudes','nuevasSolicitudesTecnico'));
     }
 }

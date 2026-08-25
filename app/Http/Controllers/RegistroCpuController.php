@@ -49,6 +49,8 @@ use App\Mail\TecnicoAsignado;
 use App\Services\EquipoPdfService;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use App\Models\Correlativo;
+use App\Services\CorrelativoService;
 
 class RegistroCpuController extends Controller
 {
@@ -175,7 +177,7 @@ public function index(Request $request): View
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, CorrelativoService $correlativoService)
     {
     $request->validate([
         'ci'        => 'required',
@@ -394,6 +396,11 @@ public function index(Request $request): View
         ]);
     }
 
+    $registroCpu = DB::transaction(function () use (
+        $request,
+        $funcionario,
+        $correlativoService
+    ) {
         $registroCpu = new RegistroCpu();
         $registroCpu->funcionario_id = $funcionario->id;
         $registroCpu->dependencia_id = $request->input('dependencia_id');
@@ -404,6 +411,8 @@ public function index(Request $request): View
         $registroCpu->cod_registro = $request->input('cod_registro');
         $registroCpu->usuario = $request->input('usuario');
         $registroCpu->contrasena = $request->input('contrasena');
+                // GENERAR CORRELATIVO
+        $registroCpu->cod_registro = $correlativoService->generarNumeroRecepcion();
 
         $registroCpu->marcacase_id = $request->input('marcacase_id');
         $registroCpu->colorcase_id = $request->input('colorcase_id');
@@ -463,12 +472,41 @@ public function index(Request $request): View
         $registroCpu->reguser_id = Auth::id();
 
         $registroCpu->save();
-        
+        return $registroCpu;
+    });
         return Redirect::route('registro-cpus.index')
-        ->with('success', 'CREADO CORRECTAMENTE.')
-        ->with('icono', 'success'); 
+        ->with('success', 'REGISTRADO CORRECTAMENTE')
+        ->with('text', 'Número de recepción: ' . $registroCpu->cod_registro)
+        ->with('icono', 'success');
 
     }
+
+// NUMERO CORRELATIVO
+    private function generarNumeroRecepcion()
+{
+    $anio = now()->year;
+
+    $correlativo = Correlativo::where('anio', $anio)
+        ->lockForUpdate()
+        ->first();
+
+    if (!$correlativo) {
+
+        $correlativo = Correlativo::create([
+            'anio' => $anio,
+            'ultimo_numero' => 0,
+        ]);
+    }
+
+    $correlativo->increment('ultimo_numero');
+
+    return str_pad(
+        $correlativo->ultimo_numero,
+        3,
+        '0',
+        STR_PAD_LEFT
+    ) . '/' . $anio;
+}
 
     /**
      * Display the specified resource.
@@ -838,7 +876,7 @@ public function enviar($id, EquipoPdfService $service)
         // =========================
         // ENVÍO DE NOTIFICACIÓN
         // =========================
-        if (in_array($estadoId, [2, 3, 4])) {
+        if (in_array($estadoId, [3, 4])) {
 
             $this->notificacionService->enviar(
                 $cpu->funcionario,
@@ -879,7 +917,7 @@ public function enviar($id, EquipoPdfService $service)
                     'ratons'          => 'Mouse',
                     'upeses'          => 'UPS',
                     'parlantes'       => 'Parlante',
-                    'audifonos'       => 'Audífono',
+                    'registroCpus'       => 'Audífono',
                     'estabilizadors'  => 'Estabilizador',
                 ];
 

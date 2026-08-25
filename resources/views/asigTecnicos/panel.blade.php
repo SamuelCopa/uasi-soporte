@@ -112,17 +112,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 <i class="fas fa-chart-line"></i>
                 Estadística del Técnico
             </a>
-            <a href="{{ route('admin.asignaciones.pdf', $user->id) }}" class="btn-header" target="_blank">
-                <i class="fas fa-file-pdf"></i>
-                Generar INFORME
-            </a>
+            <button type="button" class="btn-header"" data-toggle="modal" data-target="#modalReporte">
+            <i class="fas fa-file-pdf"></i>Reporte PDF
+            </button>
             <a href="{{ route('tecnicos.index') }}" class="btn-header">
                 <i class="fas fa-arrow-left"></i>
                 Volver
             </a>
-            <button type="button" class="btn-header"" data-toggle="modal" data-target="#modalReporte">
-            <i class="fas fa-file-pdf"></i>Reporte PDF
-            </button>
+
     </div>
 </div>
 

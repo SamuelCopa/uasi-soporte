@@ -23,6 +23,8 @@ use App\Services\NotificacionService;
 use App\Mail\TecnicoAsignado;
 use App\Services\EquipoPdfService;
 use Illuminate\Support\Facades\DB;
+use App\Services\CorrelativoService;
+
 class RatonController extends Controller
 {
     /**
@@ -78,7 +80,7 @@ class RatonController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(RatonRequest $request): RedirectResponse
+    public function store(Request $request, CorrelativoService $correlativoService)
     {
         $request->validate([
             'ci'        => 'required',
@@ -124,22 +126,38 @@ class RatonController extends Controller
         // Guardar los cambios
         $funcionario->save();
 
+    $raton = DB::transaction(function () use (
+        $request,
+        $funcionario,
+        $correlativoService
+    ) {
+
         $raton = new Raton();
+
         $raton->funcionario_id = $funcionario->id;
-        $raton->dependencia_id = $request->input('dependencia_id');
         $raton->cargo = $request->input('cargo');
+        $raton->dependencia_id = $request->input('dependencia_id');
         $raton->cod_gamea = $request->input('cod_gamea');
-        $raton->cod_registro = $request->input('cod_registro');
-        $raton->marca = $request->input('marca');
+        // GENERAR CORRELATIVO
+        $raton->cod_registro = $correlativoService->generarNumeroRecepcion();
+
         $raton->fecha = $request->input('fecha');
+        $raton->marca = $request->input('marca');
         $raton->modelo = $request->input('modelo');
         $raton->falla = $request->input('falla');
         $raton->observaciones = $request->input('observaciones');
+        $raton->funcionario_activo = $request->input('funcionario_activo');
         $raton->estado_id = $request->input('estado_id');
         $raton->reguser_id = Auth::id();
+
         $raton->save();
-        return Redirect::route('ratons.index')
-        ->with('success', 'REGISTRADO CORRECTAMENTE')         
+
+        return $raton;
+    });
+    return redirect()
+        ->route('ratons.index')
+        ->with('success', 'REGISTRADO CORRECTAMENTE')
+        ->with('text', 'Número de recepción: ' . $raton->cod_registro)
         ->with('icono', 'success');
     }
 
@@ -434,7 +452,7 @@ public function enviar($id, EquipoPdfService $service)
         // =========================
         // ENVÍO DE NOTIFICACIÓN
         // =========================
-        if (in_array($estadoId, [2, 3, 4])) {
+        if (in_array($estadoId, [3, 4])) {
 
             $this->notificacionService->enviar(
                 $mouse->funcionario,
@@ -451,55 +469,6 @@ public function enviar($id, EquipoPdfService $service)
                 ? $mouse->resultado?->nombre
                 : $mouse->estado?->nombre
         ]);
-    }
-
-    public function updateRecepcion(Request $request, $id){
-    $request->validate([
-        'cod_registro' => [
-            'nullable',
-            function ($attribute, $value, $fail) {
-
-                if (empty($value)) {
-                    return;
-                }
-
-                $anio = date('Y');
-
-                $tablas = [
-                    'registro_cpus'   => 'CPU',
-                    'monitors'        => 'Monitor',
-                    'impresoras'      => 'Impresora',
-                    'laptops'         => 'Laptop',
-                    'teclados'        => 'Teclado',
-                    'ratons'          => 'Mouse',
-                    'upeses'          => 'UPS',
-                    'parlantes'       => 'Parlante',
-                    'audifonos'       => 'Audífono',
-                    'estabilizadors'  => 'Estabilizador',
-                ];
-
-                foreach ($tablas as $tabla => $nombre) {
-
-                    $existe = DB::table($tabla)
-                        ->where('cod_registro', $value)
-                        ->whereYear('created_at', $anio)
-                        ->exists();
-
-                    if ($existe) {
-                        $fail("El número de recepción ya está asignado a un {$nombre} en la gestión actual.");
-                        return;
-                    }
-                }
-            },
-        ],
-    ]);
-        $mouse = Raton::find($id);
-        $mouse->cod_registro = $request->input('cod_registro');
-        $mouse->update();
-        return Redirect::route('ratons.index')
-        ->with('success', 'REGISTRADO CORRECTAMENTE') 
-        ->with('text', 'Numero de recepción')          
-        ->with('icono', 'success');
     }
 
     public function updateTecnico(Request $request, $id){

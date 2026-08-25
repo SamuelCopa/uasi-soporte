@@ -30,12 +30,6 @@
                             <table id="mitabla" class="table table-modern align-middle">
 
                                 <thead>
-                                    <!-- Encabezado agrupado -->
-                                    <tr class="table-group-header text-center">
-                                        <th colspan="8" class="color2">DATOS DEL SOLICITANTE</th>
-                                        <th colspan="3" class="color3">ASIGNACIÓN</th>
-                                        <th colspan="3" class="color2">CONTROL</th>
-                                    </tr>
 
                                     <!-- Encabezado principal -->
                                     <tr class="text-center">
@@ -56,41 +50,34 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($laptops as $laptop)
-                                    <tr>
-                                        <td>{{ ++$i }}</td>
-                                        <td  align="center">
-                                            @if($laptop->fecha)
-                                            {{ date('d-m-Y H:i',strtotime($laptop->fecha))}}<br><br>
-                                                @role('Administrador')
-                                                @if(!($laptop->estado_id == '5'))
-                                                        @php
-                                                        $dias = floor(\Carbon\Carbon::parse($laptop->fecha)->diffInDays(\Carbon\Carbon::now()));
-                                                        @endphp
-                                                        <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Días transcurridos desde la recepción">
-                                                        {{ $dias }} DÍAS TRANSCURRIDOS
-                                                        </button>
-                                                @endif
-                                                @endrole
-                                            @elseif(! $laptop->fecha)	
+                                     @foreach ($laptops as $laptop)
+                                        <tr>
+                                            <td class="text-center">{{ ++$i }}</td>
+                                            <td>
+                                                @if($laptop->fecha)
+                                                {{date('d-m-Y H:i',strtotime($laptop->fecha))}}<br><br>
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
+                                                            @if(!($laptop->estado_id == '5'))
+                                                                @php
+                                                                $dias = floor(\Carbon\Carbon::parse($laptop->fecha)->diffInDays(\Carbon\Carbon::now()));
+                                                                @endphp
+                                                                <button 
+                                                                class="btn btn-sm btn-estado"
+                                                                data-dias="{{ $dias }}"
+                                                                title="Días transcurridos desde la recepción">
+                                                                {{ $dias }} DÍAS 
+                                                                </button>
+                                                            @endif
+                                                        @endif
+                                                @elseif(! $laptop->fecha)	
                                                 {{ $laptop->fecha ?? ''}}
-                                            @endif	
-                                            @role('Administrador')
-                                            @if(floor(\Carbon\Carbon::parse($laptop->fecha)->diffInDays(\Carbon\Carbon::now())) <= 30 )
-                                                @if(!$laptop->boton_oculto && $laptop->estado_id != '5')
-                                                    <div class="div title">
-                                                        <form class="actualizarFecha" method="POST" action="{{ route('laptop.fecha',['id'=>$laptop->id]) }}" role="form" enctype="multipart/form-data">
-                                                            {{ method_field('PATCH') }}
-                                                            @csrf
-                                                            <input type="hidden" name="fecha" class="form-control @error('fecha') is-invalid @enderror" value="{{ old('fecha', date('Y-m-d\TH:i:s'))}}" id="fecha">
-                                                            <button type="submit" class="btn btn-primary btn-sm" title="Este botón registra la fecha actual">ACTUALIZAR FECHA</button>
-                                                        </form>
-                                                    </div>
                                                 @endif
-                                            @endif
-                                            @endrole
-                                        </td>
-                                            <td >{{ $laptop->funcionario?->nombre }} {{ $laptop->funcionario?->paterno }} {{ $laptop->funcionario?->materno }}</td>
+                                          
+                                            </td>
+                                            <td >{{ $laptop->funcionario?->nombre}} {{ $laptop->funcionario?->paterno}} {{ $laptop->funcionario?->materno}}</td>
                                             <td >{{ $laptop->funcionario?->ci }} {{ $laptop->funcionario?->expedido }}</td>
                                             <td >{{ $laptop->funcionario?->celular }}</td>
                                             @if(! $laptop->cargo == '')
@@ -98,34 +85,39 @@
                                             @else
                                                 <td >{{ 'EX FUNCIONARIO'}}</td>
                                             @endif	
-                                        @if(! $laptop->dependencia_id == '')
-                                        <td >{{ $laptop->Dependencia?->dependencias }}</td>
-                                        @else
-                                        <td >{{ 'SIN DEPENDENCIA'}}</td>
-                                        @endif
-                                        <td >{{ $laptop->cod_gamea }}</td>										
-                                        @if (auth()->user()->hasRole('Administrador')) 
-                                            <td class="{{ empty($laptop->cod_registro) ? 'color1' : '' }}">
-                                                @if($laptop->cod_registro)
-                                                {{ $laptop->cod_registro}}
-                                                @elseif(! $laptop->cod_registro)	
-                                                <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eRecepcion{{ $laptop->id }}">{{ __( 'REGISTRAR NÚMERO DE RECEPCIÓN' ) }}</button>
-                                                @endif
-                                            </td>
-                                            <td class="{{ empty($laptop->user_id) ? 'color1' : '' }}">
-                                                @if($laptop->cod_registro)
-                                                    @if($laptop->user_id)
-                                                    {{ $laptop->User->name}} {{ $laptop->user->paterno}} {{ $laptop->user->materno}}
-                                                    @elseif(! $laptop->user_id)	
-                                                    <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eTecnico{{ $laptop->id }}">{{ __('ASIGNAR TECNICO') }}</button>
+                                            @if(! $laptop->dependencia_id == '')
+                                            <td >{{ $laptop->Dependencia?->dependencias }}</td>
+                                            @else
+                                            <td >{{ 'SIN DEPENDENCIA'}}</td>
+                                            @endif
+                                            <td >{{ $laptop->cod_gamea }}</td>	
+
+
+                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                'Administrador',
+                                                'SuperAdministrador'
+                                            ]))								
+                                                <td class="{{ empty($laptop->cod_registro) ? 'color1' : '' }}" >
+                                                    @if($laptop->cod_registro)
+                                                    {{$laptop->cod_registro }}
+                                                    @elseif(! $laptop->cod_registro)	
+                                                    <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eRecepcion{{ $laptop->id }}">{{ __( 'REGISTRAR NUMERO DE RECEPCIÓN' ) }}</button>
                                                     @endif
-                                                @elseif(! $laptop->cod_registro)	
-                                                <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NÚMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('ASIGNAR TECNICO') }}</button>
-                                                @endif
-                                            </td>
-                                            <td class="{{ empty($laptop->fecha_asignacion) ? 'color1' : '' }}"  align="center">
-                                                @if($laptop->fecha_asignacion)
-                                                {{ date('d-m-Y H:i',strtotime($laptop->fecha_asignacion ))}}<br><br>
+                                                </td> 
+                                                <td class="{{ empty($laptop->user_id) ? 'color1' : '' }}">
+                                                    @if($laptop->cod_registro)
+                                                        @if($laptop->user_id)
+                                                        {{ $laptop->user->name}} {{ $laptop->user->paterno}} {{ $laptop->user->materno}}
+                                                        @elseif(! $laptop->user_id)
+                                                        <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eTecnico{{ $laptop->id }}">{{ __('ASIGNAR TECNICO') }}</button>
+                                                        @endif
+                                                    @elseif(! $laptop->cod_registro)	
+                                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NUMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('ASIGNAR TECNICO') }}</button>
+                                                    @endif
+                                                </td>
+                                                <td class="{{ empty($laptop->fecha_asignacion) ? 'color1' : '' }}">
+                                                    @if($laptop->fecha_asignacion)
+                                                    {{ date('d-m-Y H:i',strtotime($laptop->fecha_asignacion ))}}<BR><BR>
                                                     @if(!($laptop->estado_id == '5') && !($laptop->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($laptop->fecha_asignacion)->diffInDays(\Carbon\Carbon::now()));
@@ -134,13 +126,13 @@
                                                         {{ $dias }} DÍAS TRANSCURRIDOS
                                                         </button>
                                                     @endif
-                                                @elseif(! $laptop->fecha_asignacion)	
-                                                <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('FECHA DE ASIGNACIÓN') }}</button>
-                                                @endif	
-                                            </td>
-                                            <td class="{{ empty($laptop->fecha_inicio) ? 'color1' : '' }}"  align="center">
-                                                @if($laptop->fecha_inicio)
-                                                {{ date('d-m-Y H:i',strtotime($laptop->fecha_inicio ))}}<br><br>
+                                                    @elseif(! $laptop->fecha_asignacion)	
+                                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('FECHA DE ASIGNACIÓN') }}</button>
+                                                    @endif							
+                                                </td>	
+                                                <td class="{{ empty($laptop->fecha_inicio) ? 'color1' : '' }}">
+                                                    @if($laptop->fecha_inicio)
+                                                    {{ date('d-m-Y H:i',strtotime($laptop->fecha_inicio ))}}<BR><BR>
                                                     @if(!($laptop->estado_id == '5') && !($laptop->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($laptop->fecha_inicio)->diffInDays(\Carbon\Carbon::now()));
@@ -149,11 +141,11 @@
                                                         {{ $dias }} DÍAS TRANSCURRIDOS
                                                         </button>
                                                     @endif
-                                                @elseif(! $laptop->fecha_inicio)	
-                                                <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'EN ESPERA DEL INICIO DEL TRABAJO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('EN ESPERA') }}</button>
-                                                @endif	
-                                            </td>
-                                        @else 
+                                                    @elseif(! $laptop->fecha_inicio)	
+                                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'EN ESPERA DEL INICIO DEL TRABAJO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('EN ESPERA') }}</button>
+                                                    @endif							
+                                                </td>	
+                                            @else 
                                         {{-- ----------------------user---------------------------------- --}}
                                             <td class="{{ empty($laptop->cod_registro) ? 'color1' : '' }}">
                                                 @if($laptop->cod_registro)
@@ -186,44 +178,200 @@
                                         @endif
 
                                         <td>
-                                        @if(!empty($laptop->cod_registro) && !empty($laptop->user_id) && !empty($laptop->fecha_asignacion) || $laptop->estado_id != '1')
-                                            @if($laptop->estado_id == '1')
-                                            <button type="submit" class="btn btn-primary btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $laptop->id }}" onclick="cambiarEstado({{ $laptop->id }},{{ $laptop->estado_id }}, {{ $laptop->resultado_id ? 'true' : 'false' }} )"@endrole>RECEPCIONADO</button>
-                                            @elseif($laptop->estado_id == '2')
-                                                <button class="btn btn-warning btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $laptop->id }}" onclick="cambiarEstado({{ $laptop->id }}, {{ $laptop->estado_id }}, {{ $laptop->resultado_id ? 'true' : 'false' }} )"@endrole>EN PROCESO</button>
-                                            @elseif($laptop->estado_id == '3')
-                                                <button class="btn btn-danger btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $laptop->id }}" onclick="cambiarEstado({{ $laptop->id }}, {{ $laptop->estado_id }}, {{ $laptop->resultado_id ? 'true' : 'false' }} )"@endrole>APERSONARSE CON EL TECNICO</button>
-                                            @elseif($laptop->estado_id == '4')
-                                                <button class="btn btn-success btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $laptop->id }}" onclick="cambiarEstado({{ $laptop->id }}, {{ $laptop->estado_id }}, {{ $laptop->resultado_id ? 'true' : 'false' }} )"@endrole>CONCLUIDO</button>
-                                            @elseif($laptop->estado_id == '5')
-                                                {{-- ---------------------------------------RESULTADO FINAL--------------------------------------------}}
-                                                    @if($laptop->resultado_id == '1')
-                                                    <button class="boton300 badge-devolucion">
-                                                    {{ $laptop->resultado?->nombre }}<br>  {{ date('d-m-Y H:i:s',strtotime($laptop->fecha_entrega ))}}</button>
-                                                    @elseif($laptop->resultado_id == '2')
-                                                    <button class="boton300 badge-reposicion">
-                                                    {{ $laptop->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($laptop->fecha_entrega ))}}</button>
-                                                    @elseif($laptop->resultado_id == '3')
-                                                    <button class="boton300  badge-repliegue">
-                                                        {{ $laptop->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($laptop->fecha_entrega ))}}</button>
-                                                    @elseif($laptop->resultado_id == '4')
-                                                    <button class="boton300  badge-custodio">
-                                                        {{ $laptop->resultado?->nombre }}  <br>  {{ date('d-m-Y H:i:s',strtotime($laptop->fecha_entrega ))}}</button>
-                                                    @elseif($laptop->resultado_id == '5')
-                                                    <button class="boton300  badge-baja" >
-                                                        {{ $laptop->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($laptop->fecha_entrega ))}}</button>
+                                                @if(
+                                                    (!empty($laptop->cod_registro) &&
+                                                    !empty($laptop->user_id) &&
+                                                    !empty($laptop->fecha_asignacion))
+                                                    ||
+                                                    $laptop->estado_id != '1'
+                                                )
+
+                                                    @if($laptop->estado_id == '1')
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $laptop->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $laptop->id }},
+                                                                    {{ $laptop->estado_id }},
+                                                                    {{ $laptop->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
+                                                    @elseif($laptop->estado_id == '2')
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            class="btn btn-warning btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $laptop->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $laptop->id }},
+                                                                    {{ $laptop->estado_id }},
+                                                                    {{ $laptop->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            EN PROCESO
+                                                        </button>
+
+
+                                                    @elseif($laptop->estado_id == '3')
+
+                                                        <button
+                                                            class="btn btn-danger btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $laptop->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $laptop->id }},
+                                                                    {{ $laptop->estado_id }},
+                                                                    {{ $laptop->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            APERSONARSE CON EL TECNICO
+                                                            {{ $laptop->resultado?->nombre }}
+                                                        </button>
+
+
+                                                    @elseif($laptop->estado_id == '4')
+
+                                                        <button
+                                                            class="btn btn-success btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $laptop->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $laptop->id }},
+                                                                    {{ $laptop->estado_id }},
+                                                                    {{ $laptop->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            CONCLUIDO
+                                                        </button>
+
+
+                                                    @elseif($laptop->estado_id == '5')
+
+                                                        {{-- ---------------------------------------RESULTADO FINAL-------------------------------------------- --}}
+
+                                                        @if($laptop->resultado_id == '1')
+
+                                                            <button class="boton300 badge-devolucion">
+                                                                {{ $laptop->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($laptop->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($laptop->resultado_id == '2')
+
+                                                            <button class="boton300 badge-reposicion">
+                                                                {{ $laptop->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($laptop->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($laptop->resultado_id == '3')
+
+                                                            <button class="boton300 badge-repliegue">
+                                                                {{ $laptop->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($laptop->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($laptop->resultado_id == '4')
+
+                                                            <button class="boton300 badge-custodio">
+                                                                {{ $laptop->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($laptop->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($laptop->resultado_id == '5')
+
+                                                            <button class="boton300 badge-baja">
+                                                                {{ $laptop->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($laptop->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @endif
+
                                                     @endif
-                                            @endif
-                                        @else 
-                                            @if(empty($laptop->cod_registro))
-                                            <button type="submit" class="btn btn-primary btn-raised" data-id="{{ $laptop->id }}" @role('Administrador') onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NÚMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                            @elseif(empty($laptop->user_id))
-                                            <button type="submit" class="btn btn-primary btn-raised" data-id="{{ $laptop->id }}" @role('Administrador') onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                            @elseif(empty($laptop->fecha_asignacion))
-                                            <button type="submit" class="btn btn-primary btn-raised" data-id="{{ $laptop->id }}" @role('Administrador') onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UNA FECHA DE INICIO', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                            @endif
-                                        @endif
-                                        
+
+
+                                                @else
+
+                                                    @if(empty($laptop->user_id))
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $laptop->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UN TECNICO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
+                                                    @elseif(empty($laptop->fecha_asignacion))
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $laptop->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UNA FECHA DE INICIO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+                                                    @endif
+
+                                                @endif
                                         <form id="form-cambiar-estado" method="POST" action="{{ route('estado-laptop') }}">
                                             @csrf
                                             <input type="hidden" name="id" id="id-laptop">
@@ -250,7 +398,10 @@
                                                             class="dropdown-card card-primary">
                                                         <i class="fa fa-eye"></i> VER
                                                     </button>
-                                                    @role('Administrador')
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
                                                     <!-- EDITAR -->
                                                     <button type="button" data-toggle="modal" data-target="#editar{{ $laptop->id }}"
                                                             class="dropdown-card card-success">
@@ -270,7 +421,7 @@
                                                             <i class="fa fa-trash"></i> ELIMINAR
                                                         </button>
                                                     </form>
-                                                    @endrole
+                                                    @endif
                                                 </div>
                                             </div>
                                         </td>

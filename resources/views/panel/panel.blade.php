@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     @endphp
 
 <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-    <div class="card dashboard-card-prof {{ ($dataEquipo['sin_cod'] > 0 || $dataEquipo['sin_user'] > 0) ? 'card-alert' : '' }}">
+    <div class="card dashboard-card-prof {{ ($dataEquipo['sin_cod'] > 0 || $dataEquipo['sin_user'] > 0)}}">
 
         <div class="card-body">
 
@@ -222,11 +222,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <!-- Indicadores -->
             <div class="card-actions">
-                <div class="action-item {{ $dataEquipo['sin_cod'] > 0 ? 'text-danger' : 'text-muted' }}">
+                <!-- <div class="action-item {{ $dataEquipo['sin_cod'] > 0 ? 'text-danger' : 'text-muted' }}">
                     Sin número de recepción: {{ $dataEquipo['sin_cod'] }}
-                </div>
+                </div> -->
                 <div class="action-item {{ $dataEquipo['sin_user'] > 0 ? 'text-danger' : 'text-muted' }}">
-                    Sin técnico: {{ $dataEquipo['sin_user'] }}
+                    Asignar técnico: {{ $dataEquipo['sin_user'] }}
                 </div>
             </div>
 

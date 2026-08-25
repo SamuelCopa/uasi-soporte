@@ -20,9 +20,10 @@
                         </div>
                         <div class="header-actions">
                         <!-- Botón -->
-                            <a href="{{ route('tecnicos.index') }}" class="btn  btn-block fw-bold text-white" style="background: linear-gradient(90deg, #dc3545, #a71d2a); border: none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: all 0.3s;">
-                                <span class="icono">↩️</span> salir
-                            </a>
+                        <a href="{{ url()->previous() }}"
+                        class="btn-header">
+                            <i class="fas fa-arrow-left"></i> Volver
+                        </a>
                         </div>
                     </div>
                         <div class="card shadow-sm border-0 rounded-4">
@@ -112,7 +113,7 @@
                                                 <td>
                                                     <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#ver{{ $upese->id }}"><i class="fa fa-fw fa-eye"></i> {{ __('VER') }}</button>
                                                     @if($upese->estado_id == '4' || $upese->estado_id == '5')
-                                                    <a class="btn btn-sm btn-secondary" href="{{ route('informe.upese', $upese->id) }}"><i class="fa fa-fw fa-file"></i>{{ __('INFORME') }}</a>
+                                                    <a class="btn btn-sm btn-secondary" href="{{ route('informe.ups', $upese->id) }}"><i class="fa fa-fw fa-file"></i>{{ __('INFORME') }}</a>
                                                     @endif
                                                 </td>
                                             </tr>

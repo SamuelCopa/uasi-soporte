@@ -46,16 +46,24 @@
                 <i class="fas fa-search"></i> 
                 <span>SEGUIMIENTO</span> 
             </button> 
+            <!-- SEGUIMIENTO --> 
+
             <!-- MODELO DE CARTA --> 
              <a href="#" class="gamea-link"> 
                 <i class="fas fa-file-alt"></i> 
                 <span>MODELO DE CARTA</span> 
             </a> 
+
             <!-- REQUERIMIENTO --> 
              <button type="button" class="gamea-link" data-bs-toggle="modal" data-bs-target="#modalServicio"> 
                 <i class="fas fa-tools"></i> 
-                <span>REQUERIMIENTO</span> 
+                <span>REQUERIMIENTO DE ASISTENCIA TÉCNICA</span> 
             </button> 
+            <a href="{{ route('evaluacion.buscar') }}"
+            class="gamea-link"">
+                <i class="fas fa-star"></i>
+                EVALUAR ATENCION
+            </a>
             <!-- SEPARADOR --> 
              <div class="gamea-divider"></div> 
              <!-- ACCEDER --> 
@@ -563,9 +571,7 @@ function borrar() {
         }
     }
 }
-
 escribir();
-
 </script>
 
     <!--Ventana Modal Seguimiento-->

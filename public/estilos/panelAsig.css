@@ -22,7 +22,7 @@
 }
 
 /* Línea superior institucional */
-.swal-card::before {
+/* .swal-card::before {
     content: "";
     position: absolute;
     top: 0;
@@ -30,7 +30,7 @@
     width: 100%;
     height: 3px;
     background: linear-gradient(90deg, #0c1bed, #134deb);
-}
+} */
 
 /* Hover elegante */
 .swal-card:hover {
@@ -83,7 +83,7 @@
 }
 
 /* Línea superior institucional */
-.dashboard-card-prof::before {
+/* .dashboard-card-prof::before {
     content: "";
     position: absolute;
     top: 0;
@@ -91,7 +91,7 @@
     width: 100%;
     height: 4px;
     background: linear-gradient(90deg, #0c1bed, #134deb);
-}
+} */
 
 /* Hover elegante */
 .dashboard-card-prof:hover {
@@ -214,17 +214,17 @@
 /* =======================================================
    ALERTA CRÍTICA
 ======================================================= */
-.card-alert{
+/* .card-alert{
     border: 2.5px solid #dc3545;
     animation: pulsoInstitucional 1.4s infinite;
-}
+} */
 
 /* Línea superior crítica */
-.card-alert::before{
+/* .card-alert::before{
     background: linear-gradient(90deg,
                 #680404,
                 #680404);
-}
+} */
 
 /* =========================================
    ANIMACIÓN PULSO INSTITUCIONAL INTENSO

@@ -69,10 +69,14 @@
                 @endif	
             </td>
         </tr>
-        <tr class="fila-dividida5">
+        <tr class="fila-dividida2">
             <td >
             <strong>DEPENDENCIA:</strong>
-            {{ $raton->Dependencia?->dependencias }}
+            {{ $audifono->Dependencia?->dependencias }}
+            </td>
+            <td >
+            <strong>NÚMERO DE RECEPCIÓN:</strong>
+            {{ $audifono->cod_registro }}
             </td>
         </tr>
         @else

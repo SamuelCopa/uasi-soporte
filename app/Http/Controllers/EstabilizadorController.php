@@ -24,6 +24,9 @@ use App\Services\NotificacionService;
 use App\Mail\TecnicoAsignado;
 use App\Services\EquipoPdfService;
 use Illuminate\Support\Facades\DB;
+use App\Models\Correlativo;
+use App\Services\CorrelativoService;
+
 class EstabilizadorController extends Controller
 {
     /**
@@ -87,7 +90,7 @@ public function index(Request $request): View
     /**
      * Store a newly created resource in storage.
      */
-    public function store(EstabilizadorRequest $request): RedirectResponse
+    public function store(Request $request, CorrelativoService $correlativoService)
     {
 
         $request->validate([
@@ -134,24 +137,42 @@ public function index(Request $request): View
         // Guardar los cambios
         $funcionario->save();
         
+    $estabilizador = DB::transaction(function () use (
+        $request,
+        $funcionario,
+        $correlativoService
+    ) {
+
         $estabilizador = new Estabilizador();
+
         $estabilizador->funcionario_id = $funcionario->id;
         $estabilizador->cargo = $request->input('cargo');
         $estabilizador->dependencia_id = $request->input('dependencia_id');
         $estabilizador->cod_gamea = $request->input('cod_gamea');
-        $estabilizador->marca = $request->input('marca');
+
+        // GENERAR CORRELATIVO
+        $estabilizador->cod_registro =
+            $correlativoService->generarNumeroRecepcion();
+
         $estabilizador->fecha = $request->input('fecha');
+        $estabilizador->marca = $request->input('marca');
         $estabilizador->modelo = $request->input('modelo');
         $estabilizador->falla = $request->input('falla');
         $estabilizador->observaciones = $request->input('observaciones');
-        $estabilizador->funcionario_activo = $request->input('funcionario_activo');
+        $estabilizador->funcionario_activo =
+        $request->input('funcionario_activo');
         $estabilizador->estado_id = $request->input('estado_id');
         $estabilizador->reguser_id = Auth::id();
-        
+
         $estabilizador->save();
 
-        return Redirect::route('estabilizadors.index')
-        ->with('success', 'REGISTRADO CORRECTAMENTE')         
+        return $estabilizador;
+    });
+
+    return redirect()
+        ->route('estabilizadors.index')
+        ->with('success', 'REGISTRADO CORRECTAMENTE')
+        ->with('text', 'Número de recepción: ' . $estabilizador->cod_registro)
         ->with('icono', 'success');
     }
 
@@ -450,7 +471,7 @@ public function enviar($id, EquipoPdfService $service)
         // =========================
         // ENVÍO DE NOTIFICACIÓN
         // =========================
-        if (in_array($estadoId, [2, 3, 4])) {
+        if (in_array($estadoId, [3, 4])) {
 
             $this->notificacionService->enviar(
                 $estabilizador->funcionario,
@@ -467,56 +488,6 @@ public function enviar($id, EquipoPdfService $service)
                 ? $estabilizador->resultado?->nombre
                 : $estabilizador->estado?->nombre
         ]);
-    }
-
-    public function updateRecepcion(Request $request, $id){
-
-   $request->validate([
-        'cod_registro' => [
-            'nullable',
-            function ($attribute, $value, $fail) {
-
-                if (empty($value)) {
-                    return;
-                }
-
-                $anio = date('Y');
-
-                $tablas = [
-                    'registro_cpus'   => 'CPU',
-                    'monitors'        => 'Monitor',
-                    'impresoras'      => 'Impresora',
-                    'laptops'         => 'Laptop',
-                    'teclados'        => 'Teclado',
-                    'ratons'          => 'Mouse',
-                    'upeses'          => 'UPS',
-                    'parlantes'       => 'Parlante',
-                    'audifonos'       => 'Audífono',
-                    'estabilizadors'  => 'Estabilizador',
-                ];
-
-                foreach ($tablas as $tabla => $nombre) {
-
-                    $existe = DB::table($tabla)
-                        ->where('cod_registro', $value)
-                        ->whereYear('created_at', $anio)
-                        ->exists();
-
-                    if ($existe) {
-                        $fail("El número de recepción ya está asignado a un {$nombre} en la gestión actual.");
-                        return;
-                    }
-                }
-            },
-        ],
-    ]);
-        $estabilizador = Estabilizador::find($id);
-        $estabilizador->cod_registro = $request->input('cod_registro');
-        $estabilizador->update();
-        return Redirect::route('estabilizadors.index')
-        ->with('success', 'REGISTRADO CORRECTAMENTE') 
-        ->with('text', 'Numero de recepción')          
-        ->with('icono', 'success');
     }
 
     public function updateTecnico(Request $request, $id){

@@ -16,20 +16,37 @@
     <!-- ENCABEZADO -->
 
     <div class="header">
+    <table width="100%">
+        <tr>
+            <td width="20%" align="center">
+                <img src="{{ public_path('img1/elalto.jpg') }}"
+                     width="65">
+            </td>
 
-        <h1>
-            GOBIERNO AUTÓNOMO MUNICIPAL DE EL ALTO
-        </h1>
+            <td width="60%" align="center">
+                <div class="titulo">
+                    <h2>GOBIERNO AUTÓNOMO MUNICIPAL DE EL ALTO</h2>
+                </div>
 
-        <h2>
-            UNIDAD DE ADMINISTRACIÓN DE SISTEMAS DE INFORMACIÓN
-        </h2>
+                <div class="subtitulo">
+                    <h2>INFORME DE ASIGNACIONES DE EQUIPOS</h2>
+                </div>
 
-        <div>
-            REPORTE DE EQUIPOS ASIGNADOS
-        </div>
+                <div class="subtitulo">
+                    @if($tipo === 'mes' && $nombreMes)
+                        PERIODO: {{ $nombreMes }} {{ $anio }}
+                    @else
+                        GESTIÓN {{ $anio }}
+                    @endif
+                </div>
+            </td>
 
+            <td width="20%">
+            </td>
+        </tr>
+    </table>
     </div>
+
 
 
     <!-- DATOS DEL REPORTE -->
@@ -49,117 +66,188 @@
             <td>
 
                 <strong>Período:</strong>
-
                 @if($tipo === 'mes')
-
                     {{ $nombreMes }} {{ $anio }}
-
                 @else
-
                     AÑO {{ $anio }}
-
                 @endif
-
             </td>
-
         </tr>
-
-
         <tr>
-
             <td>
                 <strong>Fecha de reporte:</strong>
                 {{ date('d/m/Y') }}
             </td>
-
             <td>
                 <strong>Hora:</strong>
                 {{ date('H:i') }}
             </td>
-
         </tr>
-
     </table>
+<!-- TABLA RESUMEN DE EQUIPOS -->
 
+@php
+    $totalRecepcionado = 0;
+    $totalEnProceso = 0;
+    $totalApersonarse = 0;
+    $totalConcluido = 0;
+    $totalEntregado = 0;
+    $totalGeneral = 0;
+@endphp
 
-    <!-- TABLAS DE EQUIPOS -->
+<table class="tabla">
+    <thead>
+        <tr>
+            <th>Tipo de equipo</th>
+            <th>Recepcionado</th>
+            <th>En proceso</th>
+            <th>Apersonarse</th>
+            <th>Concluido</th>
+            <th>Entregado</th>
+            <th>Total</th>
+        </tr>
+    </thead>
 
-    @foreach($datos as $item)
+    <tbody>
 
-        <div class="titulo-equipo">
-            {{ $item['titulo'] }}
-        </div>
+        @foreach($datos as $item)
 
+            @php
+                $recepcionado = 0;
+                $enProceso = 0;
+                $apersonarse = 0;
+                $concluido = 0;
+                $entregado = 0;
 
-        <table class="tabla">
+                foreach ($item['estados'] as $estado) {
 
-            <thead>
+                    $nombreEstado = strtoupper(trim($estado['estado']));
+                    $cantidad = $estado['cantidad'];
 
-                <tr>
+                    switch ($nombreEstado) {
 
-                    <th width="70%">
-                        Estado
-                    </th>
+                        case 'RECEPCIONADO':
+                            $recepcionado = $cantidad;
+                            break;
 
-                    <th width="30%">
-                        Cantidad
-                    </th>
+                        case 'EN PROCESO':
+                            $enProceso = $cantidad;
+                            break;
+                        case 'APERSONARSE':
+                            $apersonarse = $cantidad;
+                            break;
 
-                </tr>
+                        case 'CONCLUIDO':
+                            $concluido = $cantidad;
+                            break;
 
-            </thead>
+                        case 'ENTREGADO':
+                            $entregado = $cantidad;
+                            break;
+                    }
+                }
 
+                // Total por tipo de equipo
+                $totalEquipo =
+                    $recepcionado +
+                    $enProceso +
+                    $apersonarse +
+                    $concluido +
+                    $entregado;
 
-            <tbody>
+                // Acumulados generales
+                $totalRecepcionado += $recepcionado;
+                $totalEnProceso += $enProceso;
+                $totalApersonarse += $apersonarse;
+                $totalConcluido += $concluido;
+                $totalEntregado += $entregado;
+                $totalGeneral += $totalEquipo;
+            @endphp
 
-                @foreach($item['estados'] as $estado)
+            <tr>
 
-                    <tr>
+                <!-- Tipo de equipo -->
+                <td>
+                    <strong>{{ $item['titulo'] }}</strong>
+                </td>
 
-                        <td>
-                            {{ $estado['estado'] }}
-                        </td>
+                <!-- Recepcionado -->
+                <td class="cantidad">
+                    {{ $recepcionado }}
+                </td>
 
-                        <td class="cantidad">
-                            {{ $estado['cantidad'] }}
-                        </td>
+                <!-- En proceso -->
+                <td class="cantidad">
+                    {{ $enProceso }}
+                </td>
 
-                    </tr>
+                <!-- En proceso -->
+                <td class="cantidad">
+                    {{ $apersonarse }}
+                </td>
 
-                @endforeach
+                <!-- Concluido -->
+                <td class="cantidad">
+                    {{ $concluido }}
+                </td>
 
+                <!-- Entregado -->
+                <td class="cantidad">
+                    {{ $entregado }}
+                </td>
 
-                <!-- TOTAL -->
+                <!-- Total por fila -->
+                <td class="cantidad">
+                    <strong>{{ $totalEquipo }}</strong>
+                </td>
 
-                <tr class="fila-total">
+            </tr>
 
-                    <td>
-                        <strong>
-                            TOTAL {{ $item['titulo'] }}
-                        </strong>
-                    </td>
+        @endforeach
 
-                    <td class="cantidad">
+        <!-- TOTAL GENERAL -->
 
-                        <strong>
-                            {{ $item['total'] }}
-                        </strong>
-
-                    </td>
-
-                </tr>
-
-            </tbody>
-
-        </table>
-
-    @endforeach
-
+        <tr class="fila-total">
+            <td><strong>TOTAL GENERAL</strong></td>
+            <td class="cantidad">
+                <strong>{{ $totalRecepcionado }}</strong>
+            </td>
+            <td class="cantidad">
+                <strong>{{ $totalEnProceso }}</strong>
+            </td>
+            <td class="cantidad">
+                <strong>{{ $totalApersonarse }}</strong>
+            </td>
+            <td class="cantidad">
+                <strong>{{ $totalConcluido }}</strong>
+            </td>
+            <td class="cantidad">
+                <strong>{{ $totalEntregado }}</strong>
+            </td>
+            <td class="cantidad">
+                <strong>{{ $totalGeneral }}</strong>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
     <!-- PIE DEL REPORTE -->
 
- 
     <style>
+    .header table {
+        width: 100%;
+        border: none;
+        border-collapse: collapse;
+    }
+
+    .header table tr,
+    .header table td {
+        border: none !important;
+    }
+
+    .header td {
+        padding: 0;
+    }
         body {
     font-family: DejaVu Sans, sans-serif;
     font-size: 11px;
@@ -190,13 +278,16 @@
     padding: 5px;
 }
 
-.titulo-equipo {
-    background-color: #0052cc;
-    color: white;
-    font-weight: bold;
-    padding: 7px;
-    margin-top: 12px;
-}
+    .titulo {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .subtitulo {
+        font-size: 11px;
+        font-weight: bold;
+        margin-top: 3px;
+    }
 
 .tabla {
     width: 100%;

@@ -30,13 +30,6 @@
                             <table id="mitabla" class="table table-modern align-middle">
 
                                 <thead>
-                                    <!-- Encabezado agrupado -->
-                                    <tr class="table-group-header text-center">
-                                        <th colspan="8" class="color2">DATOS DEL SOLICITANTE</th>
-                                        <th colspan="3" class="color3">ASIGNACIÓN</th>
-                                        <th colspan="3" class="color2">CONTROL</th>
-                                    </tr>
-
                                     <!-- Encabezado principal -->
                                     <tr class="text-center">
                                         <th>#</th>
@@ -56,41 +49,34 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($upeses as $upese)
+                                     @foreach ($upeses as $upese)
                                         <tr>
-                                            <td>{{ ++$i }}</td>
+                                            <td class="text-center">{{ ++$i }}</td>
                                             <td>
                                                 @if($upese->fecha)
-                                                {{ date('d-m-Y H:i',strtotime($upese->fecha))}}<br><br>
-                                                    @role('Administrador')
-                                                    @if(!($upese->estado_id == '5'))
-                                                        @php
-                                                        $dias = floor(\Carbon\Carbon::parse($upese->fecha)->diffInDays(\Carbon\Carbon::now()));
-                                                        @endphp
-                                                        <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Días transcurridos desde la recepción">
-                                                        {{ $dias }} DÍAS TRANSCURRIDOS
-                                                        </button>
-                                                    @endif
-                                                    @endrole
+                                                {{date('d-m-Y H:i',strtotime($upese->fecha))}}<br><br>
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
+                                                            @if(!($upese->estado_id == '5'))
+                                                                @php
+                                                                $dias = floor(\Carbon\Carbon::parse($upese->fecha)->diffInDays(\Carbon\Carbon::now()));
+                                                                @endphp
+                                                                <button 
+                                                                class="btn btn-sm btn-estado"
+                                                                data-dias="{{ $dias }}"
+                                                                title="Días transcurridos desde la recepción">
+                                                                {{ $dias }} DÍAS 
+                                                                </button>
+                                                            @endif
+                                                        @endif
                                                 @elseif(! $upese->fecha)	
                                                 {{ $upese->fecha ?? ''}}
                                                 @endif
-                                                @role('Administrador')
-                                                @if(floor(\Carbon\Carbon::parse($upese->fecha)->diffInDays(\Carbon\Carbon::now())) <= 30 )
-                                                    @if(!$upese->boton_oculto && $upese->estado_id != '5')
-                                                        <div class="div title">
-                                                            <form class="actualizarFecha" method="POST" action="{{ route('ups.fecha',['id'=>$upese->id]) }}" role="form" enctype="multipart/form-data">
-                                                                {{ method_field('PATCH') }}
-                                                                @csrf
-                                                                <input type="hidden" name="fecha" class="form-control @error('fecha') is-invalid @enderror" value="{{ old('fecha', date('Y-m-d\TH:i:s'))}}" id="fecha">
-                                                                <button type="submit" class="btn btn-primary btn-sm" title="Este botón registra la fecha actual">ACTUALIZAR FECHA</button>
-                                                            </form>
-                                                        </div>
-                                                    @endif
-                                                @endif 
-                                                @endrole	                                           
-                                            </td> 
-                                            <td >{{ $upese->funcionario?->nombre }} {{ $upese->funcionario?->paterno }} {{ $upese->funcionario?->materno }}</td>
+                                          
+                                            </td>
+                                            <td >{{ $upese->funcionario?->nombre}} {{ $upese->funcionario?->paterno}} {{ $upese->funcionario?->materno}}</td>
                                             <td >{{ $upese->funcionario?->ci }} {{ $upese->funcionario?->expedido }}</td>
                                             <td >{{ $upese->funcionario?->celular }}</td>
                                             @if(! $upese->cargo == '')
@@ -103,29 +89,34 @@
                                             @else
                                             <td >{{ 'SIN DEPENDENCIA'}}</td>
                                             @endif
-                                            <td >{{ $upese->cod_gamea }}</td>
-                                            @if (auth()->user()->hasRole('Administrador')) 											
+                                            <td >{{ $upese->cod_gamea }}</td>	
+
+
+                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                'Administrador',
+                                                'SuperAdministrador'
+                                            ]))								
                                                 <td class="{{ empty($upese->cod_registro) ? 'color1' : '' }}" >
                                                     @if($upese->cod_registro)
-                                                    {{ $upese->cod_registro}}
+                                                    {{$upese->cod_registro }}
                                                     @elseif(! $upese->cod_registro)	
-                                                    <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eRecepcion{{ $upese->id }}">{{ __( 'REGISTRAR NÚMERO DE RECEPCIÓN' ) }}</button>
+                                                    <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eRecepcion{{ $upese->id }}">{{ __( 'REGISTRAR NUMERO DE RECEPCIÓN' ) }}</button>
                                                     @endif
                                                 </td> 
                                                 <td class="{{ empty($upese->user_id) ? 'color1' : '' }}">
                                                     @if($upese->cod_registro)
                                                         @if($upese->user_id)
-                                                        {{ $upese->user->name ?? ''}} {{ $upese->user->paterno}} {{ $upese->user->materno}}
-                                                        @elseif(! $upese->user_id)	
+                                                        {{ $upese->user->name}} {{ $upese->user->paterno}} {{ $upese->user->materno}}
+                                                        @elseif(! $upese->user_id)
                                                         <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eTecnico{{ $upese->id }}">{{ __('ASIGNAR TECNICO') }}</button>
                                                         @endif
                                                     @elseif(! $upese->cod_registro)	
-                                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NÚMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('ASIGNAR TECNICO') }}</button>
+                                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NUMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('ASIGNAR TECNICO') }}</button>
                                                     @endif
                                                 </td>
                                                 <td class="{{ empty($upese->fecha_asignacion) ? 'color1' : '' }}">
                                                     @if($upese->fecha_asignacion)
-                                                    {{ date('d-m-Y H:i',strtotime($upese->fecha_asignacion ))}}<br><br>
+                                                    {{ date('d-m-Y H:i',strtotime($upese->fecha_asignacion ))}}<BR><BR>
                                                     @if(!($upese->estado_id == '5') && !($upese->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($upese->fecha_asignacion)->diffInDays(\Carbon\Carbon::now()));
@@ -136,11 +127,11 @@
                                                     @endif
                                                     @elseif(! $upese->fecha_asignacion)	
                                                     <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('FECHA DE ASIGNACIÓN') }}</button>
-                                                    @endif								
-                                                </td>
+                                                    @endif							
+                                                </td>	
                                                 <td class="{{ empty($upese->fecha_inicio) ? 'color1' : '' }}">
                                                     @if($upese->fecha_inicio)
-                                                    {{ date('d-m-Y H:i',strtotime($upese->fecha_inicio ))}}<br><br>
+                                                    {{ date('d-m-Y H:i',strtotime($upese->fecha_inicio ))}}<BR><BR>
                                                     @if(!($upese->estado_id == '5') && !($upese->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($upese->fecha_inicio)->diffInDays(\Carbon\Carbon::now()));
@@ -151,9 +142,9 @@
                                                     @endif
                                                     @elseif(! $upese->fecha_inicio)	
                                                     <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'EN ESPERA DEL INICIO DEL TRABAJO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('EN ESPERA') }}</button>
-                                                    @endif								
-                                                </td>
-                                            @else
+                                                    @endif							
+                                                </td>	
+                                            @else 
                                             {{-- ----------------------------------------------------------------- --}}
                                                 <td class="{{ empty($upese->cod_registro) ? 'color1' : '' }}" >
                                                     @if($upese->cod_registro)
@@ -184,43 +175,200 @@
                                                     @endif								
                                                 </td>
                                             @endif										
-                                            <td >
-                                                @if(!empty($upese->cod_registro) && !empty($upese->user_id) && !empty($upese->fecha_asignacion) || $upese->estado_id != '1')
+                                            <td>
+                                                @if(
+                                                    (!empty($upese->cod_registro) &&
+                                                    !empty($upese->user_id) &&
+                                                    !empty($upese->fecha_asignacion))
+                                                    ||
+                                                    $upese->estado_id != '1'
+                                                )
+
                                                     @if($upese->estado_id == '1')
-                                                        <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') title="Actualizar estado" data-id="{{ $upese->id }}" onclick="cambiarEstado({{ $upese->id }},{{ $upese->estado_id }}, {{ $upese->resultado_id ? 'true' : 'false' }} )"@endrole>RECEPCIONADO</button>
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $upese->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $upese->id }},
+                                                                    {{ $upese->estado_id }},
+                                                                    {{ $upese->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
                                                     @elseif($upese->estado_id == '2')
-                                                        <button class="btn btn-warning btn-raised"@role('Administrador') title="Actualizar estado" data-id="{{ $upese->id }}" onclick="cambiarEstado({{ $upese->id }}, {{ $upese->estado_id }}, {{ $upese->resultado_id ? 'true' : 'false' }} )"@endrole>EN PROCESO</button>
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            class="btn btn-warning btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $upese->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $upese->id }},
+                                                                    {{ $upese->estado_id }},
+                                                                    {{ $upese->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            EN PROCESO
+                                                        </button>
+
+
                                                     @elseif($upese->estado_id == '3')
-                                                        <button class="btn btn-danger btn-raised"@role('Administrador') title="Actualizar estado" data-id="{{ $upese->id }}" onclick="cambiarEstado({{ $upese->id }}, {{ $upese->estado_id }}, {{ $upese->resultado_id ? 'true' : 'false' }} )"@endrole>APERSONARSE CON EL TECNICO</button>
+
+                                                        <button
+                                                            class="btn btn-danger btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $upese->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $upese->id }},
+                                                                    {{ $upese->estado_id }},
+                                                                    {{ $upese->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            APERSONARSE CON EL TECNICO
+                                                            {{ $upese->resultado?->nombre }}
+                                                        </button>
+
+
                                                     @elseif($upese->estado_id == '4')
-                                                        <button class="btn btn-success btn-raised"@role('Administrador') title="Actualizar estado" data-id="{{ $upese->id }}" onclick="cambiarEstado({{ $upese->id }}, {{ $upese->estado_id }}, {{ $upese->resultado_id ? 'true' : 'false' }} )"@endrole>CONCLUIDO</button>
+
+                                                        <button
+                                                            class="btn btn-success btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $upese->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $upese->id }},
+                                                                    {{ $upese->estado_id }},
+                                                                    {{ $upese->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            CONCLUIDO
+                                                        </button>
+
+
                                                     @elseif($upese->estado_id == '5')
-                                                {{-- ---------------------------------------RESULTADO FINAL--------------------------------------------}}
-                                                    @if($upese->resultado_id == '1')
-                                                    <button class="boton300 badge-devolucion">
-                                                    {{ $upese->resultado?->nombre }}<br>  {{ date('d-m-Y H:i:s',strtotime($upese->fecha_entrega ))}}</button>
-                                                    @elseif($upese->resultado_id == '2')
-                                                    <button class="boton300 badge-reposicion">
-                                                    {{ $upese->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($upese->fecha_entrega ))}}</button>
-                                                    @elseif($upese->resultado_id == '3')
-                                                    <button class="boton300  badge-repliegue">
-                                                        {{ $upese->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($upese->fecha_entrega ))}}</button>
-                                                    @elseif($upese->resultado_id == '4')
-                                                    <button class="boton300  badge-custodio">
-                                                        {{ $upese->resultado?->nombre }}  <br>  {{ date('d-m-Y H:i:s',strtotime($upese->fecha_entrega ))}}</button>
-                                                    @elseif($upese->resultado_id == '5')
-                                                    <button class="boton300  badge-baja" >
-                                                        {{ $upese->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($upese->fecha_entrega ))}}</button>
+
+                                                        {{-- ---------------------------------------RESULTADO FINAL-------------------------------------------- --}}
+
+                                                        @if($upese->resultado_id == '1')
+
+                                                            <button class="boton300 badge-devolucion">
+                                                                {{ $upese->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($upese->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($upese->resultado_id == '2')
+
+                                                            <button class="boton300 badge-reposicion">
+                                                                {{ $upese->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($upese->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($upese->resultado_id == '3')
+
+                                                            <button class="boton300 badge-repliegue">
+                                                                {{ $upese->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($upese->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($upese->resultado_id == '4')
+
+                                                            <button class="boton300 badge-custodio">
+                                                                {{ $upese->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($upese->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($upese->resultado_id == '5')
+
+                                                            <button class="boton300 badge-baja">
+                                                                {{ $upese->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($upese->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @endif
+
                                                     @endif
-                                                    @endif
-                                                @else  
-                                                    @if(empty($upese->cod_registro))
-                                                    <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') data-id="{{ $upese->id }}" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NÚMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                                    @elseif(empty($upese->user_id))
-                                                    <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') data-id="{{ $upese->id }}" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
+
+
+                                                @else
+
+                                                    @if(empty($upese->user_id))
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $upese->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UN TECNICO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
                                                     @elseif(empty($upese->fecha_asignacion))
-                                                    <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') data-id="{{ $upese->id }}" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UNA FECHA DE INICIO', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $upese->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UNA FECHA DE INICIO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
                                                     @endif
+
                                                 @endif
                                                 <form id="form-cambiar-estado" method="POST" action="{{ route('estado-ups') }}">
                                                     @csrf
@@ -252,7 +400,10 @@
                                                             <i class="fa fa-eye"></i> VER
                                                         </button>
 
-                                                        @role('Administrador')
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
                                                         <!-- EDITAR -->
                                                         <button type="button" data-toggle="modal" data-target="#editar{{ $upese->id }}"
                                                                 class="dropdown-card card-success">
@@ -274,7 +425,7 @@
                                                                 <i class="fa fa-trash"></i> ELIMINAR
                                                             </button>
                                                         </form>
-                                                        @endrole
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </td>
@@ -392,15 +543,19 @@ function cambiarEstado(id, estadoId, tieneResultado) {
 }
 
 function cambiarEstadoAjax(id, estado_id) {
-let texto, botonConfirm;
 
-if (estado_id == 5) {
-    texto = "¿Quieres cambiar el estado?";
-    botonConfirm = "Sí, cambiar";
-} else {
-    texto = "¿Quieres cambiar el estado y enviar alerta?";
-    botonConfirm = "Sí, cambiar y enviar alerta!";
-}
+    let texto, botonConfirm;
+
+    if ([2, 3, 5].includes(Number(estado_id))) {
+
+        texto = "¿Quieres cambiar el estado?";
+
+        botonConfirm = "Sí, cambiar";
+
+    } else {
+        texto = "¿Quieres cambiar el estado y enviar alerta?";
+        botonConfirm = "Sí, cambiar y enviar alerta!";
+    }
 
 // Llamada a SweetAlert
 Swal.fire({

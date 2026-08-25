@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Funcionario;
+use Illuminate\Support\Str;
 
 class ServicioController extends Controller
 {
@@ -48,13 +49,11 @@ public function index(Request $request): View
     public function store(Request $request)
     {
             $request->validate([
-            'servicio' => 'required',
             'equipo' => 'required',
             'falla' => 'required',
         ]);
 
         Servicio::create([
-        'servicio' => $request->servicio,
         'equipo' => $request->equipo,
         'falla' => $request->falla,
         'visto' => false,
@@ -141,5 +140,33 @@ public function index(Request $request): View
         ->with('success', 'ASIGNADO CORRECTAMENTE')   
         ->with('icono', 'success');   
     }
+
+public function atender(Request $request, $id)
+{
+    $request->validate([
+        'puntuacion' => 'required|integer|min:1|max:5',
+    ]);
+
+    $servicio = Servicio::findOrFail($id);
+    $servicio -> servicio = $request->servicio;
+    $servicio->puntuacion = $request->puntuacion;
+    $servicio->visto = 1;
+    $servicio->fecha_atencion = now();
+
+    $servicio->save();
+
+return redirect()->back()
+    ->with('success', 'La solicitud fue atendida correctamente')
+    ->with('text', 'Gracias por su opinión')
+    ->with('icono', 'success');
+}
+
+
+public function evaluar($id)
+{
+    $asignacion = Servicio::findOrFail($id);
+
+    return view('asigTecnico.evaluar', compact('asignacion'));
+}
 
 }

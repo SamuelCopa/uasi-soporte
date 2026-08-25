@@ -33,7 +33,7 @@ class UserController extends Controller
         // return view('user.index', compact('users'))
         //     ->with('i', ($request->input('page', 1) - 1) * $users->perPage());
         $users = User::whereHas('roles', function ($query) {
-            $query->where('name', 'Administrador')->orWhere('name', 'Usuario');
+            $query->where('name', 'Administrador')->orWhere('name', 'superAdministrador');
         })->paginate();
         $roles = Role:: all();
         $estados = EstadoUsuario:: all();

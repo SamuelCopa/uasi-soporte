@@ -24,9 +24,7 @@
                       {!! $errors->first('name', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                   </div>
                   <div class="form-group mb-2 mb20">
-                      {{-- <label for="guard_name" class="form-label">{{ __('Guard Name') }}</label> --}}
-                      <input type="hidden" name="guard_name" class="form-control @error('guard_name') is-invalid @enderror" id="guard_name" placeholder="Guard Name">
-                      {!! $errors->first('guard_name', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+                      <input type="hidden" name="guard_name" value="web">
                   </div>
               </div>
               <div class="modal-footer">

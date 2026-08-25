@@ -58,21 +58,11 @@
                                                 <td class="{{ empty($teclado->fecha_asignacion) ? 'color1' : '' }}">
                                                     @if($teclado->fecha_asignacion)
                                                     {{ date('d-m-Y H:i',strtotime($teclado->fecha_asignacion ))}}
-                                                        @if(!($teclado->estado_id == '5') && !($teclado->estado_id == '4'))
-                                                        <button class="btn btn-sm btn-danger boton-parpadea" title="Dias transcurridos desde la fecha de asignación">
-                                                        {{ floor(\Carbon\Carbon::parse($teclado->fecha_asignacion)->diffInDays(\Carbon\Carbon::now())) }} DÍAS TRANSCURRIDOS
-                                                        </button>
-                                                        @endif
                                                     @endif									
                                                 </td>
                                                 <td class="{{ empty($teclado->fecha_inicio) ? 'color1' : '' }}">
                                                     @if($teclado->fecha_inicio)
                                                     {{ date('d-m-Y H:i',strtotime($teclado->fecha_inicio ))}}
-                                                    @if(!($teclado->estado_id == '5') && !($teclado->estado_id == '4'))
-                                                    <button class="btn btn-sm btn-info boton-parpadea" title="Dias transcurridos desde la fecha de inico de la reparación">
-                                                    {{ floor(\Carbon\Carbon::parse($teclado->fecha_inicio)->diffInDays(\Carbon\Carbon::now())) }} DÍAS TRANSCURRIDOS
-                                                    </button>
-                                                @endif
                                                     @elseif(! $teclado->fecha_inicio)	
                                                     <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'EN ESPERA DEL INICIO DEL TRABAJO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('FECHA DE INICIO') }}</button>
                                                     @endif									

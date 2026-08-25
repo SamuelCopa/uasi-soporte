@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Dependencia;
 use App\Models\Funcionario;
+use Illuminate\Support\Str;
+use App\Models\User;
+
 /**
  * Class Servicio
  *
@@ -31,6 +34,7 @@ class Servicio extends Model
 {
     
     protected $perPage = 1000;
+    
         use SoftDeletes;
         use Auditable;
 
@@ -41,6 +45,21 @@ class Servicio extends Model
      */
     protected $fillable = ['servicio', 'equipo', 'falla', 'user_id', 'visto', 'dependencia_id', 'funcionario_id'];
 
+    protected static function booted()
+{
+    static::creating(function ($servicio) {
+
+        if (!$servicio->token_evaluacion) {
+            $servicio->token_evaluacion = Str::random(64);
+        }
+
+    });
+}
+
+public function tecnico()
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
     public function servicios()
     {
         return $this->hasMany(Servicio::class);

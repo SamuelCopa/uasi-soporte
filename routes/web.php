@@ -61,6 +61,8 @@ use App\Http\Controllers\SeguimientoController;
 use App\Http\Controllers\InicioController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\RegistroController;
+use App\Http\Controllers\OtrosEquipoController;
+use App\Http\Controllers\TiposEquipoController;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -83,10 +85,26 @@ Route::get('/hay-pendientes', function () {
     ]);
 })->middleware('auth');
 
-// --------------------------------------------------------------------------------------------------------
+// --------------------PARA SELECCIONAR EQUIPOS----------------------------------------------------------------------------------
+Route::get(
+    '/otros-equipos/por-tipo/{tipo}',
+    [OtrosEquipoController::class, 'porTipo']
+)->name('otros-equipos.porTipo');
+Route::get('/otros-equipos/filtrar', [OtrosEquipoController::class, 'filtrar'])->name('otros-equipos.filtrar');
+Route::get('/equipos/por-tipo/{tipo}',[OtrosEquipoController::class, 'porTipo'])->name('equipos.porTipo');
 
+// --------------------REGISTRAR TIPO DE EQUIPO----------------------------------------------------------------------------------
+
+Route::post('/tipos-equipos', [TiposEquipoController::class, 'store'])->name('tipos-equipos.store')->middleware('auth');
+
+// --------------------PARA API REST-----------------------------------------------------------------------------------
+Route::middleware('auth:sanctum')->group(function () {
+Route::apiResource('cpus', RegistroCpuController::class);});
+
+// -----------------------------REPORTES DE ASIGANCIONES A TECNICOS--------------------------------------------------------------------------
 Route::get('/asignaciones/{user}/pdf', [PanelController::class, 'reportePdf'])->name('admin.asignaciones.pdf');
 Route::get('/asignaciones2/{user}/pdf', [PanelController::class, 'reportePdf2'])->name('admin.asignaciones2.pdf');
+Route::get('/tecnicos/reporte-general',[TecnicoController::class, 'reporteGeneralPdf'])->name('tecnicos.reporteGeneral');
 
 // --------------------------------------------------------------------------------------------------------
 Route::get('/panel', [DashboardController::class, 'vistas'])->name('panel');
@@ -94,6 +112,7 @@ Route::get('/panel', [DashboardController::class, 'vistas'])->name('panel');
 Route::resource('configuracions', ConfiguracionController::class)->middleware('auth');
 
 Route::get('/buscarFuncionario',[App\Http\Controllers\FuncionarioController::class,'buscarFuncionario'])->name('buscarFuncionario');
+Route::get('/buscarEquipo',[App\Http\Controllers\OtrosEquipoController::class,'buscarEquipo'])->name('buscarEquipo');
 Route::get('/buscaMouse',[App\Http\Controllers\RatonController::class,'buscaMouse'])->name('buscaMouse');
 Route::get('/buscaImpresora',[App\Http\Controllers\ImpresoraController::class,'buscaImpresora'])->name('buscaImpresora');
 Route::get('/buscaTeclado',[App\Http\Controllers\TecladoController::class,'buscaTeclado'])->name('buscaTeclado');
@@ -156,6 +175,7 @@ Route::get('/admin/asigLaptop/{id}', [TecnicoController::class, 'tecnicoLaptop']
 
 
 //------------------CREAR INFORMES WORD------------------------------------
+Route::get('/informe/equipo/{id}', [InformesController::class, 'crearInformeEquipo'])->name('informe.equipo')->middleware('auth');
 Route::get('/informe/cpu/{id}', [InformesController::class, 'crearInformeCpu'])->name('informe.cpu')->middleware('auth');
 Route::get('/informe/impresora/{id}', [InformesController::class, 'crearInformeImpresora'])->name('informe.impresora')->middleware('auth');
 Route::get('/informe/audifono/{id}', [InformesController::class, 'crearInformeAudifono'])->name('informe.audifono')->middleware('auth');
@@ -190,8 +210,25 @@ Route::get('/asignaciones/estabilizador', [DashboardController::class, 'asignaci
 Route::get('/asignaciones/ups', [DashboardController::class, 'asignacionesUps'])->name('asignaciones.ups')->middleware('auth');
 Route::get('/asignaciones/laptop', [DashboardController::class, 'asignacionesLaptop'])->name('asignaciones.laptop')->middleware('auth');
 
-//---------------------------------
+//---------------------------------ASIGNACIONES DE ASITENCIA TECNICA A TECNICOS-----------
+Route::get('/asignaciones/asistencia', [TecnicoController::class, 'asignacionesAsistencia'])->name('asignaciones.asistencia')->middleware('auth');
+Route::put('/asignacion/{id}/atender', [ServicioController::class, 'atender'])->name('asignacion.atender')->middleware('auth');
 
+
+Route::get('/evaluar/{token}', [TecnicoController::class, 'evaluar'])->name('asignacion.evaluar');
+
+
+Route::get('/evaluar', [TecnicoController::class, 'buscarEvaluacion'])->name('evaluacion.buscar');
+
+Route::post('/evaluar', [TecnicoController::class, 'mostrarEvaluacion'])->name('evaluacion.mostrar');
+
+Route::get('/evaluar/{id}', [TecnicoController::class, 'evaluar'])->name('asignacion.evaluar');
+
+Route::post('/evaluar/guardar', [TecnicoController::class, 'guardarEvaluacion'])->name('evaluacion.guardar');
+
+//---------------------------------
+Route::resource('otros-equipos', OtrosEquipoController::class);
+Route::resource('tipos-equipos', TiposEquipoController::class);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('auth');
 Route::resource('registros', RegistroController::class)->middleware('auth');
 Route::resource('color-cases', ColorCaseController::class)->middleware('auth');
@@ -257,6 +294,7 @@ Route::patch('/ups/{id}', [App\Http\Controllers\UpeseController::class,'updateRe
 Route::patch('/upsT/{id}', [App\Http\Controllers\UpeseController::class,'updateTecnico'])->name('ups.tecnico')->middleware('auth');
 Route::patch('/laptop/{id}', [App\Http\Controllers\LaptopController::class,'updateRecepcion'])->name('laptop.recepcion')->middleware('auth');
 Route::patch('/laptopT/{id}', [App\Http\Controllers\LaptopController::class,'updateTecnico'])->name('laptop.tecnico')->middleware('auth');
+Route::patch('/equipoT/{id}', [App\Http\Controllers\OtrosEquipoController::class,'updateTecnico'])->name('equipo.tecnico')->middleware('auth');
 Route::patch('/servicioT/{id}', [App\Http\Controllers\ServicioController::class,'updateTecnico'])->name('servicio.tecnico')->middleware('auth');
 
 // ------------------BOTON ACTUALIZAR FECHA----------------------
@@ -275,6 +313,10 @@ Route::patch('/laptopF/{id}', [App\Http\Controllers\LaptopController::class,'upd
 Route::get('/seguimiento', [SeguimientoController::class, 'buscar'])->name('seguimiento.buscar');
 
 // ----------------------FORMULARIO PDF-------------------
+
+Route::get('pdf/equipo/{id}', [App\Http\Controllers\OtrosEquipoController::class, 'generarPdf'])->name('pdf.equipo.preview');
+Route::get('/pdf/equipo/{id}/descargar', [OtrosEquipoController::class, 'descargar'])->name('pdf.equipo.descargar');
+Route::post('/pdf/equipo/{id}/enviar', [OtrosEquipoController::class, 'enviar'])->name('pdf.equipo.enviar');
 
 Route::get('pdf/audifono/{id}', [App\Http\Controllers\AudifonoController::class, 'generarPdf'])->name('pdf.audifono.preview');
 Route::get('/pdf/audifono/{id}/descargar', [AudifonoController::class, 'descargar'])->name('pdf.audifono.descargar');
@@ -309,6 +351,7 @@ Route::post('/pdf/parlante/{id}/enviar', [ParlanteController::class, 'enviar'])-
 
 
 // ----------- ESTADOS DE PROCESOS -------------------
+Route::post('/estado-equipo',[App\Http\Controllers\OtrosEquipoController::class,'cambiarEstado'])->name('estado-equipo')->middleware('auth');
 Route::post('/estado-audifono',[App\Http\Controllers\AudifonoController::class,'cambiarEstado'])->name('estado-audifono')->middleware('auth');
 Route::post('/estado-impresora',[App\Http\Controllers\ImpresoraController::class,'cambiarEstado'])->name('estado-impresora')->middleware('auth');
 Route::post('/estado-teclado',[App\Http\Controllers\TecladoController::class,'cambiarEstado'])->name('estado-teclado')->middleware('auth');
@@ -321,6 +364,15 @@ Route::post('/estado-cpu',[App\Http\Controllers\RegistroCpuController::class,'ca
 Route::post('/estado-laptop',[App\Http\Controllers\LaptopController::class,'cambiarEstado'])->name('estado-laptop')->middleware('auth');
 
 // ----------------REPORTES----------
+
+Route::get('/repYear-equipo',[App\Http\Controllers\OtrosEquipoController::class,'searchYearEquipo'])->name('repyear.equipo')->middleware('auth');
+Route::get('/searchEquipo', [App\Http\Controllers\OtrosEquipoController::class,'searchEquipo'])->name('search.Equipo');
+Route::get('/repFecha-equipo',[App\Http\Controllers\OtrosEquipoController::class,'search'])->name('repFecha.equipo')->middleware('auth');
+Route::get('/pdfEquipos',[App\Http\Controllers\OtrosEquipoController::class,'pdfEquipo'])->name('pdf.Equipos')->middleware('auth');
+Route::get('/pdfFechaEquipo',[App\Http\Controllers\OtrosEquipoController::class,'fechaPdf'])->name('pdf.fechaequipo')->middleware('auth');
+Route::get('/pdfYearEquipo',[App\Http\Controllers\OtrosEquipoController::class,'pdfEquipoYear'])->name('pdf.Yearequipo')->middleware('auth');
+
+
 Route::get('/reportes', function () {return view('reportes.reporte');})->name('reportes')->middleware('auth');
 Route::get('/reportes',[App\Http\Controllers\DashboardController::class,'reportes'])->name('reportes')->middleware('auth');
 Route::get('/repFecha-audifono',[App\Http\Controllers\AudifonoController::class,'search'])->name('repFecha.audifono')->middleware('auth');

@@ -12,8 +12,8 @@
 
 /* Encabezado */
 .table-modern thead {
-  background: #1f3c88; /* azul institucional */
-  color: #ffffff;
+  background: #c9cdd8; 
+
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.5px;
@@ -21,8 +21,7 @@
 
 /* Pie de tabla */
 .table-modern tfoot {
-  background: #1f3c88;
-  color: #ffffff;
+  background: #c9cdd8;
   font-size: 0.75rem;
 }
 

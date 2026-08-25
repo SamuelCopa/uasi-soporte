@@ -30,13 +30,6 @@
                             <table id="mitabla" class="table table-modern align-middle">
 
                                 <thead>
-                                    <!-- Encabezado agrupado -->
-                                    <tr class="table-group-header text-center">
-                                        <th colspan="8" class="color2">DATOS DEL SOLICITANTE</th>
-                                        <th colspan="3" class="color3">ASIGNACIÓN</th>
-                                        <th colspan="3" class="color2">CONTROL</th>
-                                    </tr>
-
                                     <!-- Encabezado principal -->
                                     <tr class="text-center">
                                         <th>#</th>
@@ -58,74 +51,72 @@
                                 <tbody>
                                     @foreach ($ratons as $raton)
                                         <tr>
-                                            <td>{{ ++$i }}</td>
+                                            <td class="text-center">{{ ++$i }}</td>
                                             <td>
                                                 @if($raton->fecha)
-                                                    {{ date('d-m-Y H:i',strtotime($raton->fecha))}} <br><br>
-                                                    @role('Administrador')
-                                                    @if(!($raton->estado_id == '5'))
-                                                        @php
-                                                        $dias = floor(\Carbon\Carbon::parse($raton->fecha)->diffInDays(\Carbon\Carbon::now()));
-                                                        @endphp
-                                                        <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Días transcurridos desde la recepción">
-                                                        {{ $dias }} DÍAS TRANSCURRIDOS
-                                                        </button>
-                                                    @endif
-                                                    @endrole
+                                                {{date('d-m-Y H:i',strtotime($raton->fecha))}}<br><br>
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
+                                                            @if(!($raton->estado_id == '5'))
+                                                                @php
+                                                                $dias = floor(\Carbon\Carbon::parse($raton->fecha)->diffInDays(\Carbon\Carbon::now()));
+                                                                @endphp
+                                                                <button 
+                                                                class="btn btn-sm btn-estado"
+                                                                data-dias="{{ $dias }}"
+                                                                title="Días transcurridos desde la recepción">
+                                                                {{ $dias }} DÍAS 
+                                                                </button>
+                                                            @endif
+                                                        @endif
                                                 @elseif(! $raton->fecha)	
-                                                    {{ $raton->fecha ?? ''}}
-                                                @endif	 
-                                                @role('Administrador')
-                                                @if(floor(\Carbon\Carbon::parse($raton->fecha)->diffInDays(\Carbon\Carbon::now())) <= 30 )
-                                                    @if(!$raton->boton_oculto && $raton->estado_id != '5')
-                                                        <div class="div title">
-                                                            <form class="actualizarFecha" method="POST" action="{{ route('mouse.fecha',['id'=>$raton->id]) }}" role="form" enctype="multipart/form-data">
-                                                                {{ method_field('PATCH') }}
-                                                                @csrf
-                                                                <input type="hidden" name="fecha" class="form-control @error('fecha') is-invalid @enderror" value="{{ old('fecha', date('Y-m-d\TH:i:s'))}}" id="fecha">
-                                                                <button type="submit" class="btn btn-primary btn-sm" title="Este botón registra la fecha actual">ACTUALIZAR FECHA</button>
-                                                            </form>
-                                                        </div>
-                                                    @endif
-                                                @endif  
-                                                @endrole                                          
-                                            </td> 
-                                            <td >{{ $raton->funcionario?->nombre }} {{ $raton->funcionario?->paterno }} {{ $raton->funcionario?->materno }}</td>
+                                                {{ $raton->fecha ?? ''}}
+                                                @endif
+                                          
+                                            </td>
+                                            <td >{{ $raton->funcionario?->nombre}} {{ $raton->funcionario?->paterno}} {{ $raton->funcionario?->materno}}</td>
                                             <td >{{ $raton->funcionario?->ci }} {{ $raton->funcionario?->expedido }}</td>
+                                            <td >{{ $raton->funcionario?->celular }}</td>
                                             @if(! $raton->cargo == '')
                                                 <td >{{ $raton->cargo }}</td>
                                             @else
                                                 <td >{{ 'EX FUNCIONARIO'}}</td>
                                             @endif	
-                                            <td >{{ $raton->funcionario?->celular }}</td>
                                             @if(! $raton->dependencia_id == '')
                                             <td >{{ $raton->Dependencia?->dependencias }}</td>
                                             @else
                                             <td >{{ 'SIN DEPENDENCIA'}}</td>
                                             @endif
                                             <td >{{ $raton->cod_gamea }}</td>	
-                                            @if (auth()->user()->hasRole('Administrador')) 									
-                                            <td class="{{ empty($raton->cod_registro) ? 'color1' : '' }}" >
-                                                @if($raton->cod_registro)
-                                                {{ $raton->cod_registro}}
-                                                @elseif(! $raton->cod_registro)	
-                                                <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eRecepcion{{ $raton->id }}">{{ __( 'REGISTRAR NÚMERO DE RECEPCIÓN' ) }}</button>
-                                                @endif
-                                            </td> 
-                                            <td class="{{ empty($raton->user_id) ? 'color1' : '' }}">
-                                                @if($raton->cod_registro)
-                                                    @if($raton->user_id)
-                                                    {{ $raton->user->name ?? ''}} {{ $raton->user->paterno}} {{ $raton->user->materno}}
-                                                    @elseif(! $raton->user_id)	
-                                                    <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eTecnico{{ $raton->id }}">{{ __('ASIGNAR TECNICO') }}</button>
+
+
+                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                'Administrador',
+                                                'SuperAdministrador'
+                                            ]))								
+                                                <td class="{{ empty($raton->cod_registro) ? 'color1' : '' }}" >
+                                                    @if($raton->cod_registro)
+                                                    {{$raton->cod_registro }}
+                                                    @elseif(! $raton->cod_registro)	
+                                                    <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eRecepcion{{ $raton->id }}">{{ __( 'REGISTRAR NUMERO DE RECEPCIÓN' ) }}</button>
                                                     @endif
-                                                @elseif(! $raton->cod_registro)	
-                                                <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NÚMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('ASIGNAR TECNICO') }}</button>
-                                                @endif
-                                            </td>
-                                            <td class="{{ empty($raton->fecha_asignacion) ? 'color1' : '' }}">
-                                                @if($raton->fecha_asignacion)
-                                                {{ date('d-m-Y H:i',strtotime($raton->fecha_asignacion ))}}<br><br>
+                                                </td> 
+                                                <td class="{{ empty($raton->user_id) ? 'color1' : '' }}">
+                                                    @if($raton->cod_registro)
+                                                        @if($raton->user_id)
+                                                        {{ $raton->user->name}} {{ $raton->user->paterno}} {{ $raton->user->materno}}
+                                                        @elseif(! $raton->user_id)
+                                                        <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eTecnico{{ $raton->id }}">{{ __('ASIGNAR TECNICO') }}</button>
+                                                        @endif
+                                                    @elseif(! $raton->cod_registro)	
+                                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NUMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('ASIGNAR TECNICO') }}</button>
+                                                    @endif
+                                                </td>
+                                                <td class="{{ empty($raton->fecha_asignacion) ? 'color1' : '' }}">
+                                                    @if($raton->fecha_asignacion)
+                                                    {{ date('d-m-Y H:i',strtotime($raton->fecha_asignacion ))}}<BR><BR>
                                                     @if(!($raton->estado_id == '5') && !($raton->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($raton->fecha_asignacion)->diffInDays(\Carbon\Carbon::now()));
@@ -133,14 +124,14 @@
                                                         <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Dias transcurridos desde la fecha de asignación">
                                                         {{ $dias }} DÍAS TRANSCURRIDOS
                                                         </button>
-                                                    @endif	
-                                                @elseif(! $raton->fecha_asignacion)	
-                                                <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('FECHA DE ASIGNACIÓN') }}</button>
-                                                @endif								
-                                            </td>	
-                                            <td class="{{ empty($raton->fecha_inicio) ? 'color1' : '' }}">
-                                                @if($raton->fecha_inicio)
-                                                {{ date('d-m-Y H:i',strtotime($raton->fecha_inicio ))}}<br><br>
+                                                    @endif
+                                                    @elseif(! $raton->fecha_asignacion)	
+                                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('FECHA DE ASIGNACIÓN') }}</button>
+                                                    @endif							
+                                                </td>	
+                                                <td class="{{ empty($raton->fecha_inicio) ? 'color1' : '' }}">
+                                                    @if($raton->fecha_inicio)
+                                                    {{ date('d-m-Y H:i',strtotime($raton->fecha_inicio ))}}<BR><BR>
                                                     @if(!($raton->estado_id == '5') && !($raton->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($raton->fecha_inicio)->diffInDays(\Carbon\Carbon::now()));
@@ -148,11 +139,11 @@
                                                         <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Dias transcurridos desde la fecha de inico de la reparación">
                                                         {{ $dias }} DÍAS TRANSCURRIDOS
                                                         </button>
-                                                    @endif	
-                                                @elseif(! $raton->fecha_inicio)	
-                                                <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'EN ESPERA DEL INICIO DEL TRABAJO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('EN ESPERA') }}</button>
-                                                @endif								
-                                            </td>	
+                                                    @endif
+                                                    @elseif(! $raton->fecha_inicio)	
+                                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'EN ESPERA DEL INICIO DEL TRABAJO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('EN ESPERA') }}</button>
+                                                    @endif							
+                                                </td>	
                                             @else 
                                             {{-- ----------------------user---------------------------------- --}}
                                                 <td class="{{ empty($raton->cod_registro) ? 'color1' : '' }}">
@@ -185,43 +176,200 @@
                                                 </td>
                                             @endif							
                                             <td >
-                                            @if(!empty($raton->cod_registro) && !empty($raton->user_id) && !empty($raton->fecha_asignacion) || $raton->estado_id != '1')
-                                                @if($raton->estado_id == '1')
-                                                    <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') title="Actualizar estado" data-id="{{ $raton->id }}" onclick="cambiarEstado({{ $raton->id }},{{ $raton->estado_id }}, {{ $raton->resultado_id ? 'true' : 'false' }} )"@endrole>RECEPCIONADO</button>
-                                                @elseif($raton->estado_id == '2')
-                                                    <button class="btn btn-warning btn-raised"@role('Administrador') title="Actualizar estado" data-id="{{ $raton->id }}" onclick="cambiarEstado({{ $raton->id }}, {{ $raton->estado_id }}, {{ $raton->resultado_id ? 'true' : 'false' }} )"@endrole>EN PROCESO</button>
-                                                @elseif($raton->estado_id == '3')
-                                                    <button class="btn btn-danger btn-raised"@role('Administrador') title="Actualizar estado" data-id="{{ $raton->id }}" onclick="cambiarEstado({{ $raton->id }}, {{ $raton->estado_id }}, {{ $raton->resultado_id ? 'true' : 'false' }} )"@endrole>APERSONARSE CON EL TECNICO</button>
-                                                @elseif($raton->estado_id == '4')
-                                                <button class="btn btn-success btn-raised"@role('Administrador') title="Actualizar estado" data-id="{{ $raton->id }}" onclick="cambiarEstado({{ $raton->id }}, {{ $raton->estado_id }}, {{ $raton->resultado_id ? 'true' : 'false' }} )"@endrole>CONCLUIDO</button>
-                                                @elseif($raton->estado_id == '5')
-                                                {{-- ---------------------------------------RESULTADO FINAL--------------------------------------------}}
-                                                    @if($raton->resultado_id == '1')
-                                                    <button class="boton300 badge-devolucion">
-                                                    {{ $raton->resultado?->nombre }}<br>  {{ date('d-m-Y H:i:s',strtotime($raton->fecha_entrega ))}}</button>
-                                                    @elseif($raton->resultado_id == '2')
-                                                    <button class="boton300 badge-reposicion">
-                                                    {{ $raton->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($raton->fecha_entrega ))}}</button>
-                                                    @elseif($raton->resultado_id == '3')
-                                                    <button class="boton300  badge-repliegue">
-                                                        {{ $raton->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($raton->fecha_entrega ))}}</button>
-                                                    @elseif($raton->resultado_id == '4')
-                                                    <button class="boton300  badge-custodio">
-                                                        {{ $raton->resultado?->nombre }}  <br>  {{ date('d-m-Y H:i:s',strtotime($raton->fecha_entrega ))}}</button>
-                                                    @elseif($raton->resultado_id == '5')
-                                                    <button class="boton300  badge-baja" >
-                                                        {{ $raton->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($raton->fecha_entrega ))}}</button>
+                                                 @if(
+                                                    (!empty($raton->cod_registro) &&
+                                                    !empty($raton->user_id) &&
+                                                    !empty($raton->fecha_asignacion))
+                                                    ||
+                                                    $raton->estado_id != '1'
+                                                )
+
+                                                    @if($raton->estado_id == '1')
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $raton->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $raton->id }},
+                                                                    {{ $raton->estado_id }},
+                                                                    {{ $raton->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
+                                                    @elseif($raton->estado_id == '2')
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            class="btn btn-warning btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $raton->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $raton->id }},
+                                                                    {{ $raton->estado_id }},
+                                                                    {{ $raton->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            EN PROCESO
+                                                        </button>
+
+
+                                                    @elseif($raton->estado_id == '3')
+
+                                                        <button
+                                                            class="btn btn-danger btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $raton->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $raton->id }},
+                                                                    {{ $raton->estado_id }},
+                                                                    {{ $raton->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            APERSONARSE CON EL TECNICO
+                                                            {{ $raton->resultado?->nombre }}
+                                                        </button>
+
+
+                                                    @elseif($raton->estado_id == '4')
+
+                                                        <button
+                                                            class="btn btn-success btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $raton->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $raton->id }},
+                                                                    {{ $raton->estado_id }},
+                                                                    {{ $raton->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            CONCLUIDO
+                                                        </button>
+
+
+                                                    @elseif($raton->estado_id == '5')
+
+                                                        {{-- ---------------------------------------RESULTADO FINAL-------------------------------------------- --}}
+
+                                                        @if($raton->resultado_id == '1')
+
+                                                            <button class="boton300 badge-devolucion">
+                                                                {{ $raton->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($raton->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($raton->resultado_id == '2')
+
+                                                            <button class="boton300 badge-reposicion">
+                                                                {{ $raton->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($raton->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($raton->resultado_id == '3')
+
+                                                            <button class="boton300 badge-repliegue">
+                                                                {{ $raton->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($raton->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($raton->resultado_id == '4')
+
+                                                            <button class="boton300 badge-custodio">
+                                                                {{ $raton->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($raton->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($raton->resultado_id == '5')
+
+                                                            <button class="boton300 badge-baja">
+                                                                {{ $raton->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($raton->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @endif
+
                                                     @endif
+
+
+                                                @else
+
+                                                    @if(empty($raton->user_id))
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $raton->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UN TECNICO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
+                                                    @elseif(empty($raton->fecha_asignacion))
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $raton->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UNA FECHA DE INICIO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+                                                    @endif
+
                                                 @endif
-                                            @else 
-                                                @if(empty($raton->cod_registro))
-                                                <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') data-id="{{ $raton->id }}" onclick="Swal.fire({ title: 'Error', text: 'REGISTRAR NÚMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                                @elseif(empty($raton->user_id))
-                                                <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') data-id="{{ $raton->id }}" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                                @elseif(empty($raton->fecha_asignacion))
-                                                <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') data-id="{{ $raton->id }}" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UNA FECHA DE INICIO', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                                @endif
-                                            @endif
                                             <form id="form-cambiar-estado" method="POST" action="{{ route('estado-mouse') }}">
                                                 @csrf
                                                 <input type="hidden" name="id" id="id-raton">
@@ -248,7 +396,10 @@
                                                                 class="dropdown-card card-primary">
                                                             <i class="fa fa-eye"></i> VER
                                                         </button>
-                                                        @role('Administrador')
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
                                                         <!-- EDITAR -->
                                                         <button type="button" data-toggle="modal" data-target="#editar{{ $raton->id }}"
                                                                 class="dropdown-card card-success">
@@ -268,7 +419,7 @@
                                                                 <i class="fa fa-trash"></i> ELIMINAR
                                                             </button>
                                                         </form>
-                                                        @endrole
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </td>

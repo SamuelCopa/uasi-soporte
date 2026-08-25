@@ -13,7 +13,7 @@
 <body class="min-h-screen bg-cover bg-center flex items-center justify-center"
       style="background-image: url('{{ asset('assets/assets/img/jachauta.jpg') }}')">
 
-@foreach ($codigos as $codigo)
+@foreach ($resultados as $codigo)
 
 <div class="bg-black/70 backdrop-blur-md w-full max-w-5xl rounded-2xl shadow-2xl p-6 md:p-10 text-white">
 
@@ -24,33 +24,13 @@
     </div>
 
     <!-- IMAGEN -->
-    @php
-    $imagenes = [
-        'cpu' => 'cpu.jpg',
-        'impresora' => 'impresora.jpg',
-        'teclado' => 'teclado.jpg',
-        'monitor' => 'monitor.jpg',
-        'audifono' => 'audifono.jpg',
-        'mouse' => 'mouse.jpg',
-        'estabilizador' => 'estabilizador.jpg',
-        'ups' => 'ups.jpg',
-        'parlante' => 'parlantes.jpg',
-        'laptop' => 'laptop.jpg',
-    ];
-    @endphp
-
-    @if(isset($imagenes[$tipo]))
-    <div class="flex justify-center mb-6">
-        <img src="{{ asset('assets/assets/img/' . $imagenes[$tipo]) }}"
-            class="w-28 h-28 md:w-36 md:h-36 rounded-full border-4 border-sky-400 shadow-lg object-cover" alt="Equipo de computación">
-    </div>
-    @endif
+  
 
     <!-- NUMERO -->
     <div class="text-center mb-6">
         <p class="text-sm text-gray-300">NÚMERO DE RECEPCIÓN</p>
         <h2 class="text-2xl md:text-3xl font-bold tracking-wider">
-            {{ $codigo->cod_registro }}-{{ date('y') }}
+            {{ $codigo->cod_registro }}
         </h2>
     </div>
 

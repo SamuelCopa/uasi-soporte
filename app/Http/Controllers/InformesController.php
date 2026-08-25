@@ -46,6 +46,7 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpWord\PhpWord;
 use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\Shared\Html;
+use App\Models\OtrosEquipo;
 
 class InformesController extends Controller
 {
@@ -89,6 +90,18 @@ class InformesController extends Controller
         'marcaram','marcatmadre','modelotmadre','marcatred','marcatvideo','marcatwifi',
         'modprocesador','modelotred','potenciafuente','tipodisco','tipotvideo','resultado', 'funcionario'));
     }
+
+    public function crearInformeEquipo($id)
+    {
+        // Obtener los datos necesarios para el informe
+        $equipo = OtrosEquipo::find($id);
+        $user = Auth::user();
+        $responsable = Responsable::all();
+        $resultado = Resultado::all();
+
+        return view('otros-equipo.informes.crearInforme', compact('equipo','user','responsable', 'resultado'));
+    }
+
     public function crearInformeAudifono($id)
     {
         // Obtener los datos necesarios para el informe
@@ -110,6 +123,7 @@ class InformesController extends Controller
 
         return view('impresora.informes.crearInforme', compact('impresora','user','responsable', 'resultado'));
     }
+
     public function crearInformeMouse($id)
     {
         // Obtener los datos necesarios para el informe
@@ -299,7 +313,7 @@ $section = $phpWord->addSection([
         $table->addCell(500, array('valign' => 'center'))->addText(str_repeat(' ', 1)); // 5 espacios
         $table->addCell(10000, array('valign' => 'center','alignment' => 'center'))->addText('GOBIERNO AUTONOMO MUNICIPAL DE EL ALTO',$fontStyleUnderline,$paragraphStyle, array('bold' => true));
         $table->addCell(500, array('valign' => 'center'))->addText(str_repeat(' ', 1)); // 5 espacios
-        $table->addCell(2500, array('valign' => 'center'))->addImage(public_path('img1/logo-gamea.jpg'), array('width' => 60, 'height' => 60));
+        $table->addCell(2500, array('valign' => 'center'))->addImage(public_path('img1/sello1.jpg'), array('width' => 60, 'height' => 60));
 
         // -------------INFORME-------------------------------------------------------------------------------
         $fontStyle100 = array('name' => 'Times New Roman', 'size' => 11, 'bold' => true);

@@ -23,6 +23,8 @@ use App\Services\NotificacionService;
 use App\Mail\TecnicoAsignado;
 use App\Services\EquipoPdfService;
 use Illuminate\Support\Facades\DB;
+use App\Services\CorrelativoService;
+
 class TecladoController extends Controller
 {
     /**
@@ -78,7 +80,7 @@ class TecladoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(TecladoRequest $request): RedirectResponse
+    public function store(Request $request, CorrelativoService $correlativoService)
     {
         $request->validate([
             'ci'        => 'required',
@@ -124,24 +126,38 @@ class TecladoController extends Controller
         // Guardar los cambios
         $funcionario->save();
 
+    $teclado = DB::transaction(function () use (
+        $request,
+        $funcionario,
+        $correlativoService
+    ) {
+
         $teclado = new Teclado();
+
         $teclado->funcionario_id = $funcionario->id;
-        $teclado->dependencia_id = $request->input('dependencia_id');
         $teclado->cargo = $request->input('cargo');
+        $teclado->dependencia_id = $request->input('dependencia_id');
         $teclado->cod_gamea = $request->input('cod_gamea');
-        $teclado->cod_registro = $request->input('cod_registro');
-        $teclado->marca = $request->input('marca');
+        // GENERAR CORRELATIVO
+        $teclado->cod_registro = $correlativoService->generarNumeroRecepcion();
+
         $teclado->fecha = $request->input('fecha');
+        $teclado->marca = $request->input('marca');
         $teclado->modelo = $request->input('modelo');
         $teclado->falla = $request->input('falla');
         $teclado->observaciones = $request->input('observaciones');
         $teclado->funcionario_activo = $request->input('funcionario_activo');
         $teclado->estado_id = $request->input('estado_id');
         $teclado->reguser_id = Auth::id();
+
         $teclado->save();
 
-        return Redirect::route('teclados.index')
-        ->with('success', 'REGISTRADO CORRECTAMENTE')         
+        return $teclado;
+    });
+    return redirect()
+        ->route('teclados.index')
+        ->with('success', 'REGISTRADO CORRECTAMENTE')
+        ->with('text', 'Número de recepción: ' . $teclado->cod_registro)
         ->with('icono', 'success');
     }
 
@@ -435,7 +451,7 @@ public function enviar($id, EquipoPdfService $service)
         // =========================
         // ENVÍO DE NOTIFICACIÓN
         // =========================
-        if (in_array($estadoId, [2, 3, 4])) {
+        if (in_array($estadoId, [3, 4])) {
 
             $this->notificacionService->enviar(
                 $teclado->funcionario,
@@ -474,7 +490,7 @@ public function enviar($id, EquipoPdfService $service)
                     'teclados'        => 'Teclado',
                     'ratons'          => 'Mouse',
                     'upeses'          => 'UPS',
-                    'parlantes'       => 'Parlante',
+                    'teclados'       => 'teclado',
                     'audifonos'       => 'Audífono',
                     'estabilizadors'  => 'Estabilizador',
                 ];

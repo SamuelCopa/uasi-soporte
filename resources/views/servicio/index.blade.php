@@ -24,13 +24,16 @@
                                     <th>No</th>                                        
 									<th >Fecha</th>
 									<th >Nombre</th>
+									<th >ci</th>
 									<th >Dependencia</th>
 									<th >Tipo de Servicio</th>
 									<th >Equipo</th>
 									<th >Falla</th>
 									<th >tecnico</th>
                                     <th >FECHA DE ASIGNACIÓN</th>
+                                    <th >FECHA DE ATENCION</th>
 									<th >Estado</th>
+									<th >Puntaje</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -40,6 +43,7 @@
 										<td >{{date('d-m-Y H:i',strtotime($servicio->created_at ?? ''))}}</td>
                                          <td >{{ $servicio->funcionario?->nombre }} {{ $servicio->funcionario?->paterno }} {{ $servicio->funcionario?->materno }}</td>
 										<td >{{ $servicio->Dependencia?->dependencias }}</td>
+										<td >{{ $servicio->funcionario?->ci }}</td>
 										<td >{{ $servicio->servicio ?? '' }}</td>
 										<td >{{ $servicio->equipo ?? '' }}</td>
 										<td >{{ $servicio->falla ?? '' }}</td>
@@ -57,6 +61,13 @@
                                                 <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('FECHA DE ASIGNACIÓN') }}</button>
                                                 @endif	
                                         </td>
+                                        <td class="{{ empty($servicio->fecha_atencion) ? 'color1' : '' }}"  align="center">
+                                                @if($servicio->fecha_atencion)
+                                                {{ date('d-m-Y H:i',strtotime($servicio->fecha_atencion ))}}
+                                                @elseif(! $servicio->fecha_atencion)	
+                                                <button type="button" class="btn btn-sm btn-outline-light" >{{ __('FECHA DE ATENCIÓN') }}</button>
+                                                @endif	
+                                        </td>
                                         <td>
                                             @if(!empty($servicio->user_id))
                                                 <button
@@ -68,6 +79,50 @@
                                                 <button type="submit" class="btn btn-danger btn-raised" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });">PENDIENTE</button>
                                             @endif
                                         </td>
+                                                                                <td class="text-center">
+                                            @switch($servicio->puntuacion)
+
+                                                @case(1)
+                                                    <span class="evaluacion">
+                                                        <span class="emoji">😡</span>
+                                                        <span>Muy malo</span>
+                                                    </span>
+                                                    @break
+
+                                                @case(2)
+                                                    <span class="evaluacion">
+                                                        <span class="emoji">😞</span>
+                                                        <span>Malo</span>
+                                                    </span>
+                                                    @break
+
+                                                @case(3)
+                                                    <span class="evaluacion">
+                                                        <span class="emoji">😐</span>
+                                                        <span>Regular</span>
+                                                    </span>
+                                                    @break
+
+                                                @case(4)
+                                                    <span class="evaluacion">
+                                                        <span class="emoji">🙂</span>
+                                                        <span>Bueno</span>
+                                                    </span>
+                                                    @break
+
+                                                @case(5)
+                                                    <span class="evaluacion">
+                                                        <span class="emoji">😄</span>
+                                                        <span>Excelente</span>
+                                                    </span>
+                                                    @break
+
+                                                @default
+                                                    <span class="text-muted">Sin evaluar</span>
+
+                                            @endswitch
+
+                                        </td>	
                                         </tr>
                                         @include('servicio.registroTecnico')
                                     @endforeach

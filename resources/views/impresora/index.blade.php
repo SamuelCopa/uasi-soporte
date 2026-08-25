@@ -30,13 +30,6 @@
                             <table id="mitabla" class="table table-modern align-middle">
 
                                 <thead>
-                                    <!-- Encabezado agrupado -->
-                                    <tr class="table-group-header text-center">
-                                        <th colspan="8" class="color2">DATOS DEL SOLICITANTE</th>
-                                        <th colspan="3" class="color3">ASIGNACIÓN</th>
-                                        <th colspan="3" class="color2">CONTROL</th>
-                                    </tr>
-
                                     <!-- Encabezado principal -->
                                     <tr class="text-center">
                                         <th>#</th>
@@ -57,40 +50,33 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($impresoras as $impresora)
-                                    <tr data-id="{{ $impresora->id }}">
-                                        <td>{{ ++$i }}</td>
-                                        <td  align="center">
-                                            @if($impresora->fecha)
-                                            {{ date('d-m-Y H:i',strtotime($impresora->fecha))}}<br><br>
-                                                @role('Administrador')
-                                                @if(!($impresora->estado_id == '5'))
-                                                        @php
-                                                        $dias = floor(\Carbon\Carbon::parse($impresora->fecha)->diffInDays(\Carbon\Carbon::now()));
-                                                        @endphp
-                                                        <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Días transcurridos desde la recepción">
-                                                        {{ $dias }} DÍAS TRANSCURRIDOS
-                                                        </button>
-                                                @endif
-                                                @endrole
-                                            @elseif(! $impresora->fecha)	
+                                        <tr>
+                                            <td class="text-center">{{ ++$i }}</td>
+                                            <td>
+                                                @if($impresora->fecha)
+                                                {{date('d-m-Y H:i',strtotime($impresora->fecha))}}<br><br>
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
+                                                            @if(!($impresora->estado_id == '5'))
+                                                                @php
+                                                                $dias = floor(\Carbon\Carbon::parse($impresora->fecha)->diffInDays(\Carbon\Carbon::now()));
+                                                                @endphp
+                                                                <button 
+                                                                class="btn btn-sm btn-estado"
+                                                                data-dias="{{ $dias }}"
+                                                                title="Días transcurridos desde la recepción">
+                                                                {{ $dias }} DÍAS 
+                                                                </button>
+                                                            @endif
+                                                        @endif
+                                                @elseif(! $impresora->fecha)	
                                                 {{ $impresora->fecha ?? ''}}
-                                            @endif	
-                                            @role('Administrador')
-                                            @if(floor(\Carbon\Carbon::parse($impresora->fecha)->diffInDays(\Carbon\Carbon::now())) <= 30 )
-                                                @if(!$impresora->boton_oculto && $impresora->estado_id != '5')
-                                                    <div class="div title">
-                                                        <form class="actualizarFecha" method="POST" action="{{ route('impresora.fecha',['id'=>$impresora->id]) }}" role="form" enctype="multipart/form-data">
-                                                            {{ method_field('PATCH') }}
-                                                            @csrf
-                                                            <input type="hidden" name="fecha" class="form-control @error('fecha') is-invalid @enderror" value="{{ old('fecha', date('Y-m-d\TH:i:s'))}}" id="fecha">
-                                                            <button type="submit" class="btn btn-primary btn-sm" title="Este botón registra la fecha actual">ACTUALIZAR FECHA</button>
-                                                        </form>
-                                                    </div>
                                                 @endif
-                                            @endif
-                                            @endrole
-                                        </td>
-                                            <td >{{ $impresora->funcionario?->nombre }} {{ $impresora->funcionario?->paterno }} {{ $impresora->funcionario?->materno }}</td>
+                                          
+                                            </td>
+                                            <td >{{ $impresora->funcionario?->nombre}} {{ $impresora->funcionario?->paterno}} {{ $impresora->funcionario?->materno}}</td>
                                             <td >{{ $impresora->funcionario?->ci }} {{ $impresora->funcionario?->expedido }}</td>
                                             <td >{{ $impresora->funcionario?->celular }}</td>
                                             @if(! $impresora->cargo == '')
@@ -98,34 +84,39 @@
                                             @else
                                                 <td >{{ 'EX FUNCIONARIO'}}</td>
                                             @endif	
-                                        @if(! $impresora->dependencia_id == '')
-                                        <td >{{ $impresora->Dependencia?->dependencias }}</td>
-                                        @else
-                                        <td >{{ 'SIN DEPENDENCIA'}}</td>
-                                        @endif
-                                        <td >{{ $impresora->cod_gamea }}</td>										
-                                        @if (auth()->user()->hasRole('Administrador')) 
-                                            <td class="{{ empty($impresora->cod_registro) ? 'color1' : '' }}">
-                                                @if($impresora->cod_registro)
-                                                {{ $impresora->cod_registro}}
-                                                @elseif(! $impresora->cod_registro)	
-                                                <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eRecepcion{{ $impresora->id }}">{{ __( 'REGISTRAR NUMERO DE RECEPCIÓN' ) }}</button>
-                                                @endif
-                                            </td>
-                                            <td class="{{ empty($impresora->user_id) ? 'color1' : '' }}">
-                                                @if($impresora->cod_registro)
-                                                    @if($impresora->user_id)
-                                                    {{ $impresora->User->name}} {{ $impresora->user->paterno}} {{ $impresora->user->materno}}
-                                                    @elseif(! $impresora->user_id)	
-                                                    <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eTecnico{{ $impresora->id }}">{{ __('ASIGNAR TECNICO') }}</button>
+                                            @if(! $impresora->dependencia_id == '')
+                                            <td >{{ $impresora->Dependencia?->dependencias }}</td>
+                                            @else
+                                            <td >{{ 'SIN DEPENDENCIA'}}</td>
+                                            @endif
+                                            <td >{{ $impresora->cod_gamea }}</td>	
+
+
+                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                'Administrador',
+                                                'SuperAdministrador'
+                                            ]))								
+                                                <td class="{{ empty($impresora->cod_registro) ? 'color1' : '' }}" >
+                                                    @if($impresora->cod_registro)
+                                                    {{$impresora->cod_registro }}
+                                                    @elseif(! $impresora->cod_registro)	
+                                                    <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eRecepcion{{ $impresora->id }}">{{ __( 'REGISTRAR NUMERO DE RECEPCIÓN' ) }}</button>
                                                     @endif
-                                                @elseif(! $impresora->cod_registro)	
-                                                <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NUMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('ASIGNAR TECNICO') }}</button>
-                                                @endif
-                                            </td>
-                                            <td class="{{ empty($impresora->fecha_asignacion) ? 'color1' : '' }}">
-                                                @if($impresora->fecha_asignacion)
-                                                {{ date('d-m-Y H:i',strtotime($impresora->fecha_asignacion ))}}<br><br>
+                                                </td> 
+                                                <td class="{{ empty($impresora->user_id) ? 'color1' : '' }}">
+                                                    @if($impresora->cod_registro)
+                                                        @if($impresora->user_id)
+                                                        {{ $impresora->user->name}} {{ $impresora->user->paterno}} {{ $impresora->user->materno}}
+                                                        @elseif(! $impresora->user_id)
+                                                        <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eTecnico{{ $impresora->id }}">{{ __('ASIGNAR TECNICO') }}</button>
+                                                        @endif
+                                                    @elseif(! $impresora->cod_registro)	
+                                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NUMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('ASIGNAR TECNICO') }}</button>
+                                                    @endif
+                                                </td>
+                                                <td class="{{ empty($impresora->fecha_asignacion) ? 'color1' : '' }}">
+                                                    @if($impresora->fecha_asignacion)
+                                                    {{ date('d-m-Y H:i',strtotime($impresora->fecha_asignacion ))}}<BR><BR>
                                                     @if(!($impresora->estado_id == '5') && !($impresora->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($impresora->fecha_asignacion)->diffInDays(\Carbon\Carbon::now()));
@@ -134,13 +125,13 @@
                                                         {{ $dias }} DÍAS TRANSCURRIDOS
                                                         </button>
                                                     @endif
-                                                @elseif(! $impresora->fecha_asignacion)	
-                                                <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('FECHA DE INICIO') }}</button>
-                                                @endif	
-                                            </td>
-                                            <td class="{{ empty($impresora->fecha_inicio) ? 'color1' : '' }}">
-                                                @if($impresora->fecha_inicio)
-                                                {{ date('d-m-Y H:i',strtotime($impresora->fecha_inicio ))}}<br><br>
+                                                    @elseif(! $impresora->fecha_asignacion)	
+                                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('FECHA DE ASIGNACIÓN') }}</button>
+                                                    @endif							
+                                                </td>	
+                                                <td class="{{ empty($impresora->fecha_inicio) ? 'color1' : '' }}">
+                                                    @if($impresora->fecha_inicio)
+                                                    {{ date('d-m-Y H:i',strtotime($impresora->fecha_inicio ))}}<BR><BR>
                                                     @if(!($impresora->estado_id == '5') && !($impresora->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($impresora->fecha_inicio)->diffInDays(\Carbon\Carbon::now()));
@@ -149,11 +140,11 @@
                                                         {{ $dias }} DÍAS TRANSCURRIDOS
                                                         </button>
                                                     @endif
-                                                @elseif(! $impresora->fecha_inicio)	
-                                                <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'EN ESPERA DEL INICIO DEL TRABAJO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('EN ESPERA') }}</button>
-                                                @endif	
-                                            </td>
-                                        @else 
+                                                    @elseif(! $impresora->fecha_inicio)	
+                                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'EN ESPERA DEL INICIO DEL TRABAJO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('EN ESPERA') }}</button>
+                                                    @endif							
+                                                </td>	
+                                            @else 
                                         {{-- ----------------------Vista tecnico---------------------------------- --}}
                                             <td class="{{ empty($impresora->cod_registro) ? 'color1' : '' }}">
                                                 @if($impresora->cod_registro)
@@ -183,50 +174,203 @@
                                                 {{($impresora->fecha_inicio ?? 'EN ESPERA' )}}
                                                 @endif	
                                             </td>
-                                            {{-- <td>
-                                                {{$impresora->reguser?->name}} {{$impresora->reguser?->paterno}} {{$impresora->reguser?->materno}}
-                                            </td> --}}
-                                        @endif
 
-                                        <td>
-                                        @if(!empty($impresora->cod_registro) && !empty($impresora->user_id) && !empty($impresora->fecha_asignacion) || $impresora->estado_id != '1')
-                                            @if($impresora->estado_id == '1')
-                                            <button type="submit" class="btn btn-primary btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $impresora->id }}" onclick="cambiarEstado({{ $impresora->id }},{{ $impresora->estado_id }}, {{ $impresora->resultado_id ? 'true' : 'false' }} )"@endrole>RECEPCIONADO</button>
-                                            @elseif($impresora->estado_id == '2')
-                                                <button class="btn btn-warning btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $impresora->id }}" onclick="cambiarEstado({{ $impresora->id }}, {{ $impresora->estado_id }}, {{ $impresora->resultado_id ? 'true' : 'false' }} )"@endrole>EN PROCESO</button>
-                                            @elseif($impresora->estado_id == '3')
-                                                <button class="btn btn-danger btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $impresora->id }}" onclick="cambiarEstado({{ $impresora->id }}, {{ $impresora->estado_id }}, {{ $impresora->resultado_id ? 'true' : 'false' }} )"@endrole>APERSONARSE CON EL TECNICO</button>
-                                            @elseif($impresora->estado_id == '4')
-                                                <button class="btn btn-success btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $impresora->id }}" onclick="cambiarEstado({{ $impresora->id }}, {{ $impresora->estado_id }}, {{ $impresora->resultado_id ? 'true' : 'false' }} )"@endrole>CONCLUIDO</button>
-                                            @elseif($impresora->estado_id == '5')
-                                                {{-- ---------------------------------------RESULTADO FINAL--------------------------------------------}}
-                                                    @if($impresora->resultado_id == '1')
-                                                    <button class="boton300 badge-devolucion">
-                                                    {{ $impresora->resultado?->nombre }}<br>  {{ date('d-m-Y H:i:s',strtotime($impresora->fecha_entrega ))}}</button>
-                                                    @elseif($impresora->resultado_id == '2')
-                                                    <button class="boton300 badge-reposicion">
-                                                    {{ $impresora->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($impresora->fecha_entrega ))}}</button>
-                                                    @elseif($impresora->resultado_id == '3')
-                                                    <button class="boton300  badge-repliegue">
-                                                        {{ $impresora->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($impresora->fecha_entrega ))}}</button>
-                                                    @elseif($impresora->resultado_id == '4')
-                                                    <button class="boton300  badge-custodio">
-                                                        {{ $impresora->resultado?->nombre }}  <br>  {{ date('d-m-Y H:i:s',strtotime($impresora->fecha_entrega ))}}</button>
-                                                    @elseif($impresora->resultado_id == '5')
-                                                    <button class="boton300  badge-baja" >
-                                                        {{ $impresora->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($impresora->fecha_entrega ))}}</button>
-                                                    @endif
-                                            @endif
-                                        @else 
-                                            @if(empty($impresora->cod_registro))
-                                            <button type="submit" class="btn btn-primary btn-raised" data-id="{{ $impresora->id }}" @role('Administrador') onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NUMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                            @elseif(empty($impresora->user_id))
-                                            <button type="submit" class="btn btn-primary btn-raised" data-id="{{ $impresora->id }}" @role('Administrador') onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                            @elseif(empty($impresora->fecha_asignacion))
-                                            <button type="submit" class="btn btn-primary btn-raised" data-id="{{ $impresora->id }}" @role('Administrador') onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UNA FECHA DE INICIO', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                            @endif
                                         @endif
-                                        
+                                        <td>
+                                                @if(
+                                                    (!empty($impresora->cod_registro) &&
+                                                    !empty($impresora->user_id) &&
+                                                    !empty($impresora->fecha_asignacion))
+                                                    ||
+                                                    $impresora->estado_id != '1'
+                                                )
+
+                                                    @if($impresora->estado_id == '1')
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $impresora->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $impresora->id }},
+                                                                    {{ $impresora->estado_id }},
+                                                                    {{ $impresora->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
+                                                    @elseif($impresora->estado_id == '2')
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            class="btn btn-warning btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $impresora->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $impresora->id }},
+                                                                    {{ $impresora->estado_id }},
+                                                                    {{ $impresora->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            EN PROCESO
+                                                        </button>
+
+
+                                                    @elseif($impresora->estado_id == '3')
+
+                                                        <button
+                                                            class="btn btn-danger btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $impresora->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $impresora->id }},
+                                                                    {{ $impresora->estado_id }},
+                                                                    {{ $impresora->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            APERSONARSE CON EL TECNICO
+                                                            {{ $impresora->resultado?->nombre }}
+                                                        </button>
+
+
+                                                    @elseif($impresora->estado_id == '4')
+
+                                                        <button
+                                                            class="btn btn-success btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $impresora->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $impresora->id }},
+                                                                    {{ $impresora->estado_id }},
+                                                                    {{ $impresora->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            CONCLUIDO
+                                                        </button>
+
+
+                                                    @elseif($impresora->estado_id == '5')
+
+                                                        {{-- ---------------------------------------RESULTADO FINAL-------------------------------------------- --}}
+
+                                                        @if($impresora->resultado_id == '1')
+
+                                                            <button class="boton300 badge-devolucion">
+                                                                {{ $impresora->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($impresora->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($impresora->resultado_id == '2')
+
+                                                            <button class="boton300 badge-reposicion">
+                                                                {{ $impresora->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($impresora->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($impresora->resultado_id == '3')
+
+                                                            <button class="boton300 badge-repliegue">
+                                                                {{ $impresora->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($impresora->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($impresora->resultado_id == '4')
+
+                                                            <button class="boton300 badge-custodio">
+                                                                {{ $impresora->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($impresora->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($impresora->resultado_id == '5')
+
+                                                            <button class="boton300 badge-baja">
+                                                                {{ $impresora->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($impresora->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @endif
+
+                                                    @endif
+
+
+                                                @else
+
+                                                    @if(empty($impresora->user_id))
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $impresora->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UN TECNICO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
+                                                    @elseif(empty($impresora->fecha_asignacion))
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $impresora->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UNA FECHA DE INICIO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+                                                    @endif
+
+                                                @endif
                                         <form id="form-cambiar-estado" method="POST" action="{{ route('estado-impresora') }}">
                                             @csrf
                                             <input type="hidden" name="id" id="id-impresora">
@@ -253,7 +397,10 @@
                                                             class="dropdown-card card-primary">
                                                         <i class="fa fa-eye"></i> VER
                                                     </button>
-                                                    @role('Administrador')
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
                                                     <!-- EDITAR -->
                                                     <button type="button" data-toggle="modal" data-target="#editar{{ $impresora->id }}"
                                                             class="dropdown-card card-success">
@@ -273,7 +420,7 @@
                                                             <i class="fa fa-trash"></i> ELIMINAR
                                                         </button>
                                                     </form>
-                                                    @endrole
+                                                    @endif
                                                 </div>
                                             </div>
                                         </td>

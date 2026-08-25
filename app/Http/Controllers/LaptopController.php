@@ -23,6 +23,8 @@ use App\Services\NotificacionService;
 use App\Mail\TecnicoAsignado;
 use App\Services\EquipoPdfService;
 use Illuminate\Support\Facades\DB;
+use App\Services\CorrelativoService;
+
 class LaptopController extends Controller
 {
     /**
@@ -80,7 +82,7 @@ class LaptopController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, CorrelativoService $correlativoService)
     {
         $request->validate([
             'ci'        => 'required',
@@ -126,26 +128,43 @@ class LaptopController extends Controller
         // Guardar los cambios
         $funcionario->save();
 
+            $laptop = DB::transaction(function () use (
+        $request,
+        $funcionario,
+        $correlativoService
+    ) {
+
         $laptop = new Laptop();
+
         $laptop->funcionario_id = $funcionario->id;
         $laptop->cargo = $request->input('cargo');
         $laptop->dependencia_id = $request->input('dependencia_id');
         $laptop->cod_gamea = $request->input('cod_gamea');
+
+        // GENERAR CORRELATIVO
+        $laptop->cod_registro =$correlativoService->generarNumeroRecepcion();
+
         $laptop->fecha = $request->input('fecha');
-        $laptop->usuario = $request->input('usuario');
+                $laptop->usuario = $request->input('usuario');
         $laptop->contrasena = $request->input('contrasena');
         $laptop->marca = $request->input('marca');
         $laptop->modelo = $request->input('modelo');
         $laptop->falla = $request->input('falla');
         $laptop->observaciones = $request->input('observaciones');
+        $laptop->funcionario_activo =$request->input('funcionario_activo');
         $laptop->estado_id = $request->input('estado_id');
-        $laptop->funcionario_activo = $request->input('funcionario_activo');
         $laptop->reguser_id = Auth::id();
-        $laptop->save();
-        return Redirect::route('laptops.index')
-        ->with('success', 'CREADO CORRECTAMENTE.')
-        ->with('icono', 'success'); 
 
+        $laptop->save();
+
+        return $laptop;
+    });
+
+    return redirect()
+        ->route('laptops.index')
+        ->with('success', 'REGISTRADO CORRECTAMENTE')
+        ->with('text', 'Número de recepción: ' . $laptop->cod_registro)
+        ->with('icono', 'success');
     }
 
     /**
@@ -442,7 +461,7 @@ public function enviar($id, EquipoPdfService $service)
         // =========================
         // ENVÍO DE NOTIFICACIÓN
         // =========================
-        if (in_array($estadoId, [2, 3, 4])) {
+        if (in_array($estadoId, [3, 4])) {
 
             $this->notificacionService->enviar(
                 $laptop->funcionario,
@@ -459,55 +478,6 @@ public function enviar($id, EquipoPdfService $service)
                 ? $laptop->resultado?->nombre
                 : $laptop->estado?->nombre
         ]);
-    }
-
-    public function updateRecepcion(Request $request, $id){
-    $request->validate([
-        'cod_registro' => [
-            'nullable',
-            function ($attribute, $value, $fail) {
-
-                if (empty($value)) {
-                    return;
-                }
-
-                $anio = date('Y');
-
-                $tablas = [
-                    'registro_cpus'   => 'CPU',
-                    'monitors'        => 'Monitor',
-                    'impresoras'      => 'Impresora',
-                    'laptops'         => 'Laptop',
-                    'teclados'        => 'Teclado',
-                    'ratons'          => 'Mouse',
-                    'upeses'          => 'UPS',
-                    'parlantes'       => 'Parlante',
-                    'audifonos'       => 'Audífono',
-                    'estabilizadors'  => 'Estabilizador',
-                ];
-
-                foreach ($tablas as $tabla => $nombre) {
-
-                    $existe = DB::table($tabla)
-                        ->where('cod_registro', $value)
-                        ->whereYear('created_at', $anio)
-                        ->exists();
-
-                    if ($existe) {
-                        $fail("El número de recepción ya está asignado a un {$nombre} en la gestión actual.");
-                        return;
-                    }
-                }
-            },
-        ],
-    ]);
-        $laptop = Laptop::find($id);
-        $laptop->cod_registro = $request->input('cod_registro');
-        $laptop->update();
-        return Redirect::route('laptops.index')
-        ->with('success', 'REGISTRADO CORRECTAMENTE') 
-        ->with('text', 'Numero de recepción')          
-        ->with('icono', 'success');
     }
 
     public function updateTecnico(Request $request, $id){

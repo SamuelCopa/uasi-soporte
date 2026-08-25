@@ -27,13 +27,6 @@
                         <div class="table-responsive">
                             <table id="mitabla" class="table table-modern align-middle">
                                 <thead>
-                                    <!-- Encabezado agrupado -->
-                                    <tr class="table-group-header text-center">
-                                        <th colspan="8" class="color2">DATOS DEL SOLICITANTE</th>
-                                        <th colspan="3" class="color3">ASIGNACIÓN</th>
-                                        <th colspan="3" class="color2">CONTROL</th>
-                                    </tr>
-
                                     <!-- Encabezado principal -->
                                     <tr class="text-center">
                                         <th>#</th>
@@ -55,39 +48,32 @@
                                 <tbody>
                                     @foreach ($teclados as $teclado)
                                         <tr>
-                                            <td>{{ ++$i }}</td>
+                                            <td class="text-center">{{ ++$i }}</td>
                                             <td>
                                                 @if($teclado->fecha)
-                                                {{ date('d-m-Y H:i',strtotime($teclado->fecha))}}<br><br>
-                                                    @role('Administrador')
-                                                    @if(!($teclado->estado_id == '5'))
-                                                        @php
-                                                        $dias = floor(\Carbon\Carbon::parse($teclado->fecha)->diffInDays(\Carbon\Carbon::now()));
-                                                        @endphp
-                                                        <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Días transcurridos desde la recepción">
-                                                        {{ $dias }} DÍAS TRANSCURRIDOS
-                                                        </button>
-                                                    @endif
-                                                    @endrole
+                                                {{date('d-m-Y H:i',strtotime($teclado->fecha))}}<br><br>
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
+                                                            @if(!($teclado->estado_id == '5'))
+                                                                @php
+                                                                $dias = floor(\Carbon\Carbon::parse($teclado->fecha)->diffInDays(\Carbon\Carbon::now()));
+                                                                @endphp
+                                                                <button 
+                                                                class="btn btn-sm btn-estado"
+                                                                data-dias="{{ $dias }}"
+                                                                title="Días transcurridos desde la recepción">
+                                                                {{ $dias }} DÍAS 
+                                                                </button>
+                                                            @endif
+                                                        @endif
                                                 @elseif(! $teclado->fecha)	
                                                 {{ $teclado->fecha ?? ''}}
-                                                @endif	 
-                                                @role('Administrador')
-                                                @if(floor(\Carbon\Carbon::parse($teclado->fecha)->diffInDays(\Carbon\Carbon::now())) <= 30 )
-                                                    @if(!$teclado->boton_oculto && $teclado->estado_id != '5')
-                                                        <div class="div title">
-                                                            <form class="actualizarFecha" method="POST" action="{{ route('teclado.fecha',['id'=>$teclado->id]) }}" role="form" enctype="multipart/form-data">
-                                                                {{ method_field('PATCH') }}
-                                                                @csrf
-                                                                <input type="hidden" name="fecha" class="form-control @error('fecha') is-invalid @enderror" value="{{ old('fecha', date('Y-m-d\TH:i:s'))}}" id="fecha">
-                                                                <button type="submit" class="btn btn-primary btn-sm" title="Este botón registra la fecha actual">ACTUALIZAR FECHA</button>
-                                                            </form>
-                                                        </div>
-                                                    @endif
-                                                @endif  
-                                                @endrole                                        
-                                            </td> 
-                                            <td >{{ $teclado->funcionario?->nombre }} {{ $teclado->funcionario?->paterno }} {{ $teclado->funcionario?->materno }}</td>
+                                                @endif
+                                          
+                                            </td>
+                                            <td >{{ $teclado->funcionario?->nombre}} {{ $teclado->funcionario?->paterno}} {{ $teclado->funcionario?->materno}}</td>
                                             <td >{{ $teclado->funcionario?->ci }} {{ $teclado->funcionario?->expedido }}</td>
                                             <td >{{ $teclado->funcionario?->celular }}</td>
                                             @if(! $teclado->cargo == '')
@@ -101,28 +87,33 @@
                                             <td >{{ 'SIN DEPENDENCIA'}}</td>
                                             @endif
                                             <td >{{ $teclado->cod_gamea }}</td>	
-                                            @if (auth()->user()->hasRole('Administrador')) 										
+
+
+                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                'Administrador',
+                                                'SuperAdministrador'
+                                            ]))								
                                                 <td class="{{ empty($teclado->cod_registro) ? 'color1' : '' }}" >
                                                     @if($teclado->cod_registro)
-                                                    {{ $teclado->cod_registro}}
+                                                    {{$teclado->cod_registro }}
                                                     @elseif(! $teclado->cod_registro)	
-                                                    <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eRecepcion{{ $teclado->id }}">{{ __( 'REGISTRAR NÚMERO DE RECEPCIÓN' ) }}</button>
+                                                    <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eRecepcion{{ $teclado->id }}">{{ __( 'REGISTRAR NUMERO DE RECEPCIÓN' ) }}</button>
                                                     @endif
                                                 </td> 
                                                 <td class="{{ empty($teclado->user_id) ? 'color1' : '' }}">
                                                     @if($teclado->cod_registro)
                                                         @if($teclado->user_id)
-                                                        {{ $teclado->user->name ?? ''}} {{ $teclado->user->paterno}} {{ $teclado->user->materno}}
+                                                        {{ $teclado->user->name}} {{ $teclado->user->paterno}} {{ $teclado->user->materno}}
                                                         @elseif(! $teclado->user_id)
                                                         <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eTecnico{{ $teclado->id }}">{{ __('ASIGNAR TECNICO') }}</button>
                                                         @endif
                                                     @elseif(! $teclado->cod_registro)	
-                                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NÚMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('ASIGNAR TECNICO') }}</button>
+                                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NUMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('ASIGNAR TECNICO') }}</button>
                                                     @endif
                                                 </td>
                                                 <td class="{{ empty($teclado->fecha_asignacion) ? 'color1' : '' }}">
                                                     @if($teclado->fecha_asignacion)
-                                                    {{ date('d-m-Y H:i',strtotime($teclado->fecha_asignacion ))}}
+                                                    {{ date('d-m-Y H:i',strtotime($teclado->fecha_asignacion ))}}<BR><BR>
                                                     @if(!($teclado->estado_id == '5') && !($teclado->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($teclado->fecha_asignacion)->diffInDays(\Carbon\Carbon::now()));
@@ -130,14 +121,14 @@
                                                         <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Dias transcurridos desde la fecha de asignación">
                                                         {{ $dias }} DÍAS TRANSCURRIDOS
                                                         </button>
-                                                @endif
+                                                    @endif
                                                     @elseif(! $teclado->fecha_asignacion)	
                                                     <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('FECHA DE ASIGNACIÓN') }}</button>
-                                                    @endif									
-                                                </td>
+                                                    @endif							
+                                                </td>	
                                                 <td class="{{ empty($teclado->fecha_inicio) ? 'color1' : '' }}">
                                                     @if($teclado->fecha_inicio)
-                                                    {{ date('d-m-Y H:i',strtotime($teclado->fecha_inicio ))}}
+                                                    {{ date('d-m-Y H:i',strtotime($teclado->fecha_inicio ))}}<BR><BR>
                                                     @if(!($teclado->estado_id == '5') && !($teclado->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($teclado->fecha_inicio)->diffInDays(\Carbon\Carbon::now()));
@@ -145,12 +136,12 @@
                                                         <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Dias transcurridos desde la fecha de inico de la reparación">
                                                         {{ $dias }} DÍAS TRANSCURRIDOS
                                                         </button>
-                                                @endif
+                                                    @endif
                                                     @elseif(! $teclado->fecha_inicio)	
                                                     <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'EN ESPERA DEL INICIO DEL TRABAJO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('EN ESPERA') }}</button>
-                                                    @endif									
-                                                </td>
-                                            @else
+                                                    @endif							
+                                                </td>	
+                                            @else 
                                             {{-- -------------------------------------------------------------------------- --}}
                                             <td class="{{ empty($teclado->cod_registro) ? 'color1' : '' }}" >
                                                 @if($teclado->cod_registro)
@@ -182,42 +173,199 @@
                                             </td>
                                             @endif								
                                             <td >
-                                                @if(!empty($teclado->cod_registro) && !empty($teclado->user_id) && !empty($teclado->fecha_asignacion) || $teclado->estado_id != '1')
+                                                @if(
+                                                    (!empty($teclado->cod_registro) &&
+                                                    !empty($teclado->user_id) &&
+                                                    !empty($teclado->fecha_asignacion))
+                                                    ||
+                                                    $teclado->estado_id != '1'
+                                                )
+
                                                     @if($teclado->estado_id == '1')
-                                                        <button type="submit" class="btn btn-primary btn-raised" title="Actualizar estado" data-id="{{ $teclado->id }}" onclick="cambiarEstado({{ $teclado->id }},{{ $teclado->estado_id }}, {{ $teclado->resultado_id ? 'true' : 'false' }} )">RECEPCIONADO</button>
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $teclado->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $teclado->id }},
+                                                                    {{ $teclado->estado_id }},
+                                                                    {{ $teclado->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
                                                     @elseif($teclado->estado_id == '2')
-                                                        <button class="btn btn-warning btn-raised" title="Actualizar estado" data-id="{{ $teclado->id }}" onclick="cambiarEstado({{ $teclado->id }}, {{ $teclado->estado_id }}, {{ $teclado->resultado_id ? 'true' : 'false' }} )">EN PROCESO</button>
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            class="btn btn-warning btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $teclado->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $teclado->id }},
+                                                                    {{ $teclado->estado_id }},
+                                                                    {{ $teclado->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            EN PROCESO
+                                                        </button>
+
+
                                                     @elseif($teclado->estado_id == '3')
-                                                        <button class="btn btn-danger btn-raised" title="Actualizar estado" data-id="{{ $teclado->id }}" onclick="cambiarEstado({{ $teclado->id }}, {{ $teclado->estado_id }}, {{ $teclado->resultado_id ? 'true' : 'false' }} )">APERSONARSE CON EL TECNICO</button>
+
+                                                        <button
+                                                            class="btn btn-danger btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $teclado->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $teclado->id }},
+                                                                    {{ $teclado->estado_id }},
+                                                                    {{ $teclado->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            APERSONARSE CON EL TECNICO
+                                                            {{ $teclado->resultado?->nombre }}
+                                                        </button>
+
+
                                                     @elseif($teclado->estado_id == '4')
-                                                        <button class="btn btn-success btn-raised" title="Actualizar estado" data-id="{{ $teclado->id }}" onclick="cambiarEstado({{ $teclado->id }}, {{ $teclado->estado_id }}, {{ $teclado->resultado_id ? 'true' : 'false' }} )">CONCLUIDO</button>
+
+                                                        <button
+                                                            class="btn btn-success btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $teclado->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $teclado->id }},
+                                                                    {{ $teclado->estado_id }},
+                                                                    {{ $teclado->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            CONCLUIDO
+                                                        </button>
+
+
                                                     @elseif($teclado->estado_id == '5')
-                                                {{-- ---------------------------------------RESULTADO FINAL--------------------------------------------}}
-                                                    @if($teclado->resultado_id == '1')
-                                                    <button class="boton300 badge-devolucion">
-                                                    {{ $teclado->resultado?->nombre }}<br>  {{ date('d-m-Y H:i:s',strtotime($teclado->fecha_entrega ))}}</button>
-                                                    @elseif($teclado->resultado_id == '2')
-                                                    <button class="boton300 badge-reposicion">
-                                                    {{ $teclado->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($teclado->fecha_entrega ))}}</button>
-                                                    @elseif($teclado->resultado_id == '3')
-                                                    <button class="boton300  badge-repliegue">
-                                                        {{ $teclado->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($teclado->fecha_entrega ))}}</button>
-                                                    @elseif($teclado->resultado_id == '4')
-                                                    <button class="boton300  badge-custodio">
-                                                        {{ $teclado->resultado?->nombre }}  <br>  {{ date('d-m-Y H:i:s',strtotime($teclado->fecha_entrega ))}}</button>
-                                                    @elseif($teclado->resultado_id == '5')
-                                                    <button class="boton300  badge-baja" >
-                                                        {{ $teclado->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($teclado->fecha_entrega ))}}</button>
+
+                                                        {{-- ---------------------------------------RESULTADO FINAL-------------------------------------------- --}}
+
+                                                        @if($teclado->resultado_id == '1')
+
+                                                            <button class="boton300 badge-devolucion">
+                                                                {{ $teclado->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($teclado->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($teclado->resultado_id == '2')
+
+                                                            <button class="boton300 badge-reposicion">
+                                                                {{ $teclado->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($teclado->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($teclado->resultado_id == '3')
+
+                                                            <button class="boton300 badge-repliegue">
+                                                                {{ $teclado->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($teclado->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($teclado->resultado_id == '4')
+
+                                                            <button class="boton300 badge-custodio">
+                                                                {{ $teclado->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($teclado->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($teclado->resultado_id == '5')
+
+                                                            <button class="boton300 badge-baja">
+                                                                {{ $teclado->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($teclado->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @endif
+
                                                     @endif
-                                                    @endif
-                                                @else  
-                                                    @if(empty($teclado->cod_registro))
-                                                    <button type="submit" class="btn btn-primary btn-raised" data-id="{{ $teclado->id }}" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NÚMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });">RECEPCIONADO</button>
-                                                    @elseif(empty($teclado->user_id))
-                                                    <button type="submit" class="btn btn-primary btn-raised" data-id="{{ $teclado->id }}" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });">RECEPCIONADO</button>
+
+
+                                                @else
+
+                                                    @if(empty($teclado->user_id))
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $teclado->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UN TECNICO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
                                                     @elseif(empty($teclado->fecha_asignacion))
-                                                    <button type="submit" class="btn btn-primary btn-raised" data-id="{{ $teclado->id }}" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UNA FECHA DE INICIO', icon: 'error', confirmButtonText: 'ACEPTAR' });">RECEPCIONADO</button>
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $teclado->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UNA FECHA DE INICIO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
                                                     @endif
+
                                                 @endif
                                                 <form id="form-cambiar-estado" method="POST" action="{{ route('estado-teclado') }}">
                                                     @csrf
@@ -245,7 +393,10 @@
                                                                 class="dropdown-card card-primary">
                                                             <i class="fa fa-eye"></i> VER
                                                         </button>
-                                                        @role('Administrador')
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
                                                         <!-- EDITAR -->
                                                         <button type="button" data-toggle="modal" data-target="#editar{{ $teclado->id }}"
                                                                 class="dropdown-card card-success">
@@ -265,7 +416,7 @@
                                                                 <i class="fa fa-trash"></i> ELIMINAR
                                                             </button>
                                                         </form>
-                                                        @endrole
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </td>

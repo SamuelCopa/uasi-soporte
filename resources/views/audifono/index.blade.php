@@ -30,13 +30,6 @@
                             <table id="mitabla" class="table table-modern align-middle">
 
                                 <thead>
-                                    <!-- Encabezado agrupado -->
-                                    <tr class="table-group-header text-center">
-                                        <th colspan="8" class="color2">DATOS DEL SOLICITANTE</th>
-                                        <th colspan="3" class="color3">ASIGNACIÓN</th>
-                                        <th colspan="3" class="color2">CONTROL</th>
-                                    </tr>
-
                                     <!-- Encabezado principal -->
                                     <tr class="text-center">
                                         <th>#</th>
@@ -62,36 +55,26 @@
                                             <td>
                                                 @if($audifono->fecha)
                                                 {{date('d-m-Y H:i',strtotime($audifono->fecha))}}<br><br>
-                                                    @role('Administrador')
-                                                    @if(!($audifono->estado_id == '5'))
-                                                        @php
-                                                        $dias = floor(\Carbon\Carbon::parse($audifono->fecha)->diffInDays(\Carbon\Carbon::now()));
-                                                        @endphp
-                                                        <button 
-                                                        class="btn btn-sm btn-estado"
-                                                        data-dias="{{ $dias }}"
-                                                        title="Días transcurridos desde la recepción">
-                                                        {{ $dias }} DÍAS TRANSCURRIDOS
-                                                        </button>
-                                                    @endif
-                                                    @endrole
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
+                                                            @if(!($audifono->estado_id == '5'))
+                                                                @php
+                                                                $dias = floor(\Carbon\Carbon::parse($audifono->fecha)->diffInDays(\Carbon\Carbon::now()));
+                                                                @endphp
+                                                                <button 
+                                                                class="btn btn-sm btn-estado"
+                                                                data-dias="{{ $dias }}"
+                                                                title="Días transcurridos desde la recepción">
+                                                                {{ $dias }} DÍAS 
+                                                                </button>
+                                                            @endif
+                                                        @endif
                                                 @elseif(! $audifono->fecha)	
                                                 {{ $audifono->fecha ?? ''}}
                                                 @endif
-                                                @role('Administrador')
-                                                @if(floor(\Carbon\Carbon::parse($audifono->fecha)->diffInDays(\Carbon\Carbon::now())) <= 30 )
-                                                    @if(!$audifono->boton_oculto && $audifono->estado_id != '5')
-                                                        <div class="div title">
-                                                            <form class="actualizarFecha" method="POST" action="{{ route('audifono.fecha',['id'=>$audifono->id]) }}" role="form" enctype="multipart/form-data">
-                                                                {{ method_field('PATCH') }}
-                                                                @csrf
-                                                                <input type="hidden" name="fecha" class="form-control @error('fecha') is-invalid @enderror" value="{{ old('fecha', date('Y-m-d\TH:i:s'))}}" id="fecha">
-                                                                <button type="submit" class="btn btn-primary btn-sm" title="Este botón registra la fecha actual">ACTUALIZAR FECHA</button>
-                                                            </form>
-                                                        </div>
-                                                    @endif
-                                                @endif
-                                                @endrole	                                           
+                                          
                                             </td>
                                             <td >{{ $audifono->funcionario?->nombre}} {{ $audifono->funcionario?->paterno}} {{ $audifono->funcionario?->materno}}</td>
                                             <td >{{ $audifono->funcionario?->ci }} {{ $audifono->funcionario?->expedido }}</td>
@@ -107,7 +90,12 @@
                                             <td >{{ 'SIN DEPENDENCIA'}}</td>
                                             @endif
                                             <td >{{ $audifono->cod_gamea }}</td>	
-                                            @if (auth()->user()->hasRole('Administrador')) 									
+
+
+                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                'Administrador',
+                                                'SuperAdministrador'
+                                            ]))								
                                                 <td class="{{ empty($audifono->cod_registro) ? 'color1' : '' }}" >
                                                     @if($audifono->cod_registro)
                                                     {{$audifono->cod_registro }}
@@ -157,7 +145,7 @@
                                                     @endif							
                                                 </td>	
                                             @else 
-                                            {{-- -----------------------usuario--------------------------------------------------}}
+                                            {{-- -----------------------tecnico--------------------------------------------------}}
                                                 <td class="{{ empty($audifono->cod_registro) ? 'color1' : '' }}">
                                                     @if($audifono->cod_registro)
                                                     {{$audifono->cod_registro }}
@@ -179,52 +167,210 @@
                                                     {{($audifono->fecha_asignacion ?? 'SIN ASIGNAR' )}}                                                    
                                                     @endif							
                                                 </td>	
-                                                <td class="{{ empty($audifono->fecha_inicio) ? 'color1' : '' }}">
+                                                <td id="fecha-inicio-{{ $audifono->id }}"
+                                                    class="{{ empty($audifono->fecha_inicio) ? 'color1' : '' }}">
                                                     @if($audifono->fecha_inicio)
-                                                    {{ date('d-m-Y',strtotime($audifono->fecha_inicio ))}}
-                                                    @elseif(! $audifono->fecha_inicio)	
-                                                    {{($audifono->fecha_inicio ?? 'EN ESPERA' )}}                                                    
-                                                    @endif							
+                                                        {{ date('d-m-Y', strtotime($audifono->fecha_inicio)) }}
+                                                    @else
+                                                        EN ESPERA
+                                                    @endif
                                                 </td>	
                                             @endif
                                             <td>
-                                            @if(!empty($audifono->cod_registro) && !empty($audifono->user_id) && !empty($audifono->fecha_asignacion) || $audifono->estado_id != '1')
-                                                @if($audifono->estado_id == '1')
-                                                    <button id="#boton-actualizar-estado" type="submit" class="btn btn-primary btn-raised" @role('Administrador') title="Actualizar estado"data-id="{{ $audifono->id }}" onclick="cambiarEstado({{ $audifono->id }}, {{ $audifono->estado_id }}, {{ $audifono->resultado_id ? 'true' : 'false' }} )"@endrole>RECEPCIONADO</button>
-                                                @elseif($audifono->estado_id == '2')
-                                                    <button id="#boton-actualizar-estado" class="btn btn-warning btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $audifono->id }}" onclick="cambiarEstado({{ $audifono->id }}, {{ $audifono->estado_id }}, {{ $audifono->resultado_id ? 'true' : 'false' }} )"@endrole>EN PROCESO</button>
-                                                @elseif($audifono->estado_id == '3')
-                                                <button class="btn btn-danger btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $audifono->id }}" onclick="cambiarEstado({{ $audifono->id }}, {{ $audifono->estado_id }}, {{ $audifono->resultado_id ? 'true' : 'false' }} )"@endrole>APERSONARSE CON EL TECNICO{{ $audifono->resultado?->nombre }}</button>
-                                                @elseif($audifono->estado_id == '4')
-                                                <button class="btn btn-success btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $audifono->id }}" onclick="cambiarEstado({{ $audifono->id }}, {{ $audifono->estado_id }}, {{ $audifono->resultado_id ? 'true' : 'false' }} )"@endrole>CONCLUIDO</button>
-                                                @elseif($audifono->estado_id == '5')
-                                                {{-- ---------------------------------------RESULTADO FINAL--------------------------------------------}}
-                                                    @if($audifono->resultado_id == '1')
-                                                    <button class="boton300 badge-devolucion">
-                                                    {{ $audifono->resultado?->nombre }}<br>  {{ date('d-m-Y H:i:s',strtotime($audifono->fecha_entrega ))}}</button>
-                                                    @elseif($audifono->resultado_id == '2')
-                                                    <button class="boton300 badge-reposicion">
-                                                    {{ $audifono->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($audifono->fecha_entrega ))}}</button>
-                                                    @elseif($audifono->resultado_id == '3')
-                                                    <button class="boton300  badge-repliegue">
-                                                        {{ $audifono->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($audifono->fecha_entrega ))}}</button>
-                                                    @elseif($audifono->resultado_id == '4')
-                                                    <button class="boton300  badge-custodio">
-                                                        {{ $audifono->resultado?->nombre }}  <br>  {{ date('d-m-Y H:i:s',strtotime($audifono->fecha_entrega ))}}</button>
-                                                    @elseif($audifono->resultado_id == '5')
-                                                    <button class="boton300  badge-baja" >
-                                                        {{ $audifono->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($audifono->fecha_entrega ))}}</button>
+                                                @if(
+                                                    (!empty($audifono->cod_registro) &&
+                                                    !empty($audifono->user_id) &&
+                                                    !empty($audifono->fecha_asignacion))
+                                                    ||
+                                                    $audifono->estado_id != '1'
+                                                )
+
+                                                    @if($audifono->estado_id == '1')
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $audifono->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $audifono->id }},
+                                                                    {{ $audifono->estado_id }},
+                                                                    {{ $audifono->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
+                                                    @elseif($audifono->estado_id == '2')
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            class="btn btn-warning btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $audifono->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $audifono->id }},
+                                                                    {{ $audifono->estado_id }},
+                                                                    {{ $audifono->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            EN PROCESO
+                                                        </button>
+
+
+                                                    @elseif($audifono->estado_id == '3')
+
+                                                        <button
+                                                            class="btn btn-danger btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $audifono->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $audifono->id }},
+                                                                    {{ $audifono->estado_id }},
+                                                                    {{ $audifono->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            APERSONARSE CON EL TECNICO
+                                                            {{ $audifono->resultado?->nombre }}
+                                                        </button>
+
+
+                                                    @elseif($audifono->estado_id == '4')
+
+                                                        <button
+                                                            class="btn btn-success btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $audifono->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $audifono->id }},
+                                                                    {{ $audifono->estado_id }},
+                                                                    {{ $audifono->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            CONCLUIDO
+                                                        </button>
+
+
+                                                    @elseif($audifono->estado_id == '5')
+
+                                                        {{-- ---------------------------------------RESULTADO FINAL-------------------------------------------- --}}
+
+                                                        @if($audifono->resultado_id == '1')
+
+                                                            <button class="boton300 badge-devolucion">
+                                                                {{ $audifono->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($audifono->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($audifono->resultado_id == '2')
+
+                                                            <button class="boton300 badge-reposicion">
+                                                                {{ $audifono->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($audifono->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($audifono->resultado_id == '3')
+
+                                                            <button class="boton300 badge-repliegue">
+                                                                {{ $audifono->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($audifono->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($audifono->resultado_id == '4')
+
+                                                            <button class="boton300 badge-custodio">
+                                                                {{ $audifono->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($audifono->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($audifono->resultado_id == '5')
+
+                                                            <button class="boton300 badge-baja">
+                                                                {{ $audifono->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($audifono->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @endif
+
                                                     @endif
+
+
+                                                @else
+
+                                                    @if(empty($audifono->user_id))
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $audifono->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UN TECNICO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
+                                                    @elseif(empty($audifono->fecha_asignacion))
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $audifono->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UNA FECHA DE INICIO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+                                                    @endif
+
                                                 @endif
-                                            @else 
-                                                @if(empty($audifono->cod_registro))
-                                                <button type="submit" class="btn btn-primary btn-raised" data-id="{{ $audifono->id }}" @role('Administrador') onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NUMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                                @elseif(empty($audifono->user_id))
-                                                <button type="submit" class="btn btn-primary btn-raised" data-id="{{ $audifono->id }}" @role('Administrador') onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                                @elseif(empty($audifono->fecha_asignacion))
-                                                <button type="submit" class="btn btn-primary btn-raised" data-id="{{ $audifono->id }}" @role('Administrador') onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UNA FECHA DE INICIO', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                                @endif
-                                            @endif
                                                 <form id="form-cambiar-estado" method="POST" action="{{ route('estado-audifono') }}">
                                                     @csrf
                                                     <input type="hidden" name="id" id="id-audifono">
@@ -251,27 +397,33 @@
                                                                 class="dropdown-card card-primary">
                                                             <i class="fa fa-eye"></i> VER
                                                         </button>
-                                                        @role('Administrador')
-                                                        <!-- EDITAR -->
-                                                        <button type="button" data-toggle="modal" data-target="#editar{{ $audifono->id }}"
-                                                                class="dropdown-card card-success">
-                                                            <i class="fa fa-edit"></i> EDITAR
-                                                        </button>
-                                                        <!-- INFORME -->
-                                                        <a href="{{ route('informe.audifono', $audifono->id) }}"
-                                                        class="dropdown-card card-secondary">
-                                                            <i class="fa fa-file"></i> INFORME
-                                                        </a>
-                                                        <!-- ELIMINAR -->
-                                                        <form action="{{ route('audifonos.destroy', $audifono->id) }}" method="POST" class="formEliminar">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit"
-                                                                    class="dropdown-card card-danger">
-                                                                <i class="fa fa-trash"></i> ELIMINAR
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
+
+                                                            <!-- EDITAR -->
+                                                            <button type="button" data-toggle="modal" data-target="#editar{{ $audifono->id }}"
+                                                                    class="dropdown-card card-success">
+                                                                <i class="fa fa-edit"></i> EDITAR
                                                             </button>
-                                                        </form>
-                                                        @endrole
+                                                            <!-- INFORME -->
+                                                            <a href="{{ route('informe.audifono', $audifono->id) }}"
+                                                            class="dropdown-card card-secondary">
+                                                                <i class="fa fa-file"></i> INFORME
+                                                            </a>
+                                                            <!-- ELIMINAR -->
+                                                            <form action="{{ route('audifonos.destroy', $audifono->id) }}" method="POST" class="formEliminar">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit"
+                                                                        class="dropdown-card card-danger">
+                                                                    <i class="fa fa-trash"></i> ELIMINAR
+                                                                </button>
+                                                            </form>
+
+                                                        @endif
+
                                                     </div>
                                                 </div>
                                             </td>
@@ -392,99 +544,211 @@ function cambiarEstado(id, estadoId, tieneResultado) {
 }
 
 function cambiarEstadoAjax(id, estado_id) {
-// Definir texto y botón según condición
-let texto, botonConfirm;
 
-if (estado_id == 5) {
-    texto = "¿Quieres cambiar el estado?";
-    botonConfirm = "Sí, cambiar";
-} else {
-    texto = "¿Quieres cambiar el estado y enviar alerta?";
-    botonConfirm = "Sí, cambiar y enviar alerta!";
-}
+    // Definir texto y botón según condición
+    let texto, botonConfirm;
 
-// Llamada a SweetAlert
-Swal.fire({
-    title: '¿Estás seguro?',
-    text: texto,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: botonConfirm,
-    cancelButtonText: 'Cancelar'
-}).then((result) => {
+    if (estado_id == 5) {
+        texto = "¿Quieres cambiar el estado?";
+        botonConfirm = "Sí, cambiar";
+    } else {
+        texto = "¿Quieres cambiar el estado y enviar alerta?";
+        botonConfirm = "Sí, cambiar y enviar alerta!";
+    }
+
+    // Llamada a SweetAlert
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: texto,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: botonConfirm,
+        cancelButtonText: 'Cancelar'
+
+    }).then((result) => {
+
         if (result.isConfirmed) {
-                Swal.fire({
+
+            Swal.fire({
                 title: 'Actualizando...',
                 allowOutsideClick: false,
                 didOpen: () => {
                     Swal.showLoading();
                 }
-                });
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '{{ route('estado-audifono') }}', true);
-            xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            });
 
-            // ✔️ SOLO enviar lo necesario
-            xhr.send('id=' + id + '&estado_id=' + estado_id);
+            var xhr = new XMLHttpRequest();
+
+            xhr.open(
+                'POST',
+                '{{ route('estado-audifono') }}',
+                true
+            );
+
+            xhr.setRequestHeader(
+                'X-CSRF-TOKEN',
+                '{{ csrf_token() }}'
+            );
+
+            xhr.setRequestHeader(
+                'Content-Type',
+                'application/x-www-form-urlencoded'
+            );
+
+            xhr.send(
+                'id=' + encodeURIComponent(id) +
+                '&estado_id=' + encodeURIComponent(estado_id)
+            );
 
             xhr.onload = function() {
+
                 if (xhr.status === 200) {
 
                     var respuesta = JSON.parse(xhr.responseText);
+
+                    // ========================================
+                    // DATOS DEVUELTOS POR LARAVEL
+                    // ========================================
+
                     var nuevoEstado = respuesta.estado;
+                    var fechaInicio = respuesta.fecha_inicio;
 
-                    var boton = document.querySelector('button[data-id="' + id + '"]');
 
-                    boton.textContent = nuevoEstado;
-                    boton.classList.remove(
-                        'btn-primary', 'btn-warning', 'btn-success',
-                        'btn-danger', 'btn-info'
+                    // ========================================
+                    // ACTUALIZAR ESTADO
+                    // ========================================
+
+                    var boton = document.querySelector(
+                        'button[data-id="' + id + '"]'
                     );
 
-                    if (nuevoEstado === 'RECEPCIONADO') {
-                        boton.classList.add('btn-primary');
-                    } else if (nuevoEstado === 'EN PROCESO') {
-                        boton.classList.add('btn-warning');
-                    } else if (nuevoEstado === 'APERSONARSE CON EL TECNICO') {
-                        boton.classList.add('btn-danger');
-                    } else if (nuevoEstado === 'CONCLUIDO') {
-                        boton.classList.add('btn-success');
-                    } else if (nuevoEstado === 'DEVOLUCIÓN') {
-                        boton.classList.add('btn-info');
-                    }else if (nuevoEstado === 'REPOSICIÓN') {
-                        boton.classList.add('btn-info');
-                    }else if (nuevoEstado === 'REPLIEGUE') {
-                        boton.classList.add('btn-info');
-                    }else if (nuevoEstado === 'CUSTODIO') {
-                        boton.classList.add('btn-info');
-                    }else if (nuevoEstado === 'BAJA') {
-                        boton.classList.add('btn-info');
+                    if (boton) {
+
+                        boton.textContent = nuevoEstado;
+
+                        boton.classList.remove(
+                            'btn-primary',
+                            'btn-warning',
+                            'btn-success',
+                            'btn-danger',
+                            'btn-info'
+                        );
+
+                        if (nuevoEstado === 'RECEPCIONADO') {
+
+                            boton.classList.add('btn-primary');
+
+                        } else if (nuevoEstado === 'EN PROCESO') {
+
+                            boton.classList.add('btn-warning');
+
+                        } else if (
+                            nuevoEstado === 'APERSONARSE CON EL TECNICO'
+                        ) {
+
+                            boton.classList.add('btn-danger');
+
+                        } else if (nuevoEstado === 'CONCLUIDO') {
+
+                            boton.classList.add('btn-success');
+
+                        } else if (
+                            nuevoEstado === 'DEVOLUCIÓN' ||
+                            nuevoEstado === 'REPOSICIÓN' ||
+                            nuevoEstado === 'REPLIEGUE' ||
+                            nuevoEstado === 'CUSTODIO' ||
+                            nuevoEstado === 'BAJA'
+                        ) {
+
+                            boton.classList.add('btn-info');
+                        }
                     }
+
+
+                    // ========================================
+                    // ACTUALIZAR FECHA DE INICIO
+                    // ========================================
+
+                    var fechaElemento = document.getElementById(
+                        'fecha-inicio-' + id
+                    );
+
+                    if (fechaElemento) {
+
+                        if (fechaInicio) {
+
+                            // Mostrar fecha
+                            fechaElemento.textContent = fechaInicio;
+
+                            // Quitar color de "EN ESPERA"
+                            fechaElemento.classList.remove('color1');
+
+                        } else {
+
+                            // Mostrar estado de espera
+                            fechaElemento.textContent = 'EN ESPERA';
+
+                            // Agregar color de espera
+                            fechaElemento.classList.add('color1');
+                        }
+                    }
+
+
+                    // ========================================
+                    // MENSAJE DE CONFIRMACIÓN
+                    // ========================================
 
                     let texto2, texto3;
 
                     if (estado_id == 5) {
-                        texto2 = "El estado del equipo fue actualizado correctamente";
+
+                        texto2 =
+                            "El estado del equipo fue actualizado correctamente";
+
                         texto3 = "";
+
                     } else {
-                        texto2 = "El estado del equipo fue actualizado correctamente.";
-                        texto3 = "La alerta fue enviada correctamente.";
+
+                        texto2 =
+                            "El estado del equipo fue actualizado correctamente.";
+
+                        texto3 =
+                            "La alerta fue enviada correctamente.";
                     }
+
 
                     Swal.fire({
                         position: "top-center",
                         icon: "success",
                         title: texto2,
                         text: texto3,
-                        showConfirmButton: true,
+                        showConfirmButton: true
+                    });
+
+                } else {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo actualizar el estado.'
                     });
                 }
             };
+
+
+            xhr.onerror = function() {
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo conectar con el servidor.'
+                });
+
+            };
         }
-    })
+    });
 }
 </script>
 @endpush

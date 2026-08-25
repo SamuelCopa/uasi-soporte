@@ -195,7 +195,7 @@
     transition: all 0.3s;
 }
 
-
+/* cabecera */
 .topnav-modern {
     background: linear-gradient(90deg, #0052cc, #2684ff) !important;
     color: #fff !important;
@@ -216,7 +216,7 @@
 ========================= */
 
 .navbar-elegante {
-    background: linear-gradient(90deg, #003785, #005fcc, #4ba3ff);
+    background: linear-gradient(90deg, #6b11b0, #6b11b0, #6b11b0);
     color: #ffffff !important;
     font-weight: 600;
     letter-spacing: 0.5px;
@@ -226,9 +226,9 @@
     transition: background 0.3s ease;
 }
 
-.navbar-elegante:hover {
+/* .navbar-elegante:hover {
     background: linear-gradient(90deg, #002e70, #0052cc, #3d94ff);
-}
+} */
 
 .navbar-elegante .nav-link {
     color: #ffffff !important;

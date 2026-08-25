@@ -10,7 +10,7 @@
     padding: 18px 24px;
     margin-bottom: 22px;
     border: 1px solid #d7dde5;
-    border-left: 5px solid #8b1e2d;
+    /* border-left: 5px solid #8b1e2d; */
     border-radius: 10px;
     box-shadow:
         0 2px 6px rgba(0, 0, 0, 0.04),
@@ -20,7 +20,7 @@
 }
 
 /* Línea decorativa superior */
-.header-panel::before {
+/* .header-panel::before {
     content: "";
     position: absolute;
     top: 0;
@@ -33,7 +33,7 @@
         #b38b59,
         #8b1e2d
     );
-}
+} */
 
 /* =========================
    CONTENIDO IZQUIERDO

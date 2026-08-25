@@ -75,12 +75,12 @@
             
 
                 <!-- SELECT -->
-                <div>
+                <!-- <div>
                     <label for="tipo" class="block text-sm font-semibold text-gray-700 mb-2">
                         TIPO DE EQUIPO
                     </label>
 
-    <select id="tipo" name="tipo" required class="w-full pl-12 pr-10 py-3 rounded-xl border border-gray-300 bg-white
+                    <select id="tipo" name="tipo"  class="w-full pl-12 pr-10 py-3 rounded-xl border border-gray-300 bg-white
                        focus:border-violet-600 focus:ring-4 focus:ring-violet-200 transition appearance-none">
                         <option value="">Seleccione una opción</option>
                         <option value="cpu">C.P.U.</option>
@@ -93,8 +93,9 @@
                         <option value="ups">U.P.S.</option>
                         <option value="parlante">Parlantes</option>
                         <option value="laptop">Laptop</option>
+                        <option value="laptop">Laptop</option>
                     </select>
-                </div>
+                </div> -->
 
                 <!-- INPUT -->
     <!-- NÚMERO -->
@@ -108,7 +109,7 @@
 
             <i class="bi bi-hash absolute left-4 top-1/2 -translate-y-1/2 text-violet-500"></i>
 
-            <input type="number" name="codigo" id="input-imagen" required placeholder="Ej.: 12345" class="w-full pl-12 pr-4 py-3
+            <input type="text" name="codigo" id="input-imagen" required placeholder="Ej.: 12345" class="w-full pl-12 pr-4 py-3
                     rounded-xl border border-gray-300 focus:border-violet-600 focus:ring-4 focus:ring-violet-200 transition">
         </div>
 

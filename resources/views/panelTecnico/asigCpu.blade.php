@@ -58,27 +58,11 @@
                                                 <td class="{{ empty($registroCpu->fecha_asignacion) ? 'color1' : '' }}"  align="center">
                                                     @if($registroCpu->fecha_asignacion)
                                                         {{ date('d-m-Y H:i',strtotime($registroCpu->fecha_asignacion ))}}<br><br>
-                                                        @if(!($registroCpu->estado_id == '5') && !($registroCpu->estado_id == '4'))
-                                                            @php
-                                                            $dias = floor(\Carbon\Carbon::parse($registroCpu->fecha_asignacion)->diffInDays(\Carbon\Carbon::now()));
-                                                            @endphp
-                                                            <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Dias transcurridos desde la fecha de inico de la reparación">
-                                                            {{ $dias }} DÍAS TRANSCURRIDOS
-                                                            </button>
-                                                        @endif	
                                                     @endif								
                                                 </td>
                                                 <td class="{{ empty($registroCpu->fecha_inicio) ? 'color1' : '' }}"  align="center">
                                                     @if($registroCpu->fecha_inicio)
                                                         {{ date('d-m-Y H:i',strtotime($registroCpu->fecha_inicio ))}}<br><br>
-                                                        @if(!($registroCpu->estado_id == '5') && !($registroCpu->estado_id == '4'))
-                                                            @php
-                                                            $dias = floor(\Carbon\Carbon::parse($registroCpu->fecha_inicio)->diffInDays(\Carbon\Carbon::now()));
-                                                            @endphp
-                                                            <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Dias transcurridos desde la fecha de inico de la reparación">
-                                                            {{ $dias }} DÍAS TRANSCURRIDOS
-                                                            </button>
-                                                        @endif	
                                                     @elseif(! $registroCpu->fecha_inicio)	
                                                     <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Información', text: 'EN ESPERA DEL INICIO DEL TRABAJO', icon: 'info', confirmButtonText: 'ACEPTAR' });">{{ __('EN ESPERA') }}</button>
                                                     @endif								

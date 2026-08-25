@@ -30,13 +30,6 @@
                             <table id="mitabla" class="table table-modern align-middle">
 
                                 <thead>
-                                    <!-- Encabezado agrupado -->
-                                    <tr class="table-group-header text-center">
-                                        <th colspan="8" class="color2">DATOS DEL SOLICITANTE</th>
-                                        <th colspan="3" class="color3">ASIGNACIÓN</th>
-                                        <th colspan="3" class="color2">CONTROL</th>
-                                    </tr>
-
                                     <!-- Encabezado principal -->
                                     <tr class="text-center">
                                         <th>#</th>
@@ -58,39 +51,32 @@
                                 <tbody>
                                     @foreach ($monitors as $monitor)
                                         <tr>
-                                            <td>{{ ++$i }}</td>
+                                            <td class="text-center">{{ ++$i }}</td>
                                             <td>
                                                 @if($monitor->fecha)
-                                                {{ date('d-m-Y H:i',strtotime($monitor->fecha))}}
-                                                    @role('Administrador')
-                                                    @if(!($monitor->estado_id == '5'))
-                                                        @php
-                                                        $dias = floor(\Carbon\Carbon::parse($monitor->fecha)->diffInDays(\Carbon\Carbon::now()));
-                                                        @endphp
-                                                        <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Días transcurridos desde la recepción">
-                                                        {{ $dias }} DÍAS TRANSCURRIDOS
-                                                        </button>
-                                                    @endif
-                                                    @endrole
+                                                {{date('d-m-Y H:i',strtotime($monitor->fecha))}}<br><br>
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
+                                                            @if(!($monitor->estado_id == '5'))
+                                                                @php
+                                                                $dias = floor(\Carbon\Carbon::parse($monitor->fecha)->diffInDays(\Carbon\Carbon::now()));
+                                                                @endphp
+                                                                <button 
+                                                                class="btn btn-sm btn-estado"
+                                                                data-dias="{{ $dias }}"
+                                                                title="Días transcurridos desde la recepción">
+                                                                {{ $dias }} DÍAS 
+                                                                </button>
+                                                            @endif
+                                                        @endif
                                                 @elseif(! $monitor->fecha)	
                                                 {{ $monitor->fecha ?? ''}}
                                                 @endif
-                                                @role('Administrador')	
-                                                    @if(floor(\Carbon\Carbon::parse($monitor->fecha)->diffInDays(\Carbon\Carbon::now())) <= 30 )
-                                                        @if(!$monitor->boton_oculto && $monitor->estado_id != '5')
-                                                            <div class="div title">
-                                                                <form class="actualizarFecha" method="POST" action="{{ route('monitor.fecha',['id'=>$monitor->id]) }}" role="form" enctype="multipart/form-data">
-                                                                    {{ method_field('PATCH') }}
-                                                                    @csrf
-                                                                    <input type="hidden" name="fecha" class="form-control @error('fecha') is-invalid @enderror" value="{{ old('fecha', date('Y-m-d\TH:i:s'))}}" id="fecha">
-                                                                    <button type="submit" class="btn btn-primary btn-sm" title="Este botón registra la fecha actual">ACTUALIZAR FECHA</button>
-                                                                </form>
-                                                            </div>
-                                                        @endif
-                                                    @endif 
-                                                @endrole
-                                            </td> 
-                                            <td >{{ $monitor->funcionario?->nombre }} {{ $monitor->funcionario?->paterno }} {{ $monitor->funcionario?->materno }}</td>
+                                          
+                                            </td>
+                                            <td >{{ $monitor->funcionario?->nombre}} {{ $monitor->funcionario?->paterno}} {{ $monitor->funcionario?->materno}}</td>
                                             <td >{{ $monitor->funcionario?->ci }} {{ $monitor->funcionario?->expedido }}</td>
                                             <td >{{ $monitor->funcionario?->celular }}</td>
                                             @if(! $monitor->cargo == '')
@@ -104,19 +90,24 @@
                                             <td >{{ 'SIN DEPENDENCIA'}}</td>
                                             @endif
                                             <td >{{ $monitor->cod_gamea }}</td>	
-                                            @if (auth()->user()->hasRole('Administrador')) 									
+
+
+                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                'Administrador',
+                                                'SuperAdministrador'
+                                            ]))								
                                                 <td class="{{ empty($monitor->cod_registro) ? 'color1' : '' }}" >
                                                     @if($monitor->cod_registro)
-                                                    {{ $monitor->cod_registro}}
+                                                    {{$monitor->cod_registro }}
                                                     @elseif(! $monitor->cod_registro)	
                                                     <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eRecepcion{{ $monitor->id }}">{{ __( 'REGISTRAR NUMERO DE RECEPCIÓN' ) }}</button>
                                                     @endif
                                                 </td> 
-                                                <td class="{{ empty($monitor->user_id) ? 'color1' : '' }}" >
+                                                <td class="{{ empty($monitor->user_id) ? 'color1' : '' }}">
                                                     @if($monitor->cod_registro)
                                                         @if($monitor->user_id)
-                                                        {{ $monitor->user->name ?? ''}} {{ $monitor->user->paterno}} {{ $monitor->user->materno}}
-                                                        @elseif(! $monitor->user_id)	
+                                                        {{ $monitor->user->name}} {{ $monitor->user->paterno}} {{ $monitor->user->materno}}
+                                                        @elseif(! $monitor->user_id)
                                                         <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eTecnico{{ $monitor->id }}">{{ __('ASIGNAR TECNICO') }}</button>
                                                         @endif
                                                     @elseif(! $monitor->cod_registro)	
@@ -125,7 +116,7 @@
                                                 </td>
                                                 <td class="{{ empty($monitor->fecha_asignacion) ? 'color1' : '' }}">
                                                     @if($monitor->fecha_asignacion)
-                                                    {{ date('d-m-Y H:i',strtotime($monitor->fecha_asignacion ))}}
+                                                    {{ date('d-m-Y H:i',strtotime($monitor->fecha_asignacion ))}}<BR><BR>
                                                     @if(!($monitor->estado_id == '5') && !($monitor->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($monitor->fecha_asignacion)->diffInDays(\Carbon\Carbon::now()));
@@ -136,11 +127,11 @@
                                                     @endif
                                                     @elseif(! $monitor->fecha_asignacion)	
                                                     <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('FECHA DE ASIGNACIÓN') }}</button>
-                                                    @endif								
-                                                </td>
+                                                    @endif							
+                                                </td>	
                                                 <td class="{{ empty($monitor->fecha_inicio) ? 'color1' : '' }}">
                                                     @if($monitor->fecha_inicio)
-                                                    {{ date('d-m-Y H:i',strtotime($monitor->fecha_inicio ))}}
+                                                    {{ date('d-m-Y H:i',strtotime($monitor->fecha_inicio ))}}<BR><BR>
                                                     @if(!($monitor->estado_id == '5') && !($monitor->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($monitor->fecha_inicio)->diffInDays(\Carbon\Carbon::now()));
@@ -151,9 +142,9 @@
                                                     @endif
                                                     @elseif(! $monitor->fecha_inicio)	
                                                     <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'EN ESPERA DEL INICIO DEL TRABAJO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('EN ESPERA') }}</button>
-                                                    @endif								
-                                                </td>
-                                            @else
+                                                    @endif							
+                                                </td>	
+                                            @else 
                                             {{-- ------------------------------user---------------------------- --}}
                                                 <td class="{{ empty($monitor->cod_registro) ? 'color1' : '' }}" >
                                                     @if($monitor->cod_registro)
@@ -185,43 +176,200 @@
                                                 </td>
                                             @endif										
                                             <td >
-                                            @if(!empty($monitor->cod_registro) && !empty($monitor->user_id) && !empty($monitor->fecha_asignacion) || $monitor->estado_id != '1')
-                                                @if($monitor->estado_id == '1')
-                                                <button type="submit" class="btn btn-primary btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $monitor->id }}" onclick="cambiarEstado({{ $monitor->id }},{{ $monitor->estado_id }}, {{ $monitor->resultado_id ? 'true' : 'false' }} )"@endrole>RECEPCIONADO</button>
-                                                @elseif($monitor->estado_id == '2')
-                                                    <button class="btn btn-warning btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $monitor->id }}" onclick="cambiarEstado({{ $monitor->id }}, {{ $monitor->estado_id }}, {{ $monitor->resultado_id ? 'true' : 'false' }} )"@endrole>EN PROCESO</button>
-                                                @elseif($monitor->estado_id == '3')
-                                                    <button class="btn btn-danger btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $monitor->id }}" onclick="cambiarEstado({{ $monitor->id }}, {{ $monitor->estado_id }}, {{ $monitor->resultado_id ? 'true' : 'false' }} )"@endrole>APERSONARSE CON EL TECNICO</button>
-                                                @elseif($monitor->estado_id == '4')
-                                                    <button class="btn btn-success btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $monitor->id }}" onclick="cambiarEstado({{ $monitor->id }}, {{ $monitor->estado_id }}, {{ $monitor->resultado_id ? 'true' : 'false' }} )"@endrole>CONCLUIDO</button>
+                                                 @if(
+                                                    (!empty($monitor->cod_registro) &&
+                                                    !empty($monitor->user_id) &&
+                                                    !empty($monitor->fecha_asignacion))
+                                                    ||
+                                                    $monitor->estado_id != '1'
+                                                )
+
+                                                    @if($monitor->estado_id == '1')
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $monitor->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $monitor->id }},
+                                                                    {{ $monitor->estado_id }},
+                                                                    {{ $monitor->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
+                                                    @elseif($monitor->estado_id == '2')
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            class="btn btn-warning btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $monitor->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $monitor->id }},
+                                                                    {{ $monitor->estado_id }},
+                                                                    {{ $monitor->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            EN PROCESO
+                                                        </button>
+
+
+                                                    @elseif($monitor->estado_id == '3')
+
+                                                        <button
+                                                            class="btn btn-danger btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $monitor->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $monitor->id }},
+                                                                    {{ $monitor->estado_id }},
+                                                                    {{ $monitor->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            APERSONARSE CON EL TECNICO
+                                                            {{ $monitor->resultado?->nombre }}
+                                                        </button>
+
+
+                                                    @elseif($monitor->estado_id == '4')
+
+                                                        <button
+                                                            class="btn btn-success btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $monitor->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $monitor->id }},
+                                                                    {{ $monitor->estado_id }},
+                                                                    {{ $monitor->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            CONCLUIDO
+                                                        </button>
+
+
                                                     @elseif($monitor->estado_id == '5')
-                                                {{-- ---------------------------------------RESULTADO FINAL--------------------------------------------}}
-                                                    @if($monitor->resultado_id == '1')
-                                                    <button class="boton300 badge-devolucion">
-                                                    {{ $monitor->resultado?->nombre }}<br>  {{ date('d-m-Y H:i:s',strtotime($monitor->fecha_entrega ))}}</button>
-                                                    @elseif($monitor->resultado_id == '2')
-                                                    <button class="boton300 badge-reposicion">
-                                                    {{ $monitor->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($monitor->fecha_entrega ))}}</button>
-                                                    @elseif($monitor->resultado_id == '3')
-                                                    <button class="boton300  badge-repliegue">
-                                                        {{ $monitor->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($monitor->fecha_entrega ))}}</button>
-                                                    @elseif($monitor->resultado_id == '4')
-                                                    <button class="boton300  badge-custodio">
-                                                        {{ $monitor->resultado?->nombre }}  <br>  {{ date('d-m-Y H:i:s',strtotime($monitor->fecha_entrega ))}}</button>
-                                                    @elseif($monitor->resultado_id == '5')
-                                                    <button class="boton300  badge-baja" >
-                                                        {{ $monitor->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($monitor->fecha_entrega ))}}</button>
+
+                                                        {{-- ---------------------------------------RESULTADO FINAL-------------------------------------------- --}}
+
+                                                        @if($monitor->resultado_id == '1')
+
+                                                            <button class="boton300 badge-devolucion">
+                                                                {{ $monitor->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($monitor->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($monitor->resultado_id == '2')
+
+                                                            <button class="boton300 badge-reposicion">
+                                                                {{ $monitor->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($monitor->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($monitor->resultado_id == '3')
+
+                                                            <button class="boton300 badge-repliegue">
+                                                                {{ $monitor->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($monitor->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($monitor->resultado_id == '4')
+
+                                                            <button class="boton300 badge-custodio">
+                                                                {{ $monitor->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($monitor->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($monitor->resultado_id == '5')
+
+                                                            <button class="boton300 badge-baja">
+                                                                {{ $monitor->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($monitor->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @endif
+
                                                     @endif
-                                                @endif 
-                                            @else 
-                                                @if(empty($monitor->cod_registro))
-                                                <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') data-id="{{ $monitor->id }}" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NUMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                                @elseif(empty($monitor->user_id))
-                                                <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') data-id="{{ $monitor->id }}" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                                @elseif(empty($monitor->fecha_asignacion))
-                                                <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') data-id="{{ $monitor->id }}" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UNA FECHA DE INICIO', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
+
+
+                                                @else
+
+                                                    @if(empty($monitor->user_id))
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $monitor->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UN TECNICO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
+                                                    @elseif(empty($monitor->fecha_asignacion))
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $monitor->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UNA FECHA DE INICIO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+                                                    @endif
+
                                                 @endif
-                                            @endif
                                             <form id="form-cambiar-estado" method="POST" action="{{ route('estado-monitor') }}">
                                                 @csrf
                                                 <input type="hidden" name="id" id="id-monitor">
@@ -248,7 +396,10 @@
                                                                 class="dropdown-card card-primary">
                                                             <i class="fa fa-eye"></i> VER
                                                         </button>
-                                                        @role('Administrador')
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
                                                         <!-- EDITAR -->
                                                         <button type="button" data-toggle="modal" data-target="#editar{{ $monitor->id }}"
                                                                 class="dropdown-card card-success">
@@ -268,7 +419,7 @@
                                                                 <i class="fa fa-trash"></i> ELIMINAR
                                                             </button>
                                                         </form>
-                                                        @endrole
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </td>

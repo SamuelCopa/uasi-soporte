@@ -482,11 +482,11 @@ public function reportePdf2(Request $request, $id)
     ];
 
     $estados = [
-        1 => 'Recepcionados',
+        1 => 'Recepcionado',
         2 => 'En proceso',
-        3 => 'Apersonarse con el técnico',
+        3 => 'Apersonarse',
         4 => 'Concluido',
-        5 => 'Entregados',
+        5 => 'Entregado',
     ];
 
     $datos = [];

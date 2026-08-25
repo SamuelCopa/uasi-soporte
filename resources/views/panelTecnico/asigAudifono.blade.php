@@ -57,21 +57,11 @@
                                                 <td class="{{ empty($audifono->fecha_asignacion) ? 'color1' : '' }}">
                                                     @if($audifono->fecha_asignacion)
                                                     {{ date('d-m-Y H:i',strtotime($audifono->fecha_asignacion ))}}<BR><BR>
-                                                        @if(!($audifono->estado_id == '5') && !($audifono->estado_id == '4'))
-                                                        <button class="btn btn-sm btn-danger boton-parpadea">
-                                                        {{ floor(\Carbon\Carbon::parse($audifono->fecha_asignacion)->diffInDays(\Carbon\Carbon::now())) }} DÍAS TRANSCURRIDOS
-                                                        </button>
-                                                        @endif
                                                     @endif							
                                                 </td>	
                                                 <td class="{{ empty($audifono->fecha_inicio) ? 'color1' : '' }}">
                                                     @if($audifono->fecha_inicio)
                                                     {{ date('d-m-Y H:i',strtotime($audifono->fecha_inicio ))}}<BR><BR>
-                                                    @if(!($audifono->estado_id == '5') && !($audifono->estado_id == '4'))
-                                                    <button class="btn btn-sm btn-info boton-parpadea">
-                                                    {{ floor(\Carbon\Carbon::parse($audifono->fecha_inicio)->diffInDays(\Carbon\Carbon::now())) }} DÍAS TRANSCURRIDOS
-                                                    </button>
-                                                    @endif
                                                     @elseif(! $audifono->fecha_inicio)	
                                                     <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Información', text: 'EN ESPERA DEL INICIO DEL TRABAJO', icon: 'info', confirmButtonText: 'ACEPTAR' });">{{ __('EN ESPERA') }}</button>
                                                     @endif							

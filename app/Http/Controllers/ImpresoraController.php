@@ -23,6 +23,10 @@ use App\Services\NotificacionService;
 use App\Mail\TecnicoAsignado;
 use App\Services\EquipoPdfService;
 use Illuminate\Support\Facades\DB;
+use App\Models\Correlativo;
+use App\Services\CorrelativoService;
+
+
 class ImpresoraController extends Controller
 {
     /**
@@ -80,7 +84,7 @@ class ImpresoraController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ImpresoraRequest $request)
+    public function store(Request $request, CorrelativoService $correlativoService)
     {
         $request->validate([
             'ci'        => 'required',
@@ -128,23 +132,43 @@ class ImpresoraController extends Controller
         // Guardar los cambios
         $funcionario->save();
 
+    $impresora = DB::transaction(function () use (
+        $request,
+        $funcionario,
+        $correlativoService
+    ) {
+
         $impresora = new Impresora();
+
         $impresora->funcionario_id = $funcionario->id;
-        $impresora->dependencia_id = $request->input('dependencia_id');
         $impresora->cargo = $request->input('cargo');
+        $impresora->dependencia_id = $request->input('dependencia_id');
         $impresora->cod_gamea = $request->input('cod_gamea');
-        $impresora->marca = $request->input('marca');
+
+        // GENERAR CORRELATIVO
+        $impresora->cod_registro =
+            $correlativoService->generarNumeroRecepcion();
+
         $impresora->fecha = $request->input('fecha');
+        $impresora->marca = $request->input('marca');
         $impresora->modelo = $request->input('modelo');
         $impresora->falla = $request->input('falla');
         $impresora->observaciones = $request->input('observaciones');
+        $impresora->funcionario_activo =
+        $request->input('funcionario_activo');
         $impresora->estado_id = $request->input('estado_id');
-        $impresora->funcionario_activo = $request->input('funcionario_activo');
         $impresora->reguser_id = Auth::id();
+
         $impresora->save();
-        return Redirect::route('impresoras.index')
-        ->with('success', 'CREADO CORRECTAMENTE.')
-        ->with('icono', 'success'); 
+
+        return $impresora;
+    });
+
+    return redirect()
+        ->route('impresoras.index')
+        ->with('success', 'REGISTRADO CORRECTAMENTE')
+        ->with('text', 'Número de recepción: ' . $impresora->cod_registro)
+        ->with('icono', 'success');
 
     }
 
@@ -440,7 +464,7 @@ public function enviar($id, EquipoPdfService $service)
         // =========================
         // ENVÍO DE NOTIFICACIÓN
         // =========================
-        if (in_array($estadoId, [2, 3, 4])) {
+        if (in_array($estadoId, [3, 4])) {
 
             $this->notificacionService->enviar(
                 $impresora->funcionario,
@@ -457,55 +481,6 @@ public function enviar($id, EquipoPdfService $service)
                 ? $impresora->resultado?->nombre
                 : $impresora->estado?->nombre
         ]);
-    }
-
-    public function updateRecepcion(Request $request, $id){
-    $request->validate([
-        'cod_registro' => [
-            'nullable',
-            function ($attribute, $value, $fail) {
-
-                if (empty($value)) {
-                    return;
-                }
-
-                $anio = date('Y');
-
-                $tablas = [
-                    'registro_cpus'   => 'CPU',
-                    'monitors'        => 'Monitor',
-                    'impresoras'      => 'Impresora',
-                    'laptops'         => 'Laptop',
-                    'teclados'        => 'Teclado',
-                    'ratons'          => 'Mouse',
-                    'upeses'          => 'UPS',
-                    'parlantes'       => 'Parlante',
-                    'audifonos'       => 'Audífono',
-                    'estabilizadors'  => 'Estabilizador',
-                ];
-
-                foreach ($tablas as $tabla => $nombre) {
-
-                    $existe = DB::table($tabla)
-                        ->where('cod_registro', $value)
-                        ->whereYear('created_at', $anio)
-                        ->exists();
-
-                    if ($existe) {
-                        $fail("El número de recepción ya está asignado a un {$nombre} en la gestión actual.");
-                        return;
-                    }
-                }
-            },
-        ],
-    ]);
-        $impresora = Impresora::find($id);
-        $impresora->cod_registro = $request->input('cod_registro');
-        $impresora->update();
-        return Redirect::route('impresoras.index')
-        ->with('success', 'REGISTRADO CORRECTAMENTE') 
-        ->with('text', 'Numero de recepción')          
-        ->with('icono', 'success');
     }
 
     public function updateTecnico(Request $request, $id){

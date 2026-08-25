@@ -22,19 +22,25 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-    {
-        Gate::define('admin', function ($user) {
-            return $user->hasRole('Administrador');
-        });
-        Gate::define('usuario', function ($user) {
-            return $user->hasRole('Usuario');
-        });
-        Gate::define('tecnico', function ($user) {
-            return $user->hasRole('Tecnico');
-        });
-    
-    }
+public function boot(): void
+{
+    Gate::define('admin', function ($user) {
+        return $user->hasRole('Administrador')
+            || $user->hasRole('SuperAdministrador');
+    });
+
+    Gate::define('superadministrador', function ($user) {
+        return $user->hasRole('SuperAdministrador');
+    });
+
+    Gate::define('usuario', function ($user) {
+        return $user->hasRole('Usuario');
+    });
+
+    Gate::define('tecnico', function ($user) {
+        return $user->hasRole('Tecnico');
+    });
+}
 
 
 }

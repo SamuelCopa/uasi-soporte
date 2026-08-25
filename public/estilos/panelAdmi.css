@@ -107,7 +107,7 @@
 }
 
 /* Línea superior institucional */
-.dashboard-card-prof::before{
+/* .dashboard-card-prof::before{
     content: "";
     position: absolute;
     top: 0;
@@ -117,7 +117,7 @@
     background: linear-gradient(90deg,
                 var(--color-primario),
                 var(--color-secundario));
-}
+} */
 
 /* Hover elegante */
 .dashboard-card-prof:hover{

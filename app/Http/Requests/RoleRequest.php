@@ -23,7 +23,7 @@ class RoleRequest extends FormRequest
     {
         return [
 			'name' => 'required|string',
-			'guard_name' => 'required|string',
+			// 'guard_name' => 'required|string',
         ];
     }
 }

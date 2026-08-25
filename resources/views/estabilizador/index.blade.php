@@ -30,13 +30,6 @@
                             <table id="mitabla" class="table table-modern align-middle">
 
                                 <thead>
-                                    <!-- Encabezado agrupado -->
-                                    <tr class="table-group-header text-center">
-                                        <th colspan="8" class="color2">DATOS DEL SOLICITANTE</th>
-                                        <th colspan="3" class="color3">ASIGNACIÓN</th>
-                                        <th colspan="3" class="color2">CONTROL</th>
-                                    </tr>
-
                                     <!-- Encabezado principal -->
                                     <tr class="text-center">
                                         <th>#</th>
@@ -58,39 +51,32 @@
                                 <tbody>
                                     @foreach ($estabilizadors as $estabilizador)
                                         <tr>
-                                            <td>{{ ++$i }}</td>
+                                            <td class="text-center">{{ ++$i }}</td>
                                             <td>
                                                 @if($estabilizador->fecha)
-                                                {{ date('d-m-Y H:i',strtotime($estabilizador->fecha))}}<br><br>
-                                                @role('Administrador')
-                                                @if(!($estabilizador->estado_id == '5'))
-                                                        @php
-                                                        $dias = floor(\Carbon\Carbon::parse($estabilizador->fecha)->diffInDays(\Carbon\Carbon::now()));
-                                                        @endphp
-                                                        <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Días transcurridos desde la recepción">
-                                                        {{ $dias }} DÍAS TRANSCURRIDOS
-                                                        </button>
-                                                @endif
-                                                @endrole
+                                                {{date('d-m-Y H:i',strtotime($estabilizador->fecha))}}<br><br>
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
+                                                            @if(!($estabilizador->estado_id == '5'))
+                                                                @php
+                                                                $dias = floor(\Carbon\Carbon::parse($estabilizador->fecha)->diffInDays(\Carbon\Carbon::now()));
+                                                                @endphp
+                                                                <button 
+                                                                class="btn btn-sm btn-estado"
+                                                                data-dias="{{ $dias }}"
+                                                                title="Días transcurridos desde la recepción">
+                                                                {{ $dias }} DÍAS 
+                                                                </button>
+                                                            @endif
+                                                        @endif
                                                 @elseif(! $estabilizador->fecha)	
                                                 {{ $estabilizador->fecha ?? ''}}
-                                                @endif	
-                                                @role('Administrador')
-                                                @if(floor(\Carbon\Carbon::parse($estabilizador->fecha)->diffInDays(\Carbon\Carbon::now())) <= 30 )
-                                                    @if(!$estabilizador->boton_oculto && $estabilizador->estado_id != '5')
-                                                        <div class="div title">
-                                                            <form class="actualizarFecha" method="POST" action="{{ route('estabilizador.fecha',['id'=>$estabilizador->id]) }}" role="form" enctype="multipart/form-data">
-                                                                {{ method_field('PATCH') }}
-                                                                @csrf
-                                                                <input type="hidden" name="fecha" class="form-control @error('fecha') is-invalid @enderror" value="{{ old('fecha', date('Y-m-d\TH:i:s'))}}" id="fecha">
-                                                                <button type="submit" class="btn btn-primary btn-sm" title="Este botón registra la fecha actual">ACTUALIZAR FECHA</button>
-                                                            </form>
-                                                        </div>
-                                                    @endif
-                                                @endif 
-                                                @endrole                                          
-                                            </td>                                            
-                                            <td >{{ $estabilizador->funcionario?->nombre }} {{ $estabilizador->funcionario?->paterno }} {{ $estabilizador->funcionario?->materno }}</td>
+                                                @endif
+                                          
+                                            </td>
+                                            <td >{{ $estabilizador->funcionario?->nombre}} {{ $estabilizador->funcionario?->paterno}} {{ $estabilizador->funcionario?->materno}}</td>
                                             <td >{{ $estabilizador->funcionario?->ci }} {{ $estabilizador->funcionario?->expedido }}</td>
                                             <td >{{ $estabilizador->funcionario?->celular }}</td>
                                             @if(! $estabilizador->cargo == '')
@@ -103,11 +89,16 @@
                                             @else
                                             <td >{{ 'SIN DEPENDENCIA'}}</td>
                                             @endif
-                                            <td >{{ $estabilizador->cod_gamea }}</td>
-                                            @if (auth()->user()->hasRole('Administrador')) 											
+                                            <td >{{ $estabilizador->cod_gamea }}</td>	
+
+
+                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                'Administrador',
+                                                'SuperAdministrador'
+                                            ]))								
                                                 <td class="{{ empty($estabilizador->cod_registro) ? 'color1' : '' }}" >
                                                     @if($estabilizador->cod_registro)
-                                                    {{ $estabilizador->cod_registro}}
+                                                    {{$estabilizador->cod_registro }}
                                                     @elseif(! $estabilizador->cod_registro)	
                                                     <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eRecepcion{{ $estabilizador->id }}">{{ __( 'REGISTRAR NUMERO DE RECEPCIÓN' ) }}</button>
                                                     @endif
@@ -116,7 +107,7 @@
                                                     @if($estabilizador->cod_registro)
                                                         @if($estabilizador->user_id)
                                                         {{ $estabilizador->user->name}} {{ $estabilizador->user->paterno}} {{ $estabilizador->user->materno}}
-                                                        @elseif(! $estabilizador->user_id)	
+                                                        @elseif(! $estabilizador->user_id)
                                                         <button type="button" class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#eTecnico{{ $estabilizador->id }}">{{ __('ASIGNAR TECNICO') }}</button>
                                                         @endif
                                                     @elseif(! $estabilizador->cod_registro)	
@@ -125,35 +116,35 @@
                                                 </td>
                                                 <td class="{{ empty($estabilizador->fecha_asignacion) ? 'color1' : '' }}">
                                                     @if($estabilizador->fecha_asignacion)
-                                                    {{ date('d-m-Y H:i',strtotime($estabilizador->fecha_asignacion ))}}<br><br>
-                                                        @if(!($estabilizador->estado_id == '5') && !($estabilizador->estado_id == '4'))
-                                                            @php
-                                                            $dias = floor(\Carbon\Carbon::parse($estabilizador->fecha_asignacion)->diffInDays(\Carbon\Carbon::now()));
-                                                            @endphp
-                                                            <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Dias transcurridos desde la fecha de asignación">
-                                                            {{ $dias }} DÍAS TRANSCURRIDOS
-                                                            </button>
-                                                        @endif
+                                                    {{ date('d-m-Y H:i',strtotime($estabilizador->fecha_asignacion ))}}<BR><BR>
+                                                    @if(!($estabilizador->estado_id == '5') && !($estabilizador->estado_id == '4'))
+                                                        @php
+                                                        $dias = floor(\Carbon\Carbon::parse($estabilizador->fecha_asignacion)->diffInDays(\Carbon\Carbon::now()));
+                                                        @endphp
+                                                        <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Dias transcurridos desde la fecha de asignación">
+                                                        {{ $dias }} DÍAS TRANSCURRIDOS
+                                                        </button>
+                                                    @endif
                                                     @elseif(! $estabilizador->fecha_asignacion)	
                                                     <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('FECHA DE ASIGNACIÓN') }}</button>
-                                                    @endif								
+                                                    @endif							
                                                 </td>	
                                                 <td class="{{ empty($estabilizador->fecha_inicio) ? 'color1' : '' }}">
                                                     @if($estabilizador->fecha_inicio)
-                                                    {{ date('d-m-Y H:i',strtotime($estabilizador->fecha_inicio ))}}<br><br>
-                                                        @if(!($estabilizador->estado_id == '5') && !($estabilizador->estado_id == '4'))
+                                                    {{ date('d-m-Y H:i',strtotime($estabilizador->fecha_inicio ))}}<BR><BR>
+                                                    @if(!($estabilizador->estado_id == '5') && !($estabilizador->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($estabilizador->fecha_inicio)->diffInDays(\Carbon\Carbon::now()));
                                                         @endphp
                                                         <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Dias transcurridos desde la fecha de inico de la reparación">
                                                         {{ $dias }} DÍAS TRANSCURRIDOS
                                                         </button>
-                                                        @endif
+                                                    @endif
                                                     @elseif(! $estabilizador->fecha_inicio)	
                                                     <button type="button" class="btn btn-sm btn-outline-light" onclick="Swal.fire({ title: 'Error', text: 'EN ESPERA DEL INICIO DEL TRABAJO', icon: 'error', confirmButtonText: 'ACEPTAR' });">{{ __('EN ESPERA') }}</button>
-                                                    @endif								
+                                                    @endif							
                                                 </td>	
-                                            @else
+                                            @else 
                                             {{-- ---------------------------VISTA TÉCNICO-------------------------------------------- --}}
                                                 <td class="{{ empty($estabilizador->cod_registro) ? 'color1' : '' }}" >
                                                     @if($estabilizador->cod_registro)
@@ -186,41 +177,200 @@
                                             {{------------------------------------------------------------------------ --}}
                                             @endif									
                                             <td >
-                                            @if(!empty($estabilizador->cod_registro) && !empty($estabilizador->user_id) && !empty($estabilizador->fecha_asignacion) || $estabilizador->estado_id != '1')
-                                                @if($estabilizador->estado_id == '1')
-                                                    <button id="#boton-actualizar-estado" type="submit" class="btn btn-primary btn-raised" @role('Administrador') title="Actualizar estado"data-id="{{ $estabilizador->id }}" onclick="cambiarEstado({{ $estabilizador->id }}, {{ $estabilizador->estado_id }}, {{ $estabilizador->resultado_id ? 'true' : 'false' }} )"@endrole>RECEPCIONADO</button>
-                                                @elseif($estabilizador->estado_id == '2')
-                                                    <button id="#boton-actualizar-estado" class="btn btn-warning btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $estabilizador->id }}" onclick="cambiarEstado({{ $estabilizador->id }}, {{ $estabilizador->estado_id }}, {{ $estabilizador->resultado_id ? 'true' : 'false' }} )"@endrole>EN PROCESO</button>
-                                                @elseif($estabilizador->estado_id == '3')
-                                                <button class="btn btn-danger btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $estabilizador->id }}" onclick="cambiarEstado({{ $estabilizador->id }}, {{ $estabilizador->estado_id }}, {{ $estabilizador->resultado_id ? 'true' : 'false' }} )"@endrole>APERSONARSE CON EL TECNICO</button>
-                                                @elseif($estabilizador->estado_id == '4')
-                                                <button class="btn btn-success btn-raised" @role('Administrador') title="Actualizar estado" data-id="{{ $estabilizador->id }}" onclick="cambiarEstado({{ $estabilizador->id }}, {{ $estabilizador->estado_id }}, {{ $estabilizador->resultado_id ? 'true' : 'false' }} )"@endrole>CONCLUIDO</button>
-                                                @elseif($estabilizador->estado_id == '5')
-                                                {{-- ---------------------------------------RESULTADO FINAL--------------------------------------------}}
-                                                    @if($estabilizador->resultado_id == '1')
-                                                    <button class="boton300 badge-devolucion">
-                                                    {{ $estabilizador->resultado?->nombre }}<br>  {{ date('d-m-Y H:i:s',strtotime($estabilizador->fecha_entrega ))}}</button>
-                                                    @elseif($estabilizador->resultado_id == '2')
-                                                    <button class="boton300 badge-reposicion">
-                                                    {{ $estabilizador->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($estabilizador->fecha_entrega ))}}</button>
-                                                    @elseif($estabilizador->resultado_id == '3')
-                                                    <button class="boton300  badge-repliegue">
-                                                        {{ $estabilizador->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($estabilizador->fecha_entrega ))}}</button>
-                                                    @elseif($estabilizador->resultado_id == '4')
-                                                    <button class="boton300  badge-custodio">
-                                                        {{ $estabilizador->resultado?->nombre }}  <br>  {{ date('d-m-Y H:i:s',strtotime($estabilizador->fecha_entrega ))}}</button>
-                                                    @elseif($estabilizador->resultado_id == '5')
-                                                    <button class="boton300  badge-baja" >
-                                                        {{ $estabilizador->resultado?->nombre }} <br>  {{ date('d-m-Y H:i:s',strtotime($estabilizador->fecha_entrega ))}}</button>
+                                                @if(
+                                                    (!empty($estabilizador->cod_registro) &&
+                                                    !empty($estabilizador->user_id) &&
+                                                    !empty($estabilizador->fecha_asignacion))
+                                                    ||
+                                                    $estabilizador->estado_id != '1'
+                                                )
+
+                                                    @if($estabilizador->estado_id == '1')
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $estabilizador->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $estabilizador->id }},
+                                                                    {{ $estabilizador->estado_id }},
+                                                                    {{ $estabilizador->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
+                                                    @elseif($estabilizador->estado_id == '2')
+
+                                                        <button
+                                                            id="boton-actualizar-estado"
+                                                            class="btn btn-warning btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $estabilizador->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $estabilizador->id }},
+                                                                    {{ $estabilizador->estado_id }},
+                                                                    {{ $estabilizador->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            EN PROCESO
+                                                        </button>
+
+
+                                                    @elseif($estabilizador->estado_id == '3')
+
+                                                        <button
+                                                            class="btn btn-danger btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $estabilizador->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $estabilizador->id }},
+                                                                    {{ $estabilizador->estado_id }},
+                                                                    {{ $estabilizador->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            APERSONARSE CON EL TECNICO
+                                                            {{ $estabilizador->resultado?->nombre }}
+                                                        </button>
+
+
+                                                    @elseif($estabilizador->estado_id == '4')
+
+                                                        <button
+                                                            class="btn btn-success btn-raised"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $estabilizador->id }}"
+                                                                onclick="cambiarEstado(
+                                                                    {{ $estabilizador->id }},
+                                                                    {{ $estabilizador->estado_id }},
+                                                                    {{ $estabilizador->resultado_id ? 'true' : 'false' }}
+                                                                )"
+                                                            @endif
+                                                        >
+                                                            CONCLUIDO
+                                                        </button>
+
+
+                                                    @elseif($estabilizador->estado_id == '5')
+
+                                                        {{-- ---------------------------------------RESULTADO FINAL-------------------------------------------- --}}
+
+                                                        @if($estabilizador->resultado_id == '1')
+
+                                                            <button class="boton300 badge-devolucion">
+                                                                {{ $estabilizador->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($estabilizador->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($estabilizador->resultado_id == '2')
+
+                                                            <button class="boton300 badge-reposicion">
+                                                                {{ $estabilizador->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($estabilizador->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($estabilizador->resultado_id == '3')
+
+                                                            <button class="boton300 badge-repliegue">
+                                                                {{ $estabilizador->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($estabilizador->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($estabilizador->resultado_id == '4')
+
+                                                            <button class="boton300 badge-custodio">
+                                                                {{ $estabilizador->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($estabilizador->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @elseif($estabilizador->resultado_id == '5')
+
+                                                            <button class="boton300 badge-baja">
+                                                                {{ $estabilizador->resultado?->nombre }}<br>
+                                                                {{ date('d-m-Y H:i:s', strtotime($estabilizador->fecha_entrega)) }}
+                                                            </button>
+
+                                                        @endif
+
                                                     @endif
+
+
+                                                @else
+
+                                                    @if(empty($estabilizador->user_id))
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $estabilizador->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UN TECNICO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+
+                                                    @elseif(empty($estabilizador->fecha_asignacion))
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            data-id="{{ $estabilizador->id }}"
+
+                                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                                'Administrador',
+                                                                'SuperAdministrador'
+                                                            ]))
+                                                                onclick="Swal.fire({
+                                                                    title: 'Error',
+                                                                    text: 'DEBES ASIGNAR UNA FECHA DE INICIO',
+                                                                    icon: 'error',
+                                                                    confirmButtonText: 'ACEPTAR'
+                                                                });"
+                                                            @endif
+                                                        >
+                                                            RECEPCIONADO
+                                                        </button>
+
+                                                    @endif
+
                                                 @endif
-                                            @else 
-                                                @if(empty($estabilizador->cod_registro))
-                                                <button type="submit" class="btn btn-primary btn-raised" @role('Administrador') data-id="{{ $estabilizador->id }}" onclick="Swal.fire({ title: 'Error', text: 'DEBES REGISTRAR NUMERO DE RECEPCIÓN', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                                @elseif(empty($estabilizador->user_id))
-                                                <button type="submit" class="btn btn-primary btn-raised" @role('Administrador') data-id="{{ $estabilizador->id }}" onclick="Swal.fire({ title: 'Error', text: 'DEBES ASIGNAR UN TECNICO', icon: 'error', confirmButtonText: 'ACEPTAR' });"@endrole>RECEPCIONADO</button>
-                                                @endif
-                                            @endif
                                                 <form id="form-cambiar-estado" method="POST" action="{{ route('estado-estabilizador') }}">
                                                     @csrf
                                                     <input type="hidden" name="id" id="id-estabilizador">
@@ -247,7 +397,10 @@
                                                                 class="dropdown-card card-primary">
                                                             <i class="fa fa-eye"></i> VER
                                                         </button>
-                                                        @role('Administrador')
+                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                            'Administrador',
+                                                            'SuperAdministrador'
+                                                        ]))
                                                         <!-- EDITAR -->
                                                         <button type="button" data-toggle="modal" data-target="#editar{{ $estabilizador->id }}"
                                                                 class="dropdown-card card-success">
@@ -267,7 +420,7 @@
                                                                 <i class="fa fa-trash"></i> ELIMINAR
                                                             </button>
                                                         </form>
-                                                        @endrole
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </td>

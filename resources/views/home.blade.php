@@ -16,43 +16,57 @@
 
         <div class="header-actions">
 
-            @role('Administrador')
-                <a href="{{ route('estadistica') }}" class="btn-header">
-                    <i class="fas fa-chart-line"></i>
-                    Estadística general
+        @if(auth()->check() && auth()->user()->hasAnyRole([
+            'Administrador',
+            'SuperAdministrador'
+        ]))
+
+            <a href="{{ route('estadistica') }}" class="btn-header">
+                <i class="fas fa-chart-line"></i>
+                Estadística general
+            </a>
+
+            <div>
+                <a href="{{ route('servicios.index') }}" class="btn-header">
+
+                    @if($nuevasSolicitudes > 0)
+                        <h4>🔔 {{ $nuevasSolicitudes }} NUEVAS</h4>
+                    @endif
+
                 </a>
-            @endrole
+            </div>
+
+        @endif
+
 
             @role('Tecnico')
                 <a href="{{ route('estadistica.tecnico') }}" class="btn-header">
                     <i class="fas fa-chart-line"></i>
                     Mis estadisticas
                 </a>
+        <div>
+            <a href="{{ route('asignaciones.asistencia') }}" class="btn-header">
+            @if($nuevasSolicitudesTecnico > 0)
+            <h4>🔔 {{ $nuevasSolicitudesTecnico }} NUEVAS</h4>
+            @endif
+            </a>
+        </div>
             @endrole
         </div>
-        <div>
-<a href="{{ route('servicios.index') }}" class="nav-link">
 
-@if($nuevasSolicitudes > 0)
-
-<h1 class="badge bg-danger fs-6">
-    🔔 {{ $nuevasSolicitudes }} NUEVAS
-</h1>
-
-@endif
-
-</a>
-
-
-        </div>
     </div>
 
 @stop
 
 @section('content')
-    @role('Administrador')
-    @include('panel.panel')
-    @endrole
+        @if(auth()->check() && auth()->user()->hasAnyRole([
+            'Administrador',
+            'SuperAdministrador'
+        ]))
+
+     @include('panel.panel')
+
+        @endif
 
     @role('Tecnico')
     @include('panelTecnico.panel')

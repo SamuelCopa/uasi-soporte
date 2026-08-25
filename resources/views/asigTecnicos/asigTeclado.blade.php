@@ -20,9 +20,10 @@
                         </div>
                         <div class="header-actions">
                         <!-- Botón -->
-                            <a href="{{ route('tecnicos.index') }}" class="btn  btn-block fw-bold text-white" style="background: linear-gradient(90deg, #dc3545, #a71d2a); border: none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: all 0.3s;">
-                                <span class="icono">↩️</span> salir
-                            </a>
+                        <a href="{{ url()->previous() }}"
+                        class="btn-header">
+                            <i class="fas fa-arrow-left"></i> Volver
+                        </a>
                         </div>
                     </div>
                         <div class="card shadow-sm border-0 rounded-4">

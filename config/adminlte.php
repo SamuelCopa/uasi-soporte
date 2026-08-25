@@ -150,7 +150,7 @@ return [
 
     'usermenu_enabled' => true,
     'usermenu_header' => true,
-    'usermenu_header_class' => 'bg-info',
+    'usermenu_header_class' => '',
     'usermenu_image' => true,
     'usermenu_desc' => true,
     'usermenu_profile_url' => true,
@@ -174,31 +174,6 @@ return [
     'layout_fixed_footer' => true,
     'layout_dark_mode' => null,
 
-    /*
-    |--------------------------------------------------------------------------
-    | Authentication Views Classes
-    |--------------------------------------------------------------------------
-    |
-    | Here you can change the look and behavior of the authentication views.
-    |
-    | For detailed instructions you can look the auth classes section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Layout-and-Styling-Configuration
-    |
-    */
-
-// 'classes_auth_card' => '',
-// 'classes_auth_header' => 'bg-gradient-info',
-// 'classes_auth_body' => '',
-// 'classes_auth_footer' => 'text-center',
-// 'classes_auth_icon' => 'fa-lg text-info',
-// 'classes_auth_btn' => 'btn-flat btn-primary',
-
-// 'classes_auth_card' => '',
-// 'classes_auth_header' => 'bg-gradient-info',
-// 'classes_auth_body' => '',
-// 'classes_auth_footer' => 'text-center',
-// 'classes_auth_icon' => 'fa-lg text-info',
-// 'classes_auth_btn' => 'btn-flat btn-primary',
 
     /*
     |--------------------------------------------------------------------------
@@ -357,20 +332,20 @@ return [
             'text' => 'PANEL PRINCIPAL',
             // 'classes' => 'text-blue text-bold',
             'url' => '/home',
-            'icon' => 'fas fas fa-house-user',
+            'icon' => 'fas fas fa-home',
             'icon_color' => '',
         ],
         [
             'text' => 'PERSONAL',
             // 'classes' => 'text-cyan text-bold',
             'icon' => 'fas fas fa-user',
-            'icon_color' => 'cyan',
-            'can' => 'admin',
+            'can' => ['superadministrador','admin'],
             'submenu' => [
                 [
                     'text' => 'RESPONSABLES',
                     'url' => '/users',
                     'icon' => 'fas fas fa-user',
+                    'can' => 'superadministrador',
                 ],
                 [
                     'text' => 'TECNICOS',
@@ -391,10 +366,14 @@ return [
             'text' => 'REGISTRO DE ACTIVOS',
             // 'classes' => 'text-yellow text-bold',
             'icon' => 'fas fa-folder-open',
-            'icon_color' => 'yellow',
             'can' => ['admin', 'tecnico'],
 
             'submenu' => [
+                [
+                    'text' => 'EQUIPOS',
+                    'url' => '/otros-equipos',
+                    'icon' => 'fas fas fa-headphones',
+                ],
                 [
                     'text' => 'AUDIFONOS',
                     'url' => '/audifonos',
@@ -452,7 +431,6 @@ return [
             'text' => 'MIS ASIGNACIONES',
             // 'classes' => 'text-primary text-bold',
             'icon' => 'fas fa-user-clock',
-            'icon_color' => 'primary',
             'can' => 'tecnico',
             'submenu' => [
                 [
@@ -512,7 +490,6 @@ return [
         [
             'text' => 'PIEZAS CPU',
             'icon' => 'fas fa-cog',
-            'icon_color' => 'success',
             'can' => 'admin',
             'submenu' => [
                     [
@@ -696,11 +673,18 @@ return [
             ],
         ],
         [
-            'text' => 'REQUERIMIENTO DE SERVICIO',
+            'text' => 'REQUERIMIENTO DE ASISTENCIA TÉCNICA',
             // 'classes' => 'text-blue text-bold',
             'url' => '/servicios',
             'icon' => 'fa fa-fw fa-cog',
-            'icon_color' => 'red',
+            'can' => ['superadministrador','admin'],
+        ],
+        [
+            'text' => 'MIS ASIGNACIONES DE SERVICIOS',
+            // 'classes' => 'text-blue text-bold',
+            'url' => '/asignaciones/asistencia',
+            'icon' => 'fa fa-fw fa-cog',
+            'can' => 'tecnico',
         ],
         [
             'text' => 'REPORTES',
@@ -713,7 +697,6 @@ return [
             'text' => 'OTROS',
             // 'classes' => 'text-orange text-bold',
             'icon' => 'fas fa-file-alt',
-            'icon_color' =>'orange',
             'can' => 'admin',
             'submenu' => [
                 [

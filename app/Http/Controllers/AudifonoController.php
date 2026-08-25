@@ -27,6 +27,8 @@ use App\Services\NotificacionService;
 use App\Mail\TecnicoAsignado;
 use App\Services\EquipoPdfService;
 use Illuminate\Support\Facades\DB;
+use App\Models\Correlativo;
+use App\Services\CorrelativoService;
 
 class AudifonoController extends Controller
 {
@@ -93,7 +95,7 @@ public function index(Request $request): View
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+public function store(Request $request, CorrelativoService $correlativoService)
     {
 
         $request->validate([
@@ -141,26 +143,45 @@ public function index(Request $request): View
         // Guardar los cambios
         $funcionario->save();
 
+    $audifono = DB::transaction(function () use (
+        $request,
+        $funcionario,
+        $correlativoService
+    ) {
+
         $audifono = new Audifono();
+
         $audifono->funcionario_id = $funcionario->id;
         $audifono->cargo = $request->input('cargo');
         $audifono->dependencia_id = $request->input('dependencia_id');
         $audifono->cod_gamea = $request->input('cod_gamea');
+
+        // GENERAR CORRELATIVO
+        $audifono->cod_registro =
+            $correlativoService->generarNumeroRecepcion();
+
         $audifono->fecha = $request->input('fecha');
         $audifono->marca = $request->input('marca');
         $audifono->modelo = $request->input('modelo');
         $audifono->falla = $request->input('falla');
         $audifono->observaciones = $request->input('observaciones');
-        $audifono->funcionario_activo = $request->input('funcionario_activo');
+        $audifono->funcionario_activo =
+            $request->input('funcionario_activo');
         $audifono->estado_id = $request->input('estado_id');
         $audifono->reguser_id = Auth::id();
-        
+
         $audifono->save();
 
-        return Redirect::route('audifonos.index')
-        ->with('success', 'REGISTRADO CORRECTAMENTE')         
+        return $audifono;
+    });
+
+    return redirect()
+        ->route('audifonos.index')
+        ->with('success', 'REGISTRADO CORRECTAMENTE')
+        ->with('text', 'Número de recepción: ' . $audifono->cod_registro)
         ->with('icono', 'success');
     }
+
 
     /**
      * Display the specified resource.
@@ -416,107 +437,58 @@ public function enviar($id, EquipoPdfService $service)
         return $audifono->funcionario?->email;
     }
 
-    
-// CAMBIAR ESTADO Y ENVIAR ALERTA
+
+
     public function cambiarEstado(Request $request)
-    {
-        $audifono = Audifono::findOrFail($request->id);
+{
+    $audifono = Audifono::findOrFail($request->id);
 
-        $estadoId = (int) $request->input('estado_id');
+    $estadoId = (int) $request->input('estado_id');
 
-        // =========================
-        // ACTUALIZAR ESTADO
-        // =========================
-        $audifono->estado_id = $estadoId;
+    // Actualizar estado
+    $audifono->estado_id = $estadoId;
 
-        // Mapeo de fechas por estado
-        $fechas = [
-            2 => 'fecha_inicio',
-            5 => 'fecha_entrega',
-        ];
-        $audifono->estado_id = $estadoId;
+    // Mapeo de fechas por estado
+    $fechas = [
+        2 => 'fecha_inicio',
+        5 => 'fecha_entrega',
+    ];
 
-        if (isset($fechas[$estadoId])) {
-            $campoFecha = $fechas[$estadoId];
-            // Controla la fecha, NO el estado
-            if (empty($audifono->$campoFecha)) {
-                $audifono->$campoFecha = now();
-            }
+    if (isset($fechas[$estadoId])) {
+
+        $campoFecha = $fechas[$estadoId];
+
+        if (empty($audifono->$campoFecha)) {
+            $audifono->$campoFecha = now();
         }
-
-        $audifono->save();
-
-        // =========================
-        // ENVÍO DE NOTIFICACIÓN
-        // =========================
-        if (in_array($estadoId, [2, 3, 4])) {
-
-            $this->notificacionService->enviar(
-                $audifono->funcionario,
-                $estadoId,
-                $audifono
-            );
-        }
-
-        // =========================
-        // RESPUESTA
-        // =========================
-        return response()->json([
-            'estado' => $estadoId == 5
-                ? $audifono->resultado?->nombre
-                : $audifono->estado?->nombre
-        ]);
     }
 
-    //registro de numero de recpcion
-    public function updateRecepcion(Request $request, $id){
-    $request->validate([
-        'cod_registro' => [
-            'nullable',
-            function ($attribute, $value, $fail) {
+    $audifono->save();
 
-                if (empty($value)) {
-                    return;
-                }
+    // Notificación
+    if (in_array($estadoId, [2, 3, 4])) {
 
-                $anio = date('Y');
-
-                $tablas = [
-                    'registro_cpus'   => 'CPU',
-                    'monitors'        => 'Monitor',
-                    'impresoras'      => 'Impresora',
-                    'laptops'         => 'Laptop',
-                    'teclados'        => 'Teclado',
-                    'ratons'          => 'Mouse',
-                    'upeses'          => 'UPS',
-                    'parlantes'       => 'Parlante',
-                    'audifonos'       => 'Audífono',
-                    'estabilizadors'  => 'Estabilizador',
-                ];
-
-                foreach ($tablas as $tabla => $nombre) {
-
-                    $existe = DB::table($tabla)
-                        ->where('cod_registro', $value)
-                        ->whereYear('created_at', $anio)
-                        ->exists();
-
-                    if ($existe) {
-                        $fail("El número de recepción ya está asignado a un {$nombre} en la gestión actual.");
-                        return;
-                    }
-                }
-            },
-        ],
-    ]);
-        $audifono = Audifono::find($id);
-        $audifono->cod_registro = $request->input('cod_registro');
-        $audifono->update();
-        return Redirect::route('audifonos.index')
-        ->with('success', 'REGISTRADO CORRECTAMENTE') 
-        ->with('text', 'Numero de recepción')          
-        ->with('icono', 'success');
+        $this->notificacionService->enviar(
+            $audifono->funcionario,
+            $estadoId,
+            $audifono
+        );
     }
+
+    // Respuesta JSON
+return response()->json([
+    'success' => true,
+
+    'estado' => $estadoId == 5
+        ? $audifono->resultado?->nombre
+        : $audifono->estado?->nombre,
+
+'fecha_inicio' => $audifono->fecha_inicio
+    ? $audifono->fecha_inicio->format('d-m-Y')
+    : null,
+]);
+}
+
 
     public function updateTecnico(Request $request, $id){
 

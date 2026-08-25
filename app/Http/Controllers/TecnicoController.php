@@ -47,6 +47,12 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Servicio;
+use App\Models\Funcionario;
+use Illuminate\Support\Str;
+use App\Models\OtrosEquipo;
+
 
 class TecnicoController extends Controller
 {
@@ -473,6 +479,255 @@ public function panelRegistros($id)
         'modprocesador','modelotred','potenciafuente','tipodisco','tipotvideo','impresora','audifono',
         'estabilizador','monitor','upese','raton','parlante','teclado', 'laptop'))   ;   
 
+}
+
+public function reporteGeneralPdf(Request $request)
+{
+    $tipo = $request->input('tipo', 'anio');
+    $anio = $request->input('anio', date('Y'));
+    $mes = $request->input('mes');
+
+    // Obtener todos los usuarios que tienen el rol Técnico
+    $users = User::whereHas('roles', function ($query) {
+        $query->where('name', 'LIKE', 'Tecnico');
+    })
+    ->orderBy('paterno', 'asc')
+    ->get();
+
+    $asignaciones = [
+        ['titulo' => 'CPUs', 'relacion' => 'registro_cpus'],
+        ['titulo' => 'Impresoras', 'relacion' => 'impresoras'],
+        ['titulo' => 'Monitores', 'relacion' => 'monitor'],
+        ['titulo' => 'Audífonos', 'relacion' => 'audifonos'],
+        ['titulo' => 'Laptops', 'relacion' => 'laptop'],
+        ['titulo' => 'Teclados', 'relacion' => 'teclados'],
+        ['titulo' => 'Parlantes', 'relacion' => 'parlantes'],
+        ['titulo' => 'Mouse', 'relacion' => 'raton'],
+        ['titulo' => 'UPS', 'relacion' => 'upeses'],
+        ['titulo' => 'Estabilizadores', 'relacion' => 'estabilizador'],
+        ['titulo' => 'OtrosEquipo', 'relacion' => 'otrosequipos'],
+    ];
+
+    $estados = [
+        1 => 'Recepcionado',
+        2 => 'En proceso',
+        3 => 'Apersonarse',
+        4 => 'Concluido',
+        5 => 'Entregado',
+    ];
+
+    $datosTecnicos = [];
+
+    foreach ($users as $user) {
+
+        $datos = [];
+
+        foreach ($asignaciones as $item) {
+
+            $rel = $item['relacion'];
+
+            /*
+             * Consulta general del tipo de equipo
+             */
+            $query = $user->$rel()
+                ->whereYear('fecha_asignacion', $anio);
+
+            if ($tipo === 'mes' && $mes) {
+                $query->whereMonth('fecha_asignacion', $mes);
+            }
+
+            $total = $query->count();
+
+            /*
+             * Cantidades por estado
+             */
+            $estadosData = [];
+
+            foreach ($estados as $idEstado => $nombreEstado) {
+
+                $queryEstado = $user->$rel()
+                    ->whereYear('fecha_asignacion', $anio)
+                    ->where('estado_id', $idEstado);
+
+                if ($tipo === 'mes' && $mes) {
+                    $queryEstado->whereMonth('fecha_asignacion', $mes);
+                }
+
+                $cantidad = $queryEstado->count();
+
+                $estadosData[] = [
+                    'estado' => $nombreEstado,
+                    'cantidad' => $cantidad,
+                ];
+            }
+
+            $datos[] = [
+                'titulo' => $item['titulo'],
+                'total' => $total,
+                'estados' => $estadosData,
+            ];
+        }
+
+        /*
+         * Guardamos la información del técnico
+         */
+        $datosTecnicos[] = [
+            'user' => $user,
+            'datos' => $datos,
+        ];
+    }
+
+    /*
+     * Nombre del mes
+     */
+    $meses = [
+        1 => 'ENERO',
+        2 => 'FEBRERO',
+        3 => 'MARZO',
+        4 => 'ABRIL',
+        5 => 'MAYO',
+        6 => 'JUNIO',
+        7 => 'JULIO',
+        8 => 'AGOSTO',
+        9 => 'SEPTIEMBRE',
+        10 => 'OCTUBRE',
+        11 => 'NOVIEMBRE',
+        12 => 'DICIEMBRE',
+    ];
+
+    $nombreMes = $mes
+        ? $meses[(int) $mes]
+        : null;
+
+    /*
+     * Generar UN SOLO PDF
+     */
+    $pdf = Pdf::loadView(
+        'tecnico.informe-pdf',
+        compact(
+            'datosTecnicos',
+            'anio',
+            'tipo',
+            'nombreMes'
+        )
+    );
+
+    return $pdf->stream(
+        'reporte_general' . $anio . '.pdf'
+    );
+}
+
+public function asignacionesAsistencia()
+{
+    $user = Auth::user();
+
+    $asignaciones = Servicio::where('user_id', $user->id)
+        ->latest()
+        ->get();
+
+    return view('asigAsistencia.asigAsistencia', compact('user', 'asignaciones'));
+}
+
+
+public function buscarEvaluacion()
+{
+    return view('asigAsistencia.buscar-evaluacion');
+}
+
+public function mostrarEvaluacion(Request $request)
+{
+    $request->validate([
+        'ci' => 'required|string|max:20',
+    ]);
+
+    $funcionario = Funcionario::where('ci', $request->ci)
+        ->first();
+
+    if (!$funcionario) {
+
+        return back()->with(
+            'error',
+            'No se encontró un usuario con ese número de documento.'
+        );
+    }
+
+    $asignacion = Servicio::with([
+        'tecnico',
+        'funcionario'
+    ])
+    ->where('funcionario_id', $funcionario->id)
+
+    // Solo solicitudes no vistas
+    ->where('visto', 0)
+
+    // Debe tener técnico asignado
+    ->whereNotNull('user_id')
+
+    // Todavía no atendida/evaluada
+    // ->whereNull('fecha_atencion')
+
+    ->latest()
+    ->first();
+
+    if (!$asignacion) {
+
+        return back()->with(
+            'warning',
+            'No existen solicitudes pendientes de evaluación.'
+        );
+    }
+
+    return view(
+        'asigAsistencia.evaluar',
+        compact('asignacion')
+    );
+}
+
+public function evaluar($id)
+{
+    $asignacion = Servicio::with([
+        'tecnico',
+        'funcionario'
+    ])->findOrFail($id);
+
+    if ($asignacion->fecha_atencion) {
+
+        return view('asignaciones.gracias');
+    }
+
+    return view(
+        'asigAsistencia.evaluar',
+        compact('asignacion')
+    );
+}
+
+public function guardarEvaluacion(Request $request)
+{
+    $request->validate([
+        'asignacion_id' => 'required|integer',
+        'servicio' => 'required|string|max:1000',
+        'puntuacion' => 'required|integer|between:1,5',
+    ]);
+
+    $asignacion = Servicio::findOrFail(
+        $request->asignacion_id
+    );
+
+    if ($asignacion->fecha_atencion) {
+        return back()->with(
+            'error',
+            'Esta solicitud ya fue evaluada.'
+        );
+    }
+
+    $asignacion->servicio = $request->servicio;
+    $asignacion->puntuacion = $request->puntuacion;
+    $asignacion->visto = 1;
+    $asignacion->fecha_atencion = now();
+
+    $asignacion->save();
+
+    return view('asigAsistencia.gracias');
 }
 
 }

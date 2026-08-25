@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Laravel\Sanctum\HasApiTokens;
+use App\Models\OtrosEquipo;
 
 
 class User extends Authenticatable
@@ -21,6 +23,7 @@ class User extends Authenticatable
     use Auditable;
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -387,5 +390,10 @@ public function adminlte_image()
         })
         ->orderBy('fecha_asignacion', 'desc')
         ->get();
+    }
+
+    public function otrosequipos()
+    {
+        return $this->hasMany(OtrosEquipo::class, 'user_id');
     }
 }

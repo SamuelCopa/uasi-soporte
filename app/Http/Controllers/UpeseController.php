@@ -24,6 +24,7 @@ use App\Services\NotificacionService;
 use App\Mail\TecnicoAsignado;
 use App\Services\EquipoPdfService;
 use Illuminate\Support\Facades\DB;
+use App\Services\CorrelativoService;
 
 class UpeseController extends Controller
 {
@@ -87,7 +88,7 @@ class UpeseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UpeseRequest $request): RedirectResponse
+    public function store(Request $request, CorrelativoService $correlativoService)
     {
 
         $request->validate([
@@ -134,24 +135,38 @@ class UpeseController extends Controller
         // Guardar los cambios
         $funcionario->save();
 
+    $upese = DB::transaction(function () use (
+        $request,
+        $funcionario,
+        $correlativoService
+    ) {
+
         $upese = new Upese();
+
         $upese->funcionario_id = $funcionario->id;
-        $upese->dependencia_id = $request->input('dependencia_id');
         $upese->cargo = $request->input('cargo');
+        $upese->dependencia_id = $request->input('dependencia_id');
         $upese->cod_gamea = $request->input('cod_gamea');
-        $upese->cod_registro = $request->input('cod_registro');
-        $upese->marca = $request->input('marca');
+        // GENERAR CORRELATIVO
+        $upese->cod_registro = $correlativoService->generarNumeroRecepcion();
+
         $upese->fecha = $request->input('fecha');
+        $upese->marca = $request->input('marca');
         $upese->modelo = $request->input('modelo');
         $upese->falla = $request->input('falla');
         $upese->observaciones = $request->input('observaciones');
         $upese->funcionario_activo = $request->input('funcionario_activo');
         $upese->estado_id = $request->input('estado_id');
         $upese->reguser_id = Auth::id();
+
         $upese->save();
 
-        return Redirect::route('upeses.index')
-        ->with('success', 'REGISTRADO CORRECTAMENTE')         
+        return $upese;
+    });
+    return redirect()
+        ->route('upeses.index')
+        ->with('success', 'REGISTRADO CORRECTAMENTE')
+        ->with('text', 'Número de recepción: ' . $upese->cod_registro)
         ->with('icono', 'success');
     }
 
@@ -443,7 +458,7 @@ public function enviar($id, EquipoPdfService $service)
         // =========================
         // ENVÍO DE NOTIFICACIÓN
         // =========================
-        if (in_array($estadoId, [2, 3, 4])) {
+        if (in_array($estadoId, [3, 4])) {
 
             $this->notificacionService->enviar(
                 $ups->funcionario,
@@ -460,55 +475,6 @@ public function enviar($id, EquipoPdfService $service)
                 ? $ups->resultado?->nombre
                 : $ups->estado?->nombre
         ]);
-    }
-
-    public function updateRecepcion(Request $request, $id){
-    $request->validate([
-        'cod_registro' => [
-            'nullable',
-            function ($attribute, $value, $fail) {
-
-                if (empty($value)) {
-                    return;
-                }
-
-                $anio = date('Y');
-
-                $tablas = [
-                    'registro_cpus'   => 'CPU',
-                    'monitors'        => 'Monitor',
-                    'impresoras'      => 'Impresora',
-                    'laptops'         => 'Laptop',
-                    'teclados'        => 'Teclado',
-                    'ratons'          => 'Mouse',
-                    'upeses'          => 'UPS',
-                    'parlantes'       => 'Parlante',
-                    'audifonos'       => 'Audífono',
-                    'estabilizadors'  => 'Estabilizador',
-                ];
-
-                foreach ($tablas as $tabla => $nombre) {
-
-                    $existe = DB::table($tabla)
-                        ->where('cod_registro', $value)
-                        ->whereYear('created_at', $anio)
-                        ->exists();
-
-                    if ($existe) {
-                        $fail("El número de recepción ya está asignado a un {$nombre} en la gestión actual.");
-                        return;
-                    }
-                }
-            },
-        ],
-    ]);
-        $ups = Upese::find($id);
-        $ups->cod_registro = $request->input('cod_registro');
-        $ups->update();
-        return Redirect::route('upeses.index')
-        ->with('success', 'REGISTRADO CORRECTAMENTE') 
-        ->with('text', 'Numero de recepción')          
-        ->with('icono', 'success');
     }
 
     public function updateTecnico(Request $request, $id){
