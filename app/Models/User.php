@@ -224,6 +224,11 @@ public function adminlte_image()
         return $this->hasMany(Laptop::class);
     }
 
+    public function equipos(): HasMany
+    {
+        return $this->hasMany(OtrosEquipo::class);
+    }
+
     public function getlaptopCountAttribute()
     {
         return $this->laptops()->count();
@@ -381,6 +386,22 @@ public function adminlte_image()
     $anioActual = date('Y');
     $anioAnterior = $anioActual - 1;
         return $this->teclados()
+                ->where(function ($q) use ($anioActual, $anioAnterior) {
+            $q->whereYear('fecha_asignacion', $anioActual)
+                ->orWhere(function ($q2) use ($anioAnterior) {
+                $q2->whereYear('fecha_asignacion', $anioAnterior)
+                    ->whereMonth('fecha_asignacion', 12);
+                });
+        })
+        ->orderBy('fecha_asignacion', 'desc')
+        ->get();
+    }
+
+    public function equiposActuales()
+    {
+    $anioActual = date('Y');
+    $anioAnterior = $anioActual - 1;
+        return $this->equipos()
                 ->where(function ($q) use ($anioActual, $anioAnterior) {
             $q->whereYear('fecha_asignacion', $anioActual)
                 ->orWhere(function ($q2) use ($anioAnterior) {

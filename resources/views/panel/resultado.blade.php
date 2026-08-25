@@ -140,6 +140,12 @@ $equipos = [
         'color'  => 'bg-gradient-success',
         'icon'   => 'ion-outlet',
     ],
+    [
+        'nombre' => 'Otros',
+        'modelo' => OtrosEquipo::class,
+        'color'  => 'bg-gradient-success',
+        'icon'   => 'ion-outlet',
+    ],
 ];
 @endphp
 
@@ -156,12 +162,12 @@ $equipos = [
             $total = array_sum($datos);
         @endphp
 
-    <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+    <!-- <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
         <div class="card dashboard-card-prof ">
 
             <div class="card-body">
 
-                <!-- HEADER -->
+
                 <div class="card-header-custom">
                     <span class="card-title">
                         {{ $nombreEquipo }}
@@ -169,7 +175,7 @@ $equipos = [
                     <i class="ion {{ $icon }}"></i>
                 </div>
 
-                <!-- TOTAL -->
+   
                 <div class="mb-2">
                     <h3 class="mb-0 font-weight-bold text-dark">
                         {{ $total }}
@@ -177,7 +183,6 @@ $equipos = [
                     <small class="">Total registros</small>
                 </div>
 
-                <!-- BARRAS -->
                 @foreach(['devolucion','reposicion','repliegue','custodio','baja'] as $estado)
                     @php
                         $porcentaje = $total > 0 ? round(($datos[$estado]/$total)*100) : 0;
@@ -193,7 +198,6 @@ $equipos = [
 
                     <div class="mb-2">
 
-                        <!-- TEXTO -->
                         <div class="stat-row">
                             <span >
                                 {{ ucfirst($estado) }}
@@ -203,7 +207,7 @@ $equipos = [
                             </span>
                         </div>
 
-                        <!-- BARRA -->
+
                     <div class="progress progress-custom">
                         <div class="progress-bar"
                                 style="width: {{ $porcentaje }}%; background-color: {{ $colorBar }};">
@@ -219,46 +223,88 @@ $equipos = [
     </div>
     <link rel="stylesheet" href="{{ asset('estilos/panelAdmi.css') }}">
     @endforeach
-</div>
+</div> -->
 
 
 {{-- -----------------------------TABLA DE DATOS--------------------------------- --}}
-{{-- <div class="card">
+
+<div class="card">
     <div class="table-responsive">
-  <table class="table-modern table-striped table-hover table-bordered">
-      <thead>
-          <tr align="center">
-              <td colspan="7" class="color2"><h4>DETALLE POR ACTIVOS {{ date('Y') }}</h4></td>
-          </tr>
-          <tr align="center">
-              <th>Equipo</th>
-              <th>Devolución</th>
-              <th>Reposición</th>
-              <th>Repliegue</th>
-              <th>Custodio</th>
-              <th>Baja</th>
-              <th>TOTAL</th>
-          </tr>
-      </thead>
-      <tbody>
-          @foreach ($detalle as $modelo => $datos)
-            @php
-            $total = array_sum($datos);
-            @endphp
-              <tr align="center">
-                  <td>{{ strtoupper($modelo )}}</td>
-                  <td>{{ $datos['devolucion'] }}</td>
-                  <td>{{ $datos['reposicion'] }}</td>
-                  <td>{{ $datos['repliegue'] }}</td>
-                  <td>{{ $datos['custodio'] }}</td>
-                  <td>{{ $datos['baja'] }}</td>
-                  <td>{{ $total }}</td>
-              </tr>
-          @endforeach
-      </tbody>
-  </table>
+
+        <table class="table table-striped table-hover table-bordered">
+
+            <thead>
+
+                <tr align="center">
+                    <td colspan="7" class="color2">
+                        <h4 class="mb-0">
+                            DETALLE POR ACTIVOS - GESTIÓN {{ $year }}
+                        </h4>
+                    </td>
+                </tr>
+
+                <tr align="center">
+                    <th>Equipo</th>
+                    <th>Devolución</th>
+                    <th>Reposición</th>
+                    <th>Repliegue</th>
+                    <th>Custodio</th>
+                    <th>Baja</th>
+                    <th>TOTAL</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @foreach ($detalle as $modelo => $datos)
+
+                    @php
+                        $total = array_sum($datos);
+                    @endphp
+
+                    <tr align="center">
+
+                        <td>
+                            {{ strtoupper($modelo) }}
+                        </td>
+
+                        <td>
+                            {{ $datos['devolucion'] }}
+                        </td>
+
+                        <td>
+                            {{ $datos['reposicion'] }}
+                        </td>
+
+                        <td>
+                            {{ $datos['repliegue'] }}
+                        </td>
+
+                        <td>
+                            {{ $datos['custodio'] }}
+                        </td>
+
+                        <td>
+                            {{ $datos['baja'] }}
+                        </td>
+
+                        <td class="font-weight-bold">
+                            {{ $total }}
+                        </td>
+
+                    </tr>
+
+                @endforeach
+
+            </tbody>
+
+        </table>
+
+    </div>
 </div>
-</div>
+
+{{-- 
 <h3 class="mt-4">GRÁFICOS POR ACTIVOS {{ date('Y') }}</h3>
 
 <div class="row">

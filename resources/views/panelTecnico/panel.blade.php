@@ -11,6 +11,7 @@
         ['nombre' => 'PARLANTES', 'relacion' => 'parlantes', 'icon' => '🔊', 'color' => '#ffc107'],
         ['nombre' => 'UPS', 'relacion' => 'upeses', 'icon' => '⚡', 'color' => '#0d6efd'],
         ['nombre' => 'ESTABILIZADOR', 'relacion' => 'estabilizador', 'icon' => '🔌', 'color' => '#198754'],
+        ['nombre' => 'OTROS EQUIPOS', 'relacion' => 'otrosequipos', 'icon' => '🔌', 'color' => '#198754'],
     ];
 
     $pendientes = [];
@@ -85,16 +86,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 @php
     $asignaciones = [
-        [ 'titulo' => 'CPUs', 'color' => 'bg-gradient-info', 'icono' => 'ion-ios-cog', 'relacion' => 'registro_cpus', 'ruta' => 'asignaciones.cpu', ],
-        [ 'titulo' => 'IMPRESORAS', 'color' => 'bg-gradient-success', 'icono' => 'ion-printer', 'relacion' => 'impresoras', 'ruta' => 'asignaciones.impresora', ],
-        [ 'titulo' => 'MONITORES', 'color' => 'bg-gradient-warning','icono' => 'ion-monitor','relacion' => 'monitor','ruta' => 'asignaciones.monitor',],
-        [ 'titulo' => 'AUDÍFONOS','color' => 'bg-gradient-purple','icono' => 'ion-headphone','relacion' => 'audifonos','ruta' => 'asignaciones.audifono',],
-        [ 'titulo' => 'LAPTOPS','color' => 'bg-gradient-info','icono' => 'ion-laptop','relacion' => 'laptop','ruta' => 'asignaciones.laptop',],
-        [ 'titulo' => 'TECLADOS','color' => 'bg-gradient-success','icono' => 'ion-stop','relacion' => 'teclados','ruta' => 'asignaciones.teclado',],
-        [ 'titulo' => 'PARLANTES','color' => 'bg-gradient-warning','icono' => 'ion-volume-high','relacion' => 'parlantes','ruta' => 'asignaciones.parlante',],
-        [ 'titulo' => 'MOUSE','color' => 'bg-gradient-purple','icono' => 'ion-mouse','relacion' => 'raton','ruta' => 'asignaciones.mouse',],
-        [ 'titulo' => 'UPS','color' => 'bg-gradient-info','icono' => 'ion-stop','relacion' => 'upeses','ruta' => 'asignaciones.ups',],
-        [ 'titulo' => 'ESTABILIZADORES','color' => 'bg-gradient-success','icono' => 'ion-outlet','relacion' => 'estabilizador','ruta' => 'asignaciones.estabilizador',],
+        [ 'titulo' => 'CPUs', 'icono' => 'ion-ios-cog', 'relacion' => 'registro_cpus', 'ruta' => 'asignaciones.cpu', ],
+        [ 'titulo' => 'IMPRESORAS', 'icono' => 'ion-printer', 'relacion' => 'impresoras', 'ruta' => 'asignaciones.impresora', ],
+        [ 'titulo' => 'MONITORES', 'icono' => 'ion-monitor','relacion' => 'monitor','ruta' => 'asignaciones.monitor',],
+        [ 'titulo' => 'AUDÍFONOS','icono' => 'ion-headphone','relacion' => 'audifonos','ruta' => 'asignaciones.audifono',],
+        [ 'titulo' => 'LAPTOPS','icono' => 'ion-laptop','relacion' => 'laptop','ruta' => 'asignaciones.laptop',],
+        [ 'titulo' => 'TECLADOS', 'icono' => 'ion-stop','relacion' => 'teclados','ruta' => 'asignaciones.teclado',],
+        [ 'titulo' => 'PARLANTES','icono' => 'ion-volume-high','relacion' => 'parlantes','ruta' => 'asignaciones.parlante',],
+        [ 'titulo' => 'MOUSE','icono' => 'ion-mouse','relacion' => 'raton','ruta' => 'asignaciones.mouse',],
+        [ 'titulo' => 'UPS','icono' => 'ion-stop','relacion' => 'upeses','ruta' => 'asignaciones.ups',],
+        [ 'titulo' => 'ESTABILIZADORES','icono' => 'ion-outlet','relacion' => 'estabilizador','ruta' => 'asignaciones.estabilizador',],
+        [ 'titulo' => 'OTROS EQUIPOS','icono' => 'ion-outlet','relacion' => 'otrosequipos','ruta' => 'asignaciones.Equipos',],
     ];
 
     $estados = [

@@ -42,8 +42,8 @@
                                         <td>{{ ++$i }}</td>                                            
 										<td >{{date('d-m-Y H:i',strtotime($servicio->created_at ?? ''))}}</td>
                                          <td >{{ $servicio->funcionario?->nombre }} {{ $servicio->funcionario?->paterno }} {{ $servicio->funcionario?->materno }}</td>
+                                         <td >{{ $servicio->funcionario?->ci }}</td>
 										<td >{{ $servicio->Dependencia?->dependencias }}</td>
-										<td >{{ $servicio->funcionario?->ci }}</td>
 										<td >{{ $servicio->servicio ?? '' }}</td>
 										<td >{{ $servicio->equipo ?? '' }}</td>
 										<td >{{ $servicio->falla ?? '' }}</td>
@@ -130,15 +130,18 @@
                                 <tfoot>
                                     <tr>
                                     <th>No</th>                                        
-									<th >FECHA</th>
-									<th >NOMBRE</th>
-									<th >DEPENDENCIA</th>
-									<th >TIPO DE SERVICIO</th>
-									<th >EQUIPO</th>
-									<th >FALLA</th>
-									<th >TÉCNICO</th>
-									<th >FECHA DE ASIGNACIÓN</th>
-									<th >ESTADO</th>
+									<th >Fecha</th>
+									<th >Nombre</th>
+									<th >ci</th>
+									<th >Dependencia</th>
+									<th >Tipo de Servicio</th>
+									<th >Equipo</th>
+									<th >Falla</th>
+									<th >tecnico</th>
+                                    <th >FECHA DE ASIGNACIÓN</th>
+                                    <th >FECHA DE ATENCION</th>
+									<th >Estado</th>
+									<th >Puntaje</th>
                                     </tr>
                                 </tfoot>
                             </table>

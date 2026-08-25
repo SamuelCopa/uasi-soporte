@@ -86,10 +86,7 @@ Route::get('/hay-pendientes', function () {
 })->middleware('auth');
 
 // --------------------PARA SELECCIONAR EQUIPOS----------------------------------------------------------------------------------
-Route::get(
-    '/otros-equipos/por-tipo/{tipo}',
-    [OtrosEquipoController::class, 'porTipo']
-)->name('otros-equipos.porTipo');
+Route::get('/otros-equipos/por-tipo/{tipo}', [OtrosEquipoController::class, 'porTipo'])->name('otros-equipos.porTipo');
 Route::get('/otros-equipos/filtrar', [OtrosEquipoController::class, 'filtrar'])->name('otros-equipos.filtrar');
 Route::get('/equipos/por-tipo/{tipo}',[OtrosEquipoController::class, 'porTipo'])->name('equipos.porTipo');
 
@@ -209,8 +206,9 @@ Route::get('/asignaciones/monitor', [DashboardController::class, 'asignacionesMo
 Route::get('/asignaciones/estabilizador', [DashboardController::class, 'asignacionesEstabilizador'])->name('asignaciones.estabilizador')->middleware('auth');
 Route::get('/asignaciones/ups', [DashboardController::class, 'asignacionesUps'])->name('asignaciones.ups')->middleware('auth');
 Route::get('/asignaciones/laptop', [DashboardController::class, 'asignacionesLaptop'])->name('asignaciones.laptop')->middleware('auth');
+Route::get('/asignaciones/equipos', [DashboardController::class, 'asignacionesEquipos'])->name('asignaciones.Equipos')->middleware('auth');
 
-//---------------------------------ASIGNACIONES DE ASITENCIA TECNICA A TECNICOS-----------
+//---------------------------------ASIGNACIONES DE ASITENCIA TECNICA-----------
 Route::get('/asignaciones/asistencia', [TecnicoController::class, 'asignacionesAsistencia'])->name('asignaciones.asistencia')->middleware('auth');
 Route::put('/asignacion/{id}/atender', [ServicioController::class, 'atender'])->name('asignacion.atender')->middleware('auth');
 

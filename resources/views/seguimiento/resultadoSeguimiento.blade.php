@@ -70,7 +70,7 @@
     <div class="text-center p-4 rounded-xl
         @switch($codigo->estado_id)
             @case(1) bg-blue-600 @break
-            @case(2) bg-yellow-500 @break
+            @case(2) bg-blue-500 @break
             @case(3) bg-red-500 @break
             @case(4) bg-green-600 @break
         @endswitch
@@ -84,7 +84,7 @@
                 @break
 
             @case(2)
-                <h2 class="text-xl font-bold">EN PROCESO</h2>
+                <h2 class="text-xl font-bold">RECEPCIONADO</h2>
                 <p>El mantenimiento de su equipo se encuentra en proceso..</p>
                 <div class="mt-2 animate-pulse">⏳ Procesando...</div>
                 @break
@@ -96,7 +96,7 @@
 
             @case(4)
                 <h2 class="text-xl font-bold">CONCLUIDO</h2>
-                <p>Se finalizo el mantenimiento de su equipo, puede pasar a recoger por secretaria.</p>
+                <p>Se finalizo el mantenimiento de su equipo, puede pasar a recoger</p>
                 @break
 
         @endswitch
@@ -121,7 +121,7 @@ Swal.fire({
         'El equipo ha sido registrado correctamente.',
         'El mantenimiento de su equipo se encuentra en proceso.',
         'Se solicita su presencia en la oficina para la revisión correspondiente a la brevedad posible.',
-        'Se finalizo el mantenimiento de su equipo, puede pasar a recoger por secretaria.',
+        'Se finalizo el mantenimiento de su equipo, puede pasar a recoger.',
     ][$codigo->estado_id - 1] }}",
 });
 </script>

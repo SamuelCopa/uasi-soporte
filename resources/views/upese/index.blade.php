@@ -8,7 +8,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
-                <div class="card-header card-header--custom">
+                <div class=" card-header--custom">
                 </div>
                     <div class="header-panel">
                         <div class="header-left">
@@ -546,7 +546,7 @@ function cambiarEstadoAjax(id, estado_id) {
 
     let texto, botonConfirm;
 
-    if ([2, 3, 5].includes(Number(estado_id))) {
+    if ([2, 5].includes(Number(estado_id))) {
 
         texto = "¿Quieres cambiar el estado?";
 

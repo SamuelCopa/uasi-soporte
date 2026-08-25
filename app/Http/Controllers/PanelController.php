@@ -12,6 +12,7 @@ use App\Models\Raton;
 use App\Models\RegistroCpu;
 use App\Models\Teclado;
 use App\Models\Upese;
+use App\Models\OtrosEquipo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -339,23 +340,21 @@ public function index()
 
 public function resultado()
 {
-      //$users = User::all();
-
-    $year = date('Y');
+    $year = now()->year;
 
     $modelos = [
-    'CPU' => RegistroCpu::class,
-    'Impresora' => Impresora::class,
-    'Monitor'=> Monitor::class,
-    'Audifono'=> Audifono::class,
-    'Laptop'=> Laptop::class,
-    'Teclado'=> Teclado::class,
-    'Parlante'=> Parlante::class,
-    'Mouse'=> Raton::class,
-    'UPS'=> Upese::class,
-    'Estabilizador'=> Estabilizador::class,
+        'CPU' => RegistroCpu::class,
+        'Impresora' => Impresora::class,
+        'Monitor' => Monitor::class,
+        'Audifono' => Audifono::class,
+        'Laptop' => Laptop::class,
+        'Teclado' => Teclado::class,
+        'Parlante' => Parlante::class,
+        'Mouse' => Raton::class,
+        'UPS' => Upese::class,
+        'Estabilizador' => Estabilizador::class,
+        'Otros Equipos' => OtrosEquipo::class,
     ];
-
 
     $totales = [
         'devolucion' => 0,
@@ -369,22 +368,44 @@ public function resultado()
 
     foreach ($modelos as $nombre => $modelo) {
 
+        // Consulta base: solamente gestión actual
+        $query = $modelo::whereNotNull('fecha_entrega')
+                ->whereYear('fecha_entrega', $year);
+
         $detalle[$nombre] = [
-            'devolucion' => $modelo::whereYear('fecha_asignacion', $year)->where('resultado_id', 1)->count(),
-            'reposicion' => $modelo::whereYear('fecha_asignacion', $year)->where('resultado_id', 2)->count(),
-            'repliegue'  => $modelo::whereYear('fecha_asignacion', $year)->where('resultado_id', 3)->count(),
-            'custodio'   => $modelo::whereYear('fecha_asignacion', $year)->where('resultado_id', 4)->count(),
-            'baja'       => $modelo::whereYear('fecha_asignacion', $year)->where('resultado_id', 5)->count(),
+            'devolucion' => (clone $query)
+                ->where('resultado_id', 1)
+                ->count(),
+
+            'reposicion' => (clone $query)
+                ->where('resultado_id', 2)
+                ->count(),
+
+            'repliegue' => (clone $query)
+                ->where('resultado_id', 3)
+                ->count(),
+
+            'custodio' => (clone $query)
+                ->where('resultado_id', 4)
+                ->count(),
+
+            'baja' => (clone $query)
+                ->where('resultado_id', 5)
+                ->count(),
         ];
 
         foreach ($detalle[$nombre] as $key => $valor) {
             $totales[$key] += $valor;
         }
     }
-        $user= Auth::user();
-        return view('panel.resultado', compact('totales', 'detalle','user'));
 
-    }
+    $user = Auth::user();
+
+    return view(
+        'panel.resultado',
+        compact('totales', 'detalle', 'user', 'year')
+    );
+}
 
 
 public function reportePdf(User $user)

@@ -25,9 +25,9 @@
 									<th >FECHA</th>
 									<th >NOMBRE</th>
 									<th >DEPENDENCIA</th>
-									<th >SERVICIO</th>
 									<th >EQUIPO</th>
 									<th >FALLA</th>
+									<th >SERVICIO</th>
                                     <th >FECHA DE ASIGNACIÓN</th>
                                     <th >FECHA DE ATENCIÓN</th>
 									<th >ESTADO</th>
@@ -78,9 +78,9 @@
 									<th >FECHA</th>
 									<th >NOMBRE</th>
 									<th >DEPENDENCIA</th>
-									<th >SERVICIO</th>
 									<th >EQUIPO</th>
 									<th >FALLA</th>
+									<th >SERVICIO</th>
                                     <th >FECHA DE ASIGNACIÓN</th>
                                     <th >FECHA DE ATENCION</th>
 									<th >ESTADO</th>

@@ -602,15 +602,15 @@ public function reporteGeneralPdf(Request $request)
     /*
      * Generar UN SOLO PDF
      */
-    $pdf = Pdf::loadView(
-        'tecnico.informe-pdf',
-        compact(
-            'datosTecnicos',
-            'anio',
-            'tipo',
-            'nombreMes'
-        )
-    );
+$pdf = Pdf::loadView(
+    'tecnico.informe-pdf',
+    compact(
+        'datosTecnicos',
+        'anio',
+        'tipo',
+        'nombreMes'
+    )
+)->setPaper('letter');
 
     return $pdf->stream(
         'reporte_general' . $anio . '.pdf'

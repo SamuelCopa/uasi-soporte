@@ -483,6 +483,11 @@ return [
                     'url' => '/asignaciones/ups',
                     'icon' => 'fas fas fa-hdd',
                 ],
+                [
+                    'text' => 'OTROS EQUIPOS',
+                    'url' => '/asignaciones/equipos',
+                    'icon' => 'fas fas fa-hdd',
+                ],
             ],
 
         ],

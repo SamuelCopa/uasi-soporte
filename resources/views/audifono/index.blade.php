@@ -8,7 +8,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
-                <div class="card-header card-header--custom">
+                <div class=" card-header--custom">
                 </div>
                     <div class="header-panel">
                         <div class="header-left">
@@ -328,7 +328,7 @@
                                                         <button
                                                             type="submit"
                                                             class="btn btn-primary btn-raised"
-                                                            data-id="{{ $audifono->id }}"
+                                                            data-id="{{ $audifono->id }}" 
 
                                                             @if(auth()->check() && auth()->user()->hasAnyRole([
                                                                 'Administrador',
@@ -548,9 +548,12 @@ function cambiarEstadoAjax(id, estado_id) {
     // Definir texto y botón según condición
     let texto, botonConfirm;
 
-    if (estado_id == 5) {
+    if ([2, 5].includes(Number(estado_id))) {
+
         texto = "¿Quieres cambiar el estado?";
+
         botonConfirm = "Sí, cambiar";
+
     } else {
         texto = "¿Quieres cambiar el estado y enviar alerta?";
         botonConfirm = "Sí, cambiar y enviar alerta!";

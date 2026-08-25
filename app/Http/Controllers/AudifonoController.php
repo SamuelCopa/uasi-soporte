@@ -466,7 +466,7 @@ public function enviar($id, EquipoPdfService $service)
     $audifono->save();
 
     // Notificación
-    if (in_array($estadoId, [2, 3, 4])) {
+    if (in_array($estadoId, [3, 4])) {
 
         $this->notificacionService->enviar(
             $audifono->funcionario,
@@ -483,9 +483,6 @@ return response()->json([
         ? $audifono->resultado?->nombre
         : $audifono->estado?->nombre,
 
-'fecha_inicio' => $audifono->fecha_inicio
-    ? $audifono->fecha_inicio->format('d-m-Y')
-    : null,
 ]);
 }
 

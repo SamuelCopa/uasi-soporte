@@ -189,13 +189,16 @@ function cambiarEstado(id, estadoId, tieneResultado) {
 function cambiarEstadoAjax(id, estado_id) {
 let texto, botonConfirm;
 
-if (estado_id == 5) {
-    texto = "¿Quieres cambiar el estado?";
-    botonConfirm = "Sí, cambiar";
-} else {
-    texto = "¿Quieres cambiar el estado y enviar alerta?";
-    botonConfirm = "Sí, cambiar y enviar alerta!";
-}
+    if ([2, 5].includes(Number(estado_id))) {
+
+        texto = "¿Quieres cambiar el estado?";
+
+        botonConfirm = "Sí, cambiar";
+
+    } else {
+        texto = "¿Quieres cambiar el estado y enviar alerta?";
+        botonConfirm = "Sí, cambiar y enviar alerta!";
+    }
 
     Swal.fire({
     title: '¿Estás seguro?',

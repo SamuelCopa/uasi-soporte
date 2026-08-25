@@ -130,16 +130,17 @@ document.addEventListener('DOMContentLoaded', () => {
 <div class="row">
     @php
         $equipos = [
-            ['nombre' => 'CPUs', 'modelo' => \App\Models\RegistroCpu::class, 'color' => 'bg-gradient-info', 'icon' => 'ion-ios-cog', 'ruta' => '/registro-cpus'],
-            ['nombre' => 'IMPRESORAS', 'modelo' => \App\Models\Impresora::class, 'color' => 'bg-gradient-success', 'icon' => 'ion-printer', 'ruta' => '/impresoras'],
-            ['nombre' => 'MONITORES', 'modelo' => \App\Models\Monitor::class, 'color' => 'bg-gradient-warning', 'icon' => 'ion-monitor', 'ruta' => '/monitors'],
-            ['nombre' => 'AUDIFONOS', 'modelo' => \App\Models\Audifono::class, 'color' => 'bg-gradient-purple', 'icon' => 'ion-headphone', 'ruta' => '/audifonos'],
-            ['nombre' => 'LAPTOPS', 'modelo' => \App\Models\Laptop::class, 'color' => 'bg-gradient-info', 'icon' => 'ion-laptop', 'ruta' => '/laptops'],
-            ['nombre' => 'TECLADOS', 'modelo' => \App\Models\Teclado::class, 'color' => 'bg-gradient-success', 'icon' => 'ion-stop', 'ruta' => '/teclados'],
-            ['nombre' => 'PARLANTES', 'modelo' => \App\Models\Parlante::class, 'color' => 'bg-gradient-yellow', 'icon' => 'ion-volume-high', 'ruta' => '/parlantes'],
-            ['nombre' => 'MOUSE', 'modelo' => \App\Models\Raton::class, 'color' => 'bg-gradient-purple', 'icon' => 'ion-mouse', 'ruta' => '/ratons'],
-            ['nombre' => 'UPS', 'modelo' => \App\Models\Upese::class, 'color' => 'bg-gradient-info', 'icon' => 'ion-stop', 'ruta' => '/upeses'],
-            ['nombre' => 'ESTABILIZADOR', 'modelo' => \App\Models\Estabilizador::class, 'color' => 'bg-gradient-success', 'icon' => 'ion-outlet', 'ruta' => '/estabilizadors'],
+            ['nombre' => 'CPUs', 'modelo' => \App\Models\RegistroCpu::class, 'icon' => 'ion-ios-cog', 'ruta' => '/registro-cpus'],
+            ['nombre' => 'IMPRESORAS', 'modelo' => \App\Models\Impresora::class, 'icon' => 'ion-printer', 'ruta' => '/impresoras'],
+            ['nombre' => 'MONITORES', 'modelo' => \App\Models\Monitor::class, 'icon' => 'ion-monitor', 'ruta' => '/monitors'],
+            ['nombre' => 'AUDIFONOS', 'modelo' => \App\Models\Audifono::class, 'icon' => 'ion-headphone', 'ruta' => '/audifonos'],
+            ['nombre' => 'LAPTOPS', 'modelo' => \App\Models\Laptop::class, 'icon' => 'ion-laptop', 'ruta' => '/laptops'],
+            ['nombre' => 'TECLADOS', 'modelo' => \App\Models\Teclado::class, 'icon' => 'ion-stop', 'ruta' => '/teclados'],
+            ['nombre' => 'PARLANTES', 'modelo' => \App\Models\Parlante::class, 'icon' => 'ion-volume-high', 'ruta' => '/parlantes'],
+            ['nombre' => 'MOUSE', 'modelo' => \App\Models\Raton::class,'icon' => 'ion-mouse', 'ruta' => '/ratons'],
+            ['nombre' => 'UPS', 'modelo' => \App\Models\Upese::class, 'icon' => 'ion-stop', 'ruta' => '/upeses'],
+            ['nombre' => 'ESTABILIZADOR', 'modelo' => \App\Models\Estabilizador::class,'icon' => 'ion-outlet', 'ruta' => '/estabilizadors'],
+            ['nombre' => 'OTROS EQUIPOS', 'modelo' => \App\Models\Otrosequipo::class, 'icon' => 'ion-outlet', 'ruta' => '/estabilizadors'],
         ];
     @endphp
 

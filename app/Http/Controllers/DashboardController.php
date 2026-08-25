@@ -76,6 +76,12 @@ class DashboardController extends Controller
         return view('panelTecnico.asigLaptop', compact('user'));
     }
 
+    public function asignacionesEquipos()
+    {
+        $user = Auth::user();
+        return view('panelTecnico.asigEquipo', compact('user'));
+    }
+
         public function panelRegistro()
     {
         $user = Auth::user();
@@ -109,8 +115,6 @@ public function equiposTotales()
 
     return view('inicio.inicio', compact('laptopCount'));
 }
-
-
 
 
 }
