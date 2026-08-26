@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ['nombre' => 'MOUSE', 'modelo' => \App\Models\Raton::class,'icon' => 'ion-mouse', 'ruta' => '/ratons'],
             ['nombre' => 'UPS', 'modelo' => \App\Models\Upese::class, 'icon' => 'ion-stop', 'ruta' => '/upeses'],
             ['nombre' => 'ESTABILIZADOR', 'modelo' => \App\Models\Estabilizador::class,'icon' => 'ion-outlet', 'ruta' => '/estabilizadors'],
-            ['nombre' => 'OTROS EQUIPOS', 'modelo' => \App\Models\Otrosequipo::class, 'icon' => 'ion-outlet', 'ruta' => '/otros-equipos'],
+            ['nombre' => 'OTROS EQUIPOS', 'modelo' => \App\Models\OtrosEquipo::class, 'icon' => 'ion-outlet', 'ruta' => '/otros-equipos'],
         ];
     @endphp
 
