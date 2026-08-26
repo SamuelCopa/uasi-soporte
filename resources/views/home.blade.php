@@ -20,7 +20,12 @@
             'Administrador',
             'SuperAdministrador'
         ]))
-
+        <div class="header-actions">
+                <a href="{{ route('resultado') }}" class="btn-header">
+                    <i class="fas fa-chart-line"></i>
+                    Ver Resultados del mantenimiento
+                </a>
+        </div>
             <a href="{{ route('estadistica') }}" class="btn-header">
                 <i class="fas fa-chart-line"></i>
                 Estadística general

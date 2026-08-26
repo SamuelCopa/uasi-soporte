@@ -353,7 +353,6 @@ public function resultado()
         'Mouse' => Raton::class,
         'UPS' => Upese::class,
         'Estabilizador' => Estabilizador::class,
-        'Otros Equipos' => OtrosEquipo::class,
     ];
 
     $totales = [
@@ -366,11 +365,16 @@ public function resultado()
 
     $detalle = [];
 
+    /*
+    |--------------------------------------------------------------------------
+    | EQUIPOS NORMALES
+    |--------------------------------------------------------------------------
+    */
+
     foreach ($modelos as $nombre => $modelo) {
 
-        // Consulta base: solamente gestión actual
         $query = $modelo::whereNotNull('fecha_entrega')
-                ->whereYear('fecha_entrega', $year);
+            ->whereYear('fecha_entrega', $year);
 
         $detalle[$nombre] = [
             'devolucion' => (clone $query)
@@ -399,13 +403,227 @@ public function resultado()
         }
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | OTROS EQUIPOS
+    |--------------------------------------------------------------------------
+    */
+
+    $otrosEquipos = OtrosEquipo::with('tipoEquipo')
+        ->whereNotNull('fecha_entrega')
+        ->whereYear('fecha_entrega', $year)
+        ->get();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | AGRUPAR POR TIPO DE EQUIPO
+    |--------------------------------------------------------------------------
+    */
+
+    $otrosAgrupados = $otrosEquipos->groupBy(function ($equipo) {
+
+        return $equipo->tipoEquipo?->nombre ?? 'OTRO EQUIPO';
+
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | AGREGAR CADA TIPO DINÁMICAMENTE
+    |--------------------------------------------------------------------------
+    */
+
+    foreach ($otrosAgrupados as $nombre => $equipos) {
+
+        $detalle[$nombre] = [
+            'devolucion' => $equipos
+                ->where('resultado_id', 1)
+                ->count(),
+
+            'reposicion' => $equipos
+                ->where('resultado_id', 2)
+                ->count(),
+
+            'repliegue' => $equipos
+                ->where('resultado_id', 3)
+                ->count(),
+
+            'custodio' => $equipos
+                ->where('resultado_id', 4)
+                ->count(),
+
+            'baja' => $equipos
+                ->where('resultado_id', 5)
+                ->count(),
+        ];
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SUMAR A LOS TOTALES GENERALES
+        |--------------------------------------------------------------------------
+        */
+
+        foreach ($detalle[$nombre] as $key => $valor) {
+            $totales[$key] += $valor;
+        }
+    }
+
+
     $user = Auth::user();
 
     return view(
         'panel.resultado',
-        compact('totales', 'detalle', 'user', 'year')
+        compact(
+            'totales',
+            'detalle',
+            'user',
+            'year'
+        )
     );
 }
+
+
+public function resultadoPdf()
+{
+    $year = now()->year;
+
+    $modelos = [
+        'CPU' => RegistroCpu::class,
+        'Impresora' => Impresora::class,
+        'Monitor' => Monitor::class,
+        'Audifono' => Audifono::class,
+        'Laptop' => Laptop::class,
+        'Teclado' => Teclado::class,
+        'Parlante' => Parlante::class,
+        'Mouse' => Raton::class,
+        'UPS' => Upese::class,
+        'Estabilizador' => Estabilizador::class,
+    ];
+
+    $totales = [
+        'devolucion' => 0,
+        'reposicion' => 0,
+        'repliegue'  => 0,
+        'custodio'   => 0,
+        'baja'       => 0,
+    ];
+
+    $detalle = [];
+
+    /*
+    |--------------------------------------------------------------------------
+    | EQUIPOS NORMALES
+    |--------------------------------------------------------------------------
+    */
+
+    foreach ($modelos as $nombre => $modelo) {
+
+        $query = $modelo::whereNotNull('fecha_entrega')
+            ->whereYear('fecha_entrega', $year);
+
+        $detalle[$nombre] = [
+            'devolucion' => (clone $query)
+                ->where('resultado_id', 1)
+                ->count(),
+
+            'reposicion' => (clone $query)
+                ->where('resultado_id', 2)
+                ->count(),
+
+            'repliegue' => (clone $query)
+                ->where('resultado_id', 3)
+                ->count(),
+
+            'custodio' => (clone $query)
+                ->where('resultado_id', 4)
+                ->count(),
+
+            'baja' => (clone $query)
+                ->where('resultado_id', 5)
+                ->count(),
+        ];
+
+        foreach ($detalle[$nombre] as $key => $valor) {
+            $totales[$key] += $valor;
+        }
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | OTROS EQUIPOS
+    |--------------------------------------------------------------------------
+    */
+
+    $otrosEquipos = OtrosEquipo::with('tipoEquipo')
+        ->whereNotNull('fecha_entrega')
+        ->whereYear('fecha_entrega', $year)
+        ->get();
+
+    $otrosAgrupados = $otrosEquipos->groupBy(function ($equipo) {
+
+        return $equipo->tipoEquipo?->nombre
+            ?? 'OTRO EQUIPO';
+
+    });
+
+
+    foreach ($otrosAgrupados as $nombre => $equipos) {
+
+        $detalle[$nombre] = [
+            'devolucion' => $equipos
+                ->where('resultado_id', 1)
+                ->count(),
+
+            'reposicion' => $equipos
+                ->where('resultado_id', 2)
+                ->count(),
+
+            'repliegue' => $equipos
+                ->where('resultado_id', 3)
+                ->count(),
+
+            'custodio' => $equipos
+                ->where('resultado_id', 4)
+                ->count(),
+
+            'baja' => $equipos
+                ->where('resultado_id', 5)
+                ->count(),
+        ];
+
+        foreach ($detalle[$nombre] as $key => $valor) {
+            $totales[$key] += $valor;
+        }
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | GENERAR PDF
+    |--------------------------------------------------------------------------
+    */
+
+    $pdf = Pdf::loadView(
+        'panel.resultadoPdf',
+        compact(
+            'detalle',
+            'totales',
+            'year'
+        )
+    );
+
+    $pdf->setPaper('letter');
+
+    return $pdf->stream(
+        'informe_mantenimiento_' . $year . '.pdf'
+    );
+}
+
+
 
 
 public function reportePdf(User $user)

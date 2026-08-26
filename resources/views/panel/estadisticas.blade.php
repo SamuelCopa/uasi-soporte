@@ -17,16 +17,6 @@
             </div>
         </div>
 
-        <div class="header-actions">
-                <a href="{{ route('resultado') }}" class="btn-header">
-                    <i class="fas fa-chart-line"></i>
-                    Ver Resultados del mantenimiento
-                </a>
-                <a href="{{ route('home') }}" class="btn-header">
-                    <i class="fas fa-arrow-left"></i>
-                    Volver
-                </a>
-        </div>
     </div>
 
 @stop

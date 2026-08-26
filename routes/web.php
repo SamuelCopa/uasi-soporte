@@ -312,6 +312,9 @@ Route::get('/seguimiento', [SeguimientoController::class, 'buscar'])->name('segu
 
 // ----------------------FORMULARIO PDF-------------------
 
+Route::get('/resultado/reporte-pdf',[PanelController::class, 'resultadoPdf'])->name('resultado.reporte.pdf');
+
+
 Route::get('pdf/equipo/{id}', [App\Http\Controllers\OtrosEquipoController::class, 'generarPdf'])->name('pdf.equipo.preview');
 Route::get('/pdf/equipo/{id}/descargar', [OtrosEquipoController::class, 'descargar'])->name('pdf.equipo.descargar');
 Route::post('/pdf/equipo/{id}/enviar', [OtrosEquipoController::class, 'enviar'])->name('pdf.equipo.enviar');

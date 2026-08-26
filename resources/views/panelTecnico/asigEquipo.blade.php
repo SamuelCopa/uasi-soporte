@@ -222,7 +222,7 @@ let texto, botonConfirm;
                 });
 
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '{{ route('estado-monitor') }}', true);
+            xhr.open('POST', '{{ route('estado-equipo') }}', true);
             xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
@@ -266,10 +266,10 @@ let texto, botonConfirm;
                     let texto2, texto3;
 
                     if (estado_id == 5) {
-                        texto2 = "El estado del monitor fue actualizado correctamente";
+                        texto2 = "El estado del equipo fue actualizado correctamente";
                         texto3 = "";
                     } else {
-                        texto2 = "El estado del monitor fue actualizado correctamente.";
+                        texto2 = "El estado del equipo fue actualizado correctamente.";
                         texto3 = "La alerta fue enviada correctamente.";
                     }
 

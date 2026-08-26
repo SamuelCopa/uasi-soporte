@@ -8,7 +8,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
-                <div class="card-header card-header--custom">
+                <div class=" card-header--custom">
                 </div>
                     <div class="header-panel">
                         <div class="header-left">

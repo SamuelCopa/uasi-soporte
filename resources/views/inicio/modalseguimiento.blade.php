@@ -109,7 +109,7 @@
 
             <i class="bi bi-hash absolute left-4 top-1/2 -translate-y-1/2 text-violet-500"></i>
 
-            <input type="text" name="codigo" id="input-imagen" required placeholder="Ej.: 12345" class="w-full pl-12 pr-4 py-3
+            <input type="text" name="codigo" id="input-imagen" required placeholder="Ej.: 001/{{ date('Y') }}" class="w-full pl-12 pr-4 py-3
                     rounded-xl border border-gray-300 focus:border-violet-600 focus:ring-4 focus:ring-violet-200 transition">
         </div>
 

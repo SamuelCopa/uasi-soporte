@@ -128,52 +128,6 @@ public function index(Request $request): View
     return view('registro-cpu.index', $data->all());
 }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): View
-    {
-        $registroCpu = new RegistroCpu();
-
-        $capdisco=CapacidadDisco::all();
-        $capram=CapacidadRam::orderBy('capacidad', 'asc')->get();
-        $captvideo=CapacidadTvideo::orderBy('capacidad', 'asc')->get();
-        $colorcase = ColorCase::orderByRaw('LOWER(color) asc')->get();
-        $dependencia = Dependencia::orderBy('dependencias', 'asc')->get();
-        $estado=Estado::all();
-        $genprocesador=GenProcesador::orderBy('generacion', 'asc')->get();
-        $marcacase=MarcaCase::orderBy('marca', 'asc')->get();
-        $marcadisco=MarcaDisco::orderBy('marca', 'asc')->get();
-        $marcafuente=MarcaFuente::orderBy('marca', 'asc')->get();
-        $marcalectorcd=MarcaLectorcd::orderBy('marca', 'asc')->get();
-        $marcaprocesador=MarcaProcesador::orderBy('marca', 'asc')->get();
-        $marcaram=MarcaRam::orderBy('marca', 'asc')->get();
-        $marcatmadre=MarcaTmadre::orderBy('marca', 'asc')->get();
-        $modelotmadre=ModeloTmadre::orderBy('marca', 'asc')->get();
-        $marcatred=MarcaTred::orderBy('marca', 'asc')->get();
-        $marcatvideo=MarcaTvideo::orderBy('marca', 'asc')->get();
-        $marcatwifi=MarcaTwifi::orderBy('marca', 'asc')->get();
-        $modelowifi=ModeloWifi::orderBy('modelo', 'asc')->get();
-        $disipadorram=DisipadorRam::all();
-        $modprocesador=ModeloProcesador::orderBy('modelo', 'asc')->get();   
-        $tiporam=TipoRam::all();
-        $modelotred=ModeloTred::orderBy('modelo', 'asc')->get();
-        $cantidadram=CantidadRam::all();
-        $potenciafuente=PotenciaFuente::orderBy('potencia', 'asc')->get();
-        $tipodisco=TipoDisco::orderBy('tipo', 'asc')->get();
-        $tipotvideo=TipoTvideo::orderBy('tipo', 'asc')->get();
-        $users = User::whereHas('roles', function ($query) {
-            $query->where('name', 'Tecnico');
-        })->where('id_estadousuario', '1')->get();  
-
-        return view('registro-cpu.create', compact('registroCpu','capdisco','capram','users'
-        ,'captvideo','colorcase','dependencia','estado','genprocesador','modelowifi','disipadorram','cantidadram',
-        'marcacase','marcadisco','marcafuente','marcalectorcd','marcaprocesador','tiporam',
-        'marcaram','marcatmadre','modelotmadre','marcatred','marcatvideo','marcatwifi',
-        'modprocesador','modelotred','potenciafuente','tipodisco','tipotvideo'));
-    }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -521,49 +475,7 @@ public function index(Request $request): View
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id): View
-    {
-        $registroCpu = RegistroCpu::find($id);
-
-        $capdisco=CapacidadDisco::all();
-        $capram=CapacidadRam::all();
-        $captvideo=CapacidadTvideo::all();
-        $colorcase=ColorCase::orderBy('color', 'asc')->get();
-        $dependencia = Dependencia::orderBy('dependencias', 'asc')->get();
-        $estado=Estado::all();
-        $genprocesador=GenProcesador::all();
-        $marcacase=MarcaCase::all();
-        $marcadisco=MarcaDisco::all();
-        $marcafuente=MarcaFuente::all();
-        $marcalectorcd=MarcaLectorcd::all();
-        $marcaprocesador=MarcaProcesador::all();
-        $marcaram=MarcaRam::all();
-        $marcatmadre=MarcaTmadre::all();
-        $modelotmadre=ModeloTmadre::all();
-        $marcatred=MarcaTred::all();
-        $marcatvideo=MarcaTvideo::all();
-        $marcatwifi=MarcaTwifi::all();
-        $modelowifi=ModeloWifi::all();
-        $disipadorram=DisipadorRam::all();
-        $modprocesador=ModeloProcesador::all();    
-        $tiporam=TipoRam::all();
-        $modelotred=ModeloTred::all();
-        $cantidadram=CantidadRam::all();
-        $potenciafuente=PotenciaFuente::all();
-        $tipodisco=TipoDisco::all();
-        $tipotvideo=TipoTvideo::all();
-        $users = User::whereHas('roles', function ($query) {
-            $query->where('name', 'Tecnico');
-        })->where('id_estadousuario', '1')->orderBy('paterno', 'asc')->get(); 
-
-        return view('registro-cpu.edit', compact('registroCpu','capdisco','capram','users'
-        ,'captvideo','colorcase','dependencia','estado','genprocesador','modelowifi','disipadorram','cantidadram',
-        'marcacase','marcadisco','marcafuente','marcalectorcd','marcaprocesador','tiporam',
-        'marcaram','marcatmadre','modelotmadre','marcatred','marcatvideo','marcatwifi',
-        'modprocesador','modelotred','potenciafuente','tipodisco','tipotvideo'));
-    }
-
-    /**
+  /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)

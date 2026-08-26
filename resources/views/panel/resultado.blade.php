@@ -36,8 +36,11 @@
                 <strong>{{ $user->name }} {{ $user->paterno }} {{ $user->materno }}</strong>
             </div>
         </div>
-
         <div class="header-actions">
+            <a href="{{ route('resultado.reporte.pdf') }}" target="_blank" class="btn-header">
+                <i class="fas fa-file-pdf"></i>
+                Generar PDF
+            </a>
                 <a href="{{ route('estadistica') }}" class="btn-header">
                     <i class="fas fa-arrow-left"></i>
                     Volver
@@ -72,12 +75,120 @@ a:hover .icono {
 }
 </style>
 @stop
-<div class="row"  style="display: flex; justify-content: space-between; align-items: center;">
-    <div class="title-container">
-        <h3 class="main-title">
-            RESULTADO DEL MANTENIMIENTO {{ date('Y') }}
-        </h3>
+<div class="tabla-container">
+
+    <div class="table-responsive">
+
+        <table class="table table-striped table-hover table-bordered text-center">
+
+            <thead>
+
+                <tr>
+                    <td colspan="7" class="color2">
+                        <h4 class="mb-0">
+                            DETALLE POR ACTIVOS - GESTIÓN {{ $year }}
+                        </h4>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Equipo</th>
+                    <th>Devolución</th>
+                    <th>Reposición</th>
+                    <th>Repliegue</th>
+                    <th>Custodio</th>
+                    <th>Baja</th>
+                    <th>TOTAL</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @foreach ($detalle as $modelo => $datos)
+
+                    @php
+                        $totalFila = array_sum($datos);
+                    @endphp
+
+                    <tr>
+
+                        <td>
+                            {{ strtoupper($modelo) }}
+                        </td>
+
+                        <td>
+                            {{ $datos['devolucion'] }}
+                        </td>
+
+                        <td>
+                            {{ $datos['reposicion'] }}
+                        </td>
+
+                        <td>
+                            {{ $datos['repliegue'] }}
+                        </td>
+
+                        <td>
+                            {{ $datos['custodio'] }}
+                        </td>
+
+                        <td>
+                            {{ $datos['baja'] }}
+                        </td>
+
+                        <td class="font-weight-bold">
+                            {{ $totalFila }}
+                        </td>
+
+                    </tr>
+
+                @endforeach
+
+            </tbody>
+
+            {{-- TOTAL GENERAL --}}
+            <tfoot>
+
+                <tr class="font-weight-bold">
+
+                    <td>
+                        TOTAL GENERAL
+                    </td>
+
+                    <td>
+                        {{ $totales['devolucion'] }}
+                    </td>
+
+                    <td>
+                        {{ $totales['reposicion'] }}
+                    </td>
+
+                    <td>
+                        {{ $totales['repliegue'] }}
+                    </td>
+
+                    <td>
+                        {{ $totales['custodio'] }}
+                    </td>
+
+                    <td>
+                        {{ $totales['baja'] }}
+                    </td>
+
+                    <td>
+                        {{ array_sum($totales) }}
+                    </td>
+
+                </tr>
+
+            </tfoot>
+
+        </table>
+
     </div>
+
+</div>
 @php
 $equipos = [
     [
@@ -228,81 +339,7 @@ $equipos = [
 
 {{-- -----------------------------TABLA DE DATOS--------------------------------- --}}
 
-<div class="card">
-    <div class="table-responsive">
 
-        <table class="table table-striped table-hover table-bordered">
-
-            <thead>
-
-                <tr align="center">
-                    <td colspan="7" class="color2">
-                        <h4 class="mb-0">
-                            DETALLE POR ACTIVOS - GESTIÓN {{ $year }}
-                        </h4>
-                    </td>
-                </tr>
-
-                <tr align="center">
-                    <th>Equipo</th>
-                    <th>Devolución</th>
-                    <th>Reposición</th>
-                    <th>Repliegue</th>
-                    <th>Custodio</th>
-                    <th>Baja</th>
-                    <th>TOTAL</th>
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                @foreach ($detalle as $modelo => $datos)
-
-                    @php
-                        $total = array_sum($datos);
-                    @endphp
-
-                    <tr align="center">
-
-                        <td>
-                            {{ strtoupper($modelo) }}
-                        </td>
-
-                        <td>
-                            {{ $datos['devolucion'] }}
-                        </td>
-
-                        <td>
-                            {{ $datos['reposicion'] }}
-                        </td>
-
-                        <td>
-                            {{ $datos['repliegue'] }}
-                        </td>
-
-                        <td>
-                            {{ $datos['custodio'] }}
-                        </td>
-
-                        <td>
-                            {{ $datos['baja'] }}
-                        </td>
-
-                        <td class="font-weight-bold">
-                            {{ $total }}
-                        </td>
-
-                    </tr>
-
-                @endforeach
-
-            </tbody>
-
-        </table>
-
-    </div>
-</div>
 
 {{-- 
 <h3 class="mt-4">GRÁFICOS POR ACTIVOS {{ date('Y') }}</h3>

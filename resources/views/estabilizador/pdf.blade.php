@@ -71,11 +71,11 @@
         <tr class="fila-dividida2">
             <td >
             <strong>DEPENDENCIA:</strong>
-            {{ $audifono->Dependencia?->dependencias }}
+            {{ $estabilizador->Dependencia?->dependencias }}
             </td>
             <td >
             <strong>NÚMERO DE RECEPCIÓN:</strong>
-            {{ $audifono->cod_registro }}
+            {{ $estabilizador->cod_registro }}
             </td>
         </tr>
         @else

@@ -39,31 +39,6 @@ class OtrosEquipoController extends Controller
     {
         $this->notificacionService = $notificacionService;
     }
-    // public function index(Request $request): View
-    // {
-    //     $gestionPasada = date('Y') - 1;
-
-    // // Últimos 30 días de la gestión pasada
-    //     $fechaFinPasada = Carbon::create($gestionPasada, 12, 31); // 31 dic gestión pasada
-    //     $fechaInicioPasada = $fechaFinPasada->copy()->subDays(29); // últimos 30 días exactos
-
-    // // Consulta: últimos 30 días gestión pasada OR registros de la gestión actual
-    //     $otrosEquipo = OtrosEquipo::where(function ($query) use ($fechaInicioPasada, $fechaFinPasada) {
-    //         $query->whereBetween('fecha', [$fechaInicioPasada, $fechaFinPasada])
-    //         ->where('estado_id', '!=', 5);
-    //     })
-    //     ->orWhereYear('fecha', date('Y'))
-    //     ->orderByDesc('fecha')
-    //     ->paginate();
-    //     $tipoequipo=TiposEquipo::all();
-    //     $estado=Estado::all();
-    //     $dependencia = Dependencia::orderBy('dependencias', 'asc')->get();
-    //     $users = User::whereHas('roles', function ($query) {$query->where('name', 'Tecnico');
-    //     })->where('id_estadousuario', '1')->orderBy('paterno', 'asc')->get();
-
-    //     return view('otros-equipo.index', compact('otrosEquipo', 'users','estado','dependencia', 'tipoequipo'))
-    //         ->with('i', ($request->input('page', 1) - 1) * $otrosEquipo->perPage());
-    // }
 
     public function index(Request $request): View
 {
@@ -110,13 +85,8 @@ class OtrosEquipoController extends Controller
 
     // Datos para los formularios
     $tipoequipo = TiposEquipo::all();
-
     $estado = Estado::all();
-
-    $dependencia = Dependencia::orderBy(
-        'dependencias',
-        'asc'
-    )->get();
+    $dependencia = Dependencia::orderBy('dependencias', 'asc')->get();
 
     $users = User::whereHas('roles', function ($query) {
             $query->where('name', 'Tecnico');
@@ -361,7 +331,6 @@ public function store(Request $request, CorrelativoService $correlativoService)
     }
 
 
-
     public function destroy($id): RedirectResponse
     {
         OtrosEquipo::find($id)->delete();
@@ -387,10 +356,10 @@ public function updateTecnico(Request $request, $id)
             ->send(new TecnicoAsignado($equipo, $user));
     }
 
-    return Redirect::route('otros-equipos.index')
-        ->with('success', 'ASIGNADO CORRECTAMENTE')
-        ->with('text', 'Se ha enviado la notificación de asignación al técnico.')
-        ->with('icono', 'success');
+return back()
+    ->with('success', 'ASIGNADO CORRECTAMENTE')
+    ->with('text', 'Se ha enviado la notificación de asignación al técnico.')
+    ->with('icono', 'success');
 }
 
 
@@ -593,58 +562,75 @@ public function enviar($id, EquipoPdfService $service)
     }
 
 // ===========CAMBIAR ESTADO Y ENVIAR ALERTA==================
-    public function cambiarEstado(Request $request)
-    {
-        $equipo = OtrosEquipo::findOrFail($request->id);
+public function cambiarEstado(Request $request)
+{
+    $equipo = OtrosEquipo::with([
+        'tipoEquipo',
+        'funcionario',
+        'estado',
+        'resultado'
+    ])->findOrFail($request->id);
 
-        $estadoId = (int) $request->input('estado_id');
+    $estadoId = (int) $request->input('estado_id');
 
-        // =========================
-        // ACTUALIZAR ESTADO
-        // =========================
-        $equipo->estado_id = $estadoId;
+    // =========================
+    // ACTUALIZAR ESTADO
+    // =========================
 
-        // Mapeo de fechas por estado
-        $fechas = [
-            2 => 'fecha_inicio',
-            5 => 'fecha_entrega',
-        ];
+    $equipo->estado_id = $estadoId;
 
-        $equipo->estado_id = $estadoId;
+    $fechas = [
+        2 => 'fecha_inicio',
+        5 => 'fecha_entrega',
+    ];
 
-        if (isset($fechas[$estadoId])) {
+    if (isset($fechas[$estadoId])) {
 
-            $campoFecha = $fechas[$estadoId];
+        $campoFecha = $fechas[$estadoId];
 
-            // Controla la fecha, NO el estado
-            if (empty($equipo->$campoFecha)) {
-                $equipo->$campoFecha = now();
-            }
+        if (empty($equipo->$campoFecha)) {
+            $equipo->$campoFecha = now();
         }
-
-        $equipo->save();
-
-        // =========================
-        // ENVÍO DE NOTIFICACIÓN
-        // =========================
-        if (in_array($estadoId, [3, 4])) {
-
-            $this->notificacionService->enviar(
-                $equipo->funcionario,
-                $estadoId,
-                $equipo
-            );
-        }
-
-        // =========================
-        // RESPUESTA
-        // =========================
-        return response()->json([
-            'estado' => $estadoId == 5
-                ? $equipo->resultado?->nombre
-                : $equipo->estado?->nombre
-        ]);
     }
+
+    $equipo->save();
+
+    // =========================
+    // RECARGAR RELACIONES
+    // =========================
+
+    $equipo->load([
+        'estado',
+        'resultado',
+        'tipoEquipo'
+    ]);
+
+    // =========================
+    // ENVÍO DE NOTIFICACIÓN
+    // =========================
+
+    if (in_array($estadoId, [3, 4])) {
+
+        $this->notificacionService->enviar(
+            $equipo->funcionario,
+            $estadoId,
+            $equipo
+        );
+    }
+
+    // =========================
+    // ESTADO PARA AJAX
+    // =========================
+
+    $nombreEstado = $estadoId == 5
+        ? ($equipo->resultado?->nombre ?? 'SIN RESULTADO')
+        : ($equipo->estado?->nombre ?? 'SIN ESTADO');
+
+    return response()->json([
+        'success' => true,
+        'estado' => $nombreEstado
+    ]);
+}
 
 public function filtrar(Request $request)
 {

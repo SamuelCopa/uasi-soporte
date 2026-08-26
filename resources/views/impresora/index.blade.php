@@ -122,7 +122,7 @@
                                                         $dias = floor(\Carbon\Carbon::parse($impresora->fecha_asignacion)->diffInDays(\Carbon\Carbon::now()));
                                                         @endphp
                                                         <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Dias transcurridos desde la fecha de asignación">
-                                                        {{ $dias }} DÍAS TRANSCURRIDOS
+                                                        {{ $dias }} DÍAS
                                                         </button>
                                                     @endif
                                                     @elseif(! $impresora->fecha_asignacion)	
@@ -137,7 +137,7 @@
                                                         $dias = floor(\Carbon\Carbon::parse($impresora->fecha_inicio)->diffInDays(\Carbon\Carbon::now()));
                                                         @endphp
                                                         <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Dias transcurridos desde la fecha de inico de la reparación">
-                                                        {{ $dias }} DÍAS TRANSCURRIDOS
+                                                        {{ $dias }} DÍAS
                                                         </button>
                                                     @endif
                                                     @elseif(! $impresora->fecha_inicio)	

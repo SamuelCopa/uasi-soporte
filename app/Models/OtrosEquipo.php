@@ -125,7 +125,6 @@ public function tipoEquipo(): BelongsTo
     );
 }
     
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

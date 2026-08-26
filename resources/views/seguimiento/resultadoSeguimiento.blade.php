@@ -24,7 +24,12 @@
     </div>
 
     <!-- IMAGEN -->
-  
+         <div class="flex justify-center mb-6">
+            <h5 class="text-2xl md:text-3xl font-bold">
+                <i class="fas fa-desktop"></i>
+                {{ $codigo->nombre_equipo }}
+            </h5>
+        </div>
 
     <!-- NUMERO -->
     <div class="text-center mb-6">

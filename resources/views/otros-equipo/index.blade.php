@@ -8,7 +8,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
-                <div class="card-header card-header--custom">
+                <div class=" card-header--custom">
                 </div>
                     <div class="header-panel">
                         <div class="header-left">
@@ -24,25 +24,25 @@
                                 Tipo de equipo
                             </label>
 
-<select id="tipoEquipo"
-        name="tipo_equipo_id"
-        class="form-control"
-        onchange="filtrarEquipo()">
+                            <select id="tipoEquipo"
+                                    name="tipo_equipo_id"
+                                    class="form-control"
+                                    onchange="filtrarEquipo()">
 
-    <option value="">TODOS LOS EQUIPOS</option>
+                                <option value="">TODOS LOS EQUIPOS</option>
 
-    @foreach($tipoequipo as $tipo)
-        <option value="{{ $tipo->id }}"
-            {{ request('tipo_equipo_id') == $tipo->id ? 'selected' : '' }}>
-            {{ strtoupper($tipo->nombre) }}
-        </option>
-    @endforeach
+                                @foreach($tipoequipo as $tipo)
+                                    <option value="{{ $tipo->id }}"
+                                        {{ request('tipo_equipo_id') == $tipo->id ? 'selected' : '' }}>
+                                        {{ strtoupper($tipo->nombre) }}
+                                    </option>
+                                @endforeach
 
-    <option value="nuevo">
-        + CREAR NUEVO EQUIPO
-    </option>
+                                <option value="nuevo">
+                                    + CREAR NUEVO EQUIPO
+                                </option>
 
-</select>
+                            </select>
 
                                 </div>
 
@@ -60,136 +60,135 @@
                         </div>
 
                     </div>
-<script>
-function filtrarEquipo() {
+                        <script>
+                        function filtrarEquipo() {
 
-    const select = document.getElementById('tipoEquipo');
-    const tipo = select.value;
+                            const select = document.getElementById('tipoEquipo');
+                            const tipo = select.value;
 
-    // ==============================
-    // CREAR NUEVO TIPO DE EQUIPO
-    // ==============================
-    if (tipo === 'nuevo') {
+                            // ==============================
+                            // CREAR NUEVO TIPO DE EQUIPO
+                            // ==============================
+                            if (tipo === 'nuevo') {
 
-        Swal.fire({
-            title: 'NUEVO TIPO DE EQUIPO',
-            input: 'text',
-            inputLabel: 'Nombre del equipo',
-            inputPlaceholder: 'Ej.: TABLETA',
-            showCancelButton: true,
-            confirmButtonText: 'GUARDAR',
-            cancelButtonText: 'CANCELAR',
+                                Swal.fire({
+                                    title: 'NUEVO TIPO DE EQUIPO',
+                                    input: 'text',
+                                    inputLabel: 'Nombre del equipo',
+                                    inputPlaceholder: 'Ej.: TABLETA',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'GUARDAR',
+                                    cancelButtonText: 'CANCELAR',
 
-            inputValidator: (value) => {
+                                    inputValidator: (value) => {
 
-                if (!value || value.trim() === '') {
-                    return 'Debe ingresar el nombre del equipo';
-                }
-            }
+                                        if (!value || value.trim() === '') {
+                                            return 'Debe ingresar el nombre del equipo';
+                                        }
+                                    }
 
-        }).then((result) => {
+                                }).then((result) => {
 
-            if (result.isConfirmed) {
+                                    if (result.isConfirmed) {
 
-                guardarTipoEquipo(result.value.trim());
+                                        guardarTipoEquipo(result.value.trim());
 
-            } else {
+                                    } else {
 
-                // Volver a todos los equipos
-                select.value = '';
-            }
-        });
+                                        // Volver a todos los equipos
+                                        select.value = '';
+                                    }
+                                });
 
-        return;
-    }
+                                return;
+                            }
 
-    // ==============================
-    // FILTRAR EQUIPOS
-    // ==============================
+                            // ==============================
+                            // FILTRAR EQUIPOS
+                            // ==============================
 
-    let url = "{{ route('otros-equipos.index') }}";
+                            let url = "{{ route('otros-equipos.index') }}";
 
-    if (tipo !== '') {
-        url += '?tipo_equipo_id=' + tipo;
-    }
+                            if (tipo !== '') {
+                                url += '?tipo_equipo_id=' + tipo;
+                            }
 
-    window.location.href = url;
-}
-</script>
-<script>
-function guardarTipoEquipo(nombre) {
+                            window.location.href = url;
+                        }
+                        </script>
+                        <script>
+                        function guardarTipoEquipo(nombre) {
 
-    fetch("{{ route('tipos-equipos.store') }}", {
+                            fetch("{{ route('tipos-equipos.store') }}", {
 
-        method: 'POST',
+                                method: 'POST',
 
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
-        },
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Accept': 'application/json'
+                                },
 
-        body: JSON.stringify({
-            nombre: nombre
-        })
+                                body: JSON.stringify({
+                                    nombre: nombre
+                                })
 
-    })
-    .then(response => response.json())
+                            })
+                            .then(response => response.json())
 
-    .then(data => {
+                            .then(data => {
 
-        if (data.success) {
+                                if (data.success) {
 
-            const select = document.getElementById('tipoEquipo');
+                                    const select = document.getElementById('tipoEquipo');
 
-            // Crear nueva opción
-            const option = document.createElement('option');
+                                    // Crear nueva opción
+                                    const option = document.createElement('option');
 
-            option.value = data.tipo.id;
-            option.textContent = data.tipo.nombre.toUpperCase();
+                                    option.value = data.tipo.id;
+                                    option.textContent = data.tipo.nombre.toUpperCase();
 
-            // Agregar antes de "CREAR NUEVO EQUIPO"
-            const opcionNuevo = select.querySelector('option[value="nuevo"]');
+                                    // Agregar antes de "CREAR NUEVO EQUIPO"
+                                    const opcionNuevo = select.querySelector('option[value="nuevo"]');
 
-            select.insertBefore(option, opcionNuevo);
+                                    select.insertBefore(option, opcionNuevo);
 
-            // Seleccionar automáticamente el nuevo equipo
-            select.value = data.tipo.id;
+                                    // Seleccionar automáticamente el nuevo equipo
+                                    select.value = data.tipo.id;
 
-            Swal.fire({
-                icon: 'success',
-                title: 'REGISTRADO',
-                text: 'El tipo de equipo fue registrado correctamente',
-                confirmButtonText: 'ACEPTAR'
-            });
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'REGISTRADO',
+                                        text: 'El tipo de equipo fue registrado correctamente',
+                                        confirmButtonText: 'ACEPTAR'
+                                    });
 
-        } else {
+                                } else {
 
-            Swal.fire({
-                icon: 'error',
-                title: 'ERROR',
-                text: data.message ?? 'No se pudo registrar el tipo de equipo'
-            });
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'ERROR',
+                                        text: data.message ?? 'No se pudo registrar el tipo de equipo'
+                                    });
 
-            document.getElementById('tipoEquipo').value = '';
-        }
+                                    document.getElementById('tipoEquipo').value = '';
+                                }
 
-    })
-    .catch(error => {
+                            })
+                            .catch(error => {
 
-        console.error(error);
+                                console.error(error);
 
-        Swal.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: 'Ocurrió un error al registrar el tipo de equipo'
-        });
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'ERROR',
+                                    text: 'Ocurrió un error al registrar el tipo de equipo'
+                                });
 
-        document.getElementById('tipoEquipo').value = '';
-    });
-}
-</script>
-
+                                document.getElementById('tipoEquipo').value = '';
+                            });
+                        }
+                        </script>
                     <script>
                         function abrirModalEquipo()
                     {
@@ -319,7 +318,7 @@ function guardarTipoEquipo(nombre) {
                                                         $dias = floor(\Carbon\Carbon::parse($monitor->fecha_asignacion)->diffInDays(\Carbon\Carbon::now()));
                                                         @endphp
                                                         <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Dias transcurridos desde la fecha de asignación">
-                                                        {{ $dias }} DÍAS TRANSCURRIDOS
+                                                        {{ $dias }} DÍAS 
                                                         </button>
                                                     @endif
                                                     @elseif(! $monitor->fecha_asignacion)	
@@ -334,7 +333,7 @@ function guardarTipoEquipo(nombre) {
                                                         $dias = floor(\Carbon\Carbon::parse($monitor->fecha_inicio)->diffInDays(\Carbon\Carbon::now()));
                                                         @endphp
                                                         <button class="btn btn-sm btn-estado" data-dias="{{ $dias }}" title="Dias transcurridos desde la fecha de inico de la reparación">
-                                                        {{ $dias }} DÍAS TRANSCURRIDOS
+                                                        {{ $dias }} DÍAS 
                                                         </button>
                                                     @endif
                                                     @elseif(! $monitor->fecha_inicio)	
@@ -567,7 +566,7 @@ function guardarTipoEquipo(nombre) {
                                                     @endif
 
                                                 @endif
-                                            <form id="form-cambiar-estado" method="POST" action="{{ route('estado-monitor') }}">
+                                            <form id="form-cambiar-estado" method="POST" action="{{ route('estado-equipo') }}">
                                                 @csrf
                                                 <input type="hidden" name="id" id="id-monitor">
                                                 <input type="hidden" name="estado_id" id="estado-id">

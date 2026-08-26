@@ -68,10 +68,14 @@
                 @endif	
             </td>
         </tr>
-        <tr class="fila-dividida5">
+        <tr class="fila-dividida2">
             <td >
             <strong>DEPENDENCIA:</strong>
             {{ $laptop->Dependencia?->dependencias }}
+            </td>
+            <td >
+            <strong>NÚMERO DE RECEPCIÓN:</strong>
+            {{ $laptop->cod_registro }}
             </td>
         </tr>
         @else

@@ -195,110 +195,7 @@
     transition: all 0.3s;
 }
 
-/* cabecera */
-.topnav-modern {
-    background: linear-gradient(90deg, #0052cc, #2684ff) !important;
-    color: #fff !important;
-    font-family: 'Poppins', sans-serif;
-}
-.topnav-modern .nav-link {
-    color: #fff !important;
 
-}
-.topnav-modern .navbar-brand {
-    color: #fff !important;
-
-}
-
-
-/* =========================
-   NAVBAR ELEGANTE - BASE
-========================= */
-
-.navbar-elegante {
-    background: linear-gradient(90deg, #6b11b0, #6b11b0, #6b11b0);
-    color: #ffffff !important;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    padding: 10px 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    transition: background 0.3s ease;
-}
-
-/* .navbar-elegante:hover {
-    background: linear-gradient(90deg, #002e70, #0052cc, #3d94ff);
-} */
-
-.navbar-elegante .nav-link {
-    color: #ffffff !important;
-    padding: 8px 14px;
-    transition: background 0.2s ease, color 0.2s ease;
-}
-
-.navbar-elegante .nav-link:hover {
-    background: rgba(255,255,255,0.15);
-    border-radius: 4px;
-}
-
-/* =========================
-   TABLET (≤ 991px)
-========================= */
-
-@media (max-width: 991.98px) {
-    .navbar-elegante {
-        padding: 8px 16px;
-    }
-
-    .navbar-elegante .nav-link {
-        padding: 10px;
-        text-align: center;
-        font-size: 0.95rem;
-    }
-}
-
-/* =========================
-   MOBILE (≤ 575px)
-========================= */
-
-@media (max-width: 575.98px) {
-    .navbar-elegante {
-        padding: 6px 12px;
-    }
-
-    .navbar-elegante .nav-link {
-        display: block;
-        width: 100%;
-        padding: 12px;
-        font-size: 0.9rem;
-    }
-
-    /* Menú colapsado */
-    .navbar-collapse {
-        background: linear-gradient(180deg, #003785, #005fcc);
-        padding: 10px 0;
-    }
-}
-
-.navbar-elegante .navbar-brand,
-.navbar-elegante .nav-link {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-@media (max-width: 575.98px) {
-
-    .navbar-elegante .nav-link {
-        white-space: normal;
-        text-align: center;
-        line-height: 1.2;
-    }
-
-    .navbar-elegante .navbar-brand {
-        max-width: 140px;
-    }
-}
 
 /* Animación de vaivén horizontal */
 @keyframes move-left-right {
@@ -332,22 +229,35 @@
 .dropdown-card {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
 
     width: 100%;
-    padding: 8px 12px;
+    padding: 10px 15px;
 
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
 
-    color: #2c3e50;
+    color: #0052cc;
     background: #ffffff;
 
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
+    border: 1px solid #0052cc;
+    border-radius: 6px;
 
     cursor: pointer;
-    transition: background 0.15s ease;
+
+    transition: all 0.2s ease;
+}
+
+.dropdown-card:hover {
+    background: linear-gradient(135deg, #0052cc, #2684ff);
+    border-color: #0052cc;
+    box-shadow: 0 4px 10px rgba(0, 82, 204, 0.25);
+    transform: translateY(-1px);
+}
+
+.dropdown-card i {
+    font-size: 15px;
 }
 
 /* Íconos */

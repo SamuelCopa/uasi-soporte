@@ -370,11 +370,6 @@ return [
 
             'submenu' => [
                 [
-                    'text' => 'EQUIPOS',
-                    'url' => '/otros-equipos',
-                    'icon' => 'fas fas fa-headphones',
-                ],
-                [
                     'text' => 'AUDIFONOS',
                     'url' => '/audifonos',
                     'icon' => 'fas fas fa-headphones',
@@ -423,6 +418,11 @@ return [
                     'text' => 'UPS',
                     'url' => '/upeses',
                     'icon' => 'fas fas fa-hdd',
+                ],
+                [
+                    'text' => 'OTROS EQUIPOS',
+                    'url' => '/otros-equipos',
+                    'icon' => 'fas fas fa-headphones',
                 ],
             ],
 
