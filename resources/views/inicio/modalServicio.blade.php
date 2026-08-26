@@ -105,13 +105,9 @@
                         <option value="cpu">C.P.U.</option>
                         <option value="impresora">Impresora</option>
                         <option value="teclado">Teclado</option>
-                        <option value="mouse">Mouse</option>
-                        <!-- <option value="monitor">Monitor</option>
-                        <option value="audifono">Audífono</option>
+                        <option value="monitor">Monitor</option>
                         <option value="estabilizador">Estabilizador</option>
-                        <option value="ups">U.P.S.</option>
-                        <option value="parlante">Parlantes</option>
-                        <option value="laptop">Laptop</option> -->
+                        <option value="internet">Internet</option>
                     </select>
                 </div>
 
