@@ -99,7 +99,7 @@ public function index(Request $request): View
         'modelotmadre'   => fn() => ModeloTmadre::orderBy('modelo', 'asc')->get(),
         'marcatred'      => fn() => MarcaTred::orderBy('marca', 'asc')->get(),
         'marcatvideo'    => fn() => MarcaTvideo::orderBy('marca', 'asc')->get(),
-        'marcaTwifi'     => fn() => MarcaTwifi::orderBy('marca', 'asc')->get(),
+        'marcatwifi'     => fn() => MarcaTwifi::orderBy('marca', 'asc')->get(),
         'modelowifi'     => fn() =>  ModeloWifi::orderBy('modelo', 'asc')->get(),
         'disipadorram'   => DisipadorRam::class,
         'modprocesador'  => ModeloProcesador::class,
