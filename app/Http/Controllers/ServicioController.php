@@ -46,27 +46,43 @@ public function index(Request $request): View
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-            $request->validate([
-            'equipo' => 'required',
-            'falla' => 'required',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'ci' => 'required',
+        'nombre' => 'required|string',
+        'equipo' => 'required',
+        'falla' => 'required',
+        'dependencia_id' => 'required',
+    ]);
 
-        Servicio::create([
+    // Buscar funcionario por C.I.
+    $funcionario = Funcionario::where('ci', $request->ci)->first();
+
+    // Si no existe, registrarlo
+    if (!$funcionario) {
+
+        $funcionario = Funcionario::create([
+            'ci' => $request->ci,
+            'nombre' => $request->nombre,
+            'dependencia_id' => $request->dependencia_id,
+        ]);
+    }
+
+    // Registrar servicio
+    Servicio::create([
         'equipo' => $request->equipo,
         'falla' => $request->falla,
         'visto' => false,
         'dependencia_id' => $request->dependencia_id,
-        'funcionario_id' => $request->funcionario_id,
-        ]);
+        'funcionario_id' => $funcionario->id,
+    ]);
 
-   
-        return redirect()->back()
+    return redirect()->back()
         ->with('icono', 'success')
         ->with('success', 'LA SOLICITUD SE REGISTRO CON EXITO')
         ->with('text', 'EN BREVE LO ATENDEREMOS');
-    }
+}
 
 
     /**

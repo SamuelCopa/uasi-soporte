@@ -26,9 +26,9 @@
 									<th >Nombre</th>
 									<th >ci</th>
 									<th >Dependencia</th>
-									<th >Tipo de Servicio</th>
 									<th >Equipo</th>
 									<th >Falla</th>
+									<th >Tipo de Servicio</th>
 									<th >tecnico</th>
                                     <th >FECHA DE ASIGNACIÓN</th>
                                     <th >FECHA DE ATENCION</th>
@@ -44,9 +44,9 @@
                                          <td >{{ $servicio->funcionario?->nombre }} {{ $servicio->funcionario?->paterno }} {{ $servicio->funcionario?->materno }}</td>
                                          <td >{{ $servicio->funcionario?->ci }}</td>
 										<td >{{ $servicio->Dependencia?->dependencias }}</td>
-										<td >{{ $servicio->servicio ?? '' }}</td>
 										<td >{{ $servicio->equipo ?? '' }}</td>
 										<td >{{ $servicio->falla ?? '' }}</td>
+										<td >{{ $servicio->servicio ?? '' }}</td>
                                         <td class="{{ empty($servicio->user_id) ? 'color1' : '' }}">
                                             @if($servicio->user_id)
                                             {{ $servicio->user->name ?? ''}} {{ $servicio->user->paterno}} {{ $servicio->user->materno}}
@@ -134,9 +134,9 @@
 									<th >Nombre</th>
 									<th >ci</th>
 									<th >Dependencia</th>
-									<th >Tipo de Servicio</th>
 									<th >Equipo</th>
 									<th >Falla</th>
+									<th >Tipo de Servicio</th>
 									<th >tecnico</th>
                                     <th >FECHA DE ASIGNACIÓN</th>
                                     <th >FECHA DE ATENCION</th>

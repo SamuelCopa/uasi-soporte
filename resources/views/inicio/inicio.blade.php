@@ -620,5 +620,16 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 <link rel="stylesheet" href="{{ asset('estilos/registroCpu.css') }}">  
+<script>
+const searchInputI = document.getElementById('search-input');
+const optionsI = document.getElementById('options').options;
+const idSelectedInputI = document.getElementById('id-selected');
 
+searchInputI.addEventListener('input', () => {
+    const selectedOption = Array.from(options).find(option => option.value === searchInputI.value);
+    if (selectedOption) {
+        idSelectedInputI.value = selectedOption.dataset.id;
+    }
+});
+</script>
 </body>

@@ -16,6 +16,12 @@
                 <strong>{{ $user->name }} {{ $user->paterno }} {{ $user->materno }}</strong>
             </div>
         </div>
+                <div class="header-actions">
+                <a href="{{ route('home') }}" class="btn-header">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </a>
+        </div>
 
     </div>
 

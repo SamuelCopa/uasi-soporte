@@ -41,7 +41,7 @@
                 <i class="fas fa-file-pdf"></i>
                 Generar PDF
             </a>
-                <a href="{{ route('estadistica') }}" class="btn-header">
+                <a href="{{ route('home') }}" class="btn-header">
                     <i class="fas fa-arrow-left"></i>
                     Volver
                 </a>

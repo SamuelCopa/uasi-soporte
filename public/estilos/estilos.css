@@ -1,4 +1,35 @@
 
+.acciones {
+    display: grid;
+    grid-template-columns: repeat(2, 35px);
+    justify-content: center;
+    gap: 5px;
+}
+
+.btn-mini {
+    width: 35px;
+    height: 35px;
+    padding: 0 !important;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 13px !important;
+    border-radius: 5px;
+
+    flex: 0 0 35px;
+}
+
+.btn-mini i {
+    font-size: 14px;
+}
+
+.formEliminar {
+    margin: 0;
+    display: contents;
+}
+
 /* =========================================================== */
 
 .required {
