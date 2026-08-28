@@ -152,8 +152,11 @@ Route::resource('tecnicos', TecnicoController::class)->middleware('auth');
 Route::post('/estado-tecnico',[App\Http\Controllers\TecnicoController::class,'cambiarEstado'])->name('estado.tecnico')->middleware('auth');
 Route::patch('/tecnico/{id}', [App\Http\Controllers\TecnicoController::class,'updatePassword'])->name('tecnico.pass')->middleware('auth');
 
-//-----------------------------------------------------------------------------
-Route::patch('/password/update', [UserController::class, 'ActualizarPassword'])->name('password.update')->middleware('auth');
+//-------------------------REPORTES SERVICIOS----------------------------------------------------
+Route::patch('/password/update', [UserController::class, 'ActualizarPassword'])->name('usuario.password.update')->middleware('auth');
+
+Route::get('/servicio/reporte-pdf', [ServicioController::class, 'reporteServicioPdf'])->name('servicio.reporte.pdf');
+
 
 
 //------------------VER ASIGNACIONES A TECNICOS------------------------------------

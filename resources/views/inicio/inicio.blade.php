@@ -384,7 +384,7 @@ function toggleGameaMenu() {
   <div class="container position-relative px-4 px-lg-5 d-flex flex-column align-items-center text-center">
     <img src="assets/assets/img/gamea.png" alt="Logo Gobierno Autonomo Municipal de El Alto" class="mb-4" style="height: 100px;">
     <h1 class="fw-bold display-5 text-uppercase mb-2" id="texto-escritura">Soporte Técnico</h1>
-    <h2 class="fw-light text-light">Área de Soporte Técnico</h2>
+    <h2 class="fw-light text-light">Soporte Técnico</h2>
   </div>
 
   <!-- efecto de sombra inferior -->

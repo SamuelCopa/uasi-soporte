@@ -22,11 +22,11 @@
                         
                                 <div class="form-group mb-2 mb20">
                                     <strong>Servicio:</strong>
-                                    {{ $servicio->servicio }}
+                                    {{ $servicio?->servicio }}
                                 </div>
                                 <div class="form-group mb-2 mb20">
                                     <strong>Update At:</strong>
-                                    {{ $servicio->update_at }}
+                                    {{ $servicio?->update_at }}
                                 </div>
 
                     </div>

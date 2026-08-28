@@ -377,51 +377,66 @@
                                             </form> 
                                             </td>
                                             <td>
-                                                <div class="dropdown">
-                                                    <button class="btn btn-institucional dropdown-toggle" type="button" data-toggle="dropdown">
-                                                        <i class="fas fa-cog"></i> OPCIONES
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-right p-2">
-                                                        <!-- PDF -->
-                                                        <a href="#" 
-                                                        class="dropdown-card card-danger btn-preview-pdf"
-                                                        data-ver="{{ route('pdf.monitor.preview', ':id') }}"
-                                                        data-descargar="{{ route('pdf.monitor.descargar', ':id') }}"
-                                                        data-enviar="{{ route('pdf.monitor.enviar', ':id') }}"
-                                                        data-id="{{ $monitor->id }}">
-                                                        <i class="far fa-file-pdf"></i> FORMULARIO
-                                                        </a>
-                                                        <!-- VER -->
-                                                        <button type="button" data-toggle="modal" data-target="#ver{{ $monitor->id }}"
-                                                                class="dropdown-card card-primary">
-                                                            <i class="fa fa-eye"></i> VER
-                                                        </button>
-                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
-                                                            'Administrador',
-                                                            'SuperAdministrador'
-                                                        ]))
-                                                        <!-- EDITAR -->
-                                                        <button type="button" data-toggle="modal" data-target="#editar{{ $monitor->id }}"
-                                                                class="dropdown-card card-success">
-                                                            <i class="fa fa-edit"></i> EDITAR
-                                                        </button>
-                                                        <!-- INFORME -->
-                                                        <a href="{{ route('informe.monitor', $monitor->id) }}"
-                                                        class="dropdown-card card-secondary">
-                                                            <i class="fa fa-file"></i> INFORME
-                                                        </a>
-                                                        <!-- ELIMINAR -->
-                                                        <form action="{{ route('monitors.destroy', $monitor->id) }}" method="POST" class="formEliminar">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit"
-                                                                    class="dropdown-card card-danger">
-                                                                <i class="fa fa-trash"></i> ELIMINAR
-                                                            </button>
-                                                        </form>
-                                                        @endif
-                                                    </div>
-                                                </div>
+                                               <div class="acciones">
+
+    <!-- PDF -->
+    <a href="#"
+       class="btn-mini btn-danger btn-preview-pdf"
+       data-ver="{{ route('pdf.monitor.preview', ':id') }}"
+       data-descargar="{{ route('pdf.monitor.descargar', ':id') }}"
+       data-enviar="{{ route('pdf.monitor.enviar', ':id') }}"
+       data-id="{{ $monitor->id }}"
+       title="Formulario PDF">
+        <i class="far fa-file-pdf"></i>
+    </a>
+
+    <!-- VER -->
+    <button type="button"
+            data-toggle="modal"
+            data-target="#ver{{ $monitor->id }}"
+            class="btn-mini btn-primary"
+            title="Ver">
+        <i class="fa fa-eye"></i>
+    </button>
+
+    @if(auth()->check() && auth()->user()->hasAnyRole([
+        'Administrador',
+        'SuperAdministrador'
+    ]))
+
+        <!-- EDITAR -->
+        <button type="button"
+                data-toggle="modal"
+                data-target="#editar{{ $monitor->id }}"
+                class="btn-mini btn-success"
+                title="Editar">
+            <i class="fa fa-edit"></i>
+        </button>
+
+        <!-- INFORME -->
+        <a href="{{ route('informe.monitor', $monitor->id) }}"
+           class="btn-mini btn-secondary"
+           title="Informe">
+            <i class="fa fa-file"></i>
+        </a>
+
+        <!-- ELIMINAR -->
+        <form action="{{ route('monitors.destroy', $monitor->id) }}"
+              method="POST"
+              class="formEliminar">
+            @csrf
+            @method('DELETE')
+
+            <button type="submit"
+                    class="btn-mini btn-danger"
+                    title="Eliminar">
+                <i class="fa fa-trash"></i>
+            </button>
+        </form>
+
+    @endif
+
+</div>
                                             </td>
                                         </tr>
                                         <!--Ventana Modal para Ver --->

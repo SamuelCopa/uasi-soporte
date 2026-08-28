@@ -32,11 +32,11 @@ use App\Models\User;
  */
 class Servicio extends Model
 {
-    
+    use SoftDeletes;
+    use Auditable;
     protected $perPage = 1000;
     
-        use SoftDeletes;
-        use Auditable;
+
 
     /**
      * The attributes that are mass assignable.

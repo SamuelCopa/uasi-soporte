@@ -73,37 +73,61 @@
                                             </td>
 
                                             <td>
-                                                <div class="dropdown">
-                                                    <button class="btn btn-institucional dropdown-toggle" type="button" data-toggle="dropdown">
-                                                        <i class="fas fa-cog"></i> OPCIONES
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-right p-2">
-                                                        <!-- VER -->
-                                                        <button type="button" data-toggle="modal" data-target="#ver{{ $user->id }}"
-                                                                class="dropdown-card card-primary">
-                                                            <i class="fa fa-eye"></i> VER
-                                                        </button>
-                                                        <!-- EDITAR -->
-                                                        <button type="button" data-toggle="modal" data-target="#editar{{ $user->id }}"
-                                                                class="dropdown-card card-success">
-                                                            <i class="fa fa-edit"></i> EDITAR
-                                                        </button>
-                                                        <!-- PASSWORD -->
-                                                        <button type="button" data-toggle="modal" data-target="#Password{{ $user->id }}"
-                                                                class="dropdown-card card-secondary">
-                                                            <i class="fa fa-edit"></i> CAMBIAR CONTRASEÑA
-                                                        </button>
-                                                        <!-- ELIMINAR -->
-                                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="formEliminar">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit"
-                                                                    class="dropdown-card card-danger">
-                                                                <i class="fa fa-trash"></i> ELIMINAR
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </div>
+                                               <div class="d-flex justify-content-center align-items-center gap-1">
+
+    <!-- VER -->
+    <button
+        type="button"
+        data-toggle="modal"
+        data-target="#ver{{ $user->id }}"
+        class="btn btn-primary btn-sm btn-mini"
+        title="Ver">
+
+        <i class="fa fa-eye"></i>
+    </button>
+
+    <!-- EDITAR -->
+    <button
+        type="button"
+        data-toggle="modal"
+        data-target="#editar{{ $user->id }}"
+        class="btn btn-success btn-sm btn-mini"
+        title="Editar">
+
+        <i class="fa fa-edit"></i>
+    </button>
+
+    <!-- CAMBIAR CONTRASEÑA -->
+    <button
+        type="button"
+        data-toggle="modal"
+        data-target="#Password{{ $user->id }}"
+        class="btn btn-secondary btn-sm btn-mini"
+        title="Cambiar contraseña">
+
+        <i class="fa fa-key"></i>
+    </button>
+
+    <!-- ELIMINAR -->
+    <form
+        action="{{ route('users.destroy', $user->id) }}"
+        method="POST"
+        class="formEliminar d-inline">
+
+        @csrf
+        @method('DELETE')
+
+        <button
+            type="submit"
+            class="btn btn-danger btn-sm btn-mini"
+            title="Eliminar">
+
+            <i class="fa fa-trash"></i>
+        </button>
+
+    </form>
+
+</div>
                                             </td>
                                         </tr>
                                         <!--Ventana Modal Password --->

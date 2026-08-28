@@ -12,6 +12,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Funcionario;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Dependencia;
 
 class ServicioController extends Controller
 {
@@ -20,19 +22,185 @@ class ServicioController extends Controller
      */
 public function index(Request $request): View
 {
-    $servicios = Servicio::whereYear('created_at', date('Y'))
+    $query = Servicio::query()
+        ->with([
+            'funcionario',
+            'Dependencia',
+            'user'
+        ]);
+
+    $year = $request->input('year', date('Y'));
+
+    if ($year !== 'todos') {
+        $query->whereYear('created_at', $year);
+    }
+
+    if ($request->filled('estado')) {
+
+        if ($request->estado == 'pendiente') {
+
+            $query->where(function ($q) {
+                $q->whereNull('user_id')
+                  ->orWhere('visto', 0);
+            });
+
+        } elseif ($request->estado == 'atendido') {
+
+            $query->whereNotNull('user_id')
+                  ->where('visto', 1);
+        }
+    }
+
+    if ($request->filled('tecnico')) {
+        $query->where('user_id', $request->tecnico);
+    }
+
+    if ($request->filled('dependencia')) {
+        $query->where(
+            'dependencia_id',
+            $request->dependencia
+        );
+    }
+
+    if ($request->filled('fecha_desde')) {
+        $query->whereDate(
+            'created_at',
+            '>=',
+            $request->fecha_desde
+        );
+    }
+
+    if ($request->filled('fecha_hasta')) {
+        $query->whereDate(
+            'created_at',
+            '<=',
+            $request->fecha_hasta
+        );
+    }
+
+    $servicios = $query
         ->orderByDesc('created_at')
-        ->paginate();
-    
-        $users = User::whereHas('roles', function ($query) {$query->where('name', 'Tecnico');
-        })->where('id_estadousuario', '1')->orderBy('paterno', 'asc')->get();
+        ->paginate(15)
+        ->withQueryString();
 
-    $hayPendientes = Servicio::where('visto', 0)->exists();
+    // Técnicos
+    $users = User::whereHas('roles', function ($query) {
+        $query->where('name', 'Tecnico');
+    })
+    ->where('id_estadousuario', '1')
+    ->orderBy('paterno', 'asc')
+    ->get();
 
-    return view('servicio.index', compact('servicios', 'hayPendientes','users'))
-        ->with('i', ($request->input('page', 1) - 1) * $servicios->perPage());
+    // Dependencias
+    $dependencias = Dependencia::orderBy(
+        'dependencias',
+        'asc'
+    )->get();
+
+    // Hay pendientes
+    $hayPendientes = Servicio::where('visto', 0)
+        ->exists();
+
+    return view(
+        'servicio.index',
+        compact(
+            'servicios',
+            'hayPendientes',
+            'users',
+            'dependencias',
+            'year'
+        )
+    )->with(
+        'i',
+        ($request->input('page', 1) - 1) * $servicios->perPage()
+    );
 }
 
+
+public function reporteServicioPdf(Request $request)
+{
+    $query = Servicio::with([
+        'funcionario',
+        'Dependencia',
+        'user'
+    ]);
+
+    if ($request->filled('year')) {
+        $query->whereYear(
+            'created_at',
+            $request->year
+        );
+    }
+
+    if ($request->filled('estado')) {
+
+        if ($request->estado == 'pendiente') {
+
+            $query->where(function ($q) {
+
+                $q->whereNull('user_id')
+                  ->orWhere('visto', 0);
+
+            });
+        }
+
+        if ($request->estado == 'atendido') {
+
+            $query->whereNotNull('user_id')
+                  ->where('visto', 1);
+
+        }
+    }
+
+    if ($request->filled('tecnico')) {
+
+        $query->where(
+            'user_id',
+            $request->tecnico
+        );
+
+    }
+
+    if ($request->filled('dependencia')) {
+
+        $query->where(
+            'dependencia_id',
+            $request->dependencia
+        );
+
+    }
+
+    if ($request->filled('fecha_desde')) {
+
+        $query->whereDate(
+            'created_at',
+            '>=',
+            $request->fecha_desde
+        );
+
+    }
+
+    if ($request->filled('fecha_hasta')) {
+
+        $query->whereDate(
+            'created_at',
+            '<=',
+            $request->fecha_hasta
+        );
+
+    }
+
+    $servicios = $query
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    $pdf = Pdf::loadView(
+        'servicio.reporte-pdf',
+        compact('servicios')
+    )->setPaper('letter');
+
+    return $pdf->stream('reporte-servicios.pdf');
+}
     /**
      * Show the form for creating a new resource.
      */
@@ -168,5 +336,6 @@ public function evaluar($id)
 
     return view('asigTecnico.evaluar', compact('asignacion'));
 }
+
 
 }

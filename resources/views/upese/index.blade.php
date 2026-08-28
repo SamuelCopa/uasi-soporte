@@ -377,57 +377,78 @@
                                                 </form> 
                                             </td>
                                             <td>
-                                                <div class="dropdown">
-                                                    <button class="btn btn-institucional dropdown-toggle" type="button" data-toggle="dropdown">
-                                                        <i class="fas fa-cog"></i> OPCIONES
-                                                    </button>
+<div class="d-flex justify-content-center align-items-center gap-1">
 
-                                                    <div class="dropdown-menu dropdown-menu-right p-2">
+    <!-- FORMULARIO PDF -->
+    <a href="#"
+       class="btn btn-danger btn-sm btn-mini btn-preview-pdf"
+       data-ver="{{ route('pdf.ups.preview', ':id') }}"
+       data-descargar="{{ route('pdf.ups.descargar', ':id') }}"
+       data-enviar="{{ route('pdf.ups.enviar', ':id') }}"
+       data-id="{{ $upese->id }}"
+       title="Formulario">
 
-                                                        <!-- PDF -->
-                                                        <a href="#" 
-                                                        class="dropdown-card card-danger btn-preview-pdf"
-                                                        data-ver="{{ route('pdf.ups.preview', ':id') }}"
-                                                        data-descargar="{{ route('pdf.ups.descargar', ':id') }}"
-                                                        data-enviar="{{ route('pdf.ups.enviar', ':id') }}"
-                                                        data-id="{{ $upese->id }}">
-                                                        <i class="far fa-file-pdf"></i> FORMULARIO
-                                                        </a>
+        <i class="far fa-file-pdf"></i>
+    </a>
 
-                                                        <!-- VER -->
-                                                        <button type="button" data-toggle="modal" data-target="#ver{{ $upese->id }}"
-                                                                class="dropdown-card card-primary">
-                                                            <i class="fa fa-eye"></i> VER
-                                                        </button>
+    <!-- VER -->
+    <button
+        type="button"
+        data-toggle="modal"
+        data-target="#ver{{ $upese->id }}"
+        class="btn btn-primary btn-sm btn-mini"
+        title="Ver">
 
-                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
-                                                            'Administrador',
-                                                            'SuperAdministrador'
-                                                        ]))
-                                                        <!-- EDITAR -->
-                                                        <button type="button" data-toggle="modal" data-target="#editar{{ $upese->id }}"
-                                                                class="dropdown-card card-success">
-                                                            <i class="fa fa-edit"></i> EDITAR
-                                                        </button>
+        <i class="fa fa-eye"></i>
+    </button>
 
-                                                        <!-- INFORME -->
-                                                        <a href="{{ route('informe.ups', $upese->id) }}"
-                                                        class="dropdown-card card-secondary">
-                                                            <i class="fa fa-file"></i> INFORME
-                                                        </a>
+    @if(auth()->check() && auth()->user()->hasAnyRole([
+        'Administrador',
+        'SuperAdministrador'
+    ]))
 
-                                                        <!-- ELIMINAR -->
-                                                        <form action="{{ route('upeses.destroy', $upese->id) }}" method="POST" class="formEliminar">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit"
-                                                                    class="dropdown-card card-danger">
-                                                                <i class="fa fa-trash"></i> ELIMINAR
-                                                            </button>
-                                                        </form>
-                                                        @endif
-                                                    </div>
-                                                </div>
+        <!-- EDITAR -->
+        <button
+            type="button"
+            data-toggle="modal"
+            data-target="#editar{{ $upese->id }}"
+            class="btn btn-success btn-sm btn-mini"
+            title="Editar">
+
+            <i class="fa fa-edit"></i>
+        </button>
+
+        <!-- INFORME -->
+        <a
+            href="{{ route('informe.ups', $upese->id) }}"
+            class="btn btn-secondary btn-sm btn-mini"
+            title="Informe">
+
+            <i class="fa fa-file"></i>
+        </a>
+
+        <!-- ELIMINAR -->
+        <form
+            action="{{ route('upeses.destroy', $upese->id) }}"
+            method="POST"
+            class="formEliminar d-inline">
+
+            @csrf
+            @method('DELETE')
+
+            <button
+                type="submit"
+                class="btn btn-danger btn-sm btn-mini"
+                title="Eliminar">
+
+                <i class="fa fa-trash"></i>
+            </button>
+
+        </form>
+
+    @endif
+
+</div>
                                             </td>
                                         </tr>
                                         <!--Ventana Modal para Ver --->

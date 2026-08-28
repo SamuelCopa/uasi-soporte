@@ -1,4 +1,34 @@
 
+/* .acciones {
+    display: grid;
+    grid-template-columns: repeat(3, 35px);
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin: auto;
+} */
+
+.btn-mini {
+    width: 35px;
+    height: 35px;
+    padding: 0 !important;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 13px !important;
+    border-radius: 5px;
+}
+
+.btn-mini i {
+    font-size: 14px;
+}
+
+.formEliminar {
+    margin: 0;
+    padding: 0;
+}
 /* =========================================================== */
 
 .required {

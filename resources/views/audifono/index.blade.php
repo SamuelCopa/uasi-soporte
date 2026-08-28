@@ -378,54 +378,66 @@
                                                 </form>
                                             </td>
                                             <td>
-                                                <div class="dropdown">
-                                                    <button class="btn btn-institucional dropdown-toggle" type="button" data-toggle="dropdown">
-                                                        <i class="fas fa-cog"></i> OPCIONES
+                                               <div class="acciones">
+
+                                                <!-- PDF -->
+                                                <a href="#"
+                                                class="btn-mini btn-danger btn-preview-pdf"
+                                                data-ver="{{ route('pdf.audifono.preview', ':id') }}"
+                                                data-descargar="{{ route('pdf.audifono.descargar', ':id') }}"
+                                                data-enviar="{{ route('pdf.audifono.enviar', ':id') }}"
+                                                data-id="{{ $audifono->id }}"
+                                                title="Formulario PDF">
+                                                    <i class="far fa-file-pdf"></i>
+                                                </a>
+
+                                                <!-- VER -->
+                                                <button type="button"
+                                                        data-toggle="modal"
+                                                        data-target="#ver{{ $audifono->id }}"
+                                                        class="btn-mini btn-primary"
+                                                        title="Ver">
+                                                    <i class="fa fa-eye"></i>
+                                                </button>
+
+                                                @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                    'Administrador',
+                                                    'SuperAdministrador'
+                                                ]))
+
+                                                    <!-- EDITAR -->
+                                                    <button type="button"
+                                                            data-toggle="modal"
+                                                            data-target="#editar{{ $audifono->id }}"
+                                                            class="btn-mini btn-success"
+                                                            title="Editar">
+                                                        <i class="fa fa-edit"></i>
                                                     </button>
-                                                    <!-- PDF -->
-                                                    <div class="dropdown-menu dropdown-menu-right p-2">
-                                                        <a href="#" 
-                                                        class="dropdown-card card-danger btn-preview-pdf"
-                                                        data-ver="{{ route('pdf.audifono.preview', ':id') }}"
-                                                        data-descargar="{{ route('pdf.audifono.descargar', ':id') }}"
-                                                        data-enviar="{{ route('pdf.audifono.enviar', ':id') }}"
-                                                        data-id="{{ $audifono->id }}">
-                                                        <i class="far fa-file-pdf"></i> FORMULARIO
-                                                        </a>
-                                                        <!-- VER -->
-                                                        <button type="button" data-toggle="modal" data-target="#ver{{ $audifono->id }}"
-                                                                class="dropdown-card card-primary">
-                                                            <i class="fa fa-eye"></i> VER
+
+                                                    <!-- INFORME -->
+                                                    <a href="{{ route('informe.audifono', $audifono->id) }}"
+                                                    class="btn-mini btn-secondary"
+                                                    title="Informe">
+                                                        <i class="fa fa-file"></i>
+                                                    </a>
+
+                                                    <!-- ELIMINAR -->
+                                                    <form action="{{ route('audifonos.destroy', $audifono->id) }}"
+                                                        method="POST"
+                                                        class="formEliminar">
+                                                        @csrf
+                                                        @method('DELETE')
+
+                                                        <button type="submit"
+                                                                class="btn-mini btn-danger"
+                                                                title="Eliminar">
+                                                            <i class="fa fa-trash"></i>
                                                         </button>
-                                                        @if(auth()->check() && auth()->user()->hasAnyRole([
-                                                            'Administrador',
-                                                            'SuperAdministrador'
-                                                        ]))
+                                                    </form>
 
-                                                            <!-- EDITAR -->
-                                                            <button type="button" data-toggle="modal" data-target="#editar{{ $audifono->id }}"
-                                                                    class="dropdown-card card-success">
-                                                                <i class="fa fa-edit"></i> EDITAR
-                                                            </button>
-                                                            <!-- INFORME -->
-                                                            <a href="{{ route('informe.audifono', $audifono->id) }}"
-                                                            class="dropdown-card card-secondary">
-                                                                <i class="fa fa-file"></i> INFORME
-                                                            </a>
-                                                            <!-- ELIMINAR -->
-                                                            <form action="{{ route('audifonos.destroy', $audifono->id) }}" method="POST" class="formEliminar">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit"
-                                                                        class="dropdown-card card-danger">
-                                                                    <i class="fa fa-trash"></i> ELIMINAR
-                                                                </button>
-                                                            </form>
+                                                @endif
 
-                                                        @endif
-
-                                                    </div>
-                                                </div>
+                                            </div>
                                             </td>
                                         </tr>
                                         <!--Ventana Modal para Ver --->
