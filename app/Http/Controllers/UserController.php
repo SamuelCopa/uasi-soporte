@@ -29,12 +29,11 @@ class UserController extends Controller
 
     public function index(Request $request): View                               
     {
-        // $users = User::paginate();
-        // return view('user.index', compact('users'))
-        //     ->with('i', ($request->input('page', 1) - 1) * $users->perPage());
         $users = User::whereHas('roles', function ($query) {
-            $query->where('name', 'Administrador')->orWhere('name', 'superAdministrador');
-        })->paginate();
+            $query->whereIn('name', ['Administrador', 'SuperAdministrador']);
+        })
+        ->orderBy('paterno', 'asc')
+        ->paginate();
         $roles = Role:: all();
         $estados = EstadoUsuario:: all();
         return view('user.index', compact('users', 'roles','estados'))
@@ -56,40 +55,30 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserRequest $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed',
-            'paterno' => 'required',
-            'materno' => 'required',
-            'ci' => 'required',
-            'expedido' => 'required',
-            'celular' => 'required|string|min:8|max:15',
-            'id_estadousuario' => 'required',
+public function store(UserRequest $request): RedirectResponse
+{
+    $user = new User();
 
-        ]);
-    
-        $user = new User();
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->ci = $request->input('ci');
-        $user->expedido = $request->input('expedido');
-        $user->celular = $request->input('celular');
-        $user->paterno = $request->input('paterno');
-        $user->materno = $request->input('materno');
-        $user->id_estadousuario = $request->input('id_estadousuario');
-        $user->password = Hash::make($request->input('password'));
-        $user->save();
+    $user->name = $request->input('name');
+    $user->email = $request->input('email');
+    $user->ci = $request->input('ci');
+    $user->expedido = $request->input('expedido');
+    $user->celular = $request->input('celular');
+    $user->paterno = $request->input('paterno');
+    $user->materno = $request->input('materno');
+    $user->id_estadousuario = $request->input('id_estadousuario');
+    $user->password = Hash::make($request->input('password'));
 
-        $user->assignRole('Administrador');
-    
-        return redirect()->route('users.index')
+    $user->save();
+
+    // Asignar el rol seleccionado
+    $user->assignRole($request->input('role'));
+
+    return redirect()
+        ->route('users.index')
         ->with('icono', 'success')
         ->with('success', 'USUARIO REGISTRADO CON EXITO');
-    }
-
+}
     /**
      * Display the specified resource.
      */

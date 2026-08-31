@@ -60,11 +60,28 @@
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->roles->pluck('name')->implode(', ') ?? 'Sin rol' }}</td>
                                             <td>
-                                            @if($user->id_estadousuario== '1')
-                                                <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') title="Actualizar estado" data-id="{{ $user->id }}" onclick="cambiarEstado({{ $user->id }},{{ $user->id_estadousuario}} )"@endrole>ACTIVO</button>
-                                            @elseif($user->id_estadousuario == '2')
-                                                <button class="btn btn-danger btn-raised"@role('Administrador') title="Actualizar estado" data-id="{{ $user->id }}" onclick="cambiarEstado({{ $user->id }}, {{ $user->id_estadousuario }} )"@endrole>INACTIVO</button>
-                                            @endif
+                                                @if($user->id_estadousuario == '1')
+                                                    <button type="submit"
+                                                            class="btn btn-primary btn-raised"
+                                                            @hasAnyRole(['Administrador', 'SuperAdministrador'])
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $user->id }}"
+                                                                onclick="cambiarEstado({{ $user->id }}, {{ $user->id_estadousuario }})"
+                                                            @endhasAnyRole>
+                                                        ACTIVO
+                                                    </button>
+
+                                                @elseif($user->id_estadousuario == '2')
+                                                    <button type="submit"
+                                                            class="btn btn-danger btn-raised"
+                                                            @hasAnyRole(['Administrador', 'SuperAdministrador'])
+                                                                title="Actualizar estado"
+                                                                data-id="{{ $user->id }}"
+                                                                onclick="cambiarEstado({{ $user->id }}, {{ $user->id_estadousuario }})"
+                                                            @endhasAnyRole>
+                                                        INACTIVO
+                                                    </button>
+                                                @endif
                                             <form id="form-cambiar-estado" method="POST" action="{{ route('estado-usuario') }}">
                                                 @csrf
                                                 <input type="hidden" name="id" id="id-user">
@@ -73,61 +90,61 @@
                                             </td>
 
                                             <td>
-                                               <div class="d-flex justify-content-center align-items-center gap-1">
+                                               <div class="acciones">
 
-    <!-- VER -->
-    <button
-        type="button"
-        data-toggle="modal"
-        data-target="#ver{{ $user->id }}"
-        class="btn btn-primary btn-sm btn-mini"
-        title="Ver">
+                                            <!-- VER -->
+                                            <button
+                                                type="button"
+                                                data-toggle="modal"
+                                                data-target="#ver{{ $user->id }}"
+                                                class="btn btn-primary btn-sm btn-mini"
+                                                title="Ver">
 
-        <i class="fa fa-eye"></i>
-    </button>
+                                                <i class="fa fa-eye"></i>
+                                            </button>
 
-    <!-- EDITAR -->
-    <button
-        type="button"
-        data-toggle="modal"
-        data-target="#editar{{ $user->id }}"
-        class="btn btn-success btn-sm btn-mini"
-        title="Editar">
+                                            <!-- EDITAR -->
+                                            <button
+                                                type="button"
+                                                data-toggle="modal"
+                                                data-target="#editar{{ $user->id }}"
+                                                class="btn btn-success btn-sm btn-mini"
+                                                title="Editar">
 
-        <i class="fa fa-edit"></i>
-    </button>
+                                                <i class="fa fa-edit"></i>
+                                            </button>
 
-    <!-- CAMBIAR CONTRASEÑA -->
-    <button
-        type="button"
-        data-toggle="modal"
-        data-target="#Password{{ $user->id }}"
-        class="btn btn-secondary btn-sm btn-mini"
-        title="Cambiar contraseña">
+                                            <!-- CAMBIAR CONTRASEÑA -->
+                                            <button
+                                                type="button"
+                                                data-toggle="modal"
+                                                data-target="#Password{{ $user->id }}"
+                                                class="btn btn-secondary btn-sm btn-mini"
+                                                title="Cambiar contraseña">
 
-        <i class="fa fa-key"></i>
-    </button>
+                                                <i class="fa fa-key"></i>
+                                            </button>
 
-    <!-- ELIMINAR -->
-    <form
-        action="{{ route('users.destroy', $user->id) }}"
-        method="POST"
-        class="formEliminar d-inline">
+                                            <!-- ELIMINAR -->
+                                            <form
+                                                action="{{ route('users.destroy', $user->id) }}"
+                                                method="POST"
+                                                class="formEliminar d-inline">
 
-        @csrf
-        @method('DELETE')
+                                                @csrf
+                                                @method('DELETE')
 
-        <button
-            type="submit"
-            class="btn btn-danger btn-sm btn-mini"
-            title="Eliminar">
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-danger btn-sm btn-mini"
+                                                    title="Eliminar">
 
-            <i class="fa fa-trash"></i>
-        </button>
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
 
-    </form>
+                                            </form>
 
-</div>
+                                        </div>
                                             </td>
                                         </tr>
                                         <!--Ventana Modal Password --->

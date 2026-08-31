@@ -54,7 +54,7 @@
                                             <td class="text-center">{{ ++$i }}</td>
                                             <td>
                                                 @if($registroCpu->fecha)
-                                                {{date('d-m-Y H:i',strtotime($registroCpu->fecha))}}<br><br>
+                                                {{date('d-m-Y H:i',strtotime($registroCpu->fecha))}}<br>
                                                         @if(auth()->check() && auth()->user()->hasAnyRole([
                                                             'Administrador',
                                                             'SuperAdministrador'
@@ -116,7 +116,7 @@
                                                 </td>
                                                 <td class="{{ empty($registroCpu->fecha_asignacion) ? 'color1' : '' }}">
                                                     @if($registroCpu->fecha_asignacion)
-                                                    {{ date('d-m-Y H:i',strtotime($registroCpu->fecha_asignacion ))}}<BR><BR>
+                                                    {{ date('d-m-Y H:i',strtotime($registroCpu->fecha_asignacion ))}}<BR>
                                                     @if(!($registroCpu->estado_id == '5') && !($registroCpu->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($registroCpu->fecha_asignacion)->diffInDays(\Carbon\Carbon::now()));
@@ -131,7 +131,7 @@
                                                 </td>	
                                                 <td class="{{ empty($registroCpu->fecha_inicio) ? 'color1' : '' }}">
                                                     @if($registroCpu->fecha_inicio)
-                                                    {{ date('d-m-Y H:i',strtotime($registroCpu->fecha_inicio ))}}<BR><BR>
+                                                    {{ date('d-m-Y H:i',strtotime($registroCpu->fecha_inicio ))}}<BR>
                                                     @if(!($registroCpu->estado_id == '5') && !($registroCpu->estado_id == '4'))
                                                         @php
                                                         $dias = floor(\Carbon\Carbon::parse($registroCpu->fecha_inicio)->diffInDays(\Carbon\Carbon::now()));
@@ -162,14 +162,14 @@
                                             </td>
                                             <td class="{{ empty($registroCpu->fecha_asignacion) ? 'color1' : '' }}"  align="center">
                                                 @if($registroCpu->fecha_asignacion)
-                                                {{ date('d-m-Y H:i',strtotime($registroCpu->fecha_asignacion ))}}<br><br>
+                                                {{ date('d-m-Y H:i',strtotime($registroCpu->fecha_asignacion ))}}<br>
                                                 @elseif(! $registroCpu->fecha_asignacion)	
                                                 {{($registroCpu->fecha_asignacion ?? 'SIN ASIGNAR' )}}
                                                 @endif	
                                             </td>
                                             <td class="{{ empty($registroCpu->fecha_inicio) ? 'color1' : '' }}"  align="center">
                                                 @if($registroCpu->fecha_inicio)
-                                                {{ date('d-m-Y H:i',strtotime($registroCpu->fecha_inicio ))}}<br><br>
+                                                {{ date('d-m-Y H:i',strtotime($registroCpu->fecha_inicio ))}}<br>
                                                 @elseif(! $registroCpu->fecha_inicio)	
                                                 {{($registroCpu->fecha_inicio ?? 'EN ESPERA' )}}
                                                 @endif	
@@ -344,7 +344,6 @@
                                                             RECEPCIONADO
                                                         </button>
 
-
                                                     @elseif(empty($registroCpu->fecha_asignacion))
 
                                                         <button
@@ -379,64 +378,64 @@
                                         <td>
                                            <div class="acciones">
 
-    <!-- PDF -->
-    <a href="#"
-       class="btn-mini btn-danger btn-preview-pdf"
-       data-ver="{{ route('pdf.cpu.preview', ':id') }}"
-       data-descargar="{{ route('pdf.cpu.descargar', ':id') }}"
-       data-enviar="{{ route('pdf.cpu.enviar', ':id') }}"
-       data-id="{{ $registroCpu->id }}"
-       title="Formulario PDF">
-        <i class="far fa-file-pdf"></i>
-    </a>
+                                            <!-- PDF -->
+                                            <a href="#"
+                                            class="btn-mini btn-danger btn-preview-pdf"
+                                            data-ver="{{ route('pdf.cpu.preview', ':id') }}"
+                                            data-descargar="{{ route('pdf.cpu.descargar', ':id') }}"
+                                            data-enviar="{{ route('pdf.cpu.enviar', ':id') }}"
+                                            data-id="{{ $registroCpu->id }}"
+                                            title="Formulario PDF">
+                                                <i class="far fa-file-pdf"></i>
+                                            </a>
 
-    <!-- VER -->
-    <button type="button"
-            data-toggle="modal"
-            data-target="#ver{{ $registroCpu->id }}"
-            class="btn-mini btn-primary"
-            title="Ver">
-        <i class="fa fa-eye"></i>
-    </button>
+                                            <!-- VER -->
+                                            <button type="button"
+                                                    data-toggle="modal"
+                                                    data-target="#ver{{ $registroCpu->id }}"
+                                                    class="btn-mini btn-primary"
+                                                    title="Ver">
+                                                <i class="fa fa-eye"></i>
+                                            </button>
 
-    @if(auth()->check() && auth()->user()->hasAnyRole([
-        'Administrador',
-        'SuperAdministrador'
-    ]))
+                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                'Administrador',
+                                                'SuperAdministrador'
+                                            ]))
 
-        <!-- EDITAR -->
-        <button type="button"
-                data-toggle="modal"
-                data-target="#editar{{ $registroCpu->id }}"
-                class="btn-mini btn-success"
-                title="Editar">
-            <i class="fa fa-pen"></i>
-        </button>
+                                                <!-- EDITAR -->
+                                                <button type="button"
+                                                        data-toggle="modal"
+                                                        data-target="#editar{{ $registroCpu->id }}"
+                                                        class="btn-mini btn-success"
+                                                        title="Editar">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
 
-        <!-- INFORME -->
-        <a href="{{ route('informe.cpu', $registroCpu->id) }}"
-           class="btn-mini btn-secondary"
-           title="Informe">
-            <i class="fa fa-file"></i>
-        </a>
+                                                <!-- INFORME -->
+                                                <a href="{{ route('informe.cpu', $registroCpu->id) }}"
+                                                class="btn-mini btn-secondary"
+                                                title="Informe">
+                                                    <i class="fa fa-file"></i>
+                                                </a>
 
-        <!-- ELIMINAR -->
-        <form action="{{ route('registro-cpus.destroy', $registroCpu->id) }}"
-              method="POST"
-              class="formEliminar">
-            @csrf
-            @method('DELETE')
+                                                <!-- ELIMINAR -->
+                                                <form action="{{ route('registro-cpus.destroy', $registroCpu->id) }}"
+                                                    method="POST"
+                                                    class="formEliminar">
+                                                    @csrf
+                                                    @method('DELETE')
 
-            <button type="submit"
-                    class="btn-mini btn-danger"
-                    title="Eliminar">
-                <i class="fa fa-trash"></i>
-            </button>
-        </form>
+                                                    <button type="submit"
+                                                            class="btn-mini btn-danger"
+                                                            title="Eliminar">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
 
-    @endif
+                                            @endif
 
-</div>
+                                        </div>
                                         </td>
                                         </tr>
                                         <!--Ventana Modal para Ver --->

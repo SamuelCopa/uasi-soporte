@@ -1056,41 +1056,7 @@
                                                 <div class="">
                                                 <label for="terminos_text">TÉRMINOS Y CONDICIONES</label>
                                                 <div id="terminos_text" class="condiciones">
-                                                <p>
-                                                Al entregar su equipo a , el usuario acepta los siguientes términos y condiciones:
-                                                </p>
-                                                <p>
-                                                1. Recepción y Diagnóstico del Equipo
-
-                                                    Inspección Inicial: En el momento de la recepción, se realizará una inspección visual básica del equipo junto con el cliente, dejando constancia escrita de su estado aparente y los accesorios entregados. El taller no se hace responsable de defectos o daños ocultos que puedan surgir durante el proceso de reparación.
-                                                    Diagnóstico y Presupuesto: Se informará al cliente del costo del diagnóstico (si aplica). Una vez diagnosticada la avería, se emitirá un presupuesto detallado. El cliente debe aprobar este presupuesto por escrito (incluyendo correo electrónico o mensaje) antes de que se inicie cualquier reparación.
-                                                    Costos de Diagnóstico: Si el cliente no acepta el presupuesto, deberá abonar el costo del diagnóstico (si existe) para retirar su equipo. 
-                                                </p>
-                                                <p>
-                                                2. Proceso de Reparación y Garantía
-
-                                                    Autorización Implícita: La aceptación del presupuesto autoriza al taller a realizar las reparaciones necesarias y a desechar las piezas dañadas sustituidas (salvo que el cliente solicite lo contrario por escrito).
-                                                    Garantía: La reparación tiene una garantía de [ej. 3 meses] en la mano de obra efectuada y sobre las piezas nuevas instaladas, las cuales tendrán la garantía ofrecida por el fabricante. La garantía no cubre averías causadas por un uso inadecuado, subidas de tensión, condiciones ambientales anormales o reparaciones realizadas por terceros sin autorización.
-                                                    Defectos Ocultos: El taller no se responsabiliza por daños o fallas que surjan durante el mantenimiento debido a defectos ocultos del equipo no detectados en la revisión inicial. 
-                                                </p>
-                                                <p>
-                                                3. Limitación de Responsabilidad
-
-                                                    Pérdida de Información: El cliente es el único responsable de realizar una copia de seguridad de la información contenida en el equipo antes de su entrega. El taller no se responsabiliza por la pérdida total o parcial de datos que pueda ocurrir durante el servicio.
-                                                    Daños al Equipo: La responsabilidad del taller se limita al valor de la reparación o, en su caso, al valor de mercado del equipo en su estado actual antes de la avería, excluyendo cualquier pérdida de beneficio u otros daños indirectos.
-                                                    Equipos Externos/Periféricos: El taller no se hace responsable de daños a equipos periféricos o software que no hayan sido entregados para revisión. 
-                                                </p>
-                                                <p>
-                                                4. Plazos y Retirada del Equipo
-
-                                                    Plazos: Los plazos de reparación son estimados y pueden variar en función de la disponibilidad de repuestos.
-                                                    Abandono del Equipo: Si el equipo no es retirado por el cliente en un plazo de [ej. 60 o 90 días] a partir de la fecha de notificación de finalización del servicio o no aceptación del presupuesto, se considerará abandonado. El taller quedará facultado para disponer del equipo (incluyendo su venta o desecho) para cubrir los gastos de almacenamiento y reparación, perdiendo el cliente todo derecho a reclamo o indemnización. 
-                                                </p>
-                                                <p>
-                                                5. Confidencialidad y Datos Personales
-
-                                                    El taller se compromete a tratar de forma confidencial cualquier información personal o contenida en el equipo del cliente, y a cumplir con la normativa de protección de datos aplicable. 
-                                                    </p>
+                                              {!! nl2br(e($termino->contenido ?? '')) !!}
                                                 </div>
                                                 </div>
                                                 <div class="div">

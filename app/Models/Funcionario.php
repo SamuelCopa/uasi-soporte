@@ -39,7 +39,7 @@ class Funcionario extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['grado_academico', 'paterno', 'materno', 'nombre', 'ci', 'expedido', 'cargo', 'celular','dependencia_id'];
+    protected $fillable = ['grado_academico', 'paterno', 'materno', 'nombre', 'ci', 'expedido', 'cargo', 'email', 'celular','dependencia_id'];
 
 
     /**

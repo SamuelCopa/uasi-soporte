@@ -14,6 +14,7 @@
         <script src="https://cdn.tailwindcss.com"></script>
 
         <!-- 3. Tus estilos personalizados -->
+         <link rel="stylesheet" href="{{ asset('estilos/inicio.css') }}">  
         <link href="{{ asset('assets/css/styles.css') }}" rel="stylesheet" />
         <link href="{{ asset('estilos/estilos.css') }}" rel="stylesheet" />
         <link href="{{ asset('estilos/estilos2.css') }}" rel="stylesheet" />
@@ -49,10 +50,13 @@
             <!-- SEGUIMIENTO --> 
 
             <!-- MODELO DE CARTA --> 
-             <a href="#" class="gamea-link"> 
-                <i class="fas fa-file-alt"></i> 
-                <span>MODELO DE CARTA</span> 
-            </a> 
+            <a href="#"
+            class="gamea-link"
+            data-bs-toggle="modal"
+            data-bs-target="#modalDocumentos">
+                <i class="fas fa-file-alt"></i>
+                <span>MODELO DE CARTAS</span>
+            </a>
 
             <!-- REQUERIMIENTO --> 
              <button type="button" class="gamea-link" data-bs-toggle="modal" data-bs-target="#modalServicio"> 
@@ -71,6 +75,7 @@
                 <i class="fas fa-sign-in-alt"></i> 
                 <span>ACCEDER</span> </a> 
             </div> 
+            
             <!-- BOTÓN MÓVIL --> 
              <button type="button" class="gamea-mobile-button" onclick="toggleGameaMenu()"> 
                 <i class="fas fa-bars"></i> 
@@ -80,292 +85,27 @@
                 <button type="button" class="gamea-mobile-link" data-bs-toggle="modal" data-bs-target="#modalSeguimiento" onclick="toggleGameaMenu()"> 
                     <i class="fas fa-search"></i> SEGUIMIENTO 
                 </button> 
-                <a href="#" class="gamea-mobile-link"> 
-                    <i class="fas fa-file-alt"></i> MODELO DE CARTA
-                </a> 
+                    <a href="#"
+                    class="gamea-mobile-link""
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalDocumentos">
+                        <i class="fas fa-file-alt"></i>
+                        <span>MODELO DE CARTAS</span>
+                    </a>
                 <button type="button" class="gamea-mobile-link" data-bs-toggle="modal" data-bs-target="#modalServicio" onclick="toggleGameaMenu()"> 
                     <i class="fas fa-tools"></i> REQUERIMIENTO DE SERVICIO
                 </button> 
+                <a href="{{ route('evaluacion.buscar') }}"
+                class="gamea-mobile-link"">
+                    <i class="fas fa-star"></i>
+                    EVALUAR ATENCION
+                </a>
                 <a href="#" class="gamea-mobile-login" data-bs-toggle="modal" data-bs-target="#login"> 
                     <i class="fas fa-sign-in-alt"></i> ACCEDER 
                 </a> 
             </div> 
 </nav>
-<style>
-/* =========================================================
-   GAMEA NAVBAR
-   ========================================================= */
 
-.gamea-navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 78px;
-    background: rgba(255,255,255,.97);
-    border-bottom: 1px solid #e5e7eb;
-    box-shadow: 0 4px 20px rgba(0,0,0,.08);
-    z-index: 99999;
-}
-/* CONTENEDOR */
-
-.gamea-nav-container {
-    width: 100%;
-    max-width: 1250px;
-    height: 78px;
-    margin: 0 auto;
-    padding: 0 25px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-/* =========================================================
-   LOGO
-   ========================================================= */
-
-.gamea-brand {
-    display: flex !important;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-.gamea-logo {
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.gamea-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.gamea-brand-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1;
-}
-
-.gamea-brand-text strong {
-    color: #0052cc;
-    font-size: 19px;
-    font-weight: 800;
-}
-
-.gamea-brand-text span {
-    margin-top: 5px;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-}
-
-/* =========================================================
-   MENÚ
-   ========================================================= */
-
-.gamea-menu {
-    display: flex !important;
-    align-items: center;
-    gap: 5px;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-/* =========================================================
-   ENLACES
-   ========================================================= */
-
-.gamea-link {
-    display: flex !important;
-    align-items: center;
-    gap: 8px;
-    padding: 11px 14px;
-    margin: 0;
-    color: #1164d7 !important;
-    background: transparent !important;
-    border: none !important;
-    border-radius: 9px;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: none !important;
-    cursor: pointer;
-    visibility: visible !important;
-    opacity: 1 !important;
-    transition: all .25s ease;
-}
-
-.gamea-link i {
-    color: #0052cc;
-    font-size: 14px;
-}
-
-.gamea-link:hover {
-    color: #0052cc !important;
-    background: #eef5ff !important;
-    transform: translateY(-1px);
-}
-
-/* =========================================================
-   SEPARADOR
-   ========================================================= */
-
-.gamea-divider {
-    width: 1px;
-    height: 30px;
-    margin: 0 10px;
-    background: #e2e8f0;
-}
-
-/* =========================================================
-   ACCEDER
-   ========================================================= */
-
-.gamea-login {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 11px 20px;
-    color: #fff !important;
-    background: linear-gradient(135deg,#0052cc,#2684ff) !important;
-    border-radius: 9px;
-    font-size: 14px;
-    font-weight: 700;
-    text-decoration: none !important;
-    box-shadow: 0 5px 15px rgba(0,82,204,.25);
-    visibility: visible !important;
-    opacity: 1 !important;
-    transition: all .25s ease;
-}
-
-.gamea-login:hover {
-    color: white !important;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 22px rgba(0,82,204,.35);
-}
-
-/* =========================================================
-   BOTÓN MÓVIL
-   ========================================================= */
-
-.gamea-mobile-button {
-    display: none;
-    width: 44px;
-    height: 44px;
-    border: none;
-    border-radius: 9px;
-    background: #eef5ff;
-    color: #0052cc;
-    font-size: 18px;
-    cursor: pointer;
-}
-
-/* =========================================================
-   MENÚ MÓVIL
-   ========================================================= */
-
-.gamea-mobile-menu {
-    display: none;
-    padding: 15px 20px 20px;
-    background: #fff;
-    border-top: 1px solid #e5e7eb;
-    box-shadow: 0 10px 25px rgba(0,0,0,.10);
-}
-
-.gamea-mobile-menu.active {
-    display: block !important;
-}
-
-.gamea-mobile-link {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 13px 15px;
-    margin-bottom: 5px;
-    color: #146ce8 !important;
-    background: transparent;
-    border: none;
-    border-radius: 9px;
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: none !important;
-    text-align: left;
-    cursor: pointer;
-}
-
-.gamea-mobile-link i {
-    width: 25px;
-    color: #0052cc;
-}
-
-.gamea-mobile-link:hover {
-    background: #eef5ff;
-    color: #0052cc !important;
-}
-
-.gamea-mobile-login {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 13px;
-    margin-top: 8px;
-    color: #fff !important;
-    background: linear-gradient(135deg,#0052cc, #2684ff);
-    border-radius: 9px;
-    font-size: 14px;
-    font-weight: 700;
-    text-decoration: none !important;
-}
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
-
-@media (max-width: 1000px) {
-    .gamea-menu {
-        display: none !important;
-    }
-    .gamea-mobile-button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-}
-
-@media (max-width: 600px) {
-    .gamea-nav-container {
-        height: 70px;
-        padding: 0 15px;
-    }
-    .gamea-navbar {
-        height: 70px;
-    }
-    .gamea-logo {
-        width: 42px;
-        height: 42px;
-    }
-    .gamea-brand-text strong {
-        font-size: 16px;
-    }
-
-}
-
-body {
-    padding-top: 78px;
-}
-
-</style>
 <script>
 function toggleGameaMenu() {
 
@@ -574,6 +314,8 @@ function borrar() {
 escribir();
 </script>
 
+    <!--Ventana Modal Documentos-->
+    @include('documentos.modal')
     <!--Ventana Modal Seguimiento-->
     @include('inicio.modalseguimiento')
     <!--Ventana Modal Seguimiento-->
@@ -620,5 +362,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 <link rel="stylesheet" href="{{ asset('estilos/registroCpu.css') }}">  
+
 
 </body>

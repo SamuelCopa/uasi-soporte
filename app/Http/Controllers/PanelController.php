@@ -18,6 +18,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\User;
+use App\Models\TiposEquipo;
 
 class PanelController extends Controller
 {
@@ -338,45 +339,174 @@ public function index()
 
 // --------------------------------RESULTADOS MANTENIMIENTO--------------------------------------
 
-public function resultado()
+public function resultado(Request $request)
 {
-    $year = now()->year;
+    /*
+    |--------------------------------------------------------------------------
+    | FILTROS
+    |--------------------------------------------------------------------------
+    */
 
-    $modelos = [
-        'CPU' => RegistroCpu::class,
-        'Impresora' => Impresora::class,
-        'Monitor' => Monitor::class,
-        'Audifono' => Audifono::class,
-        'Laptop' => Laptop::class,
-        'Teclado' => Teclado::class,
-        'Parlante' => Parlante::class,
-        'Mouse' => Raton::class,
-        'UPS' => Upese::class,
-        'Estabilizador' => Estabilizador::class,
-    ];
+    $year = $request->input('year', now()->year);
 
-    $totales = [
-        'devolucion' => 0,
-        'reposicion' => 0,
-        'repliegue'  => 0,
-        'custodio'   => 0,
-        'baja'       => 0,
-    ];
+    $month = $request->input('month');
 
-    $detalle = [];
+    $equipoFiltro = $request->input('equipo');
+
+    $resultadoFiltro = $request->input('resultado');
+
 
     /*
     |--------------------------------------------------------------------------
-    | EQUIPOS NORMALES
+    | RESULTADOS
+    |--------------------------------------------------------------------------
+    */
+
+    $resultados = [
+        'devolucion' => 1,
+        'reposicion'  => 2,
+        'repliegue'   => 3,
+        'custodio'    => 4,
+        'baja'        => 5,
+    ];
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | EQUIPOS FIJOS
+    |--------------------------------------------------------------------------
+    */
+
+    $modelos = [
+
+        'CPU' => RegistroCpu::class,
+
+        'Impresora' => Impresora::class,
+
+        'Monitor' => Monitor::class,
+
+        'Audifono' => Audifono::class,
+
+        'Laptop' => Laptop::class,
+
+        'Teclado' => Teclado::class,
+
+        'Parlante' => Parlante::class,
+
+        'Mouse' => Raton::class,
+
+        'UPS' => Upese::class,
+
+        'Estabilizador' => Estabilizador::class,
+
+    ];
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | TOTALES GENERALES
+    |--------------------------------------------------------------------------
+    */
+
+    $totales = [
+
+        'devolucion' => 0,
+
+        'reposicion' => 0,
+
+        'repliegue' => 0,
+
+        'custodio' => 0,
+
+        'baja' => 0,
+
+    ];
+
+
+    $detalle = [];
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PROCESAR EQUIPOS FIJOS
     |--------------------------------------------------------------------------
     */
 
     foreach ($modelos as $nombre => $modelo) {
 
-        $query = $modelo::whereNotNull('fecha_entrega')
-            ->whereYear('fecha_entrega', $year);
+        /*
+        |--------------------------------------------------------------------------
+        | Si se seleccionó un equipo específico
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $equipoFiltro &&
+            $equipoFiltro !== $nombre
+        ) {
+            continue;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CONSULTA
+        |--------------------------------------------------------------------------
+        */
+
+        $query = $modelo::query()
+
+            ->whereNotNull('fecha_entrega')
+
+            ->whereYear(
+                'fecha_entrega',
+                $year
+            );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | FILTRO MES
+        |--------------------------------------------------------------------------
+        */
+
+        if ($month) {
+
+            $query->whereMonth(
+                'fecha_entrega',
+                $month
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | FILTRO RESULTADO
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $resultadoFiltro &&
+            isset($resultados[$resultadoFiltro])
+        ) {
+
+            $query->where(
+                'resultado_id',
+                $resultados[$resultadoFiltro]
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CONTADORES
+        |--------------------------------------------------------------------------
+        */
 
         $detalle[$nombre] = [
+
             'devolucion' => (clone $query)
                 ->where('resultado_id', 1)
                 ->count(),
@@ -396,122 +526,426 @@ public function resultado()
             'baja' => (clone $query)
                 ->where('resultado_id', 5)
                 ->count(),
-        ];
 
-        foreach ($detalle[$nombre] as $key => $valor) {
-            $totales[$key] += $valor;
-        }
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | OTROS EQUIPOS
-    |--------------------------------------------------------------------------
-    */
-
-    $otrosEquipos = OtrosEquipo::with('tipoEquipo')
-        ->whereNotNull('fecha_entrega')
-        ->whereYear('fecha_entrega', $year)
-        ->get();
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | AGRUPAR POR TIPO DE EQUIPO
-    |--------------------------------------------------------------------------
-    */
-
-    $otrosAgrupados = $otrosEquipos->groupBy(function ($equipo) {
-
-        return $equipo->tipoEquipo?->nombre ?? 'OTRO EQUIPO';
-
-    });
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | AGREGAR CADA TIPO DINÁMICAMENTE
-    |--------------------------------------------------------------------------
-    */
-
-    foreach ($otrosAgrupados as $nombre => $equipos) {
-
-        $detalle[$nombre] = [
-            'devolucion' => $equipos
-                ->where('resultado_id', 1)
-                ->count(),
-
-            'reposicion' => $equipos
-                ->where('resultado_id', 2)
-                ->count(),
-
-            'repliegue' => $equipos
-                ->where('resultado_id', 3)
-                ->count(),
-
-            'custodio' => $equipos
-                ->where('resultado_id', 4)
-                ->count(),
-
-            'baja' => $equipos
-                ->where('resultado_id', 5)
-                ->count(),
         ];
 
 
         /*
         |--------------------------------------------------------------------------
-        | SUMAR A LOS TOTALES GENERALES
+        | SUMAR TOTALES
         |--------------------------------------------------------------------------
         */
 
-        foreach ($detalle[$nombre] as $key => $valor) {
+        foreach (
+            $detalle[$nombre] as $key => $valor
+        ) {
+
             $totales[$key] += $valor;
+
         }
+
     }
 
 
-    $user = Auth::user();
+    /*
+    |--------------------------------------------------------------------------
+    | PROCESAR OTROS EQUIPOS
+    |--------------------------------------------------------------------------
+    */
+
+    $esTipoDinamico = str_starts_with(
+        $equipoFiltro ?? '',
+        'tipo_'
+    );
+
+
+    $procesarOtros = false;
+
+
+    if (!$equipoFiltro) {
+
+        $procesarOtros = true;
+
+    }
+
+
+    if ($equipoFiltro === 'Otros') {
+
+        $procesarOtros = true;
+
+    }
+
+
+    if ($esTipoDinamico) {
+
+        $procesarOtros = true;
+
+    }
+
+
+    if ($procesarOtros) {
+
+        /*
+        |--------------------------------------------------------------------------
+        | CONSULTA OTROS
+        |--------------------------------------------------------------------------
+        */
+
+        $queryOtros = OtrosEquipo::with(
+            'tipoEquipo'
+        )
+
+        ->whereNotNull(
+            'fecha_entrega'
+        )
+
+        ->whereYear(
+            'fecha_entrega',
+            $year
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | FILTRO MES
+        |--------------------------------------------------------------------------
+        */
+
+        if ($month) {
+
+            $queryOtros->whereMonth(
+                'fecha_entrega',
+                $month
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | FILTRO RESULTADO
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $resultadoFiltro &&
+            isset($resultados[$resultadoFiltro])
+        ) {
+
+            $queryOtros->where(
+                'resultado_id',
+                $resultados[$resultadoFiltro]
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | FILTRO TIPO DINÁMICO
+        |--------------------------------------------------------------------------
+        */
+
+        if ($esTipoDinamico) {
+
+            $tipoId = str_replace(
+                'tipo_',
+                '',
+                $equipoFiltro
+            );
+
+
+            $queryOtros->where(
+                'tipo_equipo_id',
+                $tipoId
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | OBTENER REGISTROS
+        |--------------------------------------------------------------------------
+        */
+
+        $otrosEquipos = $queryOtros->get();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | AGRUPAR POR TIPO
+        |--------------------------------------------------------------------------
+        */
+
+        $otrosAgrupados = $otrosEquipos->groupBy(
+            function ($equipo) {
+
+                return $equipo->tipoEquipo?->nombre
+                    ?? 'OTRO EQUIPO';
+
+            }
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | GENERAR DETALLE
+        |--------------------------------------------------------------------------
+        */
+
+        foreach (
+            $otrosAgrupados as $nombre => $equipos
+        ) {
+
+            $detalle[$nombre] = [
+
+                'devolucion' => $equipos
+                    ->where(
+                        'resultado_id',
+                        1
+                    )
+                    ->count(),
+
+                'reposicion' => $equipos
+                    ->where(
+                        'resultado_id',
+                        2
+                    )
+                    ->count(),
+
+                'repliegue' => $equipos
+                    ->where(
+                        'resultado_id',
+                        3
+                    )
+                    ->count(),
+
+                'custodio' => $equipos
+                    ->where(
+                        'resultado_id',
+                        4
+                    )
+                    ->count(),
+
+                'baja' => $equipos
+                    ->where(
+                        'resultado_id',
+                        5
+                    )
+                    ->count(),
+
+            ];
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | SUMAR AL TOTAL GENERAL
+            |--------------------------------------------------------------------------
+            */
+
+            foreach (
+                $detalle[$nombre] as $key => $valor
+            ) {
+
+                $totales[$key] += $valor;
+
+            }
+
+        }
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | MESES
+    |--------------------------------------------------------------------------
+    */
+
+    $meses = [
+
+        1 => 'Enero',
+
+        2 => 'Febrero',
+
+        3 => 'Marzo',
+
+        4 => 'Abril',
+
+        5 => 'Mayo',
+
+        6 => 'Junio',
+
+        7 => 'Julio',
+
+        8 => 'Agosto',
+
+        9 => 'Septiembre',
+
+        10 => 'Octubre',
+
+        11 => 'Noviembre',
+
+        12 => 'Diciembre',
+
+    ];
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | NOMBRE DEL MES
+    |--------------------------------------------------------------------------
+    */
+
+    $nombreMes = $month
+        ? ($meses[(int) $month] ?? null)
+        : null;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | TIPOS DINÁMICOS
+    |--------------------------------------------------------------------------
+    */
+
+    $tiposEquipos = TiposEquipo::orderBy(
+        'nombre'
+    )->get();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | USUARIO
+    |--------------------------------------------------------------------------
+    */
+
+    $user = auth()->user();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | VISTA
+    |--------------------------------------------------------------------------
+    */
 
     return view(
         'panel.resultado',
         compact(
-            'totales',
-            'detalle',
+
             'user',
-            'year'
+
+            'detalle',
+
+            'totales',
+
+            'year',
+
+            'month',
+
+            'nombreMes',
+
+            'equipoFiltro',
+
+            'resultadoFiltro',
+
+            'tiposEquipos',
+
+            'meses'
+
         )
     );
 }
 
-
-public function resultadoPdf()
+public function resultadoPdf(Request $request)
 {
-    $year = now()->year;
+    $year = $request->input(
+        'year',
+        now()->year
+    );
+
+    $month = $request->input('month');
+
+    $equipoFiltro = $request->input('equipo');
+
+    $resultadoFiltro = $request->input('resultado');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESULTADOS
+    |--------------------------------------------------------------------------
+    */
+
+    $resultados = [
+
+        'devolucion' => 1,
+
+        'reposicion' => 2,
+
+        'repliegue' => 3,
+
+        'custodio' => 4,
+
+        'baja' => 5,
+
+    ];
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | EQUIPOS FIJOS
+    |--------------------------------------------------------------------------
+    */
 
     $modelos = [
+
         'CPU' => RegistroCpu::class,
+
         'Impresora' => Impresora::class,
+
         'Monitor' => Monitor::class,
+
         'Audifono' => Audifono::class,
+
         'Laptop' => Laptop::class,
+
         'Teclado' => Teclado::class,
+
         'Parlante' => Parlante::class,
+
         'Mouse' => Raton::class,
+
         'UPS' => Upese::class,
+
         'Estabilizador' => Estabilizador::class,
+
     ];
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | TOTALES
+    |--------------------------------------------------------------------------
+    */
 
     $totales = [
+
         'devolucion' => 0,
+
         'reposicion' => 0,
-        'repliegue'  => 0,
-        'custodio'   => 0,
-        'baja'       => 0,
+
+        'repliegue' => 0,
+
+        'custodio' => 0,
+
+        'baja' => 0,
+
     ];
 
+
     $detalle = [];
+
 
     /*
     |--------------------------------------------------------------------------
@@ -521,85 +955,350 @@ public function resultadoPdf()
 
     foreach ($modelos as $nombre => $modelo) {
 
-        $query = $modelo::whereNotNull('fecha_entrega')
-            ->whereYear('fecha_entrega', $year);
+        if (
+            $equipoFiltro &&
+            $equipoFiltro !== $nombre
+        ) {
+
+            continue;
+
+        }
+
+
+        $query = $modelo::whereNotNull(
+            'fecha_entrega'
+        )
+        ->whereYear(
+            'fecha_entrega',
+            $year
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | MES
+        |--------------------------------------------------------------------------
+        */
+
+        if ($month) {
+
+            $query->whereMonth(
+                'fecha_entrega',
+                $month
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | RESULTADO
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $resultadoFiltro &&
+            isset($resultados[$resultadoFiltro])
+        ) {
+
+            $query->where(
+                'resultado_id',
+                $resultados[$resultadoFiltro]
+            );
+
+        }
+
 
         $detalle[$nombre] = [
+
             'devolucion' => (clone $query)
-                ->where('resultado_id', 1)
+                ->where(
+                    'resultado_id',
+                    1
+                )
                 ->count(),
 
             'reposicion' => (clone $query)
-                ->where('resultado_id', 2)
+                ->where(
+                    'resultado_id',
+                    2
+                )
                 ->count(),
 
             'repliegue' => (clone $query)
-                ->where('resultado_id', 3)
+                ->where(
+                    'resultado_id',
+                    3
+                )
                 ->count(),
 
             'custodio' => (clone $query)
-                ->where('resultado_id', 4)
+                ->where(
+                    'resultado_id',
+                    4
+                )
                 ->count(),
 
             'baja' => (clone $query)
-                ->where('resultado_id', 5)
+                ->where(
+                    'resultado_id',
+                    5
+                )
                 ->count(),
+
         ];
 
-        foreach ($detalle[$nombre] as $key => $valor) {
+
+        foreach (
+            $detalle[$nombre]
+            as $key => $valor
+        ) {
+
             $totales[$key] += $valor;
+
         }
+
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | OTROS EQUIPOS
+    | OTROS EQUIPOS DINÁMICOS
     |--------------------------------------------------------------------------
     */
 
-    $otrosEquipos = OtrosEquipo::with('tipoEquipo')
-        ->whereNotNull('fecha_entrega')
-        ->whereYear('fecha_entrega', $year)
-        ->get();
-
-    $otrosAgrupados = $otrosEquipos->groupBy(function ($equipo) {
-
-        return $equipo->tipoEquipo?->nombre
-            ?? 'OTRO EQUIPO';
-
-    });
+    $procesarOtros = false;
 
 
-    foreach ($otrosAgrupados as $nombre => $equipos) {
+    if (!$equipoFiltro) {
 
-        $detalle[$nombre] = [
-            'devolucion' => $equipos
-                ->where('resultado_id', 1)
-                ->count(),
+        $procesarOtros = true;
 
-            'reposicion' => $equipos
-                ->where('resultado_id', 2)
-                ->count(),
-
-            'repliegue' => $equipos
-                ->where('resultado_id', 3)
-                ->count(),
-
-            'custodio' => $equipos
-                ->where('resultado_id', 4)
-                ->count(),
-
-            'baja' => $equipos
-                ->where('resultado_id', 5)
-                ->count(),
-        ];
-
-        foreach ($detalle[$nombre] as $key => $valor) {
-            $totales[$key] += $valor;
-        }
     }
 
+
+    if ($equipoFiltro === 'Otros') {
+
+        $procesarOtros = true;
+
+    }
+
+
+    if (
+        str_starts_with(
+            $equipoFiltro ?? '',
+            'tipo_'
+        )
+    ) {
+
+        $procesarOtros = true;
+
+    }
+
+
+    if ($procesarOtros) {
+
+        $queryOtros = OtrosEquipo::with(
+            'tipoEquipo'
+        )
+        ->whereNotNull(
+            'fecha_entrega'
+        )
+        ->whereYear(
+            'fecha_entrega',
+            $year
+        );
+
+
+        if ($month) {
+
+            $queryOtros->whereMonth(
+                'fecha_entrega',
+                $month
+            );
+
+        }
+
+
+        if (
+            $resultadoFiltro &&
+            isset($resultados[$resultadoFiltro])
+        ) {
+
+            $queryOtros->where(
+                'resultado_id',
+                $resultados[$resultadoFiltro]
+            );
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | TIPO DINÁMICO
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            str_starts_with(
+                $equipoFiltro ?? '',
+                'tipo_'
+            )
+        ) {
+
+            $tipoId = str_replace(
+                'tipo_',
+                '',
+                $equipoFiltro
+            );
+
+
+            $queryOtros->where(
+                'tipo_equipo_id',
+                $tipoId
+            );
+
+        }
+
+
+        $otrosEquipos = $queryOtros->get();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | AGRUPAR
+        |--------------------------------------------------------------------------
+        */
+
+        $otrosAgrupados = $otrosEquipos
+            ->groupBy(function ($equipo) {
+
+                return $equipo->tipoEquipo?->nombre
+                    ?? 'OTRO EQUIPO';
+
+            });
+
+
+        foreach (
+            $otrosAgrupados as $nombre => $equipos
+        ) {
+
+            $detalle[$nombre] = [
+
+                'devolucion' => $equipos
+                    ->where(
+                        'resultado_id',
+                        1
+                    )
+                    ->count(),
+
+                'reposicion' => $equipos
+                    ->where(
+                        'resultado_id',
+                        2
+                    )
+                    ->count(),
+
+                'repliegue' => $equipos
+                    ->where(
+                        'resultado_id',
+                        3
+                    )
+                    ->count(),
+
+                'custodio' => $equipos
+                    ->where(
+                        'resultado_id',
+                        4
+                    )
+                    ->count(),
+
+                'baja' => $equipos
+                    ->where(
+                        'resultado_id',
+                        5
+                    )
+                    ->count(),
+
+            ];
+
+
+            foreach (
+                $detalle[$nombre]
+                as $key => $valor
+            ) {
+
+                $totales[$key] += $valor;
+
+            }
+
+        }
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | MESES
+    |--------------------------------------------------------------------------
+    */
+
+    $meses = [
+
+        1 => 'Enero',
+        2 => 'Febrero',
+        3 => 'Marzo',
+        4 => 'Abril',
+        5 => 'Mayo',
+        6 => 'Junio',
+        7 => 'Julio',
+        8 => 'Agosto',
+        9 => 'Septiembre',
+        10 => 'Octubre',
+        11 => 'Noviembre',
+        12 => 'Diciembre',
+
+    ];
+
+
+    $nombreMes = $month
+        ? ($meses[(int) $month] ?? null)
+        : null;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PDF
+    |--------------------------------------------------------------------------
+    */
+
+    $pdf = Pdf::loadView(
+        'panel.resultadoPdf',
+        compact(
+
+            'detalle',
+
+            'totales',
+
+            'year',
+
+            'month',
+
+            'nombreMes',
+
+            'equipoFiltro',
+
+            'resultadoFiltro'
+
+        )
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PAPEL
+    |--------------------------------------------------------------------------
+    */
 
     /*
     |--------------------------------------------------------------------------
@@ -612,15 +1311,40 @@ public function resultadoPdf()
         compact(
             'detalle',
             'totales',
-            'year'
+            'year',
+            'month',
+            'nombreMes',
+            'equipoFiltro',
+            'resultadoFiltro'
         )
     );
 
-    $pdf->setPaper('letter');
+
+    /*
+    |--------------------------------------------------------------------------
+    | CONFIGURACIÓN DEL PAPEL
+    |--------------------------------------------------------------------------
+    */
+
+    $pdf->setPaper(
+        'letter',
+        'landscape'
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | MOSTRAR PDF
+    |--------------------------------------------------------------------------
+    */
 
     return $pdf->stream(
-        'informe_mantenimiento_' . $year . '.pdf'
+        'informe_activos_' .
+        $year .
+        ($month ? '_' . $month : '') .
+        '.pdf'
     );
+
 }
 
 

@@ -63,8 +63,11 @@ use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\OtrosEquipoController;
 use App\Http\Controllers\TiposEquipoController;
+use App\Http\Controllers\EquipoController;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\TerminoController;
+use App\Http\Controllers\DocumentoController;
 
 Route::get('/', function () {
     return view('inicio.inicio');
@@ -84,6 +87,19 @@ Route::get('/hay-pendientes', function () {
         'hayPendientes' => \App\Models\Servicio::where('visto', 0)->exists()
     ]);
 })->middleware('auth');
+
+// --------------------TERMINOS---------------------------------------------------------------------------------
+Route::get('/terminos/edit', [TerminoController::class, 'edit'])->name('terminos.edit');
+Route::put('/terminos',[TerminoController::class, 'update'])->name('terminos.update');
+
+// --------------------SOLICITUDES PARA DESCARGAR---------------------------------------------------------------------------------
+Route::resource('documentos', DocumentoController::class);
+Route::get('/documentos', [DocumentoController::class, 'index'])->name('documentos.index');
+Route::get('/documentos/create',[DocumentoController::class, 'create'])->name('documentos.create');
+Route::post('/documentos', [DocumentoController::class, 'store'])->name('documentos.store');
+Route::get('/documentos/{documento}/descargar', [DocumentoController::class, 'descargar'])->name('documentos.descargar');
+Route::delete('/documentos/{documento}', [DocumentoController::class, 'destroy'])->name('documentos.destroy');
+
 
 // --------------------PARA SELECCIONAR EQUIPOS----------------------------------------------------------------------------------
 Route::get('/otros-equipos/por-tipo/{tipo}', [OtrosEquipoController::class, 'porTipo'])->name('otros-equipos.porTipo');
@@ -298,17 +314,7 @@ Route::patch('/laptopT/{id}', [App\Http\Controllers\LaptopController::class,'upd
 Route::patch('/equipoT/{id}', [App\Http\Controllers\OtrosEquipoController::class,'updateTecnico'])->name('equipo.tecnico')->middleware('auth');
 Route::patch('/servicioT/{id}', [App\Http\Controllers\ServicioController::class,'updateTecnico'])->name('servicio.tecnico')->middleware('auth');
 
-// ------------------BOTON ACTUALIZAR FECHA----------------------
-Route::patch('/cpuF/{id}', [App\Http\Controllers\RegistroCpuController::class,'updateFecha'])->name('cpu.fecha')->middleware('auth');
-Route::patch('/impresoraF/{id}', [App\Http\Controllers\ImpresoraController::class,'updateFecha'])->name('impresora.fecha')->middleware('auth');
-Route::patch('/tecladoF/{id}', [App\Http\Controllers\TecladoController::class,'updateFecha'])->name('teclado.fecha')->middleware('auth');
-Route::patch('/mouseF/{id}', [App\Http\Controllers\RatonController::class,'updateFecha'])->name('mouse.fecha')->middleware('auth');
-Route::patch('/parlanteF/{id}', [App\Http\Controllers\ParlanteController::class,'updateFecha'])->name('parlante.fecha')->middleware('auth');
-Route::patch('/audifonoF/{id}', [App\Http\Controllers\AudifonoController::class,'updateFecha'])->name('audifono.fecha')->middleware('auth');
-Route::patch('/monitorF/{id}', [App\Http\Controllers\MonitorController::class,'updateFecha'])->name('monitor.fecha')->middleware('auth');
-Route::patch('/estabilizadorF/{id}', [App\Http\Controllers\EstabilizadorController::class,'updateFecha'])->name('estabilizador.fecha')->middleware('auth');
-Route::patch('/upsF/{id}', [App\Http\Controllers\UpeseController::class,'updateFecha'])->name('ups.fecha')->middleware('auth');
-Route::patch('/laptopF/{id}', [App\Http\Controllers\LaptopController::class,'updateFecha'])->name('laptop.fecha')->middleware('auth');
+
 
 // ------------------SEGUIMIENTO DE EQUIPO-----------------------
 Route::get('/seguimiento', [SeguimientoController::class, 'buscar'])->name('seguimiento.buscar');
@@ -366,6 +372,13 @@ Route::post('/estado-mouse',[App\Http\Controllers\RatonController::class,'cambia
 Route::post('/estado-ups',[App\Http\Controllers\UpeseController::class,'cambiarEstado'])->name('estado-ups')->middleware('auth');
 Route::post('/estado-cpu',[App\Http\Controllers\RegistroCpuController::class,'cambiarEstado'])->name('estado-cpu')->middleware('auth');
 Route::post('/estado-laptop',[App\Http\Controllers\LaptopController::class,'cambiarEstado'])->name('estado-laptop')->middleware('auth');
+
+// ----------------REPORTES EQUIPOS----------
+
+
+Route::get('/equipos/reporte', [EquipoController::class, 'reporte'])->name('equipos.reporte')->middleware('auth');
+Route::get('/equipos/reporte/pdf', [EquipoController::class, 'reportePdf'])->name('equipos.reporte.pdf')->middleware('auth');
+
 
 // ----------------REPORTES----------
 

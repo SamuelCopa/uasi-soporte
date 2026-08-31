@@ -3,27 +3,42 @@
 @section('template_title')
     {{ $user->name ?? __('Show') . " " . __('User') }}
 @endsection
-
-@section('content')
-    <section class="content container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+@section('content_header')
+    <div class="header-panel">
+        <div class="header-left">
+            <h1 class="header-title">
                         <div class="float-left">
-                            @if (auth()->user()->hasRole('Administrador')) 
-                            <h3 class="">{{ __('ADMINISTRADOR') }}</h3>
-                            @else
-                            <h3 class="">{{ __('TECNICO') }} </h3>
+                            @if(auth()->user()->hasRole('SuperAdministrador'))
+                                <h3>{{ __('SUPER ADMINISTRADOR') }}</h3>
+
+                            @elseif(auth()->user()->hasRole('Administrador'))
+                                <h3>{{ __('ADMINISTRADOR') }}</h3>
+
+                            @elseif(auth()->user()->hasRole('Tecnico'))
+                                <h3>{{ __('TECNICO') }}</h3>
+
                             @endif
                         </div>
+            </h1>
+        </div>
+                <div class="header-actions">
                     <div class="float-right">
-                    <!-- Botón para abrir el modal -->
-                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#changePasswordModal">
-                        <i class="fas fa-key"></i> Cambiar Contraseña
-                    </button>
+                        <!-- Botón para abrir el modal -->
+                        <button type="button" class="btn-header" data-toggle="modal" data-target="#changePasswordModal">
+                            <i class="fas fa-key"></i> Cambiar Contraseña
+                        </button>
                     </div>
-                    </div>
+                    {{-- VOLVER --}}
+                    <a href="{{ route('home') }}"
+                    class="btn-header">
+                        <i class="fas fa-arrow-left"></i>
+                        Volver
+                    </a>
+                </div>
+            </div>
+@stop
+@section('content')
+
 <!--Ventana Modal para Crear--->
 @include('user.CambiarContrasena')
 

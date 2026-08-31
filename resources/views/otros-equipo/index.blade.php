@@ -575,64 +575,64 @@
                                             <td>
                                                <div class="acciones">
 
-    <!-- PDF -->
-    <a href="#"
-       class="btn-mini btn-danger btn-preview-pdf"
-       data-ver="{{ route('pdf.equipo.preview', ':id') }}"
-       data-descargar="{{ route('pdf.equipo.descargar', ':id') }}"
-       data-enviar="{{ route('pdf.equipo.enviar', ':id') }}"
-       data-id="{{ $monitor->id }}"
-       title="Formulario PDF">
-        <i class="far fa-file-pdf"></i>
-    </a>
+                                            <!-- PDF -->
+                                            <a href="#"
+                                            class="btn-mini btn-danger btn-preview-pdf"
+                                            data-ver="{{ route('pdf.equipo.preview', ':id') }}"
+                                            data-descargar="{{ route('pdf.equipo.descargar', ':id') }}"
+                                            data-enviar="{{ route('pdf.equipo.enviar', ':id') }}"
+                                            data-id="{{ $monitor->id }}"
+                                            title="Formulario PDF">
+                                                <i class="far fa-file-pdf"></i>
+                                            </a>
 
-    <!-- VER -->
-    <button type="button"
-            data-toggle="modal"
-            data-target="#ver{{ $monitor->id }}"
-            class="btn-mini btn-primary"
-            title="Ver">
-        <i class="fa fa-eye"></i>
-    </button>
+                                            <!-- VER -->
+                                            <button type="button"
+                                                    data-toggle="modal"
+                                                    data-target="#ver{{ $monitor->id }}"
+                                                    class="btn-mini btn-primary"
+                                                    title="Ver">
+                                                <i class="fa fa-eye"></i>
+                                            </button>
 
-    @if(auth()->check() && auth()->user()->hasAnyRole([
-        'Administrador',
-        'SuperAdministrador'
-    ]))
+                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                'Administrador',
+                                                'SuperAdministrador'
+                                            ]))
 
-        <!-- EDITAR -->
-        <button type="button"
-                data-toggle="modal"
-                data-target="#editar{{ $monitor->id }}"
-                class="btn-mini btn-success"
-                title="Editar">
-            <i class="fa fa-edit"></i>
-        </button>
+                                                <!-- EDITAR -->
+                                                <button type="button"
+                                                        data-toggle="modal"
+                                                        data-target="#editar{{ $monitor->id }}"
+                                                        class="btn-mini btn-success"
+                                                        title="Editar">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
 
-        <!-- INFORME -->
-        <a href="{{ route('informe.equipo', $monitor->id) }}"
-           class="btn-mini btn-secondary"
-           title="Informe">
-            <i class="fa fa-file"></i>
-        </a>
+                                                <!-- INFORME -->
+                                                <a href="{{ route('informe.equipo', $monitor->id) }}"
+                                                class="btn-mini btn-secondary"
+                                                title="Informe">
+                                                    <i class="fa fa-file"></i>
+                                                </a>
 
-        <!-- ELIMINAR -->
-        <form action="{{ route('otros-equipos.destroy', $monitor->id) }}"
-              method="POST"
-              class="formEliminar">
-            @csrf
-            @method('DELETE')
+                                                <!-- ELIMINAR -->
+                                                <form action="{{ route('otros-equipos.destroy', $monitor->id) }}"
+                                                    method="POST"
+                                                    class="formEliminar">
+                                                    @csrf
+                                                    @method('DELETE')
 
-            <button type="submit"
-                    class="btn-mini btn-danger"
-                    title="Eliminar">
-                <i class="fa fa-trash"></i>
-            </button>
-        </form>
+                                                    <button type="submit"
+                                                            class="btn-mini btn-danger"
+                                                            title="Eliminar">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
 
-    @endif
+                                            @endif
 
-</div>
+                                        </div>
                                             </td>
                                         </tr>
                                         <!--Ventana Modal para Ver --->

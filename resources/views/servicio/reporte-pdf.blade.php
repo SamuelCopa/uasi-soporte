@@ -128,6 +128,7 @@
 <body>
 
     <div class="encabezado">
+
         <div class="institucion">
             GOBIERNO AUTÓNOMO MUNICIPAL DE EL ALTO
         </div>

@@ -62,23 +62,17 @@
 
 
 .acciones {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
     padding: 10px 12px;
     border-top: 1px solid #e5e7eb;
     background: #f8f9fa;
 }
 
-/* Estilo base común */
 .acciones .btn {
-    font-size: 13px;
-    font-weight: 500;
-    padding: 6px 14px;
-    border-radius: 6px;
-    border: 1px solid transparent;
-    transition: all 0.2s ease;
-    letter-spacing: 0.2px;
+    width: 100%;
+    margin: 0;
 }
 
 /* DESCARGAR */

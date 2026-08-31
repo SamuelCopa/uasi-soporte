@@ -5,6 +5,7 @@ use App\Models\Impresora;
 use App\Models\RegistroCpu;
 use App\Models\Servicio;
 use App\Models\Dependencia;
+use App\Models\Documento;
 
 use Illuminate\Http\Request;
 
@@ -41,10 +42,11 @@ public function index()
         return $modelo::where('estado_id', 4)->count();
     });
     $hayPendientes = Servicio::where('visto', 0)->exists();
-
     $dependencia = Dependencia::orderBy('dependencias', 'asc')->get();
+    $documentos = Documento::latest()->get();
 
-    return view('inicio.inicio', compact('totalEquipos','totalEquipos2', 'totalEquipos3', 'totalEquipos4', 'hayPendientes', 'dependencia'));
+
+    return view('inicio.inicio', compact('documentos', 'totalEquipos','totalEquipos2', 'totalEquipos3', 'totalEquipos4', 'hayPendientes', 'dependencia'));
 }
     
 

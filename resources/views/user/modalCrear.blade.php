@@ -42,6 +42,7 @@
                           <label for="expedido" class="form-label">{{ __('EXPEDIDO:') }}<span class="required">*</span></label>
                           <select name="expedido" class="form-control">
                               <option value="" disabled {{ 'selected' }}>SELECCIONE UNA OPCION</option>
+                              <option value="LP" >QR</option>
                               <option value="LP" >LA PAZ</option>
                               <option value="CB">COCHABAMBA</option>
                               <option value="SC">SANTA CRUZ</option>
@@ -71,8 +72,36 @@
                         <label for="password" class="form-label">{{ __('CONTRASEÑA') }}<span class="required">*</span></label>
                         <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required id="password" placeholder="Contraseña automatica es el numero de C.I.">
                       </div>
-                    <div>
+
                     </div>
+                    <div class="fila-1">
+                      <div class="form-group mb-3">
+                          <label>{{ __('ROL') }}</label>
+
+<div class="form-group mb-3">
+    <label>{{ __('ROL') }}</label>
+
+    @foreach ($roles as $rol)
+        <div class="form-group mb-2">
+            <input
+                type="radio"
+                name="role"
+                value="{{ $rol->name }}"
+                id="rol-{{ $rol->id }}"
+                required
+            >
+
+            <label for="rol-{{ $rol->id }}">
+                {{ $rol->name }}
+            </label>
+        </div>
+    @endforeach
+</div>
+                      </div>
+                    </div>
+
+                    </div>
+
 
                       {{-- <label for="password_confirmation">CONFIRMAR CONTRASEÑA</label> --}}
                       <input type="hidden" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" required id="password_confirmation" placeholder="Confirmar contraseña">

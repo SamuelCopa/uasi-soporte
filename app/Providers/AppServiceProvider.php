@@ -29,6 +29,10 @@ public function boot(): void
             || $user->hasRole('SuperAdministrador');
     });
 
+    Gate::define('admin1', function ($user) {
+        return $user->hasRole('Administrador');
+    });
+
     Gate::define('superadministrador', function ($user) {
         return $user->hasRole('SuperAdministrador');
     });

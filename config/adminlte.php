@@ -495,7 +495,7 @@ return [
         [
             'text' => 'PIEZAS CPU',
             'icon' => 'fas fa-cog',
-            'can' => 'admin',
+            'can' => 'admin1',
             'submenu' => [
                     [
                         'text' => 'CASE',
@@ -707,6 +707,18 @@ return [
                 [
                     'text' => 'FUNCIONARIOS',
                     'url' => '/funcionarios',
+                    'icon' => 'fas fas fa-house-user',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'TERMINOS Y CONDICIONES',
+                    'url' => '/terminos/edit',
+                    'icon' => 'fas fas fa-house-user',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'MODELOS DE CARTAS PARA SOLICITAR MANTENIMIENTO',
+                    'url' => '/documentos',
                     'icon' => 'fas fas fa-house-user',
                     'can' => 'admin',
                 ],

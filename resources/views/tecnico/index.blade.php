@@ -64,11 +64,28 @@
                                                                 <td>{{ $user->email }}</td>
                                                                 <td>{{ $user->roles->pluck('name')->implode(', ') ?? 'Sin rol' }}</td>
                                                                 <td>
-                                                                    @if($user->id_estadousuario== '1')
-                                                                        <button type="submit" class="btn btn-primary btn-raised"@role('Administrador') title="Actualizar estado" data-id="{{ $user->id }}" onclick="cambiarEstado({{ $user->id }},{{ $user->id_estadousuario}} )"@endrole>ACTIVO</button>
-                                                                    @elseif($user->id_estadousuario == '2')
-                                                                        <button class="btn btn-danger btn-raised"@role('Administrador') title="Actualizar estado" data-id="{{ $user->id }}" onclick="cambiarEstado({{ $user->id }}, {{ $user->id_estadousuario }} )"@endrole>INACTIVO</button>
-                                                                    @endif
+                                                                @if($user->id_estadousuario == '1')
+                                                                    <button type="submit"
+                                                                            class="btn btn-primary btn-raised"
+                                                                            @hasAnyRole(['Administrador', 'SuperAdministrador'])
+                                                                                title="Actualizar estado"
+                                                                                data-id="{{ $user->id }}"
+                                                                                onclick="cambiarEstado({{ $user->id }}, {{ $user->id_estadousuario }})"
+                                                                            @endhasAnyRole>
+                                                                        ACTIVO
+                                                                    </button>
+
+                                                                @elseif($user->id_estadousuario == '2')
+                                                                    <button type="submit"
+                                                                            class="btn btn-danger btn-raised"
+                                                                            @hasAnyRole(['Administrador', 'SuperAdministrador'])
+                                                                                title="Actualizar estado"
+                                                                                data-id="{{ $user->id }}"
+                                                                                onclick="cambiarEstado({{ $user->id }}, {{ $user->id_estadousuario }})"
+                                                                            @endhasAnyRole>
+                                                                        INACTIVO
+                                                                    </button>
+                                                                @endif
                                                                     <form id="form-cambiar-estado" method="POST" action="{{ route('estado.tecnico') }}">
                                                                         @csrf
                                                                         <input type="hidden" name="id" id="id-user">

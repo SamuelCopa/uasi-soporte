@@ -6,210 +6,349 @@
     <meta charset="UTF-8">
 
     <title>
-        Informe de Mantenimiento {{ $year }}
+        Detalle por Activos
     </title>
 
     <style>
-
         @page {
-            margin: 35px 30px 45px 30px;
+            margin: 25px 30px 35px 30px;
         }
 
         body {
             font-family: DejaVu Sans, sans-serif;
-            font-size: 10px;
+            font-size: 9px;
             color: #222;
+            margin: 0;
+            padding: 0;
         }
+
+
+        /* ======================================================
+           ENCABEZADO
+        ====================================================== */
 
         .encabezado {
-            width: 100%;
-            margin-bottom: 15px;
-        }
-
-        .encabezado td {
-            vertical-align: middle;
-        }
-
-        .logo {
-            width: 80px;
+            text-align: center;
+            margin-bottom: 12px;
         }
 
         .institucion {
-            text-align: center;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: bold;
-            line-height: 1.5;
+            text-transform: uppercase;
+        }
+
+        .unidad {
+            font-size: 10px;
+            margin-top: 3px;
+            text-transform: uppercase;
         }
 
         .titulo {
-            text-align: center;
-            margin-top: 15px;
-            margin-bottom: 5px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
+            margin-top: 10px;
+            text-transform: uppercase;
         }
 
         .subtitulo {
-            text-align: center;
-            font-size: 11px;
-            margin-bottom: 20px;
+            font-size: 9px;
+            margin-top: 5px;
         }
 
-        table {
+
+        /* ======================================================
+           LINEA DECORATIVA
+        ====================================================== */
+
+        .linea {
+            border-top: 2px solid #0052cc;
+            margin-top: 8px;
+            margin-bottom: 12px;
+        }
+
+
+        /* ======================================================
+           FILTROS
+        ====================================================== */
+
+        .filtros {
+            margin-bottom: 12px;
+            border: 1px solid #999;
+            padding: 7px;
+        }
+
+        .filtros table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        .tabla th,
-        .tabla td {
-            border: 1px solid #444;
-            padding: 7px 5px;
+        .filtros td {
+            padding: 3px 5px;
+            vertical-align: middle;
         }
 
-        .tabla thead th {
-            background-color: #1f4e78;
+        .filtro-label {
+            width: 10%;
+            font-weight: bold;
+        }
+
+        .filtro-valor {
+            width: 40%;
+        }
+
+
+        /* ======================================================
+           TABLA PRINCIPAL
+        ====================================================== */
+
+        .reporte {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+        }
+
+        .reporte thead {
+            display: table-header-group;
+        }
+
+        .reporte tfoot {
+            display: table-row-group;
+        }
+
+        .reporte th {
+            background-color: #0052cc;
             color: white;
+            border: 1px solid #333;
+            padding: 6px 4px;
             text-align: center;
+            font-size: 9px;
             font-weight: bold;
         }
 
-        .tabla tbody td {
+        .reporte td {
+            border: 1px solid #777;
+            padding: 5px 4px;
             text-align: center;
         }
 
-        .tabla tbody td:first-child {
-            text-align: left;
+        .reporte tbody tr {
+            page-break-inside: avoid;
+        }
+
+        .reporte tbody tr:nth-child(even) {
+            background-color: #f4f6f8;
+        }
+
+        .equipo {
+            text-align: left !important;
             font-weight: bold;
+            padding-left: 8px !important;
         }
 
         .total {
-            background-color: #d9eaf7;
             font-weight: bold;
         }
 
-        .total td {
+        .total-general {
+            background-color: #d9e8ff;
             font-weight: bold;
         }
 
-        .fecha {
-            text-align: right;
-            font-size: 9px;
-            margin-bottom: 10px;
+        .total-general td {
+            padding: 6px 4px;
         }
 
-        .firma {
-            margin-top: 50px;
-            width: 100%;
-        }
 
-        .firma td {
+        /* ======================================================
+           MENSAJE SIN RESULTADOS
+        ====================================================== */
+
+        .sin-resultados {
             text-align: center;
-            padding-top: 30px;
+            padding: 12px !important;
+            font-style: italic;
         }
 
-        .linea {
-            border-top: 1px solid #333;
-            width: 220px;
-            margin: auto;
-        }
+
+        /* ======================================================
+           PIE DE PÁGINA
+        ====================================================== */
 
         .footer {
             position: fixed;
-            bottom: -25px;
+            bottom: -20px;
             left: 0;
             right: 0;
             text-align: center;
-            font-size: 8px;
+            font-size: 7px;
             color: #666;
         }
-
     </style>
 
 </head>
 
+
 <body>
 
-    {{-- ENCABEZADO --}}
-    <table class="encabezado">
 
-        <tr>
+    {{-- ==========================================================
+     ENCABEZADO INSTITUCIONAL
+========================================================== --}}
 
-            <td width="20%">
-                @if(file_exists(public_path('assets/assets/img/elalto.jpg')))
-                    <img
-                        src="{{ public_path('img1/elalto.jpg') }}"
-                        class="logo"
-                    >
-                    <img src="{{ public_path('img1/elalto.jpg') }}" >
-                @endif
-            </td>
+    <div class="encabezado">
 
-            <td width="60%" class="institucion">
+        <div class="institucion">
+            GOBIERNO AUTÓNOMO MUNICIPAL DE EL ALTO
+        </div>
 
-                GOBIERNO AUTÓNOMO MUNICIPAL DE EL ALTO<br>
+        <div class="unidad">
+            UNIDAD DE ADMINISTRACIÓN DE SISTEMAS DE INFORMACIÓN
+        </div>
 
-                UNIDAD DE ADMINISTRACIÓN DE SISTEMAS DE INFORMACIÓN<br>
+        <div class="titulo">
+            DETALLE POR ACTIVOS
+        </div>
 
-                ÁREA DE SOPORTE TÉCNICO
+        <div class="subtitulo">
 
-            </td>
+            <strong>Gestión:</strong>
+            {{ $year }}
 
-            <td width="20%"></td>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
 
-        </tr>
+            <strong>Mes:</strong>
 
-    </table>
+            @if($month && $nombreMes)
 
+            {{ $nombreMes }}
 
-    {{-- TÍTULO --}}
+            @else
 
-    <div class="titulo">
-        INFORME DE RESULTADOS DEL MANTENIMIENTO
-    </div>
+            Todos los meses
 
-    <div class="subtitulo">
-        DETALLE POR ACTIVOS - GESTIÓN {{ $year }}
-    </div>
+            @endif
 
-    <div class="fecha">
-        Fecha:
-        {{ now()->format('d/m/Y H:i') }}
+        </div>
+
     </div>
 
 
-    {{-- TABLA --}}
+    <div class="linea"></div>
 
-    <table class="tabla">
+
+    {{-- ==========================================================
+     FILTROS UTILIZADOS
+========================================================== --}}
+
+    <div class="filtros">
+
+        <table>
+
+            <tr>
+
+                <td class="filtro-label">
+                    Año:
+                </td>
+
+                <td class="filtro-valor">
+                    {{ $year }}
+                </td>
+
+                <td class="filtro-label">
+                    Mes:
+                </td>
+
+                <td class="filtro-valor">
+
+                    @if($month && $nombreMes)
+
+                    {{ $nombreMes }}
+
+                    @else
+
+                    Todos los meses
+
+                    @endif
+
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td class="filtro-label">
+                    Equipo:
+                </td>
+
+                <td class="filtro-valor">
+
+                    {{ $equipoFiltro ?: 'Todos los equipos' }}
+
+                </td>
+
+
+                <td class="filtro-label">
+                    Resultado:
+                </td>
+
+                <td class="filtro-valor">
+
+                    @if($resultadoFiltro)
+
+                    {{ ucfirst($resultadoFiltro) }}
+
+                    @else
+
+                    Todos
+
+                    @endif
+
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+
+    {{-- ==========================================================
+     TABLA PRINCIPAL
+========================================================== --}}
+
+    <table class="reporte">
 
         <thead>
 
             <tr>
 
-                <th width="24%">
-                    Equipo
+                <th width="25%">
+                    EQUIPO
                 </th>
 
-                <th>
-                    Devolución
+                <th width="12%">
+                    DEVOLUCIÓN
                 </th>
 
-                <th>
-                    Reposición
+                <th width="12%">
+                    REPOSICIÓN
                 </th>
 
-                <th>
-                    Repliegue
+                <th width="12%">
+                    REPLIEGUE
                 </th>
 
-                <th>
-                    Custodio
+                <th width="12%">
+                    CUSTODIO
                 </th>
 
-                <th>
-                    Baja
+                <th width="12%">
+                    BAJA
                 </th>
 
-                <th>
+                <th width="15%">
                     TOTAL
                 </th>
 
@@ -217,79 +356,96 @@
 
         </thead>
 
+
         <tbody>
 
-            @foreach ($detalle as $modelo => $datos)
+            @forelse($detalle as $modelo => $datos)
 
-                @php
-                    $totalFila = array_sum($datos);
-                @endphp
+            @php
 
-                <tr>
+            $totalFila = array_sum($datos);
 
-                    <td>
-                        {{ strtoupper($modelo) }}
-                    </td>
+            @endphp
 
-                    <td>
-                        {{ $datos['devolucion'] }}
-                    </td>
+            <tr>
 
-                    <td>
-                        {{ $datos['reposicion'] }}
-                    </td>
+                <td class="equipo">
+                    {{ strtoupper($modelo) }}
+                </td>
 
-                    <td>
-                        {{ $datos['repliegue'] }}
-                    </td>
+                <td>
+                    {{ $datos['devolucion'] ?? 0 }}
+                </td>
 
-                    <td>
-                        {{ $datos['custodio'] }}
-                    </td>
+                <td>
+                    {{ $datos['reposicion'] ?? 0 }}
+                </td>
 
-                    <td>
-                        {{ $datos['baja'] }}
-                    </td>
+                <td>
+                    {{ $datos['repliegue'] ?? 0 }}
+                </td>
 
-                    <td>
-                        {{ $totalFila }}
-                    </td>
+                <td>
+                    {{ $datos['custodio'] ?? 0 }}
+                </td>
 
-                </tr>
+                <td>
+                    {{ $datos['baja'] ?? 0 }}
+                </td>
 
-            @endforeach
+                <td class="total">
+                    {{ $totalFila }}
+                </td>
+
+            </tr>
+
+            @empty
+
+            <tr>
+
+                <td colspan="7" class="sin-resultados">
+
+                    No existen registros para los filtros seleccionados.
+
+                </td>
+
+            </tr>
+
+            @endforelse
 
         </tbody>
 
 
-        {{-- TOTAL GENERAL --}}
+        {{-- ======================================================
+         TOTAL GENERAL
+    ======================================================= --}}
 
         <tfoot>
 
-            <tr class="total">
+            <tr class="total-general">
 
                 <td>
                     TOTAL GENERAL
                 </td>
 
                 <td>
-                    {{ $totales['devolucion'] }}
+                    {{ $totales['devolucion'] ?? 0 }}
                 </td>
 
                 <td>
-                    {{ $totales['reposicion'] }}
+                    {{ $totales['reposicion'] ?? 0 }}
                 </td>
 
                 <td>
-                    {{ $totales['repliegue'] }}
+                    {{ $totales['repliegue'] ?? 0 }}
                 </td>
 
                 <td>
-                    {{ $totales['custodio'] }}
+                    {{ $totales['custodio'] ?? 0 }}
                 </td>
 
                 <td>
-                    {{ $totales['baja'] }}
+                    {{ $totales['baja'] ?? 0 }}
                 </td>
 
                 <td>
@@ -301,6 +457,19 @@
         </tfoot>
 
     </table>
+
+
+    {{-- ==========================================================
+     PIE DE PÁGINA
+========================================================== --}}
+
+    <div class="footer">
+
+        Gobierno Autónomo Municipal de El Alto
+        -
+        Unidad de Administración de Sistemas de Información
+
+    </div>
 
 
 </body>

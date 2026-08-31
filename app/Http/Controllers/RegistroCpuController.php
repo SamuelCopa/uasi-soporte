@@ -51,6 +51,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\Correlativo;
 use App\Services\CorrelativoService;
+use App\Models\Termino;
 
 class RegistroCpuController extends Controller
 {
@@ -66,65 +67,78 @@ class RegistroCpuController extends Controller
 
 public function index(Request $request): View
 {
-        $gestionPasada = date('Y') - 1;
+    $gestionPasada = date('Y') - 1;
 
     // Últimos 30 días de la gestión pasada
-        $fechaFinPasada = Carbon::create($gestionPasada, 12, 31); // 31 dic gestión pasada
-        $fechaInicioPasada = $fechaFinPasada->copy()->subDays(29); // últimos 30 días exactos
+    $fechaFinPasada = Carbon::create($gestionPasada, 12, 31);
+    $fechaInicioPasada = $fechaFinPasada->copy()->subDays(29);
 
-    // Consulta: últimos 30 días gestión pasada OR registros de la gestión actual
-        $registroCpus = RegistroCpu::where(function ($query) use ($fechaInicioPasada, $fechaFinPasada) {
+    // Últimos 30 días gestión pasada OR registros de la gestión actual
+    $registroCpus = RegistroCpu::where(function ($query) use ($fechaInicioPasada, $fechaFinPasada) {
             $query->whereBetween('fecha', [$fechaInicioPasada, $fechaFinPasada])
-            ->where('estado_id', '!=', 5);
+                  ->where('estado_id', '!=', 5);
         })
         ->orWhereYear('fecha', date('Y'))
         ->orderByDesc('fecha')
         ->paginate();
 
     $catalogos = [
-        'capdisco'       => CapacidadDisco::class,
-        'capram'         => CapacidadRam::class,
-        'captvideo'      => CapacidadTvideo::class,
-        'colorcase'      => fn() => ColorCase::orderBy('color', 'asc')->get(),
-        'dependencia'    => fn() => Dependencia::orderBy('dependencias', 'asc')->get(),
-        'estado'         => Estado::class,
-        'genprocesador'  => GenProcesador::class,
-        'marcacase'      => fn() => MarcaCase::orderBy('marca', 'asc')->get(),
-        'marcadisco'     => fn() => MarcaDisco::orderBy('marca', 'asc')->get(),
-        'marcafuente'    => MarcaFuente::class,
-        'marcalectorcd'  => MarcaLectorcd::class,
-        'marcaprocesador'=> MarcaProcesador::class,
-        'marcaram'       => fn() =>MarcaRam::orderBy('marca', 'asc')->get(),
-        'marcatmadre'    => fn() => MarcaTmadre::orderBy('marca', 'asc')->get(),
-        'modelotmadre'   => fn() => ModeloTmadre::orderBy('modelo', 'asc')->get(),
-        'marcatred'      => fn() => MarcaTred::orderBy('marca', 'asc')->get(),
-        'marcatvideo'    => fn() => MarcaTvideo::orderBy('marca', 'asc')->get(),
-        'marcatwifi'     => fn() => MarcaTwifi::orderBy('marca', 'asc')->get(),
-        'modelowifi'     => fn() =>  ModeloWifi::orderBy('modelo', 'asc')->get(),
-        'disipadorram'   => DisipadorRam::class,
-        'modprocesador'  => ModeloProcesador::class,
-        'tiporam'        => TipoRam::class,
-        'modelotred'     => fn() => ModeloTred::orderBy('modelo', 'asc')->get(),
-        'cantidadram'    => CantidadRam::class,
-        'potenciafuente' => PotenciaFuente::class,
-        'tipodisco'      => TipoDisco::class,
-        'tipotvideo'     => TipoTvideo::class,
-        'funcionario'    => Funcionario::class,
+        'capdisco'        => CapacidadDisco::class,
+        'capram'          => CapacidadRam::class,
+        'captvideo'       => CapacidadTvideo::class,
+        'colorcase'       => fn() => ColorCase::orderBy('color', 'asc')->get(),
+        'dependencia'     => fn() => Dependencia::orderBy('dependencias', 'asc')->get(),
+        'estado'          => Estado::class,
+        'genprocesador'   => GenProcesador::class,
+        'marcacase'       => fn() => MarcaCase::orderBy('marca', 'asc')->get(),
+        'marcadisco'      => fn() => MarcaDisco::orderBy('marca', 'asc')->get(),
+        'marcafuente'     => MarcaFuente::class,
+        'marcalectorcd'   => MarcaLectorcd::class,
+        'marcaprocesador' => MarcaProcesador::class,
+        'marcaram'        => fn() => MarcaRam::orderBy('marca', 'asc')->get(),
+        'marcatmadre'     => fn() => MarcaTmadre::orderBy('marca', 'asc')->get(),
+        'modelotmadre'    => fn() => ModeloTmadre::orderBy('modelo', 'asc')->get(),
+        'marcatred'       => fn() => MarcaTred::orderBy('marca', 'asc')->get(),
+        'marcatvideo'     => fn() => MarcaTvideo::orderBy('marca', 'asc')->get(),
+        'marcatwifi'      => fn() => MarcaTwifi::orderBy('marca', 'asc')->get(),
+        'modelowifi'      => fn() => ModeloWifi::orderBy('modelo', 'asc')->get(),
+        'disipadorram'    => DisipadorRam::class,
+        'modprocesador'   => ModeloProcesador::class,
+        'tiporam'         => TipoRam::class,
+        'modelotred'      => fn() => ModeloTred::orderBy('modelo', 'asc')->get(),
+        'cantidadram'     => CantidadRam::class,
+        'potenciafuente'  => PotenciaFuente::class,
+        'tipodisco'       => TipoDisco::class,
+        'tipotvideo'      => TipoTvideo::class,
+        'funcionario'     => Funcionario::class,
     ];
 
-    $data = collect($catalogos)->mapWithKeys(function ($class, $key) {
-        return [$key => is_callable($class) ? $class() : $class::all()];
-    }); //sin ->toArray()
+    // Obtener términos y condiciones
+    $termino = Termino::first();
 
-    $data['users'] = User::whereHas('roles', fn($q) => $q->where('name', 'Tecnico'))
+    $data = collect($catalogos)->mapWithKeys(function ($class, $key) {
+        return [
+            $key => is_callable($class)
+                ? $class()
+                : $class::all()
+        ];
+    });
+
+    $data['users'] = User::whereHas('roles', fn($q) =>
+            $q->where('name', 'Tecnico')
+        )
         ->where('id_estadousuario', 1)
         ->orderBy('paterno', 'asc')
         ->get();
 
     $data['registroCpus'] = $registroCpus;
-    $data['i'] = ($request->input('page', 1) - 1) * $registroCpus->perPage();
 
-    // Importante: convertir a array solo la capa superior
+    // Enviar términos a la vista
+    $data['termino'] = $termino;
+
+    $data['i'] = ($request->input('page', 1) - 1)
+        * $registroCpus->perPage();
+
     return view('registro-cpu.index', $data->all());
 }
 

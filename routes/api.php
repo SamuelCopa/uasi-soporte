@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\MonitorController;
 use App\Http\Controllers\Api\RatonController;
 use App\Http\Controllers\Api\FuncionarioController;
 use App\Http\Controllers\Api\DependenciaController;
+use App\Http\Controllers\Api\UserController;
 
 
 
@@ -231,5 +232,21 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/funcionarios', [FuncionarioController::class, 'index']);
     Route::get('/funcionarios/{id}', [FuncionarioController::class, 'show']);
+
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/usuario', function (Request $request) {
+        return response()->json([
+            'success' => true,
+            'user' => $request->user()
+        ]);
+    });
+
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
 
 });
