@@ -190,8 +190,7 @@ $(document).ready(function () {
 </script>
 <script>
 </script>
-<!-- Tailwind CSS -->
-<!-- @vite('resources/css/app.css') -->
+
 
 <!-- Alpine.js -->
 <script src="//unpkg.com/alpinejs" defer></script>

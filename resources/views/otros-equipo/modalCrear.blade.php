@@ -3,7 +3,6 @@
     <div class="modal-dialog modal-xl">
 
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-
             {{-- ENCABEZADO --}}
             <div class="modal-header bg-primary text-white border-0 py-3">
                 <h4>
@@ -11,31 +10,19 @@
                     <span id="nombreTipoEquipo" class="ml-2"></span> 
                     <input type="text" id="nombre_tipo_equipo_a" class="form-control" readonly>
                 </h4>
-
                 <button
                     type="button"
                     class="btn-close bg-primary"
                     data-dismiss="modal"
-                    aria-label="Cerrar"
-                >
+                    aria-label="Cerrar" >
                     <i class="fas fa-times"></i>
                 </button>
-
             </div>
-
-
             <section class="content container-fluid">
-
                 <div class="card">
-
                     <div class="col-md-12">
-
                         {{-- FORMULARIO --}}
-                        <form
-                            method="POST"
-                            action="{{ route('otros-equipos.store') }}"
-                            autocomplete="off"
-                        >
+                        <form method="POST" action="{{ route('otros-equipos.store') }}" autocomplete="off" >
 
                             @csrf
 
@@ -227,45 +214,7 @@
 
                                     {{-- GRADO / APELLIDOS / NOMBRE --}}
 
-                                    <div class="fila-4">
-
-
-                                        {{-- GRADO --}}
-
-                                        <div class="div title">
-
-                                            <label
-                                                for="grado_academico"
-                                                class="form-label"
-                                            >
-                                                GRADO ACADEMICO:
-                                                <span class="required">*</span>
-                                            </label>
-
-                                            <select
-                                                name="grado_academico"
-                                                class="form-control"
-                                                required
-                                            >
-
-                                                <option value="" disabled selected>
-                                                    SELECCIONE UNA OPCION
-                                                </option>
-
-                                                <option value="Abg.">ABG.</option>
-                                                <option value="Arq.">ARQ.</option>
-                                                <option value="Dr.">DR.</option>
-                                                <option value="Dra.">DRA.</option>
-                                                <option value="Ing.">ING.</option>
-                                                <option value="Lic.">LIC.</option>
-                                                <option value="Tec.">TEC.</option>
-                                                <option value="Sr.">SR.</option>
-                                                <option value="Sra.">SRA.</option>
-
-                                            </select>
-
-                                        </div>
-
+                                    <div class="fila-3">
 
                                         {{-- PATERNO --}}
 

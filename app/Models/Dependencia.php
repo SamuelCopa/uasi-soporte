@@ -30,7 +30,15 @@ class Dependencia extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['dependencias'];
+    protected $fillable = [
+    'dependencias',
+    'management_id',
+    'name',
+    'correlative',
+    'dependence',
+    'status',
+    'sort_order',
+        ];
 
 
     /**

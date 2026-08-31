@@ -75,8 +75,7 @@
 
                     </div>
                     <div class="fila-1">
-                      <div class="form-group mb-3">
-                          <label>{{ __('ROL') }}</label>
+
 
 <div class="form-group mb-3">
     <label>{{ __('ROL') }}</label>

@@ -8,12 +8,15 @@
     left: 0;
     width: 100%;
     height: 78px;
-    background: rgba(255,255,255,.97);
+    background: rgba(255, 255, 255, 0.97);
     border-bottom: 1px solid #e5e7eb;
-    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     z-index: 99999;
 }
-/* CONTENEDOR */
+
+/* =========================================================
+   CONTENEDOR
+   ========================================================= */
 
 .gamea-nav-container {
     width: 100%;
@@ -21,9 +24,12 @@
     height: 78px;
     margin: 0 auto;
     padding: 0 25px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    box-sizing: border-box;
 }
 
 /* =========================================================
@@ -34,6 +40,9 @@
     display: flex !important;
     align-items: center;
     gap: 10px;
+
+    min-width: 0;
+
     text-decoration: none !important;
     visibility: visible !important;
     opacity: 1 !important;
@@ -42,6 +51,9 @@
 .gamea-logo {
     width: 50px;
     height: 50px;
+
+    flex-shrink: 0;
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -53,23 +65,34 @@
     object-fit: contain;
 }
 
+/* =========================================================
+   TEXTO DE MARCA
+   ========================================================= */
+
 .gamea-brand-text {
     display: flex;
     flex-direction: column;
     line-height: 1;
+
+    min-width: 0;
 }
 
 .gamea-brand-text strong {
     color: #0052cc;
     font-size: 19px;
     font-weight: 800;
+
+    white-space: nowrap;
 }
 
 .gamea-brand-text span {
     margin-top: 5px;
+
     font-size: 9px;
     font-weight: 700;
     letter-spacing: 2.5px;
+
+    white-space: nowrap;
 }
 
 /* =========================================================
@@ -80,6 +103,9 @@
     display: flex !important;
     align-items: center;
     gap: 5px;
+
+    flex-shrink: 0;
+
     visibility: visible !important;
     opacity: 1 !important;
 }
@@ -92,20 +118,28 @@
     display: flex !important;
     align-items: center;
     gap: 8px;
+
     padding: 11px 14px;
     margin: 0;
+
     color: #1164d7 !important;
     background: transparent !important;
+
     border: none !important;
     border-radius: 9px;
+
     font-family: inherit;
     font-size: 14px;
     font-weight: 600;
+
     text-decoration: none !important;
+
     cursor: pointer;
+
     visibility: visible !important;
     opacity: 1 !important;
-    transition: all .25s ease;
+
+    transition: all 0.25s ease;
 }
 
 .gamea-link i {
@@ -126,7 +160,9 @@
 .gamea-divider {
     width: 1px;
     height: 30px;
+
     margin: 0 10px;
+
     background: #e2e8f0;
 }
 
@@ -139,23 +175,37 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
+
     padding: 11px 20px;
+
     color: #fff !important;
-    background: linear-gradient(135deg,#0052cc,#2684ff) !important;
+    background: linear-gradient(
+        135deg,
+        #0052cc,
+        #2684ff
+    ) !important;
+
     border-radius: 9px;
+
     font-size: 14px;
     font-weight: 700;
+
     text-decoration: none !important;
-    box-shadow: 0 5px 15px rgba(0,82,204,.25);
+
+    box-shadow: 0 5px 15px rgba(0, 82, 204, 0.25);
+
     visibility: visible !important;
     opacity: 1 !important;
-    transition: all .25s ease;
+
+    transition: all 0.25s ease;
 }
 
 .gamea-login:hover {
     color: white !important;
+
     transform: translateY(-2px);
-    box-shadow: 0 8px 22px rgba(0,82,204,.35);
+
+    box-shadow: 0 8px 22px rgba(0, 82, 204, 0.35);
 }
 
 /* =========================================================
@@ -164,13 +214,23 @@
 
 .gamea-mobile-button {
     display: none;
+
     width: 44px;
     height: 44px;
+
+    flex-shrink: 0;
+
+    align-items: center;
+    justify-content: center;
+
     border: none;
     border-radius: 9px;
+
     background: #eef5ff;
     color: #0052cc;
+
     font-size: 18px;
+
     cursor: pointer;
 }
 
@@ -180,36 +240,60 @@
 
 .gamea-mobile-menu {
     display: none;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
     padding: 15px 20px 20px;
+
     background: #fff;
+
     border-top: 1px solid #e5e7eb;
-    box-shadow: 0 10px 25px rgba(0,0,0,.10);
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.10);
 }
 
 .gamea-mobile-menu.active {
     display: block !important;
 }
 
+/* =========================================================
+   ENLACES MÓVILES
+   ========================================================= */
+
 .gamea-mobile-link {
     width: 100%;
+
     display: flex;
     align-items: center;
+
     gap: 12px;
+
     padding: 13px 15px;
     margin-bottom: 5px;
+
+    box-sizing: border-box;
+
     color: #146ce8 !important;
     background: transparent;
+
     border: none;
     border-radius: 9px;
+
     font-size: 14px;
     font-weight: 600;
+
     text-decoration: none !important;
     text-align: left;
+
     cursor: pointer;
 }
 
 .gamea-mobile-link i {
     width: 25px;
+    flex-shrink: 0;
+
     color: #0052cc;
 }
 
@@ -218,53 +302,204 @@
     color: #0052cc !important;
 }
 
+/* =========================================================
+   LOGIN MÓVIL
+   ========================================================= */
+
 .gamea-mobile-login {
     width: 100%;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     gap: 8px;
+
     padding: 13px;
     margin-top: 8px;
+
+    box-sizing: border-box;
+
     color: #fff !important;
-    background: linear-gradient(135deg,#0052cc, #2684ff);
+
+    background: linear-gradient(
+        135deg,
+        #0052cc,
+        #2684ff
+    );
+
     border-radius: 9px;
+
     font-size: 14px;
     font-weight: 700;
+
     text-decoration: none !important;
 }
 
 /* =========================================================
-   RESPONSIVE
+   TABLET
    ========================================================= */
 
 @media (max-width: 1000px) {
-    .gamea-menu {
-        display: none !important;
-    }
-    .gamea-mobile-button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-}
 
-@media (max-width: 600px) {
-    .gamea-nav-container {
-        height: 70px;
-        padding: 0 15px;
-    }
     .gamea-navbar {
         height: 70px;
     }
-    .gamea-logo {
-        width: 42px;
-        height: 42px;
-    }
-    .gamea-brand-text strong {
-        font-size: 16px;
+
+    .gamea-nav-container {
+        height: 70px;
+        padding: 0 20px;
     }
 
+    /* Ocultar menú de escritorio */
+    .gamea-menu {
+        display: none !important;
+    }
+
+    /* Mostrar botón hamburguesa */
+    .gamea-mobile-button {
+        display: flex !important;
+    }
+
+    .gamea-logo {
+        width: 44px;
+        height: 44px;
+    }
+
+    .gamea-brand-text strong {
+        font-size: 17px;
+    }
+}
+
+
+/* =========================================================
+   CELULAR
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .gamea-navbar {
+        height: 64px;
+    }
+
+    .gamea-nav-container {
+        width: 100%;
+        height: 64px;
+
+        padding: 0 12px;
+    }
+
+    /* Marca */
+    .gamea-brand {
+        gap: 8px;
+
+        max-width: calc(100% - 52px);
+    }
+
+    /* Logo */
+    .gamea-logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    /* Texto */
+    .gamea-brand-text {
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .gamea-brand-text strong {
+        font-size: 15px;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .gamea-brand-text span {
+        margin-top: 4px;
+
+        font-size: 7px;
+        letter-spacing: 1.5px;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Botón */
+    .gamea-mobile-button {
+        width: 40px;
+        height: 40px;
+
+        font-size: 17px;
+    }
+
+    /* Menú móvil */
+    .gamea-mobile-menu {
+        padding: 12px;
+    }
+
+    .gamea-mobile-link {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .gamea-mobile-login {
+        padding: 12px;
+    }
+
+    /* Espacio para navbar fijo */
+    body {
+        padding-top: 64px;
+    }
+}
+
+
+/* =========================================================
+   CELULARES PEQUEÑOS
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .gamea-nav-container {
+        padding: 0 10px;
+    }
+
+    .gamea-logo {
+        width: 36px;
+        height: 36px;
+    }
+
+    .gamea-brand {
+        gap: 7px;
+    }
+
+    .gamea-brand-text strong {
+        font-size: 13px;
+    }
+
+    .gamea-brand-text span {
+        font-size: 6px;
+        letter-spacing: 1px;
+    }
+
+    .gamea-mobile-button {
+        width: 36px;
+        height: 36px;
+
+        font-size: 16px;
+    }
+}
+
+
+/* =========================================================
+   EVITAR DESBORDAMIENTO HORIZONTAL
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 body {

@@ -11,7 +11,7 @@ $(document).ready(function() {
                     data: { query: query },
                     success: function(data) {
                         // Limpiar los inputs antes de agregar nuevos resultados
-                        $('#grado_academico').val('');
+                        // $('#grado_academico').val('');
                         $('#nombre').val('');
                         $('#paterno').val('');
                         $('#materno').val('');
@@ -26,7 +26,7 @@ $(document).ready(function() {
                         if (data.length > 0) {
                             $('#nombre').val(data[0].nombre);
                             $('#nombre').val(
-                                data[0].grado_academico + ' ' +
+                                // data[0].grado_academico + ' ' +
                                 data[0].nombre + ' ' +
                                 data[0].paterno + ' ' +
                                 data[0].materno

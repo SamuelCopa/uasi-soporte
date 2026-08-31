@@ -57,22 +57,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="fila-4">
-                        <div class="div title">
-                            <label for="grado_academico" class="form-label">{{ __('GRADO ACADEMICO:') }}<span class="required">*</span></label>
-                            <select name="grado_academico" class="form-control">
-                                <option value="" disabled {{ 'selected' }}>SELECCIONE UNA OPCION</option>
-                                <option value="Abg." >ABG.</option>
-                                <option value="Arq.">ARQ.</option>
-                                <option value="Dr.">DR.</option>
-                                <option value="Dra.">DRA.</option>
-                                <option value="Ing.">ING.</option>
-                                <option value="Lic.">LIC.</option>
-                                <option value="Tec.">TEC.</option>
-                                <option value="Sr.">SR.</option>
-                                <option value="Sra.">SRA.</option>
-                            </select>
-                        </div>
+                    <div class="fila-3">
                         <div class="div title">
                             <label for="paterno" class="form-label">{{ __('APELLIDO PATERNO') }}<span class="required">*</span></label>
                             <div class="input-group">

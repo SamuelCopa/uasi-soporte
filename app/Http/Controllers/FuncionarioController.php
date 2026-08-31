@@ -15,14 +15,15 @@ class FuncionarioController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View
-    {
-        $funcionarios = Funcionario::paginate();
-        $dependencia = Dependencia::orderBy('dependencias', 'asc')->get();
+public function index(Request $request): View
+{
+    $funcionarios = Funcionario::paginate();
+    
+    $dependencia = Dependencia::orderBy('dependencias', 'asc')->get();
 
-        return view('funcionario.index', compact('funcionarios', 'dependencia'))
-            ->with('i', ($request->input('page', 1) - 1) * $funcionarios->perPage());
-    }
+    return view('funcionario.index', compact('funcionarios', 'dependencia'))
+        ->with('i', ($request->input('page', 1) - 1) * $funcionarios->perPage());
+}
 
     /**
      * Show the form for creating a new resource.

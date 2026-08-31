@@ -121,7 +121,7 @@
 <script>
 Swal.fire({
     icon: "{{ [1=>'info',2=>'success',3=>'warning',4=>'success'][$codigo->estado_id] }}",
-    title: "{{ ['RECEPCIONADO','EN PROCESO','APERSONARSE CON EL TÉCNICO','CONCLUIDO'][$codigo->estado_id - 1] }}",
+    title: "{{ ['RECEPCIONADO','RECEPCIONADO','APERSONARSE CON EL TÉCNICO','CONCLUIDO'][$codigo->estado_id - 1] }}",
     text: "{{ [
         'El equipo ha sido registrado correctamente.',
         'El mantenimiento de su equipo se encuentra en proceso.',

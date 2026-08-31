@@ -233,6 +233,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/funcionarios', [FuncionarioController::class, 'index']);
     Route::get('/funcionarios/{id}', [FuncionarioController::class, 'show']);
 
+    // POST para registrar un funcionario
+    Route::post('/funcionarios', [FuncionarioController::class, 'store']);
+
 });
 
 Route::middleware('auth:sanctum')->group(function () {

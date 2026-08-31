@@ -23,8 +23,9 @@ $(document).ready(function() {
                         $('#id-selectedC').val('');
                         // Mostrar el primer resultado en los inputs
                         if (data.length > 0) {
-                            $('select[name="grado_academico"]').val(data[0].grado_academico);
+                            // $('select[name="grado_academico"]').val(data[0].grado_academico);
                             $('#nombre').val(data[0].nombre);
+                            $('#grado_academico').val(data[0].grado_academico);
                             $('#paterno').val(data[0].paterno);
                             $('#materno').val(data[0].materno);
                             $('#celular').val(data[0].celular);

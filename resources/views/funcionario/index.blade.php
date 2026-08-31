@@ -40,6 +40,7 @@
 									<th >CELULAR</th>
 									<th >CORREO ELECTRÓNICO</th>
 									<th >CARGO</th>
+									<th >DEPENDENCIA</th>
                                     <th>OPCIONES</th>
                                     </tr>
                                 </thead>
@@ -56,17 +57,17 @@
 										<td >{{ $funcionario->celular }}</td>
 										<td >{{ $funcionario->email }}</td>
 										<td >{{ $funcionario->cargo }}</td>
-
-                                            <td>
-                                                <form action="{{ route('funcionarios.destroy', $funcionario->id) }}" method="POST" class="formEliminar">
-                                                    {{-- <a class="btn btn-sm btn-primary " href="{{ route('funcionarios.show', $funcionario->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('VER') }}</a> --}}
-                                                    {{-- <a class="btn btn-sm btn-success" href="{{ route('funcionarios.edit', $funcionario->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('EDITAR') }}</a> --}}
-                                                    <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#editarf{{ $funcionario->id }}"><i class="fa fa-fw fa-edit" ></i> {{ __('EDITAR') }}</button>
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" ><i class="fa fa-fw fa-trash"></i> {{ __('ELIMINAR') }}</button>
-                                                </form>
-                                            </td>
+                                        <td >{{ $funcionario->Dependencia?->dependencias }}</td>
+                                        <td>
+                                            <form action="{{ route('funcionarios.destroy', $funcionario->id) }}" method="POST" class="formEliminar">
+                                                {{-- <a class="btn btn-sm btn-primary " href="{{ route('funcionarios.show', $funcionario->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('VER') }}</a> --}}
+                                                {{-- <a class="btn btn-sm btn-success" href="{{ route('funcionarios.edit', $funcionario->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('EDITAR') }}</a> --}}
+                                                <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#editarf{{ $funcionario->id }}"><i class="fa fa-fw fa-edit" ></i> {{ __('EDITAR') }}</button>
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm" ><i class="fa fa-fw fa-trash"></i> {{ __('ELIMINAR') }}</button>
+                                            </form>
+                                        </td>
                                         </tr>
                                             <!--Ventana Modal para Actualizar--->
                                             @include('funcionario.modalEdit')
@@ -83,6 +84,7 @@
 									<th >CELULAR</th>
 									<th >CORREO ELECTRÓNICO</th>
 									<th >CARGO</th>
+                                    <th >DEPENDENCIA</th>
                                     <th>OPCIONES</th>
                                     </tr>
                                 </tfoot>
