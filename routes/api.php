@@ -236,11 +236,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // POST para registrar un funcionario
 
 });
-Route::middleware('api.token')->group(function () {
+
+// Route::middleware('api.token')->group(function () {
 
     Route::post('/funcionarios', [FuncionarioController::class,'store']);
 
-});
+// });
 
 Route::middleware('auth:sanctum')->group(function () {
 

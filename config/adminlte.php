@@ -691,14 +691,14 @@ return [
             'icon' => 'fa fa-fw fa-cog',
             'can' => 'tecnico',
         ],
-        [
-            'text' => 'REPORTES',
-            'classes' => 'text-blue text-bold',
-            'url' => '/reportes',
-            'icon' => 'fa fa-fw fa-file',
-            'can' => 'tecnico',
-            'icon_color' => '',
-        ],
+        // [
+        //     'text' => 'REPORTES',
+        //     'classes' => 'text-blue text-bold',
+        //     'url' => '/reportes',
+        //     'icon' => 'fa fa-fw fa-file',
+        //     'can' => 'tecnico',
+        //     'icon_color' => '',
+        // ],
         [
             'text' => 'OTROS',
             // 'classes' => 'text-orange text-bold',

@@ -17,6 +17,7 @@ use App\Models\Servicio;
  * @property $nombre
  * @property $ci
  * @property $expedido
+ * @property $ap_casada
  * @property $cargo
  * @property $celular
  * @property $dependencia_id
@@ -39,7 +40,7 @@ class Funcionario extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['grado_academico', 'paterno', 'materno', 'nombre', 'ci', 'expedido', 'cargo', 'email', 'celular','dependencia_id'];
+    protected $fillable = ['grado_academico', 'paterno', 'materno', 'nombre', 'ap_casada', 'ci', 'expedido', 'cargo', 'email', 'celular','dependencia_id'];
 
 
     /**
@@ -94,6 +95,14 @@ class Funcionario extends Model
         return $this->belongsTo(\App\Models\Dependencia::class, 'dependencia_id', 'id');
     }
 
+        protected function grado_academico(): Attribute
+    {
+        return new Attribute(
+            set: function ($grado_academico) {
+                return empty($grado_academico) ? null : mb_strtoupper($grado_academico);
+            }
+        );
+    }
         protected function paterno(): Attribute
     {
         return new Attribute(
@@ -115,6 +124,14 @@ class Funcionario extends Model
         return new Attribute(
             set: function ($nombre) {
                 return empty($nombre) ? null : mb_strtoupper($nombre);
+            }
+        );
+    }
+        protected function ap_casada(): Attribute
+    {
+        return new Attribute(
+            set: function ($ap_casada) {
+                return empty($ap_casada) ? null : mb_strtoupper($ap_casada);
             }
         );
     }
