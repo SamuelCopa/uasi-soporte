@@ -232,15 +232,9 @@ Route::get('/asignaciones/asistencia', [TecnicoController::class, 'asignacionesA
 Route::put('/asignacion/{id}/atender', [ServicioController::class, 'atender'])->name('asignacion.atender')->middleware('auth');
 
 
-Route::get('/evaluar/{token}', [TecnicoController::class, 'evaluar'])->name('asignacion.evaluar');
-
-
 Route::get('/evaluar', [TecnicoController::class, 'buscarEvaluacion'])->name('evaluacion.buscar');
-
 Route::post('/evaluar', [TecnicoController::class, 'mostrarEvaluacion'])->name('evaluacion.mostrar');
-
 Route::get('/evaluar/{id}', [TecnicoController::class, 'evaluar'])->name('asignacion.evaluar');
-
 Route::post('/evaluar/guardar', [TecnicoController::class, 'guardarEvaluacion'])->name('evaluacion.guardar');
 
 //---------------------------------
