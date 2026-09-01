@@ -40,5 +40,9 @@ return [
     'chat_id'   => env('TELEGRAM_CHAT_ID'),
 ],
 
+'funcionarios_api' => [
+    'token' => env('FUNCIONARIOS_API_TOKEN'),
+],
+
 
 ];

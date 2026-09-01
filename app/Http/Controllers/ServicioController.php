@@ -297,17 +297,25 @@ public function reporteServicioPdf(Request $request)
         ]);
     }
 
-    public function updateTecnico(Request $request, $id){
-
+public function updateTecnico(Request $request, $id)
+{
     $equipo = Servicio::findOrFail($id);
+
+    // Técnico asignado
     $equipo->user_id = $request->input('user_id');
+
+    // Fecha de asignación
     $equipo->fecha_asignacion = $request->input('fecha_asignacion');
+
+    // Usuario que realizó la asignación
+    $equipo->asignado_por = auth()->id();
+
     $equipo->save();
 
     return Redirect::route('servicios.index')
-        ->with('success', 'ASIGNADO CORRECTAMENTE')   
-        ->with('icono', 'success');   
-    }
+        ->with('success', 'ASIGNADO CORRECTAMENTE')
+        ->with('icono', 'success');
+}
 
 public function atender(Request $request, $id)
 {

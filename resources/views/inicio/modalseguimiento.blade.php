@@ -1,6 +1,6 @@
 <div class="modal fade" id="modalSeguimiento" tabindex="-1" aria-hidden="true">
 
-    <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down custom-modal-width">
+   <div class="modal-dialog modal-dialog-centered custom-modal-width">
 
         <div class="modal-content overflow-hidden border-0 rounded-2xl shadow-2xl">
 
@@ -9,11 +9,11 @@
 
                 <!-- PANEL IZQUIERDO INSTITUCIONAL -->
 
-                    <div class="w-full md:w-1/2  bg-gradient-to-br
-              from-violet-700
-              via-purple-800
-              to-indigo-900
-              text-white p-10 text-white p-8 flex flex-col justify-between">
+<div class="panel-institucional w-full md:w-1/2 bg-gradient-to-br
+    from-violet-700
+    via-purple-800
+    to-indigo-900
+    text-white p-8 flex flex-col justify-between">
 
                     <aside class="hidden md:flex flex-col justify-center items-center  bg-gradient-to-br
               from-violet-700
@@ -165,61 +165,7 @@
 </div>
 
 
-<style>
-.custom-modal-width {
-    max-width: 1050px;
-    width: 95%;
-}
 
-
-#modalLogin .modal-content {
-    min-height: 550px;
-    max-height: 90vh;
-    overflow: hidden;
-    border-radius: 16px;
-}
-
-#modalLogin .modal-body {
-    padding: 0;
-}
-
-
-.imagen-titulo {
-    text-align: center;
-}
-
-.imagen-titulo img {
-    width: 60px;
-    max-width: 100%;
-    height: auto;
-    opacity: 0.9;
-    transition: all 0.2s ease;
-}
-
-.imagen-titulo img:hover {
-    transform: scale(1.05);
-}
-
-select,
-input{
-
-    font-size:.95rem;
-
-}
-
-select:focus,
-input:focus{
-
-    box-shadow:0 0 0 .25rem rgba(124,58,237,.15);
-
-}
-
-button{
-
-    letter-spacing:.3px;
-
-}
-</style>
 
 <script>
 const input = document.getElementById('input-imagen');
@@ -236,4 +182,7 @@ input.addEventListener('blur', () => {
         popover.classList.add('hidden');
     }, 200);
 });
+
 </script>
+
+

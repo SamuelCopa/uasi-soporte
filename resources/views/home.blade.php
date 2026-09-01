@@ -15,16 +15,17 @@
         </div>
 
         <div class="header-actions">
-                <a href="{{ route('equipos.reporte') }}" class="btn-header">
-                    <i class="fas fa-chart-line"></i>
-                    Reportes
-                </a>
+
 
         @if(auth()->check() && auth()->user()->hasAnyRole([
             'Administrador',
             'SuperAdministrador'
         ]))
         <div class="header-actions">
+                <a href="{{ route('equipos.reporte') }}" class="btn-header">
+                    <i class="fas fa-chart-line"></i>
+                    Reportes
+                </a>
                 <a href="{{ route('resultado') }}" class="btn-header">
                     <i class="fas fa-chart-line"></i>
                     Ver Resultados del mantenimiento

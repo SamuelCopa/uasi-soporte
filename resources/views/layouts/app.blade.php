@@ -7,7 +7,54 @@
     {{ config('adminlte.title') }}
     @hasSection('subtitle') | @yield('subtitle') @endif
 @stop
+@push('css')
+<style type="text/css">
 
+
+</style>
+
+<style>
+    .dropdown-item i {
+    margin-right: 5px;
+}
+</style>
+<!-- Opcional: Bootstrap Icons (para íconos como bi-person-gear) -->
+<!-- Bootstrap Icons (deja SOLO una versión) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
+
+<!-- Ionicons -->
+<link rel="stylesheet" href="plugins/Ionicons/css/ionicons.min.css">
+ <link rel="stylesheet" href="{{ asset('estilos/usermenu.css') }}?v={{ time() }}">
+
+<!-- Tus estilos personalizados (al final SIEMPRE) -->
+<link rel="stylesheet" href="{{ asset('estilos/estilos.css') }}">
+<link rel="stylesheet" href="{{ asset('estilos/estilos2.css') }}">
+<link rel="stylesheet" href="{{ asset('estilos/dark.css') }}">
+<link rel="stylesheet" href="{{ asset('estilos/tabla.css') }}">
+<link rel="stylesheet" href="{{ asset('estilos/main.css') }}">
+<link rel="stylesheet" href="{{ asset('estilos/botones.css') }}">
+<link rel="stylesheet" href="{{ asset('estilos/headfijo.css') }}">
+<link rel="stylesheet" href="{{ asset('estilos/sidebar.css') }}">
+<link rel="stylesheet" href="{{ asset('estilos/header.css') }}">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+@endpush
+@section('content_header')
+    @hasSection('content_header_title')
+
+        <h1 class="text-muted">
+            @yield('content_header_title')
+
+            @hasSection('content_header_subtitle')
+                <small class="text-dark">
+                    <i class="fas fa-xs fa-angle-right text-muted"></i>
+                    @yield('content_header_subtitle')
+                </small>
+            @endif
+        </h1>
+    @endif
 {{-- Extend and customize the page content header --}}
 
 @section('content_header')
@@ -134,7 +181,6 @@ $(document).ready(function () {
 });
 </script>
 
-
 @if (session()->has('success'))
 <script>
     Swal.fire({
@@ -200,42 +246,3 @@ $(document).ready(function () {
 @endpush
 
 {{-- Add common CSS customizations --}}
-
-@push('css')
-<style type="text/css">
-
-
-</style>
-
-<style>
-    .dropdown-item i {
-    margin-right: 5px;
-}
-</style>
-<!-- Opcional: Bootstrap Icons (para íconos como bi-person-gear) -->
-<!-- Bootstrap Icons (deja SOLO una versión) -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
-<!-- Font Awesome (AdminLTE lo usa) -->
-<link rel="stylesheet" href="plugins/font-awesome/css/font-awesome.min.css">
-
-<!-- Ionicons -->
-<link rel="stylesheet" href="plugins/Ionicons/css/ionicons.min.css">
-
-<!-- AdminLTE -->
-<link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
-
-<!-- Tus estilos personalizados (al final SIEMPRE) -->
-<link rel="stylesheet" href="{{ asset('estilos/estilos.css') }}">
-<link rel="stylesheet" href="{{ asset('estilos/estilos2.css') }}">
-<link rel="stylesheet" href="{{ asset('estilos/dark.css') }}">
-<link rel="stylesheet" href="{{ asset('estilos/tabla.css') }}">
-<link rel="stylesheet" href="{{ asset('estilos/main.css') }}">
-<link rel="stylesheet" href="{{ asset('estilos/botones.css') }}">
-<link rel="stylesheet" href="{{ asset('estilos/headfijo.css') }}">
-<link rel="stylesheet" href="{{ asset('estilos/sidebar.css') }}">
-<link rel="stylesheet" href="{{ asset('estilos/header.css') }}">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-
-@endpush

@@ -20,40 +20,75 @@
         </h3>
     </div>
 
-<form
-    action="{{ route('documentos.store') }}"
-    method="POST"
-    enctype="multipart/form-data"
->
-    @csrf
-
-    <input
-        type="text"
-        name="titulo"
-        class="form-control"
-        required
+    <form
+        action="{{ route('terminos.update') }}"
+        method="POST"
     >
+        @csrf
+        @method('PUT')
 
-    <input
-        type="file"
-        name="archivo"
-        class="form-control"
-        accept=".pdf,.doc,.docx"
-        required
-    >
+        <div class="card-body">
 
-    @error('archivo')
-        <div class="text-danger mt-2">
-            {{ $message }}
+            {{-- Título --}}
+            <div class="form-group mb-3">
+                <label for="titulo">
+                    TÍTULO
+                </label>
+
+                <input
+                    type="text"
+                    id="titulo"
+                    name="titulo"
+                    class="form-control"
+                    value="{{ old('titulo', $termino->titulo ?? '') }}"
+                    required
+                >
+
+                @error('titulo')
+                    <div class="text-danger mt-2">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+
+            {{-- Contenido --}}
+            <div class="form-group mb-3">
+                <label for="contenido">
+                    CONTENIDO
+                </label>
+
+                <textarea
+                    id="contenido"
+                    name="contenido"
+                    class="form-control"
+                    rows="15"
+                    required
+                >{{ old('contenido', $termino->contenido ?? '') }}</textarea>
+
+                @error('contenido')
+                    <div class="text-danger mt-2">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+
         </div>
-    @enderror
 
-    <button type="submit" class="btn btn-primary">
-        SUBIR
-    </button>
+        <div class="card-footer">
 
-</form>
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                <i class="fas fa-save"></i>
+                ACTUALIZAR
+            </button>
+
+        </div>
+
+    </form>
 
 </div>
 
 @stop
+```

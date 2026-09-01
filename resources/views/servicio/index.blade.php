@@ -299,6 +299,7 @@
                                     <th >FECHA DE ATENCION</th>
 									<th >Estado</th>
 									<th >Calificación</th>
+									<th >Asignado por:</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -380,6 +381,11 @@
                                                     <span class="text-muted">Sin evaluar</span>
                                             @endswitch
                                         </td>	
+                                        <td>
+                                            {{ $servicio->asignadoPor? trim($servicio->asignadoPor->name . ' ' . ($servicio->asignadoPor->paterno ?? ''))
+                                                    : 'No registrado'
+                                                }}
+                                                                                        </td>
                                         </tr>
                                         @include('servicio.registroTecnico')
                                     @endforeach

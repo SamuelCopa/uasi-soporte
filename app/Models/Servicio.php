@@ -56,6 +56,12 @@ class Servicio extends Model
     });
 }
 
+public function asignadoPor()
+{
+    return $this->belongsTo(User::class, 'asignado_por');
+}
+
+
 public function tecnico()
 {
     return $this->belongsTo(User::class, 'user_id');

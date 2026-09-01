@@ -20,197 +20,131 @@
     @php( $password_reset_url = $password_reset_url ? url($password_reset_url) : '' )
 @endif
 
-<div class="modal fade" id="login" tabindex="-1" aria-hidden="true">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso al Sistema</title>
+    <link rel="icon" href="{{ asset('assets/assets/logogamea.ico') }}">
+    <link href="{{ asset('estilos/estilos.css') }}" rel="stylesheet" />
+    <link href="{{ asset('estilos/estilos2.css') }}" rel="stylesheet" />
+    <link href="{{ asset('estilos/estilos3.css') }}" rel="stylesheet" />
+    <link href="{{ asset('estilos/botones.css') }}" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down custom-modal-width">
+</head>
 
-        <div class="modal-content overflow-hidden border-0 rounded-2xl shadow-2xl">
+<body class="contenedor flex items-center justify-center min-h-screen cover" style="background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.75)), url('assets/assets/img/gamea.jpg'); background-size: cover; background-position: center;">
+<div class="laser-bg"></div>
+    <main class="w-full max-w-5xl mx-4 grid md:grid-cols-2 bg-white/80 backdrop-blur-xl border border-white/30 rounded-2xl shadow-2xl overflow-hidden animate-fade-slide">
 
-    <main class="w-full max-w-5xl mx-4 grid md:grid-cols-2  rounded-2xl shadow-2xl overflow-hidden animate-fade-slide">
+    <!-- PANEL IZQUIERDO -->
+        <aside class="hidden md:flex flex-col justify-center items-center bg-sky-700 text-white p-10 animate-slide-left">
 
-                <!-- PANEL IZQUIERDO -->
-            <aside class="hidden md:flex flex-col justify-center items-center
-                        bg-gradient-to-br from-slate-900 via-violet-800 to-purple-700
-                        text-white p-10 relative overflow-hidden">
+        <img src="{{ asset('assets/assets/logosgamea.png') }}"
+             alt="Logo del Gobierno Autónomo Municipal de El Alto"
+             class="w-32 mb-6">
 
-                <!-- Decoración -->
-                <div class="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-white/10 blur-3xl"></div>
-                <div class="absolute -bottom-16 -left-16 w-52 h-52 rounded-full bg-violet-300/10 blur-2xl"></div>
+        <h2 class="text-xl font-bold text-center">
+            UNIDAD DE ADMINISTRACIÓN DE SISTEMAS DE INFORMACIÓN
+        </h2>
 
-                <img src="assets/assets/img/gamea.png" alt="Logo Gobierno Autonomo Municipal de El Alto" class="w-32 mb-6" style="height: 250px;">
+        <p class="text-sm text-center mt-2 text-white">
+            Área de Soporte Técnico
+        </p>
 
-                <h2 class="text-xl font-bold uppercase text-center relative z-10">
-                    UNIDAD DE ADMINISTRACIÓN DE SISTEMAS DE INFORMACIÓN
-                </h2>
+        <p class="text-xs text-center mt-6 text-gray-200">
+            Plataforma de control y seguimiento de equipos computacionales.
+        </p>
+    </aside>
 
-                <p class="text-sm text-violet-100 text-center mt-2 relative z-10">
-                    Área de Soporte Técnico
-                </p>
+    <!-- FORMULARIO -->
+    <section class="p-6 md:p-10 flex flex-col justify-center">
 
-                <div class="w-16 h-1 bg-white/40 rounded-full my-5 relative z-10"></div>
+        <header class="text-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Inicio de Sesión</h1>
+            <p class="text-gray-600 text-sm">Ingrese sus credenciales</p>
+        </header>
 
-                <p class="text-xs text-center text-white/80 leading-6 relative z-10">
-                    Plataforma de control y seguimiento de equipos computacionales.
-                </p>
+        <form action="{{ $login_url }}" method="POST" class="space-y-5">
+            @csrf
 
-            </aside>
-
-                <!-- FORMULARIO -->
-            <section class="bg-white p-6 md:p-10 flex flex-col justify-center">
-
-                <div class="text-center mb-6">
-                    <h1 class="text-2xl font-bold text-slate-800">
-                        Inicio de Sesión
-                    </h1>
-
-                    <p class="text-gray-500 text-sm mt-1">
-                        Ingrese sus credenciales para acceder al sistema.
-                    </p>
-                </div>
-
-                    <form action="{{ $login_url }}" method="POST" class="space-y-5">
-                        @csrf
-
-            <div class="mb-4">
-
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                    Usuario
+            <!-- EMAIL -->
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+                    USUARIO
                 </label>
-
-                <div class="relative">
-
-                    <i class="bi bi-person-fill absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-
-                    <input type="email" name="email" placeholder="Correo electrónico" required
-                        class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-300 focus:border-violet-600
-                            focus:ring-4 focus:ring-violet-200 outline-none transition">
-                            <p id="email-msg" class="input-msg text-red-500 hidden"></p>
-                </div>
+                <input type="email" id="email" name="email" placeholder="Ingrese su correo electrónico" required
+                class="input-base w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500">
+                <p id="email-msg" class="input-msg text-red-500 hidden"></p>
 
                 @error('email')
                     <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                 @enderror
-
             </div>
 
-            <div class="mb-5">
-
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                    Contraseña
+            <!-- PASSWORD -->
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+                    CONTRASEÑA
                 </label>
 
-                <div class="relative">
-
-                    <i class="bi bi-lock-fill absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-
-                    <input type="password" id="password" name="password" placeholder="Contraseña" required
-                        class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-300 focus:border-violet-600 focus:ring-4
-                            focus:ring-violet-200 outline-none transition">
-                            
-                </div>
-                <p id="password-msg" class="input-msg text-red-500 hidden"></p>
+                    <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required
+                    class="input-base w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500">
+                    <p id="password-msg" class="input-msg text-red-500 hidden"></p>
 
                 @error('password')
                     <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                 @enderror
-
             </div>
 
-            <div class="space-y-3">
+            <!-- BOTONES -->
+            <div class="flex flex-col gap-2">
+            <button type="submit"
+            class="w-full bg-sky-800 hover:bg-sky-900 text-white py-2 rounded-lg shadow 
+            transition transform active:scale-95 duration-150">
+            INICIAR SESIÓN
+            </button>
 
-                <button
-                    type="submit"
-
-                    class="w-full py-3 rounded-xl
-                        bg-gradient-to-r
-                        from-violet-700
-                        to-purple-800
-
-                        hover:from-violet-800
-                        hover:to-purple-900
-
-                        text-white
-                        font-semibold
-                        tracking-wide
-
-                        shadow-lg
-                        hover:shadow-xl
-
-                        transition-all
-                        duration-300">
-
-                    <i class="bi bi-box-arrow-in-right me-2"></i>
-
-                    Iniciar sesión
-
+                <button type="button"
+                    onclick="location.href='/'"
+                    class="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 rounded-lg shadow transition transform active:scale-95 duration-150"">
+                    SALIR
                 </button>
-
-                <button
-                    type="button"
-
-                    data-bs-dismiss="modal"
-
-                    class="w-full py-3 rounded-xl
-                        border border-gray-300
-                        bg-white
-                        hover:bg-gray-100
-                        text-gray-700
-                        font-medium
-                        transition">
-
-                    <i class="bi bi-x-circle me-2"></i>
-
-                    Cerrar
-
-                </button>
-
             </div>
 
         </form>
-<footer class="mt-8 border-t pt-4 text-center">
 
-    <p class="text-sm text-gray-500">
-        Gobierno Autónomo Municipal de El Alto
-    </p>
-
-    <p class="text-xs text-gray-400 mt-1">
-        GAMEA © {{ date('Y') }} © S@mmy  
-    </p>
-
-</footer>
-
+        <footer class="mt-6 text-center text-xs text-gray-500">
+            GAMEA | {{ date('Y') }} © S@mmy  
+        </footer>
 
     </section>
 </main>
 
-        </div>
+<!-- LOADER -->
+    <div id="login-loader" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+        <img src="{{ asset('assets/assets/logogamea.ico') }}"  id="spinnerImg" 
+             class="spinner-img" 
+             alt="Cargando...">
+        <p class="text-gray-700 text-sm">Validando credenciales...</p>
     </div>
 </div>
+<script>
+// Recargar capcha
+function recargarCaptcha() {
+    const img = document.getElementById('captcha-image');
+    img.style.opacity = 0;
 
-<style>
-    .custom-modal-width{
-    max-width:900px;
+    setTimeout(() => {
+        img.src = "{{ captcha_src('flat') }}&" + Math.random();
+        img.style.opacity = 1;
+    }, 200);
 }
-
-.modal-content{
-    border-radius:22px;
-    overflow:hidden;
-    animation:loginShow .35s ease;
-}
-
-@keyframes loginShow{
-    from{
-        opacity:0;
-        transform:translateY(20px) scale(.98);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0) scale(1);
-    }
-}
-</style>
-
-
+</script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -270,6 +204,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const email = document.getElementById('email');
     const password = document.getElementById('password');
+    const captcha = document.getElementById('captcha');
 
     function validarEmail(valor) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor);
@@ -310,6 +245,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    /* CAPTCHA */
+    captcha.addEventListener('input', () => {
+        if (captcha.value.length < 4) {
+            setEstado(captcha, null, false, "Código incompleto");
+        } else {
+            setEstado(captcha, null, true);
+        }
+    });
 
 });
 </script>
+
+</body>
+</html>

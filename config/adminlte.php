@@ -693,9 +693,10 @@ return [
         ],
         [
             'text' => 'REPORTES',
-            // 'classes' => 'text-blue text-bold',
+            'classes' => 'text-blue text-bold',
             'url' => '/reportes',
             'icon' => 'fa fa-fw fa-file',
+            'can' => 'tecnico',
             'icon_color' => '',
         ],
         [

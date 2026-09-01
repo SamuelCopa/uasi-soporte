@@ -54,9 +54,7 @@
                                         <td>
                                             @if(!$asignacion->visto == 1)
                                                 <button type="button"
-                                                        class="btn btn-danger btn-sm"
-                                                        data-toggle="modal"
-                                                        data-target="#modalPuntuacion{{ $asignacion->id }}">
+                                                        class="btn btn-danger btn-sm">
                                                     <i class="fas fa-star"></i>
                                                     PENDIENTE
                                                 </button>

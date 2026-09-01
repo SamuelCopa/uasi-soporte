@@ -20,6 +20,7 @@
         <link href="{{ asset('estilos/estilos2.css') }}" rel="stylesheet" />
         <link href="{{ asset('estilos/estilos3.css') }}" rel="stylesheet" />
         <link href="{{ asset('estilos/botones.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
 
         <!-- 4. JS (Bootstrap + SweetAlert) -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -130,6 +131,8 @@ function toggleGameaMenu() {
   <!-- efecto de sombra inferior -->
   <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 60px; background: linear-gradient(transparent, rgba(0,0,0,0.5));"></div>
 </header>
+
+
 
 <!-- btn requerimineto de servicio -->
 <script>
@@ -321,7 +324,7 @@ escribir();
     <!--Ventana Modal Seguimiento-->
     @include('inicio.modalServicio')
     <!--Ventana Modal para Crear--->
-    @include('auth.login')
+    @include('auth.modallogin')
     <!-- LOADER -->
 <div id="login-loader" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
     <div class="bg-white p-6 rounded-xl shadow-lg text-center">
@@ -361,7 +364,163 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 </script>
-<link rel="stylesheet" href="{{ asset('estilos/registroCpu.css') }}">  
+
+<style>
+/* =========================================================
+   MODAL SEGUIMIENTO
+   ========================================================= */
+
+.custom-modal-width {
+    width: 95%;
+    max-width: 1050px;
+}
 
 
+/* =========================================================
+   CELULAR / TABLET
+   ========================================================= */
+
+@media screen and (max-width: 767px) {
+
+    /*
+     * EL MODAL NO DEBE SER FULLSCREEN
+     */
+
+    #modalSeguimiento .modal-dialog {
+        width: calc(100% - 20px) !important;
+        max-width: none !important;
+
+        margin: 10px auto !important;
+
+        height: auto !important;
+        min-height: 0 !important;
+    }
+
+
+    /*
+     * CONTENIDO DEL MODAL
+     */
+
+    #modalSeguimiento .modal-content {
+        width: 100% !important;
+
+        height: auto !important;
+        min-height: 0 !important;
+
+        max-height: calc(100dvh - 20px) !important;
+
+        border-radius: 16px !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+
+    /*
+     * CONTENEDOR HORIZONTAL
+     */
+
+    #modalSeguimiento .modal-content > .flex {
+        display: block !important;
+
+        width: 100% !important;
+
+        min-height: 0 !important;
+        height: auto !important;
+    }
+
+
+    /*
+     * OCULTAR PANEL INSTITUCIONAL
+     */
+
+    #modalSeguimiento .panel-institucional {
+        display: none !important;
+    }
+
+
+    /*
+     * FORMULARIO
+     *
+     * Es el segundo panel
+     */
+
+    #modalSeguimiento .modal-content > .flex > div:last-child {
+        display: flex !important;
+
+        width: 100% !important;
+
+        min-height: 0 !important;
+
+        padding: 25px 20px !important;
+
+        box-sizing: border-box;
+    }
+
+
+    /*
+     * FORMULARIO OCUPA TODO EL ANCHO
+     */
+
+    #modalSeguimiento form {
+        width: 100% !important;
+    }
+
+
+    /*
+     * TÍTULO
+     */
+
+    #modalSeguimiento h1 {
+        font-size: 1.35rem !important;
+        line-height: 1.3 !important;
+    }
+
+
+    #modalSeguimiento header p {
+        font-size: .85rem !important;
+    }
+
+
+    /*
+     * INPUT
+     */
+
+    #modalSeguimiento input {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+
+    /*
+     * BOTONES
+     */
+
+    #modalSeguimiento button {
+        width: 100% !important;
+    }
+
+
+    /*
+     * FOOTER
+     */
+
+    #modalSeguimiento .modal-content > .flex > div:last-child > .mt-6 {
+        margin-top: 20px !important;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    #modalSeguimiento .panel-institucional {
+        display: none !important;
+        visibility: hidden !important;
+        width: 0 !important;
+        max-width: 0 !important;
+        min-width: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+    }
+}
+</style>
 </body>

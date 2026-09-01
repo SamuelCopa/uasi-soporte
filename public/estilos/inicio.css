@@ -505,3 +505,161 @@ body {
 body {
     padding-top: 78px;
 }
+
+
+/* =========================================================
+   CELULARES PEQUEÑOS
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .masthead {
+
+        min-height: 100vh;
+        min-height: 100dvh;
+
+        padding: 15px !important;
+    }
+
+
+    .gamea-header-logo {
+
+        height: 65px;
+
+        max-width: 60%;
+
+        margin-bottom: 20px !important;
+    }
+
+
+    .masthead h1 {
+
+        font-size: 1.6rem !important;
+
+        margin-bottom: 10px !important;
+    }
+
+
+    .masthead h2 {
+
+        font-size: .9rem !important;
+    }
+
+
+    .header-shadow {
+
+        height: 55px;
+    }
+}
+
+/* =========================================================
+   CELULAR
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .masthead {
+
+        /*
+         * Altura completa del teléfono
+         */
+        min-height: 100vh;
+        min-height: 100dvh;
+
+        /*
+         * Centrado
+         */
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        /*
+         * Imagen
+         */
+        background-position: center center;
+
+        padding: 20px !important;
+    }
+
+
+    /* Contenedor */
+
+    .masthead .container {
+
+        width: 100%;
+
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
+
+    /* Logo */
+
+    .gamea-header-logo {
+
+        height: 80px;
+
+        width: auto;
+
+        max-width: 65%;
+
+        margin-bottom: 25px !important;
+    }
+
+
+    /* Título */
+
+    .masthead h1 {
+
+        font-size: 2rem !important;
+
+        line-height: 1.2;
+
+        margin-bottom: 12px !important;
+    }
+
+
+    /* Subtítulo */
+
+    .masthead h2 {
+
+        font-size: 1rem !important;
+
+        line-height: 1.4;
+    }
+
+
+    /* Sombra */
+
+    .header-shadow {
+
+        height: 70px;
+    }
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .masthead {
+        min-height: 100vh;
+        min-height: 100dvh;
+
+        background-position: center center;
+    }
+
+    .gamea-header-logo {
+        height: 100px;
+    }
+
+    .masthead h1 {
+        font-size: clamp(2rem, 6vw, 3.2rem);
+    }
+
+    .masthead h2 {
+        font-size: 1.2rem;
+    }
+}
