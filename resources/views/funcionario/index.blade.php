@@ -35,6 +35,7 @@
 									<th >GRADO ACADEMICO</th>
 									<th >PATERNO</th>
 									<th >MATERNO</th>
+									<th >APELLIDO DE CASADA</th>
 									<th >NOMBRE</th>
 									<th >C.I.</th>
 									<th >CELULAR</th>
@@ -52,6 +53,7 @@
 										<td >{{ strtoupper($funcionario->grado_academico) }}</td>
 										<td >{{ $funcionario->paterno }}</td>
 										<td >{{ $funcionario->materno }}</td>
+										<td >{{ $funcionario->ap_casada }}</td>
 										<td >{{ $funcionario->nombre }}</td>
 										<td >{{ $funcionario->ci }} {{ $funcionario->expedido }}</td>
 										<td >{{ $funcionario->celular }}</td>
@@ -79,6 +81,7 @@
 									<th >GRADO ACADEMICO</th>
 									<th >PATERNO</th>
 									<th >MATERNO</th>
+									<th >APELLIDO DE CASADA</th>
 									<th >NOMBRE</th>
 									<th >C.I.</th>
 									<th >CELULAR</th>
