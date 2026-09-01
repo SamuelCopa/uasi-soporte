@@ -27,8 +27,8 @@
 									<th >DEPENDENCIA</th>
 									<th >EQUIPO</th>
 									<th >FALLA</th>
-									<th >SERVICIO</th>
                                     <th >FECHA DE ASIGNACIÓN</th>
+									<th >SERVICIO</th>
                                     <th >FECHA DE ATENCIÓN</th>
 									<th >ESTADO</th>
                                     </tr>
@@ -40,10 +40,10 @@
 										<td >{{date('d-m-Y H:i',strtotime($asignacion->created_at ?? ''))}}</td>
                                         <td >{{$asignacion->funcionario?->nombre }} {{ $asignacion->funcionario?->paterno }} {{ $asignacion->funcionario?->materno }}</td>
 										<td >{{ $asignacion->Dependencia?->dependencias }}</td>
-										<td >{{ $asignacion->servicio ?? '' }}</td>
 										<td >{{ $asignacion->equipo ?? '' }}</td>
 										<td >{{ $asignacion->falla ?? '' }}</td>
 										<td >{{ $asignacion->fecha_asignacion ?? '' }}</td>
+										<td >{{ $asignacion->servicio ?? '' }}</td>
                                         <td class="{{ empty($asignacion->fecha_atencion ) ? 'color1' : '' }}">
                                             @if($asignacion->fecha_atencion)
                                             {{ date('d-m-Y H:i',strtotime($asignacion->fecha_atencion ))}}
@@ -72,15 +72,15 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                    <th>No</th>                                        
+                                  <th>No</th>                                        
 									<th >FECHA</th>
 									<th >NOMBRE</th>
 									<th >DEPENDENCIA</th>
 									<th >EQUIPO</th>
 									<th >FALLA</th>
-									<th >SERVICIO</th>
                                     <th >FECHA DE ASIGNACIÓN</th>
-                                    <th >FECHA DE ATENCION</th>
+									<th >SERVICIO</th>
+                                    <th >FECHA DE ATENCIÓN</th>
 									<th >ESTADO</th>
                                     </tr>
                                 </tfoot>
