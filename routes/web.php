@@ -231,6 +231,7 @@ Route::get('/asignaciones/equipos', [DashboardController::class, 'asignacionesEq
 Route::get('/asignaciones/asistencia', [TecnicoController::class, 'asignacionesAsistencia'])->name('asignaciones.asistencia')->middleware('auth');
 Route::put('/asignacion/{id}/atender', [ServicioController::class, 'atender'])->name('asignacion.atender')->middleware('auth');
 
+Route::get('/asignaciones-asistencia/reporte-pdf',[TecnicoController::class, 'reporteAsistenciaPdf'])->name('servicios.asignaciones.reporte.pdf');
 
 Route::get('/evaluar', [TecnicoController::class, 'buscarEvaluacion'])->name('evaluacion.buscar');
 Route::post('/evaluar', [TecnicoController::class, 'mostrarEvaluacion'])->name('evaluacion.mostrar');

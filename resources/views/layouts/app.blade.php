@@ -235,6 +235,92 @@ $(document).ready(function () {
     })
 </script>
 <script>
+
+function toggleDarkMode() {
+
+    const body = document.body;
+    const boton = document.getElementById('dark-mode-toggle');
+    const icon = boton?.querySelector('i');
+
+    body.classList.toggle('dark-mode');
+
+    const isDark = body.classList.contains('dark-mode');
+
+    // Guardar estado
+    localStorage.setItem('darkMode', isDark);
+
+
+    // Cambiar icono
+    if (icon) {
+
+        if (isDark) {
+
+            icon.classList.remove('fa-sun');
+            icon.classList.add('fa-moon');
+
+        } else {
+
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+
+        }
+
+    }
+
+}
+
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const boton = document.getElementById('dark-mode-toggle');
+
+    const isDark =
+        localStorage.getItem('darkMode') === 'true';
+
+
+    // Restaurar modo
+    if (isDark) {
+
+        document.body.classList.add('dark-mode');
+
+    }
+
+
+    // Restaurar icono
+    if (boton) {
+
+        const icon = boton.querySelector('i');
+
+        if (icon) {
+
+            if (isDark) {
+
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+
+            } else {
+
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+
+            }
+
+        }
+
+
+        // Evento click
+        boton.addEventListener('click', function (e) {
+
+            e.preventDefault();
+
+            toggleDarkMode();
+
+        });
+
+    }
+
+});
+
 </script>
 
 

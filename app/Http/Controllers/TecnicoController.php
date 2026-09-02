@@ -617,15 +617,335 @@ $pdf = Pdf::loadView(
     );
 }
 
-public function asignacionesAsistencia()
+public function asignacionesAsistencia(Request $request)
 {
     $user = Auth::user();
 
-    $asignaciones = Servicio::where('user_id', $user->id)
+    $query = Servicio::where('user_id', $user->id);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FILTRO POR GESTIÓN
+    |--------------------------------------------------------------------------
+    */
+
+    if ($request->filled('year')) {
+
+        $query->whereYear(
+            'created_at',
+            $request->year
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FECHA DESDE
+    |--------------------------------------------------------------------------
+    */
+
+    if ($request->filled('fecha_desde')) {
+
+        $query->whereDate(
+            'created_at',
+            '>=',
+            $request->fecha_desde
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FECHA HASTA
+    |--------------------------------------------------------------------------
+    */
+
+    if ($request->filled('fecha_hasta')) {
+
+        $query->whereDate(
+            'created_at',
+            '<=',
+            $request->fecha_hasta
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DEPENDENCIA
+    |--------------------------------------------------------------------------
+    */
+
+    if ($request->filled('dependencia_id')) {
+
+        $query->where(
+            'dependencia_id',
+            $request->dependencia_id
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | EQUIPO
+    |--------------------------------------------------------------------------
+    */
+
+    if ($request->filled('equipo')) {
+
+        $query->where(
+            'equipo',
+            $request->equipo
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ESTADO
+    |--------------------------------------------------------------------------
+    */
+
+    if ($request->filled('estado')) {
+
+        if ($request->estado === 'pendiente') {
+
+            $query->where('visto', 0);
+        }
+
+        if ($request->estado === 'atendido') {
+
+            $query->where('visto', 1);
+        }
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SERVICIO
+    |--------------------------------------------------------------------------
+    */
+
+    if ($request->filled('tipo_servicio')) {
+
+        $query->where(
+            'servicio',
+            $request->tipo_servicio
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESULTADOS
+    |--------------------------------------------------------------------------
+    */
+
+    $asignaciones = $query
+        ->latest('created_at')
+        ->get();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DATOS PARA LOS FILTROS
+    |--------------------------------------------------------------------------
+    */
+
+    $dependencias = Dependencia::orderBy(
+        'dependencias',
+        'asc'
+    )->get();
+
+
+    /*
+    | Equipos que tiene asignados ESTE usuario
+    */
+
+    $equipos = Servicio::where(
+            'user_id',
+            $user->id
+        )
+        ->whereNotNull('equipo')
+        ->where('equipo', '!=', '')
+        ->select('equipo')
+        ->distinct()
+        ->orderBy('equipo')
+        ->pluck('equipo');
+
+
+    /*
+    | Servicios que tiene asignados ESTE usuario
+    */
+
+    $tiposServicio = Servicio::where(
+            'user_id',
+            $user->id
+        )
+        ->whereNotNull('servicio')
+        ->where('servicio', '!=', '')
+        ->select('servicio')
+        ->distinct()
+        ->orderBy('servicio')
+        ->pluck('servicio');
+
+
+    return view(
+        'asigAsistencia.asigAsistencia',
+        compact(
+            'user',
+            'asignaciones',
+            'dependencias',
+            'equipos',
+            'tiposServicio'
+        )
+    );
+}
+
+
+public function reporteAsistenciaPdf(Request $request)
+{
+    $user = Auth::user();
+
+    $query = Servicio::with(['funcionario', 'Dependencia'])
+        ->where('user_id', $user->id);
+
+    // Gestión
+    if ($request->filled('year')) {
+        $query->whereYear('created_at', $request->year);
+    }
+
+    // Fecha desde
+    if ($request->filled('fecha_desde')) {
+        $query->whereDate('created_at', '>=', $request->fecha_desde);
+    }
+
+    // Fecha hasta
+    if ($request->filled('fecha_hasta')) {
+        $query->whereDate('created_at', '<=', $request->fecha_hasta);
+    }
+
+    // Dependencia
+    if ($request->filled('dependencia_id')) {
+        $query->where('dependencia_id', $request->dependencia_id);
+    }
+
+    // Equipo
+    if ($request->filled('equipo')) {
+        $query->where('equipo', $request->equipo);
+    }
+
+    // Estado
+    if ($request->filled('estado')) {
+
+        if ($request->estado === 'pendiente') {
+            $query->where('visto', 0);
+        }
+
+        if ($request->estado === 'atendido') {
+            $query->where('visto', 1);
+        }
+    }
+
+    // Servicio
+    if ($request->filled('tipo_servicio')) {
+        $query->where('servicio', $request->tipo_servicio);
+    }
+
+    $asignaciones = $query
         ->latest()
         ->get();
 
-    return view('asigAsistencia.asigAsistencia', compact('user', 'asignaciones'));
+
+    /*
+    |--------------------------------------------------------------------------
+    | DEPENDENCIA SELECCIONADA
+    |--------------------------------------------------------------------------
+    */
+
+    $dependenciaSeleccionada = null;
+
+    if ($request->filled('dependencia_id')) {
+        $dependenciaSeleccionada = Dependencia::find(
+            $request->dependencia_id
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | INDICADORES
+    |--------------------------------------------------------------------------
+    */
+
+    $total = $asignaciones->count();
+
+    $atendidos = $asignaciones
+        ->where('visto', 1)
+        ->count();
+
+    $pendientes = $asignaciones
+        ->where('visto', 0)
+        ->count();
+
+    $porcentajeAtencion = $total > 0
+        ? round(($atendidos / $total) * 100, 2)
+        : 0;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESUMEN POR DEPENDENCIA
+    |--------------------------------------------------------------------------
+    */
+
+    $resumenDependencias = $asignaciones
+        ->groupBy(function ($asignacion) {
+            return $asignacion->Dependencia?->dependencias
+                ?? 'Sin dependencia';
+        })
+        ->map(function ($grupo) {
+            return $grupo->count();
+        })
+        ->sortDesc();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | AÑO
+    |--------------------------------------------------------------------------
+    */
+
+    $year = $request->year ?: 'Todas';
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | GENERAR PDF
+    |--------------------------------------------------------------------------
+    */
+
+    $pdf = Pdf::loadView(
+        'asigAsistencia.reporte-pdf',
+        compact(
+            'asignaciones',
+            'user',
+            'year',
+            'total',
+            'atendidos',
+            'pendientes',
+            'porcentajeAtencion',
+            'dependenciaSeleccionada',
+            'resumenDependencias'
+        )
+    );
+
+    $pdf->setPaper('letter');
+
+    return $pdf->stream(
+        'reporte-asistencias-tecnicas.pdf'
+    );
 }
 
 
@@ -633,6 +953,7 @@ public function buscarEvaluacion()
 {
     return view('asigAsistencia.buscar-evaluacion');
 }
+
 
 public function mostrarEvaluacion(Request $request)
 {
@@ -683,6 +1004,7 @@ public function mostrarEvaluacion(Request $request)
     );
 }
 
+
 public function evaluar($id)
 {
     $asignacion = Servicio::with([
@@ -729,5 +1051,7 @@ public function guardarEvaluacion(Request $request)
 
     return view('asigAsistencia.gracias');
 }
+
+
 
 }

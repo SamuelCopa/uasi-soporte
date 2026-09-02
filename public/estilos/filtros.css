@@ -324,3 +324,238 @@
     }
 
 }
+
+
+/* =========================================================
+   FILTROS DE ASISTENCIAS
+   ========================================================= */
+
+.filtros-asistencia {
+    border: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* CABECERA */
+
+.filtros-asistencia .card-header {
+    background: linear-gradient(135deg, #0052cc, #2684ff);
+    border: 0;
+    padding: 14px 20px;
+}
+
+.titulo-filtros {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.titulo-filtros i {
+    margin-right: 8px;
+}
+
+.badge-registros {
+    background: rgba(255, 255, 255, 0.95);
+    color: #0052cc;
+    font-weight: 600;
+    padding: 7px 12px;
+    border-radius: 20px;
+}
+
+
+/* CUERPO */
+
+.filtros-asistencia .card-body {
+    padding: 20px;
+}
+
+
+/* LABELS */
+
+.filtros-asistencia .form-label {
+    color: #344054;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+
+/* INPUTS Y SELECTS */
+
+.filtros-asistencia .form-control,
+.filtros-asistencia .form-select {
+
+    min-height: 40px;
+
+    border: 1px solid #d0d5dd;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
+    color: #344054;
+
+    background-color: #fff;
+
+    transition: all 0.2s ease;
+}
+
+
+/* HOVER */
+
+.filtros-asistencia .form-control:hover,
+.filtros-asistencia .form-select:hover {
+
+    border-color: #98a2b3;
+}
+
+
+/* FOCUS */
+
+.filtros-asistencia .form-control:focus,
+.filtros-asistencia .form-select:focus {
+
+    border-color: #2684ff;
+
+    box-shadow:
+        0 0 0 3px rgba(38, 132, 255, 0.12);
+}
+
+
+/* PLACEHOLDER */
+
+.filtros-asistencia .form-control::placeholder {
+
+    color: #98a2b3;
+}
+
+
+/* BOTONES */
+
+.contenedor-botones {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+}
+
+.filtros-asistencia .btn {
+
+    min-height: 40px;
+
+    border-radius: 8px;
+
+    padding: 8px 15px;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    transition: all 0.2s ease;
+}
+
+
+/* FILTRAR */
+
+.btn-filtrar {
+
+    background: linear-gradient(
+        135deg,
+        #0052cc,
+        #2684ff
+    );
+
+    border: none;
+
+    color: #fff;
+}
+
+.btn-filtrar:hover {
+
+    color: #fff;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 4px 10px rgba(0, 82, 204, 0.25);
+}
+
+
+/* LIMPIAR */
+
+.btn-limpiar {
+
+    background: #fff;
+
+    border: 1px solid #d0d5dd;
+
+    color: #475467;
+}
+
+.btn-limpiar:hover {
+
+    background: #f8f9fa;
+
+    border-color: #98a2b3;
+
+    color: #344054;
+}
+
+
+/* PDF */
+
+.btn-pdf {
+
+    background: #dc3545;
+
+    border: none;
+
+    color: #fff;
+}
+
+.btn-pdf:hover {
+
+    background: #c82333;
+
+    color: #fff;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 4px 10px rgba(220, 53, 69, 0.25);
+}
+
+
+/* ESPACIADO */
+
+.filtros-asistencia .row {
+
+    row-gap: 16px;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+
+    .filtros-asistencia .card-body {
+
+        padding: 15px;
+    }
+
+    .contenedor-botones {
+
+        width: 100%;
+    }
+
+    .contenedor-botones .btn {
+
+        flex: 1;
+    }
+
+}

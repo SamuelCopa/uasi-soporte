@@ -12,7 +12,7 @@
                 </div>
                     <div class="header-panel">
                         <div class="header-left">
-                            <h1 class="header-title">Requerimientos de Servicios</h1>
+                            <h1 class="header-title">Requerimientos de Asistencia técnica</h1>
                         </div>
                                 <div class="header-actions">
                         {{-- VOLVER --}}
@@ -166,41 +166,108 @@
             </div>
 
 
-            {{-- DEPENDENCIA --}}
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                {{-- DEPENDENCIA --}}
+                <div class="col-md-3">
 
-                <label class="filtro-label">
-                    <i class="fas fa-building"></i>
-                    Dependencia
-                </label>
+                    <label
+                        for="buscar_dependencia"
+                        class="form-label fw-semibold"
+                    >
 
-                <div class="campo-filtro">
+                        <i class="fas fa-building me-1"></i>
 
-                    <i class="fas fa-building campo-icono"></i>
+                        Dependencia
 
-                    <select name="dependencia"
-                            class="form-control filtro-control">
+                    </label>
 
-                        <option value="">
-                            Todas las dependencias
-                        </option>
+
+                    <input
+                        type="text"
+                        id="buscar_dependencia"
+                        class="form-control"
+                        list="listaDependencias"
+                        placeholder="Buscar dependencia..."
+                        autocomplete="off"
+                        value="{{ $dependencias->firstWhere('id', request('dependencia_id'))?->dependencias }}"
+                    >
+
+
+                    <input
+                        type="hidden"
+                        name="dependencia_id"
+                        id="dependencia_id"
+                        value="{{ request('dependencia_id') }}"
+                    >
+
+
+                    <datalist id="listaDependencias">
 
                         @foreach($dependencias as $dependencia)
 
-                            <option value="{{ $dependencia->id }}"
-                                {{ request('dependencia') == $dependencia->id ? 'selected' : '' }}>
-
-                                {{ $dependencia->dependencias }}
-
-                            </option>
+                            <option
+                                value="{{ $dependencia->dependencias }}"
+                                data-id="{{ $dependencia->id }}"
+                            ></option>
 
                         @endforeach
 
-                    </select>
+                    </datalist>
 
                 </div>
+{{-- =========================================================
+     JAVASCRIPT DEPENDENCIA
+     ========================================================= --}}
 
-            </div>
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const buscarDependencia =
+        document.getElementById('buscar_dependencia');
+
+    const dependenciaId =
+        document.getElementById('dependencia_id');
+
+    const opciones =
+        document.querySelectorAll(
+            '#listaDependencias option'
+        );
+
+
+    if (!buscarDependencia || !dependenciaId) {
+        return;
+    }
+
+
+    buscarDependencia.addEventListener(
+        'input',
+        function () {
+
+            const nombre =
+                this.value.trim();
+
+            dependenciaId.value = '';
+
+
+            opciones.forEach(function (opcion) {
+
+                if (
+                    opcion.value.trim() === nombre
+                ) {
+
+                    dependenciaId.value =
+                        opcion.dataset.id;
+
+                }
+
+            });
+
+        }
+    );
+
+});
+
+</script>
 
 
             {{-- FECHA DESDE --}}
@@ -385,7 +452,7 @@
                                             {{ $servicio->asignadoPor? trim($servicio->asignadoPor->name . ' ' . ($servicio->asignadoPor->paterno ?? ''))
                                                     : 'No registrado'
                                                 }}
-                                                                                        </td>
+                                        </td>
                                         </tr>
                                         @include('servicio.registroTecnico')
                                     @endforeach

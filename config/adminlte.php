@@ -685,7 +685,7 @@ return [
             'can' => ['superadministrador','admin'],
         ],
         [
-            'text' => 'MIS ASIGNACIONES DE SERVICIOS',
+            'text' => 'MIS ASIGNACIONES DE ASISTENCIA TÉCNICA',
             // 'classes' => 'text-blue text-bold',
             'url' => '/asignaciones/asistencia',
             'icon' => 'fa fa-fw fa-cog',
@@ -748,6 +748,16 @@ return [
 
             ],
         ],
+
+        [
+    'header' => 'CONFIGURACIÓN',
+],
+[
+    'text' => 'Modo oscuro',
+    'icon' => 'fas fa-sun',
+    'url' => '#',
+    'id' => 'dark-mode-toggle',
+],
 
     ],
 

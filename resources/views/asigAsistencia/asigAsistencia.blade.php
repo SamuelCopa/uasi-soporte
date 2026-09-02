@@ -15,7 +15,348 @@
                             <h1 class="header-title">Requerimientos de asistencia técnica</h1>
                         </div>
                     </div>
+<div class="card filtros-asistencia mb-4">
 
+    {{-- CABECERA --}}
+    <div class="card-header">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <strong class="titulo-filtros">
+
+                <i class="fas fa-filter"></i>
+
+                Filtros de asistencias
+
+            </strong>
+
+
+            <span class="badge badge-registros">
+
+                {{ $asignaciones->count() }} registros
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    {{-- CUERPO --}}
+    <div class="card-body">
+
+        <form
+            action="{{ route('asignaciones.asistencia') }}"
+            method="GET"
+        >
+
+            <div class="row g-3">
+
+
+                {{-- GESTIÓN --}}
+                <div class="col-md-2">
+                    <label class="fw-semibold">
+                        <i class="fas fa-calendar-alt me-1"></i>
+                        Gestión
+                    </label>
+                    <select name="year" class="form-control">
+
+                        <option value="">
+                            Todas
+                        </option>
+
+                        @for(
+                            $i = now()->year;
+                            $i >= now()->year - 5;
+                            $i--
+                        )
+
+                            <option
+                                value="{{ $i }}"
+                                {{ request('year') == $i ? 'selected' : '' }}
+                            >
+
+                                {{ $i }}
+
+                            </option>
+
+                        @endfor
+
+                    </select>
+
+                </div>
+
+
+                {{-- FECHA DESDE --}}
+                <div class="col-md-2">
+
+                    <label class="fw-semibold">
+
+                        <i class="fas fa-calendar-day me-1"></i>
+
+                        Fecha desde
+
+                    </label>
+
+                    <input
+                        type="date"
+                        name="fecha_desde"
+                        class="form-control"
+                        value="{{ request('fecha_desde') }}"
+                    >
+
+                </div>
+
+
+                {{-- FECHA HASTA --}}
+                <div class="col-md-2">
+
+                    <label class="fw-semibold">
+
+                        <i class="fas fa-calendar-check me-1"></i>
+
+                        Fecha hasta
+
+                    </label>
+
+                    <input
+                        type="date"
+                        name="fecha_hasta"
+                        class="form-control"
+                        value="{{ request('fecha_hasta') }}"
+                    >
+
+                </div>
+
+
+                {{-- DEPENDENCIA --}}
+                <div class="col-md-3">
+
+                    <label
+                        for="buscar_dependencia"
+                        class="fw-semibold"
+                    >
+
+                        <i class="fas fa-building me-1"></i>
+
+                        Dependencia
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="buscar_dependencia"
+                        class="form-control"
+                        list="listaDependencias"
+                        placeholder="Buscar dependencia..."
+                        autocomplete="off"
+                        value="{{ $dependencias->firstWhere('id', request('dependencia_id'))?->dependencias }}"
+                    >
+
+
+                    <input
+                        type="hidden"
+                        name="dependencia_id"
+                        id="dependencia_id"
+                        value="{{ request('dependencia_id') }}"
+                    >
+
+
+                    <datalist id="listaDependencias">
+
+                        @foreach($dependencias as $dependencia)
+
+                            <option
+                                value="{{ $dependencia->dependencias }}"
+                                data-id="{{ $dependencia->id }}"
+                            ></option>
+
+                        @endforeach
+
+                    </datalist>
+
+                </div>
+
+
+                {{-- ESTADO --}}
+                <div class="col-md-3">
+
+                    <label class="fw-semibold">
+
+                        <i class="fas fa-tasks me-1"></i>
+
+                        Estado
+
+                    </label>
+
+                    <select
+                        name="estado"
+                        class="form-control"
+                    >
+
+                        <option value="">
+                            Todos
+                        </option>
+
+                        <option
+                            value="pendiente"
+                            {{ request('estado') == 'pendiente' ? 'selected' : '' }}
+                        >
+                            Pendientes
+                        </option>
+
+                        <option
+                            value="atendido"
+                            {{ request('estado') == 'atendido' ? 'selected' : '' }}
+                        >
+                            Atendidos
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                {{-- EQUIPO --}}
+                <div class="col-md-3">
+
+                    <label class=">
+
+                        <i class="fas fa-desktop me-1"></i>
+
+                        Equipo
+
+                    </label>
+
+                    <select
+                        name="equipo"
+                        class="form-control">
+                        <option value="">
+                            Todos los equipos
+                        </option>
+                        @foreach($equipos as $equipo)
+                            <option
+                                value="{{ $equipo }}"
+                                {{ request('equipo') == $equipo ? 'selected' : '' }}>
+                                {{ $equipo }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                {{-- SERVICIO --}}
+                <!-- <div class="col-md-3">
+                    <label class="fw-semibold">
+                        <i class="fas fa-tools me-1"></i>
+                        Servicio
+                    </label>
+                    <select
+                        name="tipo_servicio"
+                        class="form-select">
+                        <option value="">
+                            Todos los servicios
+                        </option>
+                        @foreach($tiposServicio as $tipo)
+                            <option
+                                value="{{ $tipo }}"
+                                {{ request('tipo_servicio') == $tipo ? 'selected' : '' }}>
+                                {{ $tipo }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div> -->
+                {{-- BOTONES --}}
+
+            </div>
+                <div class="filtros-acciones">
+                    <label class="d-block">
+                        &nbsp;
+                    </label>
+                    <div class="contenedor-botones">
+                        {{-- FILTRAR --}}
+                        <button
+                            type="submit"
+                            class="btn btn-filtrar">
+                            <i class="fas fa-search me-1"></i>
+                            Filtrar
+                        </button>
+
+                        {{-- LIMPIAR --}}
+                        <a
+                            href="{{ route('asignaciones.asistencia') }}"
+                            class="btn btn-limpiar">
+                            <i class="fas fa-undo me-1"></i>
+                            Limpiar
+                        </a>
+                        {{-- PDF --}}
+                        <a
+                            href="{{ route('servicios.asignaciones.reporte.pdf', request()->query()) }}"
+                            target="_blank"
+                            class="btn btn-pdf">
+                            <i class="fas fa-file-pdf me-1"></i>
+                            Generar PDF
+                        </a>
+                    </div>
+                </div>
+        </form>
+    </div>
+</div>
+
+{{-- =========================================================
+     JAVASCRIPT DEPENDENCIA
+     ========================================================= --}}
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const buscarDependencia =
+        document.getElementById('buscar_dependencia');
+
+    const dependenciaId =
+        document.getElementById('dependencia_id');
+
+    const opciones =
+        document.querySelectorAll(
+            '#listaDependencias option'
+        );
+
+
+    if (!buscarDependencia || !dependenciaId) {
+        return;
+    }
+
+
+    buscarDependencia.addEventListener(
+        'input',
+        function () {
+
+            const nombre =
+                this.value.trim();
+
+            dependenciaId.value = '';
+
+
+            opciones.forEach(function (opcion) {
+
+                if (
+                    opcion.value.trim() === nombre
+                ) {
+
+                    dependenciaId.value =
+                        opcion.dataset.id;
+
+                }
+
+            });
+
+        }
+    );
+
+});
+
+</script>
+<link rel="stylesheet" href="{{ asset('estilos/filtros.css') }}">  
                     <div class="card shadow-sm border-0 rounded-4">
                         <div class="table-responsive">
                             <table id="mitabla" class="table table-modern align-middle">
@@ -52,18 +393,26 @@
                                             @endif							
                                         </td>
                                         <td>
-                                            @if(!$asignacion->visto == 1)
-                                                <button type="button"
-                                                        class="btn btn-danger btn-sm">
+                                            @if($asignacion->visto == 0)
+
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-danger btn-sm"
+                                                >
                                                     <i class="fas fa-star"></i>
                                                     PENDIENTE
                                                 </button>
+
                                             @else
-                                                <button type="button"
-                                                    class="btn btn-primary btn-sm">
+
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-primary btn-sm"
+                                                >
                                                     <i class="fas fa-check-circle"></i>
                                                     ATENDIDO
                                                 </button>
+
                                             @endif
                                         </td>
                                         </tr>
