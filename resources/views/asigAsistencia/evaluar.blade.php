@@ -156,6 +156,27 @@
 
                         <i class="fas fa-exclamation-triangle"></i>
 
+                        equipo / servicio
+
+                    </span>
+
+                    <span class="dato-valor">
+
+                        {{ $asignacion->equipo }}
+
+                    </span>
+
+                </div>
+
+            @endif
+            @if($asignacion->falla)
+
+                <div class="dato">
+
+                    <span class="dato-titulo">
+
+                        <i class="fas fa-exclamation-triangle"></i>
+
                         Falla reportada
 
                     </span>

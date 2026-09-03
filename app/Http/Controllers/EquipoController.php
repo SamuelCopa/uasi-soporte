@@ -262,7 +262,7 @@ public function reporte(Request $request)
         if ($request->filled('codigo')) {
 
             $query->where(
-                'cod_registro',
+                'cod_gamea',
                 'LIKE',
                 '%' . $request->codigo . '%'
             );

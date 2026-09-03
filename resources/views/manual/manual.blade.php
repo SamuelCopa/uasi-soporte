@@ -44,13 +44,13 @@
 
 <div class="videos-section">
 
-    <!-- Encabezado -->
-    <div class="section-header">
+
+    <!-- <div class="section-header">
         <h3>🎬 VIDEOS DE CAPACITACIÓN</h3>
         <p>Material audiovisual</p>
-    </div>
+    </div> -->
 
-    <!-- Grid de videos -->
+<!-- 
     <div class="videos-grid">
             <div class="video-card">
                 <div class="video-wrapper">
@@ -156,7 +156,7 @@
             </div>
     </div>
 
-</div>
+</div> -->
 
 
 

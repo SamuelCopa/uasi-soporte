@@ -42,12 +42,12 @@
                             @endswitch
                             @if($equipo)
                             <ul>
-<li>
-    <p style="font-size: 14px;">
-        🖥️ <strong>Tipo de equipo:</strong>
-        {{ $equipo->tipoEquipo?->nombre ?? 'OTRO EQUIPO' }}
-    </p>
-</li>
+                            <li>
+                                <p style="font-size: 14px;">
+                                    🖥️ <strong>Tipo de equipo:</strong>
+                                    {{ $equipo->tipoEquipo?->nombre ?? 'OTRO EQUIPO' }}
+                                </p>
+                            </li>
                                 <li>
                                 <p style="font-size: 14px;">
                                     📄 <strong>Codigo GAMEA:</strong>
