@@ -88,6 +88,8 @@ Route::get('/hay-pendientes', function () {
     ]);
 })->middleware('auth');
 
+Route::get('/perfil', [UserController::class, 'show'])->name('perfil')->middleware('auth');
+
 // --------------------TERMINOS---------------------------------------------------------------------------------
 Route::get('/terminos/edit', [TerminoController::class, 'edit'])->name('terminos.edit');
 Route::put('/terminos',[TerminoController::class, 'update'])->name('terminos.update');

@@ -82,12 +82,12 @@ public function store(UserRequest $request): RedirectResponse
     /**
      * Display the specified resource.
      */
-    public function show($id): View
-    {
-        $user = User::find($id);
-        $impresoras = $user->impresoras;
-        return view('user.show', compact('user'));
-    }
+public function show()
+{
+    $user = Auth::user();
+
+    return view('user.show', compact('user'));
+}
 
     /**
      * Show the form for editing the specified resource.

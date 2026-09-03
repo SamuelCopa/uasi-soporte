@@ -296,470 +296,622 @@ return [
     |
     */
 
-    'menu' => [
-        // Navbar items:
-[
-    'text' => 'UNIDAD DE ADMINISTRACIÓN DE SISTEMAS DE INFORMACIÓN',
+'menu' => [
 
-    'url'     => '#',
-    'topnav'  => true,
-    'icon'    => 'fas fa-cogs',
-    'classes' => 'text-white px-2 py-1',
-],
-        [
-            'type' => 'fullscreen-widget',
-            'topnav_right' => true,
-        ],
-
-        // Sidebar items:
+// =========================================================
+// NAVBAR
+// =========================================================
         [
             'type' => 'sidebar-menu-search',
             'text' => 'Buscar',
         ],
         [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
-        ],
-      
-        // ['header' => 'account_settings'],
-        // [
-        //     'text' => 'MI PERFIL',
-        //     'url' => '',
-        //     'icon' => 'fas fa-fw fa-user',
-        // ],
-        [
-            'text' => 'PANEL PRINCIPAL',
-            // 'classes' => 'text-blue text-bold',
-            'url' => '/home',
-            'icon' => 'fas fas fa-home',
-            'icon_color' => '',
-        ],
-        [
-            'text' => 'PERSONAL',
-            // 'classes' => 'text-cyan text-bold',
-            'icon' => 'fas fas fa-user',
-            'can' => ['superadministrador','admin'],
-            'submenu' => [
-                [
-                    'text' => 'RESPONSABLES',
-                    'url' => '/users',
-                    'icon' => 'fas fas fa-user',
-                    'can' => 'superadministrador',
-                ],
-                [
-                    'text' => 'TECNICOS',
-                    'url' => '/tecnicos',
-                    'icon' => 'fas fa-user-cog',
-                ],
-                [
-                    'text' => 'TECLADOS',
-                    //'url' => '/teclados',
-                    'icon' => 'fas fas fa-keyboard',
-                ],
-
-            ],
-
+            'text' => 'Inicio',
+            'url'  => '/home',
+            'icon' => 'fas fa-fw fa-home',
+            'topnav' => true,
         ],
 
         [
-            'text' => 'REGISTRO DE ACTIVOS',
-            // 'classes' => 'text-yellow text-bold',
-            'icon' => 'fas fa-folder-open',
-            'can' => ['admin', 'tecnico'],
-
-            'submenu' => [
-                [
-                    'text' => 'AUDIFONOS',
-                    'url' => '/audifonos',
-                    'icon' => 'fas fas fa-headphones',
-                ],
-                [
-                    'text' => 'CPU',
-                    'url' => 'registro-cpus',
-                    'icon' => 'fas fas fa-window-maximize',
-                ],
-                [
-                    'text' => 'ESTABILIZADOR',
-                    'url' => '/estabilizadors',
-                    'icon' => 'fas fas fa-stop',
-                ],
-                [
-                    'text' => 'IMPRESORAS',
-                    'url' => '/impresoras',
-                    'icon' => 'fa fa-print',
-                ],
-                [
-                    'text' => 'LAPTOPS',
-                    'url' => '/laptops',
-                    'icon' => 'fas fas fa-laptop',
-                ],
-                [
-                    'text' => 'MONITOR',
-                    'url' => '/monitors',
-                    'icon' => 'fas fas fa-desktop',
-                ],
-                [
-                    'text' => 'MOUSE',
-                    'url' => '/ratons',
-                    'icon' => 'fas fa-fw fa-mouse',
-                ],
-                [
-                    'text' => 'PARLANTES',
-                    'url' => '/parlantes',
-                    'icon' => 'fas fas fa-volume-up',
-                ],
-                [
-                    'text' => 'TECLADOS',
-                    'url' => '/teclados',
-                    'icon' => 'fas fas fa-keyboard',
-                ],
-                [
-                    'text' => 'UPS',
-                    'url' => '/upeses',
-                    'icon' => 'fas fas fa-hdd',
-                ],
-                [
-                    'text' => 'OTROS EQUIPOS',
-                    'url' => '/otros-equipos',
-                    'icon' => 'fas fas fa-headphones',
-                ],
-            ],
-
-        ],
-        [
-            'text' => 'MIS ASIGNACIONES',
-            // 'classes' => 'text-primary text-bold',
-            'icon' => 'fas fa-user-clock',
-            'can' => 'tecnico',
-            'submenu' => [
-                [
-                    'text' => 'AUDIFONOS',
-                    'url' => '/asignaciones/audifono',
-                    'icon' => 'fas fas fa-headphones',
-                ],
-                [
-                    'text' => 'CPU',
-                    'url' => '/asignaciones/cpu',
-                    'icon' => 'fas fas fa-window-maximize',
-                ],
-                [
-                    'text' => 'ESTABILIZADOR',
-                    'url' => '/asignaciones/estabilizador',
-                    'icon' => 'fas fas fa-stop',
-                ],
-                [
-                    'text' => 'IMPRESORAS',
-                    'url' => '/asignaciones/impresora',
-                    'icon' => 'fa fa-print',
-                ],
-                [
-                    'text' => 'LAPTOPS',
-                    'url' => '/asignaciones/laptop',
-                    'icon' => 'fas fas fa-laptop',
-                ],
-                [
-                    'text' => 'MONITOR',
-                    'url' => '/asignaciones/monitor',
-                    'icon' => 'fas fas fa-desktop',
-                ],
-                [
-                    'text' => 'MOUSE',
-                    'url' => '/asignaciones/mouse',
-                    'icon' => 'fas fa-fw fa-mouse',
-                ],
-                [
-                    'text' => 'PARLANTES',
-                    'url' => '/asignaciones/parlante',
-                    'icon' => 'fas fas fa-volume-up',
-                ],
-                [
-                    'text' => 'TECLADOS',
-                    'url' => '/asignaciones/teclado',
-                    'icon' => 'fas fas fa-keyboard',
-                ],
-                [
-                    'text' => 'UPS',
-                    'url' => '/asignaciones/ups',
-                    'icon' => 'fas fas fa-hdd',
-                ],
-                [
-                    'text' => 'OTROS EQUIPOS',
-                    'url' => '/asignaciones/equipos',
-                    'icon' => 'fas fas fa-hdd',
-                ],
-            ],
-
+            'text' => 'Soporte Técnico',
+            'url'  => '/servicios',
+            'icon' => 'fas fa-fw fa-headset',
+            'topnav' => true,
+            'can' => ['superadministrador', 'admin'],
         ],
 
         [
-            'text' => 'PIEZAS CPU',
-            'icon' => 'fas fa-cog',
-            'can' => 'admin1',
-            'submenu' => [
-                    [
-                        'text' => 'CASE',
-                        'icon' => 'fas fa-fw fa-stop',
-                        'submenu' => [
-                            [
-                                'text' => 'MARCA',
-                                'url' => '/marca-cases',
-                                'icon_color' => 'red',
-                            ],
-                            [
-                                'text' => 'COLORES',
-                                'url' => '/color-cases',
-                                //'can'=> 'administrador'
-                            ],
-                        ]
-                    ],
-                    [
-                    'text' => 'PROCESADOR',
-                    'icon' => 'fas fa-fw fa-stop',
-                    'submenu' => [
-                        [
-                            'text' => 'MARCA',
-                            'url' => '/marca-procesadors',
-                        ],
-                        [
-                            'text' => 'MODELO',
-                            'url' => '/modelo-procesadors',
-                        ],
-                        [
-                            'text' => 'GENERACIÓN',
-                            'url' => '/gen-procesadors',
-                        ],
-                    ]
-                ],
-                [
-                    'text' => 'TARJETA MADRE',
-                    'icon' => 'fas fa-fw fa-stop',
-                    'submenu' => [
-                        [
-                            'text' => 'MARCA',
-                            'url' => '/marca-tmadres',
-                            'icon_color' => 'red',
-                        ],
-                    ]
-                ],
-                [
-                    'text' => 'DISCO DURO',
-                    'icon' => 'fas fa-fw fa-stop',
-                    'submenu' => [
-                        [
-                            'text' => 'MARCA',
-                            'url' => '/marca-discos',
-                            'icon_color' => 'red',
-                        ],
-                        [
-                            'text' => 'MODELO',
-                            'url' => '/modelo-discos',
-                            //'can'=> 'administrador'
-                        ],
-                        [
-                            'text' => 'CAPACIDAD',
-                            'url' => '/capacidad-discos',
-                            //'can'=> 'administrador'
-                        ],
-                        [
-                            'text' => 'TIPO',
-                            'url' => '/tipo-discos',
-                            //'can'=> 'administrador'
-                        ],
-                    ]
-                ],
-                [
-                    'text' => 'MEMORIA RAM',
-                    'icon' => 'fas fa-fw fa-stop',
-                    'submenu' => [
-                        [
-                            'text' => 'MARCA',
-                            'url' => '/marca-rams',
-                            'icon_color' => 'red',
-                        ],
-                        [
-                            'text' => 'CAPACIDAD',
-                            'url' => '/capacidad-rams',
-                            //'can'=> 'administrador'
-                        ],
-                        [
-                            'text' => 'TIPO',
-                            'url' => '/tipo-rams',
-                            //'can'=> 'administrador'
-                        ],
-                        [
-                            'text' => 'CANTIDAD',
-                            'url' => '/cantidad-rams',
-                            //'can'=> 'administrador'
-                        ],
-                    ]
-                ],
-                [
-                    'text' => 'TARJETA DE VIDEO',
-                    'icon' => 'fas fa-fw fa-stop',
-                    'submenu' => [
-                        [
-                            'text' => 'MARCA',
-                            'url' => '/marca-tvideos',
-                            'icon_color' => 'red',
-                        ],
-                        [
-                            'text' => 'TIPO',
-                            'url' => '/tipo-tvideos',
-                            //'can'=> 'administrador'
-                        ],
-                        [
-                            'text' => 'CAPACIDAD',
-                            'url' => '/capacidad-tvideos',
-                            //'can'=> 'administrador'
-                        ],
-                    ]
-                ],
-                [
-                    'text' => 'TARJETA  DE RED',
-                    'icon' => 'fas fa-fw fa-stop',
-                    'submenu' => [
-                        [
-                            'text' => 'MARCA',
-                            'url' => '/marca-treds',
-                            'icon_color' => 'red',
-                        ],
-                        [
-                            'text' => 'MODELO',
-                            'url' => '/modelo-treds',
-                            'icon_color' => 'red',
-                        ],
-                    ]
-                ],
-                [
-                    'text' => 'TARJETA  WIFI',
-                    'icon' => 'fas fa-fw fa-stop',
-                    'submenu' => [
-                        [
-                            'text' => 'MARCA',
-                            'url' => '/marca-twifis',
-                            'icon_color' => 'red',
-                        ],
-                        [
-                            'text' => 'MODELO',
-                            'url' => '/modelo-wifis',
-                            'icon_color' => 'red',
-                        ],
-                    ]
-                ],
-                [
-                    'text' => 'FUENTE DE PODER',
-                    'icon' => 'fas fa-fw fa-stop',
-                    'submenu' => [
-                        [
-                            'text' => 'MARCA',
-                            'url' => '/marca-fuentes',
-                            'icon_color' => 'red',
-                        ],
-                        [
-                            'text' => 'POTENCIA',
-                            'url' => '/potencia-fuentes',
-                            'icon_color' => 'red',
-                        ],
-                    ]
-                ],
-                [
-                    'text' => 'LECTOR CD-DVD',
-                    'icon' => 'fas fa-fw fa-stop',
-                    'submenu' => [
-                        [
-                            'text' => 'MARCA',
-                            'url' => '/marca-lectorcds',
-                            'icon_color' => 'red',
-                        ],
-                    ]
-                ],
-
-            ],
-        ],
-        [
-            'text' => 'REQUERIMIENTO DE ASISTENCIA TÉCNICA',
-            // 'classes' => 'text-blue text-bold',
-            'url' => '/servicios',
-            'icon' => 'fa fa-fw fa-cog',
-            'can' => ['superadministrador','admin'],
-        ],
-        [
-            'text' => 'MIS ASIGNACIONES DE ASISTENCIA TÉCNICA',
-            // 'classes' => 'text-blue text-bold',
-            'url' => '/asignaciones/asistencia',
-            'icon' => 'fa fa-fw fa-cog',
+            'text' => 'Mis asignaciones',
+            'url'  => '/asignaciones/asistencia',
+            'icon' => 'fas fa-fw fa-tasks',
+            'topnav' => true,
             'can' => 'tecnico',
         ],
-        // [
-        //     'text' => 'REPORTES',
-        //     'classes' => 'text-blue text-bold',
-        //     'url' => '/reportes',
-        //     'icon' => 'fa fa-fw fa-file',
-        //     'can' => 'tecnico',
-        //     'icon_color' => '',
-        // ],
-        [
-            'text' => 'OTROS',
-            // 'classes' => 'text-orange text-bold',
-            'icon' => 'fas fa-file-alt',
-            'can' => 'admin',
-            'submenu' => [
-                [
-                    'text' => 'FUNCIONARIOS',
-                    'url' => '/funcionarios',
-                    'icon' => 'fas fas fa-house-user',
-                    'can' => 'admin',
-                ],
-                [
-                    'text' => 'TERMINOS Y CONDICIONES',
-                    'url' => '/terminos/edit',
-                    'icon' => 'fas fas fa-house-user',
-                    'can' => 'admin',
-                ],
-                [
-                    'text' => 'MODELOS DE CARTAS PARA SOLICITAR MANTENIMIENTO',
-                    'url' => '/documentos',
-                    'icon' => 'fas fas fa-house-user',
-                    'can' => 'admin',
-                ],
-                // [
-                //     'text' => 'ROLES',
-                //     'url' => '/roles',
-                //     'icon' => 'fas fas fa-house-user',
-                //     'can' => 'admin',
-                // ],
-                [
-                    'text' => 'RESPONSABLES',
-                    'url' => '/responsables',
-                    'icon' => 'fas fas fa-house-user',
-                    'can' => 'admin',
-                ],
-                [
-                    'text' => 'DEPENDENCIAS',
-                    'icon' => 'fas fa-fw fa-stop',
-                    'url' => '/dependencias',
-                ],
-                [
-                    'text' => 'MANUAL DE USUARIO',
-                    'icon' => 'fas fa-fw fa-stop',
-                    'url' => '/manual-usuario',
-                ],
 
-            ],
+        [
+            'type' => 'fullscreen-widget',
+            'topnav_right' => true,
         ],
 
-        [
-    'header' => 'CONFIGURACIÓN',
-],
-[
-    'text' => 'Modo oscuro',
-    'icon' => 'fas fa-sun',
-    'url' => '#',
-    'id' => 'dark-mode-toggle',
-],
+// [
+//     'text' => '',
+//     'url'  => '/servicios',
+//     'icon' => 'fas fa-fw fa-bell',
+//     'topnav_right' => true,
+//     'label' => 3,
+//     'label_color' => 'danger',
+//     'can' => ['superadministrador', 'admin'],
+// ],
 
+    // =========================================================
+    // PANEL PRINCIPAL
+    // =========================================================
+    [
+        'header' => 'INICIO',
     ],
+    [
+        'text'  => 'Panel principal',
+        'route' => 'home',
+        'icon'  => 'fas fa-fw fa-tachometer-alt',
+    ],
+
+    // =========================================================
+    // PERSONAL
+    // =========================================================
+    [
+        'header' => 'GESTIÓN DE PERSONAL',
+        'can'  => ['superadministrador', 'admin'],
+    ],
+    [
+        'text' => 'Personal',
+        'icon' => 'fas fa-fw fa-users',
+        'can'  => ['superadministrador', 'admin'],
+
+        'submenu' => [
+
+            [
+                'text' => 'Responsables',
+                'url'  => '/users',
+                'icon' => 'fas fa-fw fa-user',
+                'can'  => 'superadministrador',
+            ],
+
+            [
+                'text' => 'Técnicos',
+                'url'  => '/tecnicos',
+                'icon' => 'fas fa-fw fa-user-cog',
+            ],
+
+        ],
+    ],
+
+    // =========================================================
+    // EQUIPOS
+    // =========================================================
+
+    [
+        'header' => 'GESTIÓN DE EQUIPOS',
+        'can'  => ['admin', 'tecnico'],
+    ],
+
+
+    [
+        'text' => 'Activos',
+        'icon' => 'fas fa-fw fa-folder-open',
+        'can'  => ['admin', 'tecnico'],
+
+        'submenu' => [
+
+            [
+                'text' => 'Audífonos',
+                'url'  => '/audifonos',
+                'icon' => 'fas fa-fw fa-headphones',
+            ],
+
+            [
+                'text' => 'CPU',
+                'url'  => '/registro-cpus',
+                'icon' => 'fas fa-fw fa-desktop',
+            ],
+
+            [
+                'text' => 'Estabilizador',
+                'url'  => '/estabilizadors',
+                'icon' => 'fas fa-fw fa-bolt',
+            ],
+
+            [
+                'text' => 'Impresora',
+                'url'  => '/impresoras',
+                'icon' => 'fas fa-fw fa-print',
+            ],
+
+            [
+                'text' => 'Laptops',
+                'url'  => '/laptops',
+                'icon' => 'fas fa-fw fa-laptop',
+            ],
+
+            [
+                'text' => 'Monitor',
+                'url'  => '/monitors',
+                'icon' => 'fas fa-fw fa-desktop',
+            ],
+
+            [
+                'text' => 'Mouse',
+                'url'  => '/ratons',
+                'icon' => 'fas fa-fw fa-mouse',
+            ],
+
+            [
+                'text' => 'Parlante',
+                'url'  => '/parlantes',
+                'icon' => 'fas fa-fw fa-volume-up',
+            ],
+
+            [
+                'text' => 'Teclado',
+                'url'  => '/teclados',
+                'icon' => 'fas fa-fw fa-keyboard',
+            ],
+
+            [
+                'text' => 'UPS',
+                'url'  => '/upeses',
+                'icon' => 'fas fa-fw fa-battery-full',
+            ],
+
+            [
+                'text' => 'Otros equipos',
+                'url'  => '/otros-equipos',
+                'icon' => 'fas fa-fw fa-boxes',
+            ],
+
+        ],
+    ],
+
+    // =========================================================
+    // MIS ASIGNACIONES DE EQUIPOS
+    // =========================================================
+
+    [
+        'text' => 'Mis asignaciones',
+        'icon' => 'fas fa-fw fa-user-clock',
+        'can'  => 'tecnico',
+
+        'submenu' => [
+
+            [
+                'text' => 'Audífono',
+                'url'  => '/asignaciones/audifono',
+                'icon' => 'fas fa-fw fa-headphones',
+            ],
+
+            [
+                'text' => 'CPU',
+                'url'  => '/asignaciones/cpu',
+                'icon' => 'fas fa-fw fa-desktop',
+            ],
+
+            [
+                'text' => 'Estabilizador',
+                'url'  => '/asignaciones/estabilizador',
+                'icon' => 'fas fa-fw fa-bolt',
+            ],
+
+            [
+                'text' => 'Impresora',
+                'url'  => '/asignaciones/impresora',
+                'icon' => 'fas fa-fw fa-print',
+            ],
+
+            [
+                'text' => 'Laptop',
+                'url'  => '/asignaciones/laptop',
+                'icon' => 'fas fa-fw fa-laptop',
+            ],
+
+            [
+                'text' => 'Monitor',
+                'url'  => '/asignaciones/monitor',
+                'icon' => 'fas fa-fw fa-desktop',
+            ],
+
+            [
+                'text' => 'Mouse',
+                'url'  => '/asignaciones/mouse',
+                'icon' => 'fas fa-fw fa-mouse',
+            ],
+
+            [
+                'text' => 'Parlante',
+                'url'  => '/asignaciones/parlante',
+                'icon' => 'fas fa-fw fa-volume-up',
+            ],
+
+            [
+                'text' => 'Teclado',
+                'url'  => '/asignaciones/teclado',
+                'icon' => 'fas fa-fw fa-keyboard',
+            ],
+
+            [
+                'text' => 'UPS',
+                'url'  => '/asignaciones/ups',
+                'icon' => 'fas fa-fw fa-battery-full',
+            ],
+
+            [
+                'text' => 'Otros equipos',
+                'url'  => '/asignaciones/equipos',
+                'icon' => 'fas fa-fw fa-boxes',
+            ],
+
+        ],
+    ],
+
+    // =========================================================
+    // PIEZAS CPU
+    // =========================================================
+    [
+        'header' => 'COMPONENTES',
+        'can'  => 'admin1',
+    ],
+    [
+        'text' => 'PIEZAS CPU',
+        'icon' => 'fas fa-fw fa-cogs',
+        'can'  => 'admin1',
+
+        'submenu' => [
+
+            // CASE
+            [
+                'text' => 'CASE',
+                'icon' => 'fas fa-fw fa-desktop',
+
+                'submenu' => [
+
+                    [
+                        'text' => 'Marca',
+                        'url'  => '/marca-cases',
+                        'icon' => 'fas fa-fw fa-tag',
+                    ],
+
+                    [
+                        'text' => 'Colores',
+                        'url'  => '/color-cases',
+                        'icon' => 'fas fa-fw fa-palette',
+                    ],
+
+                ],
+            ],
+
+            // PROCESADOR
+            [
+                'text' => 'PROCESADOR',
+                'icon' => 'fas fa-fw fa-microchip',
+
+                'submenu' => [
+
+                    [
+                        'text' => 'Marca',
+                        'url'  => '/marca-procesadors',
+                        'icon' => 'fas fa-fw fa-tag',
+                    ],
+
+                    [
+                        'text' => 'Modelo',
+                        'url'  => '/modelo-procesadors',
+                        'icon' => 'fas fa-fw fa-microchip',
+                    ],
+
+                    [
+                        'text' => 'Generación',
+                        'url'  => '/gen-procesadors',
+                        'icon' => 'fas fa-fw fa-layer-group',
+                    ],
+
+                ],
+            ],
+
+            // TARJETA MADRE
+            [
+                'text' => 'TARJETA MADRE',
+                'icon' => 'fas fa-fw fa-memory',
+
+                'submenu' => [
+
+                    [
+                        'text' => 'Marca',
+                        'url'  => '/marca-tmadres',
+                        'icon' => 'fas fa-fw fa-tag',
+                    ],
+
+                ],
+            ],
+
+            // DISCO DURO
+            [
+                'text' => 'DISCO DURO',
+                'icon' => 'fas fa-fw fa-hdd',
+
+                'submenu' => [
+
+                    [
+                        'text' => 'Marca',
+                        'url'  => '/marca-discos',
+                        'icon' => 'fas fa-fw fa-tag',
+                    ],
+
+                    [
+                        'text' => 'Modelo',
+                        'url'  => '/modelo-discos',
+                        'icon' => 'fas fa-fw fa-hdd',
+                    ],
+
+                    [
+                        'text' => 'Capacidad',
+                        'url'  => '/capacidad-discos',
+                        'icon' => 'fas fa-fw fa-database',
+                    ],
+
+                    [
+                        'text' => 'Tipo',
+                        'url'  => '/tipo-discos',
+                        'icon' => 'fas fa-fw fa-list',
+                    ],
+
+                ],
+            ],
+
+            // MEMORIA RAM
+            [
+                'text' => 'MEMORIA RAM',
+                'icon' => 'fas fa-fw fa-memory',
+
+                'submenu' => [
+
+                    [
+                        'text' => 'Marca',
+                        'url'  => '/marca-rams',
+                        'icon' => 'fas fa-fw fa-tag',
+                    ],
+
+                    [
+                        'text' => 'Capacidad',
+                        'url'  => '/capacidad-rams',
+                        'icon' => 'fas fa-fw fa-database',
+                    ],
+
+                    [
+                        'text' => 'Tipo',
+                        'url'  => '/tipo-rams',
+                        'icon' => 'fas fa-fw fa-list',
+                    ],
+
+                    [
+                        'text' => 'Cantidad',
+                        'url'  => '/cantidad-rams',
+                        'icon' => 'fas fa-fw fa-sort-numeric-up',
+                    ],
+
+                ],
+            ],
+
+            // TARJETA DE VIDEO
+            [
+                'text' => 'TARJETA DE VIDEO',
+                'icon' => 'fas fa-fw fa-tv',
+
+                'submenu' => [
+
+                    [
+                        'text' => 'Marca',
+                        'url'  => '/marca-tvideos',
+                        'icon' => 'fas fa-fw fa-tag',
+                    ],
+
+                    [
+                        'text' => 'Tipo',
+                        'url'  => '/tipo-tvideos',
+                        'icon' => 'fas fa-fw fa-list',
+                    ],
+
+                    [
+                        'text' => 'Capacidad',
+                        'url'  => '/capacidad-tvideos',
+                        'icon' => 'fas fa-fw fa-database',
+                    ],
+
+                ],
+            ],
+
+            // TARJETA DE RED
+            [
+                'text' => 'TARJETA DE RED',
+                'icon' => 'fas fa-fw fa-network-wired',
+
+                'submenu' => [
+
+                    [
+                        'text' => 'Marca',
+                        'url'  => '/marca-treds',
+                        'icon' => 'fas fa-fw fa-tag',
+                    ],
+
+                    [
+                        'text' => 'Modelo',
+                        'url'  => '/modelo-treds',
+                        'icon' => 'fas fa-fw fa-network-wired',
+                    ],
+
+                ],
+            ],
+
+            // TARJETA WIFI
+            [
+                'text' => 'TARJETA WIFI',
+                'icon' => 'fas fa-fw fa-wifi',
+
+                'submenu' => [
+
+                    [
+                        'text' => 'Marca',
+                        'url'  => '/marca-twifis',
+                        'icon' => 'fas fa-fw fa-tag',
+                    ],
+
+                    [
+                        'text' => 'Modelo',
+                        'url'  => '/modelo-wifis',
+                        'icon' => 'fas fa-fw fa-wifi',
+                    ],
+
+                ],
+            ],
+
+            // FUENTE DE PODER
+            [
+                'text' => 'FUENTE DE PODER',
+                'icon' => 'fas fa-fw fa-plug',
+
+                'submenu' => [
+
+                    [
+                        'text' => 'Marca',
+                        'url'  => '/marca-fuentes',
+                        'icon' => 'fas fa-fw fa-tag',
+                    ],
+
+                    [
+                        'text' => 'Potencia',
+                        'url'  => '/potencia-fuentes',
+                        'icon' => 'fas fa-fw fa-bolt',
+                    ],
+
+                ],
+            ],
+
+            // LECTOR CD/DVD
+            [
+                'text' => 'LECTOR CD-DVD',
+                'icon' => 'fas fa-fw fa-compact-disc',
+
+                'submenu' => [
+
+                    [
+                        'text' => 'Marca',
+                        'url'  => '/marca-lectorcds',
+                        'icon' => 'fas fa-fw fa-tag',
+                    ],
+
+                ],
+            ],
+
+        ],
+    ],
+
+    // =========================================================
+    // ASISTENCIA TÉCNICA
+    // =========================================================
+    [
+        'header' => 'ASISTENCIA TÉCNICA',
+    ],
+    [
+        'text' => 'Requerimiento de asistencia técnica',
+        'url'  => '/servicios',
+        'icon' => 'fas fa-fw fa-headset',
+        'can'  => ['superadministrador', 'admin'],
+    ],
+
+    [
+        'text' => 'Mis asignaciones de asistencia técnica',
+        'url'  => '/asignaciones/asistencia',
+        'icon' => 'fas fa-fw fa-user-cog',
+        'can'  => 'tecnico',
+    ],
+
+    // =========================================================
+    // OTROS
+    // =========================================================
+    [
+        'header' => 'GESTIÓN ADMINISTRATIVA',
+    ],
+    [
+        'text' => 'Otros',
+        'icon' => 'fas fa-fw fa-file-alt',
+
+        'submenu' => [
+
+            [
+                'text' => 'Funcionarios',
+                'url'  => '/funcionarios',
+                'icon' => 'fas fa-fw fa-users',
+                'can'  => 'admin',
+            ],
+
+            [
+                'text' => 'Términos y condiciones',
+                'url'  => '/terminos/edit',
+                'icon' => 'fas fa-fw fa-file-contract',
+                'can'  => 'admin',
+            ],
+
+            [
+                'text' => 'Modelos de cartas para solicitar mantenimiento',
+                'url'  => '/documentos',
+                'icon' => 'fas fa-fw fa-file-word',
+                'can'  => 'admin',
+            ],
+
+            [
+                'text' => 'Responsables',
+                'url'  => '/responsables',
+                'icon' => 'fas fa-fw fa-user-tie',
+                'can'  => 'admin',
+            ],
+
+            [
+                'text' => 'Dependencias',
+                'url'  => '/dependencias',
+                'icon' => 'fas fa-fw fa-building',
+                'can'  => 'admin',
+            ],
+
+            [
+                'text' => 'Manual de usuario',
+                'url'  => '/manual-usuario',
+                'icon' => 'fas fa-fw fa-book',
+            ],
+
+        ],
+    ],
+
+    // =========================================================
+    // CONFIGURACIÓN
+    // =========================================================
+
+    [
+        'header' => 'CONFIGURACIÓN',
+    ],
+
+    [
+        'text' => 'Modo oscuro',
+        'icon' => 'fas fa-fw fa-sun',
+        'url'  => '#',
+        'id'   => 'dark-mode-toggle',
+    ],
+
+[
+    'header' => 'USUARIO',
+],
+
+[
+    'type' => 'usermenu',
+],
+
+],
 
     /*
     |--------------------------------------------------------------------------

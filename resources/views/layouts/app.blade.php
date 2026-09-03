@@ -1,8 +1,5 @@
 @extends('adminlte::page')
 
-
-
-
 @section('title')
     {{ config('adminlte.title') }}
     @hasSection('subtitle') | @yield('subtitle') @endif
@@ -41,21 +38,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 @endpush
-@section('content_header')
-    @hasSection('content_header_title')
-
-        <h1 class="text-muted">
-            @yield('content_header_title')
-
-            @hasSection('content_header_subtitle')
-                <small class="text-dark">
-                    <i class="fas fa-xs fa-angle-right text-muted"></i>
-                    @yield('content_header_subtitle')
-                </small>
-            @endif
-        </h1>
-    @endif
-{{-- Extend and customize the page content header --}}
 
 @section('content_header')
     @hasSection('content_header_title')
@@ -77,9 +59,7 @@
 {{-- Rename section content to content_body --}}
 
 @section('content')
-
     @yield('content_body')
-
 @stop
 
 {{-- Create a common footer --}}

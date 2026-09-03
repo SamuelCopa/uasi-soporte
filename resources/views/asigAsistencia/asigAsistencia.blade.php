@@ -384,7 +384,7 @@ document.addEventListener('DOMContentLoaded', function () {
 										<td >{{ $asignacion->equipo ?? '' }}</td>
 										<td >{{ $asignacion->falla ?? '' }}</td>
 										<td >{{ $asignacion->fecha_asignacion ?? '' }}</td>
-										<td >{{ $asignacion->servicio ?? '' }}</td>
+										<td >{{ $asignacion->servicio ?? 'PENDIENTE' }}</td>
                                         <td class="{{ empty($asignacion->fecha_atencion ) ? 'color1' : '' }}">
                                             @if($asignacion->fecha_atencion)
                                             {{ date('d-m-Y H:i',strtotime($asignacion->fecha_atencion ))}}
