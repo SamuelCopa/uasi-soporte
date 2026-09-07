@@ -603,3 +603,5 @@
 .checkbox-bounce input:checked + span::after {
   display: block;
 }
+
+

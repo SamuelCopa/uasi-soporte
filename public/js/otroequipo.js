@@ -33,7 +33,7 @@ $(document).ready(function() {
                             $('#cargo').val(data[0].cargo);
                             $('select[name="expedido"]').val(data[0].expedido);
                             $('#search-inputA').val(data[0].dependencia.dependencias);
-                            $('#id-selectedM').val(data[0].dependencia_id);
+                            $('#id-selectedA').val(data[0].dependencia_id);
                         }
                     },
                     error: function(xhr, status, error) {

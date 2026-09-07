@@ -313,30 +313,29 @@ $(document).ready(function() {
     // Al escribir en el input "Otro", mostrar el siguiente nivel
     $(this).closest('ul').find('.nivel-16').first().show();
     });
-    // --- Selección de TIPO ---
-$(document).on("click", ".nivel-17", function(e){
-    e.preventDefault();
 
-    let id = $(this).data('id');
-    tipo_texto = $(this).text();
-    $('#tipodisco_id').val(id);
 
-    let contenedor = $(this).closest('ul');
+        $(document).on("click", ".nivel-17", function(e){
+        e.preventDefault();
+        let id = $(this).data("id");
+        $("#tipodisco_id").val(id);
+         tipo_texto = $(this).text();
 
-    // ocultar solo los del mismo grupo
-    contenedor.find('.nivel-17').hide();
+        if (id == "otroTipodisco") {
+            $(".otro_tipo_disco").show().focus();
+        } else {
+            $(".otro_tipo_disco").hide();
+        }
+        actualizarListaDD();
+    });
+        // Cuando escriba en el input 
+        $('.otro_tipo_disco').on('input', function(){
+            tipo_texto = $(this).val();
+            $('#tipodisco_id').val("otroTipodisco");
+            actualizarListaDD();
+        });
 
-    // mostrar todos nuevamente (o solo los necesarios)
-    contenedor.find('.nivel-17').show();
 
-    if(id == 'otroTipodisco') {
-        $('.otroTipodisco').show().focus();
-    } else {
-        $('.otroTipodisco').hide();
-    }
-
-    actualizarListaDD();
-});
     // Actualizar la lista visible
     function actualizarListaDD() {
         let lista = $('#seleccionesdd');
@@ -1236,7 +1235,7 @@ $(document).ready(function() {
         let lista = $('#seleccionesfuente');
         lista.empty();
         if(marcafuente) lista.append('<li>MARCA: ' + marcafuente + '</li>');
-        if(potenciafuente) lista.append('<li>MODELO: ' + potenciafuente + '</li>');
+        if(potenciafuente) lista.append('<li>POTENCIA: ' + potenciafuente + '</li>');
         if(cable) lista.append('<li>CABLE: ' + cable + '</li>');
     }
 });

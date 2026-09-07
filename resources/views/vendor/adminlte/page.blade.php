@@ -50,6 +50,17 @@
         @endif
 
     </div>
+    <li class="nav-item">
+    <a class="nav-link sidebar-toggle-custom"
+       data-widget="pushmenu"
+       href="#"
+       role="button"
+       aria-label="Contraer o expandir menú">
+
+        <i id="sidebar-arrow" class="fas fa-chevron-left"></i>
+
+    </a>
+</li>
 @stop
 
 @section('adminlte_js')

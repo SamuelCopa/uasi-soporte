@@ -280,25 +280,54 @@ class LaptopController extends Controller
             'module_width' => 1, 
             'module_height' => 1 
         );
-        if($laptop->funcionario_activo == 1){
-        $datos = $laptop->funcionario?->grado_academico.' '.$laptop->funcionario?->nombre.' '.$laptop->funcionario?->paterno.' '.$laptop->funcionario?->materno. ' - ' . $laptop->funcionario?->ci.''.$laptop->funcionario?->expedido  . ' - ' . $laptop->dependencia->dependencias.' - SOPORTE TECNICO-GAMEA';
-        }else{
-        $datos = $laptop->funcionario?->grado_academico.' '.$laptop->funcionario?->nombre .' '.$laptop->funcionario?->paterno.' '.$laptop->funcionario?->materno. ' - ' . $laptop->funcionario?->ci.''.$laptop->funcionario?->expedido  . ' - ' .$laptop->funcionario?->cargo.' - SOPORTE TECNICO-GAMEA';
-        }
-        $datos1 = $laptop->funcionario?->grado_academico.' '.$laptop->funcionario?->nombre.' '.$laptop->funcionario?->paterno.' '.$laptop->funcionario?->materno ;
-        $datos2 = $laptop->funcionario?->ci.' '.$laptop->funcionario?->expedido ;
-        $datos3 = $laptop->funcionario?->cargo; 
-        $datos4 = $laptop->dependencia?->dependencias; 
+ if ($laptop->funcionario_activo == 1) {
+
+    $datos = $laptop->funcionario?->grado_academico . ' ' .
+             $laptop->funcionario?->nombre . ' ' .
+             $laptop->funcionario?->paterno . ' ' .
+             $laptop->funcionario?->materno .
+             ' - ' .
+             $laptop->funcionario?->ci . ' ' .
+             $laptop->funcionario?->expedido .
+             ' - ' .
+             ($laptop->dependencia?->dependencias ?? 'SIN DEPENDENCIA') .
+             ' - SOPORTE TECNICO-GAMEA';
+
+} else {
+
+    $datos = $laptop->funcionario?->grado_academico . ' ' .
+             $laptop->funcionario?->nombre . ' ' .
+             $laptop->funcionario?->paterno . ' ' .
+             $laptop->funcionario?->materno .
+             ' - ' .
+             $laptop->funcionario?->ci . ' ' .
+             $laptop->funcionario?->expedido .
+             ' - ' .
+             ($laptop->funcionario?->cargo ?? 'SIN CARGO') .
+             ' - SOPORTE TECNICO-GAMEA';
+}
+
+$datos1 = trim(
+    ($laptop->funcionario?->grado_academico ?? '') . ' ' .
+    ($laptop->funcionario?->nombre ?? '') . ' ' .
+    ($laptop->funcionario?->paterno ?? '') . ' ' .
+    ($laptop->funcionario?->materno ?? '')
+);
+
+$datos2 = ($laptop->funcionario?->ci ?? '') . ' ' .
+          ($laptop->funcionario?->expedido ?? '');
+
+$datos3 = $laptop->funcionario?->cargo ?? 'SIN CARGO';
+
+$datos4 = $laptop->dependencia?->dependencias ?? 'SIN DEPENDENCIA';
 
         $pdf->write2DBarcode($datos, 'QRCODE,H', 165, 210, 45, 45, $style, 'N');
         $pdf->Text(20, 205, '');
-        $pdf->SetY(-60); // establece la posición del cursor en la parte inferior de la página
+        $pdf->SetY(-70); // establece la posición del cursor en la parte inferior de la página
         $pdf->Cell(0, 5, $datos1, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos2, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos3, 0, 1, 'C');
-        if($laptop->funcionario_activo == 1){
-        $pdf->Cell(0, 5, $datos4, 0, 1, 'C');
-        }
+        $pdf->MultiCell(0, 5, $datos4, 0, 'C', false, 1);
         $pdfContent = $pdf->Output('laptop.pdf', 'S');
 
         // RESPUESTA CORRECTA PARA MODAL (iframe)

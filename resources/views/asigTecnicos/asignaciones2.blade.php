@@ -3,18 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-
     <title>Reporte de Asignaciones</title>
-
     <link rel="stylesheet"
           href="{{ public_path('estilos/asignaciones.css') }}">
-
 </head>
-
 <body>
-
     <!-- ENCABEZADO -->
-
     <div class="header">
     <table width="100%">
         <tr>
@@ -22,16 +16,13 @@
                 <img src="{{ public_path('img1/elalto.jpg') }}"
                      width="65">
             </td>
-
             <td width="60%" align="center">
                 <div class="titulo">
                     <h2>GOBIERNO AUTÓNOMO MUNICIPAL DE EL ALTO</h2>
                 </div>
-
                 <div class="subtitulo">
                     <h2>INFORME DE ASIGNACIONES DE EQUIPOS</h2>
                 </div>
-
                 <div class="subtitulo">
                     @if($tipo === 'mes' && $nombreMes)
                         PERIODO: {{ $nombreMes }} {{ $anio }}
@@ -40,31 +31,25 @@
                     @endif
                 </div>
             </td>
-
-            <td width="20%">
+            <td width="20%" align="center">
+                <img src="{{ public_path('img1/sello1.jpg') }}"
+                     width="65">
             </td>
         </tr>
     </table>
     </div>
 
-
-
     <!-- DATOS DEL REPORTE -->
 
     <table class="datos">
-
         <tr>
-
             <td>
                 <strong>Técnico:</strong>
-
                 {{ $user->name }}
                 {{ $user->paterno }}
                 {{ $user->materno }}
             </td>
-
             <td>
-
                 <strong>Período:</strong>
                 @if($tipo === 'mes')
                     {{ $nombreMes }} {{ $anio }}
@@ -107,40 +92,31 @@
             <th>Total</th>
         </tr>
     </thead>
-
     <tbody>
-
         @foreach($datos as $item)
-
             @php
                 $recepcionado = 0;
                 $enProceso = 0;
                 $apersonarse = 0;
                 $concluido = 0;
                 $entregado = 0;
-
                 foreach ($item['estados'] as $estado) {
-
                     $nombreEstado = strtoupper(trim($estado['estado']));
                     $cantidad = $estado['cantidad'];
-
                     switch ($nombreEstado) {
 
                         case 'RECEPCIONADO':
                             $recepcionado = $cantidad;
                             break;
-
                         case 'EN PROCESO':
                             $enProceso = $cantidad;
                             break;
                         case 'APERSONARSE':
                             $apersonarse = $cantidad;
                             break;
-
                         case 'CONCLUIDO':
                             $concluido = $cantidad;
                             break;
-
                         case 'ENTREGADO':
                             $entregado = $cantidad;
                             break;
@@ -163,29 +139,23 @@
                 $totalEntregado += $entregado;
                 $totalGeneral += $totalEquipo;
             @endphp
-
             <tr>
-
                 <!-- Tipo de equipo -->
                 <td>
                     <strong>{{ $item['titulo'] }}</strong>
                 </td>
-
                 <!-- Recepcionado -->
                 <td class="cantidad">
                     {{ $recepcionado }}
                 </td>
-
                 <!-- En proceso -->
                 <td class="cantidad">
                     {{ $enProceso }}
                 </td>
-
                 <!-- En proceso -->
                 <td class="cantidad">
                     {{ $apersonarse }}
                 </td>
-
                 <!-- Concluido -->
                 <td class="cantidad">
                     {{ $concluido }}
@@ -195,14 +165,11 @@
                 <td class="cantidad">
                     {{ $entregado }}
                 </td>
-
                 <!-- Total por fila -->
                 <td class="cantidad">
                     <strong>{{ $totalEquipo }}</strong>
                 </td>
-
             </tr>
-
         @endforeach
 
         <!-- TOTAL GENERAL -->

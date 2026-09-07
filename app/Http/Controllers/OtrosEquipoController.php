@@ -53,28 +53,22 @@ class OtrosEquipoController extends Controller
 
     // Filtro de fechas
     $query->where(function ($query) use ($fechaInicioPasada, $fechaFinPasada) {
-
         $query->where(function ($q) use ($fechaInicioPasada, $fechaFinPasada) {
-
             $q->whereBetween('fecha', [
                 $fechaInicioPasada,
                 $fechaFinPasada
             ])
             ->where('estado_id', '!=', 5);
-
         })
         ->orWhereYear('fecha', date('Y'));
-
     });
 
     // FILTRO POR TIPO DE EQUIPO
     if ($request->filled('tipo_equipo_id')) {
-
         $query->where(
             'tipo_equipo_id',
             $request->tipo_equipo_id
         );
-
     }
 
     // Obtener registros
@@ -95,17 +89,8 @@ class OtrosEquipoController extends Controller
         ->orderBy('paterno', 'asc')
         ->get();
 
-    return view(
-        'otros-equipo.index',
-        compact(
-            'otrosEquipo',
-            'users',
-            'estado',
-            'dependencia',
-            'tipoequipo'
-        )
-    )->with(
-        'i',
+    return view('otros-equipo.index', compact('otrosEquipo','users', 'estado', 'dependencia', 'tipoequipo')
+    )->with('i',
         ($request->input('page', 1) - 1)
         * $otrosEquipo->perPage()
     );
@@ -365,7 +350,7 @@ return back()
 
     public function generarPdf($id)
     {
-        $equipo = OtrosEquipo::findOrFail($id);
+         $equipo = OtrosEquipo::with('tipoEquipo')->findOrFail($id);
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, 'LETTER', true, 'UTF-8', false);
         $pdf->SetTitle('Doc. ' . $equipo->funcionario?->ci);
         $pdf->setPrintHeader(false);
@@ -432,7 +417,7 @@ $datos4 = $equipo->dependencia?->dependencias ?? 'SIN DEPENDENCIA';
         $pdf->Cell(0, 5, $datos1, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos2, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos3, 0, 1, 'C');
-        $pdf->Cell(0, 5, $datos4, 0, 1, 'C');
+        $pdf->MultiCell(0, 5, $datos4, 0, 'C', false, 1);
 
         $pdfContent = $pdf->Output('otros-equipo.pdf', 'S');
 
@@ -448,7 +433,7 @@ $datos4 = $equipo->dependencia?->dependencias ?? 'SIN DEPENDENCIA';
 {
     return [
         'equipo' => $equipo,
-        'qr' => $this->armarQrmonitor($equipo),
+        'qr' => $this->armarQrequipo($equipo),
         'footer' => [
             $this->nombreCompleto($equipo),
             $this->ciCompleto($equipo),
@@ -457,7 +442,7 @@ $datos4 = $equipo->dependencia?->dependencias ?? 'SIN DEPENDENCIA';
         ]
     ];
 }
-private function armarQrmonitor($equipo)
+private function armarQrequipo($equipo)
 {
     if ($equipo->funcionario_activo == 1) {
         return $this->nombreCompleto($equipo) . ' - ' .
@@ -562,75 +547,58 @@ public function enviar($id, EquipoPdfService $service)
     }
 
 // ===========CAMBIAR ESTADO Y ENVIAR ALERTA==================
-public function cambiarEstado(Request $request)
-{
-    $equipo = OtrosEquipo::with([
-        'tipoEquipo',
-        'funcionario',
-        'estado',
-        'resultado'
-    ])->findOrFail($request->id);
+    public function cambiarEstado(Request $request)
+    {
+        $equipo = OtrosEquipo::findOrFail($request->id);
 
-    $estadoId = (int) $request->input('estado_id');
+        $estadoId = (int) $request->input('estado_id');
 
-    // =========================
-    // ACTUALIZAR ESTADO
-    // =========================
+        // =========================
+        // ACTUALIZAR ESTADO
+        // =========================
+        $equipo->estado_id = $estadoId;
 
-    $equipo->estado_id = $estadoId;
+        // Mapeo de fechas por estado
+        $fechas = [
+            2 => 'fecha_inicio',
+            5 => 'fecha_entrega',
+        ];
 
-    $fechas = [
-        2 => 'fecha_inicio',
-        5 => 'fecha_entrega',
-    ];
+        $equipo->estado_id = $estadoId;
 
-    if (isset($fechas[$estadoId])) {
+        if (isset($fechas[$estadoId])) {
 
-        $campoFecha = $fechas[$estadoId];
+            $campoFecha = $fechas[$estadoId];
 
-        if (empty($equipo->$campoFecha)) {
-            $equipo->$campoFecha = now();
+            // Controla la fecha, NO el estado
+            if (empty($equipo->$campoFecha)) {
+                $equipo->$campoFecha = now();
+            }
         }
+
+        $equipo->save();
+
+        // =========================
+        // ENVÍO DE NOTIFICACIÓN
+        // =========================
+        if (in_array($estadoId, [3, 4])) {
+
+            $this->notificacionService->enviar(
+                $equipo->funcionario,
+                $estadoId,
+                $equipo
+            );
+        }
+
+        // =========================
+        // RESPUESTA
+        // =========================
+        return response()->json([
+            'estado' => $estadoId == 5
+                ? $equipo->resultado?->nombre
+                : $equipo->estado?->nombre
+        ]);
     }
-
-    $equipo->save();
-
-    // =========================
-    // RECARGAR RELACIONES
-    // =========================
-
-    $equipo->load([
-        'estado',
-        'resultado',
-        'tipoEquipo'
-    ]);
-
-    // =========================
-    // ENVÍO DE NOTIFICACIÓN
-    // =========================
-
-    if (in_array($estadoId, [3, 4])) {
-
-        $this->notificacionService->enviar(
-            $equipo->funcionario,
-            $estadoId,
-            $equipo
-        );
-    }
-
-    // =========================
-    // ESTADO PARA AJAX
-    // =========================
-
-    $nombreEstado = $estadoId == 5
-        ? ($equipo->resultado?->nombre ?? 'SIN RESULTADO')
-        : ($equipo->estado?->nombre ?? 'SIN ESTADO');
-
-    return response()->json([
-        'success' => true,
-        'estado' => $nombreEstado
-    ]);
-}
 
 public function filtrar(Request $request)
 {

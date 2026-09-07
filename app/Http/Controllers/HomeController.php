@@ -22,16 +22,35 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
-    {
-        $user= Auth::user();
-        $nuevasSolicitudes = Servicio::where('visto', false)->count();
+public function index()
+{
+    $user = auth()->user();
 
-        $nuevasSolicitudesTecnico = Servicio::where('user_id', Auth::id())
-        ->where('visto', 0)
-        ->count();
-
-
-        return view('home', compact('user', 'nuevasSolicitudes','nuevasSolicitudesTecnico'));
+    // Administrador y SuperAdministrador
+    if ($user->hasAnyRole(['Administrador', 'SuperAdministrador'])) {
+        return view('home', [
+            'user' => $user,
+            'nuevasSolicitudes' => $this->nuevasSolicitudes ?? 0,
+        ]);
     }
+
+    // Técnico de SOPORTE
+    if (
+        $user->hasRole('Tecnico') &&
+        $user->especialidad?->codigo === 'SOPORTE'
+    ) {
+        return view('home', [
+            'user' => $user,
+            'nuevasSolicitudesTecnico' => $this->nuevasSolicitudesTecnico ?? 0,
+        ]);
+    }
+
+    // Los demás técnicos
+    if ($user->hasRole('Tecnico')) {
+        return redirect()->route('asignaciones.asistencia');
+    }
+
+    // Cualquier otro usuario
+    return redirect()->route('asignaciones.asistencia');
+}
 }

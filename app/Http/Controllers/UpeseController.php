@@ -279,15 +279,46 @@ class UpeseController extends Controller
             'module_width' => 1, 
             'module_height' => 1 
         );
-        if($ups->funcionario_activo == 1){
-        $datos = $ups->funcionario?->grado_academico.' '.$ups->funcionario?->nombre.' '.$ups->funcionario?->paterno.' '.$ups->funcionario?->materno. ' - ' . $ups->funcionario?->ci.''.$ups->funcionario?->expedido  . ' - ' . $ups->dependencia->dependencias.' - SOPORTE TECNICO-GAMEA';
-        }else{
-        $datos = $ups->funcionario?->grado_academico.' '.$ups->funcionario?->nombre .' '.$ups->funcionario?->paterno.' '.$ups->funcionario?->materno. ' - ' . $ups->funcionario?->ci.''.$ups->funcionario?->expedido  . ' - ' .$ups->funcionario?->cargo.' - SOPORTE TECNICO-GAMEA';
-        }
-        $datos1 = $ups->funcionario?->grado_academico.' '.$ups->funcionario?->nombre.' '.$ups->funcionario?->paterno.' '.$ups->funcionario?->materno ;
-        $datos2 = $ups->funcionario?->ci.' '.$ups->funcionario?->expedido ;
-        $datos3 = $ups->funcionario?->cargo; 
-        $datos4 = $ups->dependencia?->dependencias; 
+ if ($ups->funcionario_activo == 1) {
+
+    $datos = $ups->funcionario?->grado_academico . ' ' .
+             $ups->funcionario?->nombre . ' ' .
+             $ups->funcionario?->paterno . ' ' .
+             $ups->funcionario?->materno .
+             ' - ' .
+             $ups->funcionario?->ci . ' ' .
+             $ups->funcionario?->expedido .
+             ' - ' .
+             ($ups->dependencia?->dependencias ?? 'SIN DEPENDENCIA') .
+             ' - SOPORTE TECNICO-GAMEA';
+
+} else {
+
+    $datos = $ups->funcionario?->grado_academico . ' ' .
+             $ups->funcionario?->nombre . ' ' .
+             $ups->funcionario?->paterno . ' ' .
+             $ups->funcionario?->materno .
+             ' - ' .
+             $ups->funcionario?->ci . ' ' .
+             $ups->funcionario?->expedido .
+             ' - ' .
+             ($ups->funcionario?->cargo ?? 'SIN CARGO') .
+             ' - SOPORTE TECNICO-GAMEA';
+}
+
+$datos1 = trim(
+    ($ups->funcionario?->grado_academico ?? '') . ' ' .
+    ($ups->funcionario?->nombre ?? '') . ' ' .
+    ($ups->funcionario?->paterno ?? '') . ' ' .
+    ($ups->funcionario?->materno ?? '')
+);
+
+$datos2 = ($ups->funcionario?->ci ?? '') . ' ' .
+          ($ups->funcionario?->expedido ?? '');
+
+$datos3 = $ups->funcionario?->cargo ?? 'SIN CARGO';
+
+$datos4 = $ups->dependencia?->dependencias ?? 'SIN DEPENDENCIA';
 
         $pdf->write2DBarcode($datos, 'QRCODE,H', 165, 210, 45, 45, $style, 'N');
         $pdf->Text(20, 205, '');
@@ -295,8 +326,7 @@ class UpeseController extends Controller
         $pdf->Cell(0, 5, $datos1, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos2, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos3, 0, 1, 'C');
-        $pdf->Cell(0, 5, $datos4, 0, 1, 'C');
-
+        $pdf->MultiCell(0, 5, $datos4, 0, 'C', false, 1);
         $pdfContent = $pdf->Output('ups.pdf', 'S');
 
         // RESPUESTA CORRECTA PARA MODAL (iframe)

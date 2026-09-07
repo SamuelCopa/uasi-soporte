@@ -1,161 +1,624 @@
-<div class="modal fade" id="ver{{ $raton->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-        <div class="modal-header modal-header bg-primary text-white border-0 py-3">
-            <h4>REGISTRO</h4>
-        <button type="button" class="btn-close bg-primary" data-dismiss="modal" aria-label="Cerrar"><i class="fas fa-times"></i></button>
-      </div>
-      <section class="content container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                      <fieldset class="fieldset1">
-                          <legend class="legend1">DATOS DEL SOLICITANTE</legend>
-                        <div class="fila-1">
-                              <div class="div title">
-                                  <label>ESTADO DEL FUNCIONARIO: </label>
-                                  @if($raton?->funcionario_activo == 1)
-                                <div class="form-control">{{ 'FUNCIONARIO ACTIVO'}}</div>
-                                  @else
-                                <div class="form-control">{{ 'EX FUNCIONARIO'}}</div>
-                                  @endif
-                              </div>
-                              <div class="div title">
-                                  <label>RECEPCIONADO POR: </label>
-                                  <div class="form-control">{{$raton->reguser?->name}} {{$raton->reguser?->paterno}} {{$raton->reguser?->materno}}</div> 
-                              </div>
-                        </div>
-                        <div class="fila-1">
-                              <div class="div title">
-                                  <label>NOMBRE: </label>
-                                <div class="form-control">{{ strtoupper($raton->funcionario?->grado_academico) }} {{ $raton->funcionario?->nombre }} {{ $raton->funcionario?->paterno }} {{ $raton->funcionario?->materno }}</div>  
-                              </div>
-                              <div class="div title">
-                                <label>C.I.: </label>
-                                  <div class="form-control">{{ $raton->funcionario?->ci }} {{ $raton->funcionario?->expedido }}</div> 
-                            </div>
-                        </div>
-                        <div class="fila-2">
-                            <div class="div title">
-                              <label>CELULAR: </label>
-                            <div class="form-control">{{ $raton->funcionario?->celular }}</div> 
-                          </div>
-                          <div class="div title">
-                            <label>CORREO ELECTRÓNICO: </label>
-                            <div class="form-control">{{ $raton->funcionario?->email }}</div>
-                          </div>
-                          <div class="div title">
-                            <label>CARGO: </label>
-                            <div class="form-control">{{ $raton->funcionario?->cargo }}</div>
-                          </div>
-                        </div>
-                        <div class="fila-1">
-                          @if(! $raton->dependencia_id == '')
-                          <div class="div title" >
-                          <label>DEPENDENCIA:</label>
-                            <div class="form-control">{{ $raton->Dependencia?->dependencias }}</div> 
-                          </div>
-                          @else
-                          <div class="div title" >
-                          <label>DEPENDENCIA:</label>
-                            <div class="form-control">{{'SIN DEPENDENCIA'}}</div> 
-                          </div>
-                          @endif
-                          <div class="div title">
-                            <label>FECHA DE RECEPCIÓN: </label>
-                            @if($raton->fecha)
-                              <div class="form-control">{{ date('d-m-Y H:i',strtotime($raton->fecha))}}</div> 
-                            @elseif(! $raton->fecha)	
-                              <div class="form-control">{{ $raton->fecha ?? ''}}</div> 
-                            @endif	
-                          </div>
-                        </div>
-                        <div class="fila-2">
-                          <div class="div title">
-                            <label>TECNICO A CARGO: </label>
-                            <div class="{{ empty($raton->user_id) ? 'color1' : '' }}" >
-                              @if($raton->user_id)
-                            <div class="form-control">{{ $raton->user->name}} {{ $raton->user->paterno}} {{ $raton->user->materno}}</div> 
-                              @elseif(! $raton->user_id)	
-                            <div class="form-control ">{{ $raton->user->name ?? 'SIN ASIGNAR'}}</div> 
-                              @endif
-                          </div>
-                          </div>
-                          <div class="div title">
-                            <label>FECHA DE ASIGNACIÓN: </label>
-                            <div class="{{ empty($raton->fecha_asignacion) ? 'color1' : '' }}">
-                              @if($raton->fecha_asignacion)
-                                <div class="form-control">{{ date('d-m-Y H:i',strtotime($raton->fecha_asignacion ))}}</div> 
-                              @elseif(! $raton->fecha_asignacion)	
-                                <div class="form-control">{{ $raton->fecha_asignacion ?? 'SIN ASIGNAR'}}</div> 
-                              @endif								
-                          </div>
-                          </div>
-                          <div class="div title">
-                            <label>FECHA DE INICIO: </label>
-                            <div class="{{ empty($raton->fecha_inicio) ? 'color1' : '' }}">
-                              @if($raton->fecha_inicio)
-                                <div class="form-control">{{ date('d-m-Y H:i',strtotime($raton->fecha_inicio ))}}</div> 
-                              @elseif(! $raton->fecha_inicio)	
-                                <div class="form-control">{{ $raton->fecha_inicio ?? 'EN ESPERA'}}</div> 
-                              @endif								
-                          </div>
-                          </div>
-                        </div>
-                      </fieldset>
-                      <fieldset class="fieldset1">
-                          <legend class="legend1">DATOS DEL MOUSE</legend>
-                        <div class="fila-1">
-                          <div class="div ">
-                            <label>CODIGO GAMEA: </label>
-                              <div class="form-control">{{ $raton->cod_gamea }}</div> 
-                          </div>
-                          <div class="div title">
-                            <label>NÚMERO DE RECEPCIÓN: </label>
-                              <div class="{{ empty($raton->cod_registro) ? 'color1' : '' }}">
-                                <div class="form-control">{{ $raton->cod_registro ?? 'SIN ASIGNAR' }}</div>
-                              </div>
-                          </div>
-                        </div>
-                        <div class="fila-1">
-                          <div class="div title">
-                            <label>MARCA: </label>
-                              <div class="form-control">{{ $raton->marca }}</div>
-                          </div>
-                          <div class="div title">
-                            <label>MODELO: </label>
-                              <div class="form-control">{{ $raton->modelo }}</div> 
-                          </div>
-                        </div>
-                        <div class="fila-1">
-                          <div class="div title">
-                            <label>FALLA: </label> 
-                              <div class="form-control">{{ $raton->falla }}</div>   
-                          </div>
-                          <div class="div title">
-                            <label>ESTADO: </label>
-                            @if ($raton->estado_id == 5)
-                              <div class="form-control">{{ $raton->Estado?->nombre }} {{ date('d-m-Y H:i',strtotime($raton->fecha_entrega ))}}</div>
-                            @else
-                              <div class="form-control">{{ $raton->Estado?->nombre }}</div> 
-                            @endif
-                          </div>
-                        </div>
-                        <div class="fila-1">
-                          <div class="div title">
-                            <label>OBSERVACIONES: </label>
-                              <div class="form-control">{{ $raton->observaciones ?? 'SIN OBSERVACIONES' }}</div> 
-                          </div>
-                        </div>
-                      </fieldset>
+<link rel="stylesheet" href="{{ asset('estilos/password.css') }}">
+<!-- =========================================================
+     MODAL VER MOUSE
+     ========================================================= -->
+<div class="modal fade"
+     id="ver{{ $raton->id }}"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="verRatonLabel{{ $raton->id }}"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-xl modal-dialog-centered"
+         role="document">
+
+        <div class="modal-content modal-password">
+
+
+            <!-- =================================================
+                 HEADER
+                 ================================================= -->
+            <div class="modal-header modal-password-header">
+
+                <div class="modal-title-container">
+
+                    <div class="modal-password-icon">
+                        <i class="fas fa-mouse"></i>
                     </div>
+
+                    <div>
+
+                        <h5 class="modal-title"
+                            id="verRatonLabel{{ $raton->id }}">
+
+                            REGISTRO DE MOUSE
+
+                        </h5>
+
+                        <small>
+                            Información del equipo y seguimiento del mantenimiento
+                        </small>
+
+                    </div>
+
                 </div>
+
+                <button type="button"
+                        class="close modal-password-close"
+                        data-dismiss="modal"
+                        aria-label="Cerrar">
+
+                    <span aria-hidden="true">&times;</span>
+
+                </button>
+
             </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">CERRAR</button>
+
+
+            <!-- =================================================
+                 BODY
+                 ================================================= -->
+            <div class="modal-body modal-password-body">
+
+
+                <!-- =================================================
+                     DATOS DEL SOLICITANTE
+                     ================================================= -->
+                <div class="registro-section">
+
+                    <div class="registro-section-title">
+
+                        <i class="fas fa-user"></i>
+
+                        DATOS DEL SOLICITANTE
+
+                    </div>
+
+
+                    <!-- ESTADO FUNCIONARIO / RECEPCIONADO POR -->
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-user-check"></i>
+                                    ESTADO DEL FUNCIONARIO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    @if($raton->funcionario_activo == 1)
+
+                                        FUNCIONARIO ACTIVO
+
+                                    @else
+
+                                        EX FUNCIONARIO
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-user-shield"></i>
+                                    RECEPCIONADO POR
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $raton->reguser?->name }}
+                                    {{ $raton->reguser?->paterno }}
+                                    {{ $raton->reguser?->materno }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- NOMBRE / C.I. -->
+                    <div class="row">
+
+                        <div class="col-md-8">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-user"></i>
+                                    NOMBRE
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ strtoupper($raton->funcionario?->grado_academico ?? '') }}
+                                    {{ $raton->funcionario?->nombre }}
+                                    {{ $raton->funcionario?->paterno }}
+                                    {{ $raton->funcionario?->materno }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-id-card"></i>
+                                    C.I.
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $raton->funcionario?->ci ?? 'SIN REGISTRO' }}
+
+                                    @if($raton->funcionario?->expedido)
+
+                                        - {{ $raton->funcionario->expedido }}
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CELULAR / CORREO / CARGO -->
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-phone-alt"></i>
+                                    CELULAR
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $raton->funcionario?->celular ?? 'SIN REGISTRO' }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-envelope"></i>
+                                    CORREO ELECTRÓNICO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $raton->funcionario?->email ?? 'SIN REGISTRO' }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-briefcase"></i>
+                                    CARGO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $raton->funcionario?->cargo ?? 'SIN REGISTRO' }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- DEPENDENCIA / FECHA RECEPCIÓN -->
+                    <div class="row">
+
+                        <div class="col-md-7">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-building"></i>
+                                    DEPENDENCIA
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $raton->Dependencia?->dependencias ?? 'SIN DEPENDENCIA' }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-5">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    FECHA DE RECEPCIÓN
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    @if($raton->fecha)
+
+                                        {{ date('d-m-Y H:i', strtotime($raton->fecha)) }}
+
+                                    @else
+
+                                        <span class="text-muted">
+                                            SIN REGISTRO
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TÉCNICO / ASIGNACIÓN / INICIO -->
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-user-cog"></i>
+                                    TÉCNICO A CARGO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    @if($raton->user_id)
+
+                                        {{ $raton->user?->name }}
+                                        {{ $raton->user?->paterno }}
+                                        {{ $raton->user?->materno }}
+
+                                    @else
+
+                                        <span class="text-muted">
+                                            SIN ASIGNAR
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-calendar-check"></i>
+                                    FECHA DE ASIGNACIÓN
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    @if($raton->fecha_asignacion)
+
+                                        {{ date('d-m-Y H:i', strtotime($raton->fecha_asignacion)) }}
+
+                                    @else
+
+                                        <span class="text-muted">
+                                            SIN ASIGNAR
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-play-circle"></i>
+                                    FECHA DE INICIO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    @if($raton->fecha_inicio)
+
+                                        {{ date('d-m-Y H:i', strtotime($raton->fecha_inicio)) }}
+
+                                    @else
+
+                                        <span class="text-muted">
+                                            EN ESPERA
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
                 </div>
+
+
+                <!-- =================================================
+                     DATOS DEL MOUSE
+                     ================================================= -->
+                <div class="registro-section">
+
+                    <div class="registro-section-title">
+
+                        <i class="fas fa-mouse"></i>
+
+                        DATOS DEL MOUSE
+
+                    </div>
+
+
+                    <!-- CÓDIGO GAMEA / NÚMERO RECEPCIÓN -->
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-barcode"></i>
+                                    CÓDIGO GAMEA
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $raton->cod_gamea ?? 'SIN REGISTRO' }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-hashtag"></i>
+                                    NÚMERO DE RECEPCIÓN
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    @if($raton->cod_registro)
+
+                                        {{ $raton->cod_registro }}
+
+                                    @else
+
+                                        <span class="text-muted">
+                                            SIN ASIGNAR
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- MARCA / MODELO -->
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-tag"></i>
+                                    MARCA
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $raton->marca ?? 'SIN REGISTRO' }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-mouse"></i>
+                                    MODELO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $raton->modelo ?? 'SIN REGISTRO' }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- FALLA / ESTADO -->
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    FALLA
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $raton->falla ?? 'SIN REGISTRO' }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-tasks"></i>
+                                    ESTADO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $raton->Estado?->nombre ?? 'SIN ESTADO' }}
+
+                                    @if($raton->estado_id == 5 && $raton->fecha_entrega)
+
+                                        <span class="text-muted">
+                                            — {{ date('d-m-Y H:i', strtotime($raton->fecha_entrega)) }}
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- OBSERVACIONES -->
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-comment-alt"></i>
+                                    OBSERVACIONES
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $raton->observaciones ?? 'SIN OBSERVACIONES' }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FOOTER
+                 ================================================= -->
+            <div class="modal-footer modal-password-footer">
+
+                <button type="button"
+                        class="btn btn-password-close"
+                        data-dismiss="modal">
+
+                    <i class="fas fa-times"></i>
+
+                    CERRAR
+
+                </button>
+
+            </div>
+
         </div>
-    </section>
+
     </div>
-  </div>
+
 </div>
+

@@ -1,165 +1,583 @@
-<div class="modal fade" id="ver{{ $monitor->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-        <div class="modal-header modal-header bg-primary text-white border-0 py-3">
-            <h4>REGISTRO</h4>
-        <button type="button" class="btn-close bg-primary" data-dismiss="modal" aria-label="Cerrar"><i class="fas fa-times"></i></button>
-      </div>
-      <section class="content container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                      <fieldset class="fieldset1">
-                          <legend class="legend1">DATOS DEL SOLICITANTE</legend>
-                        <div class="fila-1">
-                              <div class="div title">
-                                  <label>ESTADO DEL FUNCIONARIO: </label>
-                                  @if($monitor?->funcionario_activo == 1)
-                                <div class="form-control">{{ 'FUNCIONARIO ACTIVO'}}</div>
-                                  @else
-                                <div class="form-control">{{ 'EX FUNCIONARIO'}}</div>
-                                  @endif
-                              </div>
-                              <div class="div title">
-                                  <label>RECEPCIONADO POR: </label>
-                                  <div class="form-control">{{$monitor->reguser?->name}} {{$monitor->reguser?->paterno}} {{$monitor->reguser?->materno}}</div> 
-                              </div>
-                        </div>
-                        <div class="fila-1">
-                              <div class="div title">
-                                  <label>NOMBRE: </label>
-                                <div class="form-control">{{ strtoupper($monitor->funcionario?->grado_academico) }} {{ $monitor->funcionario?->nombre }} {{ $monitor->funcionario?->paterno }} {{ $monitor->funcionario?->materno }}</div>  
-                              </div>
-                              <div class="div title">
-                                <label>C.I.: </label>
-                                  <div class="form-control">{{ $monitor->funcionario?->ci }} {{ $monitor->funcionario?->expedido }}</div> 
+<!-- =========================================================
+     MODAL VER MONITOR
+     ========================================================= -->
+<div class="modal fade"
+     id="ver{{ $monitor->id }}"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="verMonitorLabel{{ $monitor->id }}"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+
+        <div class="modal-content modal-password">
+
+            <!-- =================================================
+                 HEADER
+                 ================================================= -->
+            <div class="modal-header modal-password-header">
+
+                <div class="modal-title-container">
+
+                    <div class="modal-password-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+
+                    <div>
+                        <h5 class="modal-title"
+                            id="verMonitorLabel{{ $monitor->id }}">
+                            REGISTRO DE MONITOR
+                        </h5>
+
+                        <small>
+                            Información detallada del equipo y funcionario
+                        </small>
+                    </div>
+
+                </div>
+
+                <button type="button"
+                        class="close modal-password-close"
+                        data-dismiss="modal"
+                        aria-label="Cerrar">
+
+                    <span aria-hidden="true">&times;</span>
+
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 BODY
+                 ================================================= -->
+            <div class="modal-body modal-password-body">
+
+                <!-- =================================================
+                     DATOS DEL SOLICITANTE
+                     ================================================= -->
+                <div class="registro-section">
+
+                    <div class="registro-section-title">
+                        <i class="fas fa-user"></i>
+                        DATOS DEL SOLICITANTE
+                    </div>
+
+                    <div class="row">
+
+                        <!-- Estado funcionario -->
+                        <div class="col-md-6">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-user-check"></i>
+                                    ESTADO DEL FUNCIONARIO
+                                </div>
+
+                                <div class="registro-view-value">
+                                    {{ $monitor?->funcionario_activo == 1
+                                        ? 'FUNCIONARIO ACTIVO'
+                                        : 'EX FUNCIONARIO' }}
+                                </div>
+
                             </div>
                         </div>
-                        <div class="fila-2">
-                            <div class="div title">
-                              <label>CELULAR: </label>
-                            <div class="form-control">{{ $monitor->funcionario?->celular }}</div> 
-                          </div>
-                          <div class="div title">
-                            <label>CORREO ELECTRÓNICO: </label>
-                            <div class="form-control">{{ $monitor->funcionario?->email }}</div>
-                          </div>
-                          <div class="div title">
-                            <label>CARGO: </label>
-                            <div class="form-control">{{ $monitor->funcionario?->cargo }}</div>
-                          </div>
+
+
+                        <!-- Recepcionado por -->
+                        <div class="col-md-6">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-user-shield"></i>
+                                    RECEPCIONADO POR
+                                </div>
+
+                                <div class="registro-view-value">
+                                    {{ $monitor->reguser?->name ?? '' }}
+                                    {{ $monitor->reguser?->paterno ?? '' }}
+                                    {{ $monitor->reguser?->materno ?? '' }}
+
+                                    @if(!$monitor->reguser)
+                                        <span class="text-muted">
+                                            SIN REGISTRO
+                                        </span>
+                                    @endif
+                                </div>
+
+                            </div>
                         </div>
-                        <div class="fila-1">
-                          @if(! $monitor->dependencia_id == '')
-                          <div class="div title" >
-                          <label>DEPENDENCIA:</label>
-                            <div class="form-control">{{ $monitor->Dependencia?->dependencias }}</div> 
-                          </div>
-                          @else
-                          <div class="div title" >
-                          <label>DEPENDENCIA:</label>
-                            <div class="form-control">{{'SIN DEPENDENCIA'}}</div> 
-                          </div>
-                          @endif
-                          <div class="div title">
-                            <label>FECHA DE RECEPCIÓN: </label>
-                            @if($monitor->fecha)
-                              <div class="form-control">{{ date('d-m-Y H:i',strtotime($monitor->fecha))}}</div> 
-                            @elseif(! $monitor->fecha)	
-                              <div class="form-control">{{ $monitor->fecha ?? ''}}</div> 
-                            @endif	
-                          </div>
+
+
+                        <!-- Nombre -->
+                        <div class="col-md-8">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-id-card"></i>
+                                    NOMBRE DEL FUNCIONARIO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ strtoupper($monitor->funcionario?->grado_academico ?? '') }}
+                                    {{ $monitor->funcionario?->nombre ?? '' }}
+                                    {{ $monitor->funcionario?->paterno ?? '' }}
+                                    {{ $monitor->funcionario?->materno ?? '' }}
+
+                                    @if(!$monitor->funcionario)
+                                        <span class="text-muted">
+                                            SIN REGISTRO
+                                        </span>
+                                    @endif
+
+                                </div>
+
+                            </div>
                         </div>
-                        <div class="fila-2">
-                          <div class="div title">
-                            <label>TECNICO A CARGO: </label>
-                            <div class="{{ empty($monitor->user_id) ? 'color1' : '' }}" >
-                              @if($monitor->user_id)
-                            <div class="form-control">{{ $monitor->user->name}} {{ $monitor->user->paterno}} {{ $monitor->user->materno}}</div> 
-                              @elseif(! $monitor->user_id)	
-                            <div class="form-control ">{{ $monitor->user->name ?? 'SIN ASIGNAR'}}</div> 
-                              @endif
-                          </div>
-                          </div>
-                          <div class="div title">
-                            <label>FECHA DE ASIGNACIÓN: </label>
-                            <div class="{{ empty($monitor->fecha_asignacion) ? 'color1' : '' }}">
-                              @if($monitor->fecha_asignacion)
-                                <div class="form-control">{{ date('d-m-Y H:i',strtotime($monitor->fecha_asignacion ))}}</div> 
-                              @elseif(! $monitor->fecha_asignacion)	
-                                <div class="form-control">{{ $monitor->fecha_asignacion ?? 'SIN ASIGNAR'}}</div> 
-                              @endif								
-                          </div>
-                          </div>
-                          <div class="div title">
-                            <label>FECHA DE INICIO: </label>
-                            <div class="{{ empty($monitor->fecha_inicio) ? 'color1' : '' }}">
-                              @if($monitor->fecha_inicio)
-                                <div class="form-control">{{ date('d-m-Y H:i',strtotime($monitor->fecha_inicio ))}}</div> 
-                              @elseif(! $monitor->fecha_inicio)	
-                                <div class="form-control">{{ $monitor->fecha_inicio ?? 'SIN ASIGNAR'}}</div> 
-                              @endif								
-                          </div>
-                          </div>
+
+
+                        <!-- CI -->
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-address-card"></i>
+                                    C.I.
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $monitor->funcionario?->ci ?? 'SIN REGISTRO' }}
+
+                                    @if($monitor->funcionario?->expedido)
+                                        {{ $monitor->funcionario->expedido }}
+                                    @endif
+
+                                </div>
+
+                            </div>
                         </div>
-                      </fieldset>
-                      <fieldset class="fieldset1">
-                          <legend class="legend1">DATOS DEL MONITOR</legend>
-                        <div class="fila-1">
-                          <div class="div ">
-                            <label>CODIGO GAMEA: </label>
-                              <div class="form-control">{{ $monitor->cod_gamea }}</div> 
-                          </div>
-                          <div class="div title">
-                            <label>NÚMERO DE RECEPCIÓN: </label>
-                              <div class="{{ empty($monitor->cod_registro) ? 'color1' : '' }}">
-                                <div class="form-control">{{ $monitor->cod_registro ?? 'SIN ASIGNAR' }}</div>
-                              </div>
-                          </div>
+
+
+                        <!-- Celular -->
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    CELULAR
+                                </div>
+
+                                <div class="registro-view-value">
+                                    {{ $monitor->funcionario?->celular ?? 'SIN REGISTRO' }}
+                                </div>
+
+                            </div>
                         </div>
-                        <div class="fila-1">
-                          <div class="div title">
-                            <label>MARCA: </label>
-                              <div class="form-control">{{ $monitor->marca }}</div>
-                          </div>
-                          <div class="div title">
-                            <label>MODELO: </label>
-                              <div class="form-control">{{ $monitor->modelo }}</div> 
-                          </div>
+
+
+                        <!-- Correo -->
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-envelope"></i>
+                                    CORREO ELECTRÓNICO
+                                </div>
+
+                                <div class="registro-view-value">
+                                    {{ $monitor->funcionario?->email ?? 'SIN REGISTRO' }}
+                                </div>
+
+                            </div>
                         </div>
-                        <div class="fila-1">
-                          <div class="div title">
-                            <label>FALLA: </label> 
-                              <div class="form-control">{{ $monitor->falla }}</div>   
-                          </div>
-                          <div class="div title">
-                            <label>TAMAÑO: </label> 
-                              <div class="form-control">{{ $monitor->tamano }} ''</div>   
-                          </div>
+
+
+                        <!-- Cargo -->
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-briefcase"></i>
+                                    CARGO
+                                </div>
+
+                                <div class="registro-view-value">
+                                    {{ $monitor->funcionario?->cargo ?? 'SIN REGISTRO' }}
+                                </div>
+
+                            </div>
                         </div>
-                        <div class="fila-1">
-                          <div class="div title">
-                            <label>ESTADO: </label>
-                            @if ($monitor->estado_id == 5)
-                              <div class="form-control">{{ $monitor->Estado?->nombre }} {{ date('d-m-Y H:i',strtotime($monitor->fecha_entrega ))}}</div>
-                            @else
-                              <div class="form-control">{{ $monitor->Estado?->nombre }}</div> 
-                            @endif
-                          </div>
-                          <div class="div title">
-                            <label>OBSERVACIONES: </label>
-                              <div class="form-control">{{ $monitor->observaciones ?? 'SIN OBSERVACIONES' }}</div> 
-                          </div>
+
+
+                        <!-- Dependencia -->
+                        <div class="col-md-6">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-building"></i>
+                                    DEPENDENCIA
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $monitor->Dependencia?->dependencias
+                                        ?? 'SIN DEPENDENCIA' }}
+
+                                </div>
+
+                            </div>
                         </div>
-                      </fieldset>
+
+
+                        <!-- Fecha recepción -->
+                        <div class="col-md-6">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    FECHA DE RECEPCIÓN
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    @if($monitor->fecha)
+                                        {{ date('d-m-Y H:i', strtotime($monitor->fecha)) }}
+                                    @else
+                                        <span class="text-muted">
+                                            SIN REGISTRO
+                                        </span>
+                                    @endif
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Técnico -->
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-user-cog"></i>
+                                    TÉCNICO A CARGO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    @if($monitor->user_id && $monitor->user)
+
+                                        {{ $monitor->user->name }}
+                                        {{ $monitor->user->paterno }}
+                                        {{ $monitor->user->materno }}
+
+                                    @else
+
+                                        <span class="text-muted">
+                                            SIN ASIGNAR
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Fecha asignación -->
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-calendar-check"></i>
+                                    FECHA DE ASIGNACIÓN
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    @if($monitor->fecha_asignacion)
+
+                                        {{ date(
+                                            'd-m-Y H:i',
+                                            strtotime($monitor->fecha_asignacion)
+                                        ) }}
+
+                                    @else
+
+                                        <span class="text-muted">
+                                            SIN ASIGNAR
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Fecha inicio -->
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-play-circle"></i>
+                                    FECHA DE INICIO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    @if($monitor->fecha_inicio)
+
+                                        {{ date(
+                                            'd-m-Y H:i',
+                                            strtotime($monitor->fecha_inicio)
+                                        ) }}
+
+                                    @else
+
+                                        <span class="text-muted">
+                                            SIN ASIGNAR
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+                        </div>
+
                     </div>
+
                 </div>
+
+
+                <!-- =================================================
+                     DATOS DEL MONITOR
+                     ================================================= -->
+                <div class="registro-section">
+
+                    <div class="registro-section-title">
+                        <i class="fas fa-desktop"></i>
+                        DATOS DEL MONITOR
+                    </div>
+
+                    <div class="row">
+
+                        <!-- Código GAMEA -->
+                        <div class="col-md-6">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-barcode"></i>
+                                    CÓDIGO GAMEA
+                                </div>
+
+                                <div class="registro-view-value">
+                                    {{ $monitor->cod_gamea ?? 'SIN REGISTRO' }}
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Número recepción -->
+                        <div class="col-md-6">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-hashtag"></i>
+                                    NÚMERO DE RECEPCIÓN
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    @if($monitor->cod_registro)
+
+                                        {{ $monitor->cod_registro }}
+
+                                    @else
+
+                                        <span class="text-muted">
+                                            SIN ASIGNAR
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Marca -->
+                        <div class="col-md-6">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-tag"></i>
+                                    MARCA
+                                </div>
+
+                                <div class="registro-view-value">
+                                    {{ $monitor->marca ?? 'SIN REGISTRO' }}
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Modelo -->
+                        <div class="col-md-6">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-desktop"></i>
+                                    MODELO
+                                </div>
+
+                                <div class="registro-view-value">
+                                    {{ $monitor->modelo ?? 'SIN REGISTRO' }}
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Falla -->
+                        <div class="col-md-8">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    FALLA
+                                </div>
+
+                                <div class="registro-view-value">
+                                    {{ $monitor->falla ?? 'SIN REGISTRO' }}
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Tamaño -->
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-ruler-horizontal"></i>
+                                    TAMAÑO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $monitor->tamano ?? 'SIN REGISTRO' }}
+
+                                    @if($monitor->tamano)
+                                        ''
+                                    @endif
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Estado -->
+                        <div class="col-md-6">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-info-circle"></i>
+                                    ESTADO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $monitor->Estado?->nombre
+                                        ?? 'SIN ESTADO' }}
+
+                                    @if($monitor->estado_id == 5 && $monitor->fecha_entrega)
+
+                                        <span class="text-muted">
+                                            —
+                                            {{ date(
+                                                'd-m-Y H:i',
+                                                strtotime($monitor->fecha_entrega)
+                                            ) }}
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Observaciones -->
+                        <div class="col-md-6">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-comment-alt"></i>
+                                    OBSERVACIONES
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $monitor->observaciones
+                                        ?? 'SIN OBSERVACIONES' }}
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     INFORMACIÓN
+                     ================================================= -->
+                <div class="registro-required">
+
+                    <i class="fas fa-info-circle"></i>
+
+                    Información de consulta del registro.
+                    Los datos mostrados corresponden al estado actual
+                    del monitor.
+
+                </div>
+
             </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">CERRAR</button>
-              </div>
+
+
+            <!-- =================================================
+                 FOOTER
+                 ================================================= -->
+            <div class="modal-footer modal-password-footer">
+
+                <button type="button"
+                        class="btn btn-password-close"
+                        data-dismiss="modal">
+
+                    <i class="fas fa-times"></i>
+                    CERRAR
+
+                </button>
+
+            </div>
+
         </div>
-    </section>
+
     </div>
-  </div>
+
 </div>
+<link rel="stylesheet" href="{{ asset('estilos/password.css') }}">

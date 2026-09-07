@@ -78,11 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
 
                     <div class="swal-card-body">
-                        <div class="swal-item"> 
-                            <span class="label">Núm. de recepción</span>
-                            <span class="value">{{ $item['sinCod'] }}</span>
-                        </div>
-
                         <div class="swal-item">
                             <span class="label">Técnicos por asignar</span>
                             <span class="value">{{ $item['sinUser'] }}</span>
@@ -226,9 +221,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <!-- <div class="action-item {{ $dataEquipo['sin_cod'] > 0 ? 'text-danger' : 'text-muted' }}">
                     Sin número de recepción: {{ $dataEquipo['sin_cod'] }}
                 </div> -->
-                <div class="action-item {{ $dataEquipo['sin_user'] > 0 ? 'text-danger' : 'text-muted' }}">
-                    Asignar técnico: {{ $dataEquipo['sin_user'] }}
-                </div>
+<div class="card-item {{ ($dataEquipo['sin_user'] > 0) ? 'card-alert' : '' }}">
+    <span class="{{ ($dataEquipo['sin_user'] > 0) ? 'alerta-texto' : '' }}">
+        Asignar técnico: {{ $dataEquipo['sin_user'] }}
+    </span>
+</div>
             </div>
 
         </div>

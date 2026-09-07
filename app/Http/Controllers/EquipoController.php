@@ -712,13 +712,11 @@ public function reportePdf(Request $request)
         */
 
         if ($request->filled('codigo')) {
-
             $query->where(
                 'cod_gamea',
                 'LIKE',
                 '%' . $request->codigo . '%'
             );
-
         }
 
 
@@ -742,7 +740,6 @@ public function reportePdf(Request $request)
         */
 
         if ($modelo === OtrosEquipo::class) {
-
             $relaciones[] = 'tipoEquipo';
 
         }
@@ -766,7 +763,6 @@ public function reportePdf(Request $request)
         */
 
         foreach ($registros as $registro) {
-
             $registro->tipo_equipo = $tipo;
 
         }
@@ -777,11 +773,9 @@ public function reportePdf(Request $request)
         | AGREGAR RESULTADOS
         |--------------------------------------------------------------------------
         */
-
         $equipos = $equipos->merge(
             $registros
         );
-
     }
 
 
@@ -790,18 +784,14 @@ public function reportePdf(Request $request)
     | ORDENAR
     |--------------------------------------------------------------------------
     */
-
     $equipos = $equipos
         ->sortBy('fecha')
         ->values();
-
-
     /*
     |--------------------------------------------------------------------------
     | GENERAR PDF
     |--------------------------------------------------------------------------
     */
-
     $pdf = Pdf::loadView(
         'equipos.reporte-pdf',
         compact('equipos')
@@ -815,11 +805,8 @@ public function reportePdf(Request $request)
     */
 
     $pdf->setPaper(
-        'letter',
-        'landscape'
+        'letter'
     );
-
-
     /*
     |--------------------------------------------------------------------------
     | MOSTRAR

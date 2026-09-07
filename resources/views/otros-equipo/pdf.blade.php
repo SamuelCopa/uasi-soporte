@@ -96,7 +96,7 @@
 
         <tr class="fila-dividida4" >
         <td>
-            <strong>DATOS DEL ACTIVO</strong>                
+            <strong>DATOS {{ $equipo->tipoEquipo?->nombre ?? 'SIN TIPO DE EQUIPO' }}</strong>                
         </td>
         </tr>
         <tr class="fila-dividida5">

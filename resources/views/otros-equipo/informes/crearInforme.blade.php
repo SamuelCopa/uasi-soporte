@@ -11,7 +11,7 @@
 
                 <div class="card card-default">
                     <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                        <h4>{{ __('INFORME') }} MONITOR</h4>
+                        <h4>{{ __('INFORME') }}</h4>
                         @role('Administrador')
                         <div class="float-right">
                             <a class="btn btn-primary boton movnav" href="{{ route('otros-equipos.index') }}"> {{ __('VOLVER') }}</a>

@@ -271,15 +271,46 @@ class RatonController extends Controller
             'module_width' => 1, 
             'module_height' => 1 
         );
-        if($raton->funcionario_activo == 1){
-        $datos = $raton->funcionario?->grado_academico.' '.$raton->funcionario?->nombre.' '.$raton->funcionario?->paterno.' '.$raton->funcionario?->materno. ' - ' . $raton->funcionario?->ci.''. $raton->funcionario?->expedido . ' - ' . $raton->dependencia?->dependencias.' - SOPORTE TECNICO-GAMEA';
-        }else{
-        $datos = $raton->funcionario?->grado_academico.' '.$raton->funcionario?->nombre .' '.$raton->funcionario?->paterno.' '.$raton->funcionario?->materno. ' - ' . $raton->funcionario?->ci.''. $raton->funcionario?->expedido  . ' - ' .$raton->funcionario?->cargo.' - SOPORTE TECNICO-GAMEA';
-        }
-        $datos1 = $raton->funcionario?->grado_academico.' '.$raton->funcionario?->nombre.' '.$raton->funcionario?->paterno.' '.$raton->funcionario?->materno ;
-        $datos2 = $raton->funcionario?->ci.' '.$raton->funcionario?->expedido ;
-        $datos3 = $raton->funcionario?->cargo; 
-        $datos4 = $raton->dependencia?->dependencias; 
+ if ($raton->funcionario_activo == 1) {
+
+    $datos = $raton->funcionario?->grado_academico . ' ' .
+             $raton->funcionario?->nombre . ' ' .
+             $raton->funcionario?->paterno . ' ' .
+             $raton->funcionario?->materno .
+             ' - ' .
+             $raton->funcionario?->ci . ' ' .
+             $raton->funcionario?->expedido .
+             ' - ' .
+             ($raton->dependencia?->dependencias ?? 'SIN DEPENDENCIA') .
+             ' - SOPORTE TECNICO-GAMEA';
+
+} else {
+
+    $datos = $raton->funcionario?->grado_academico . ' ' .
+             $raton->funcionario?->nombre . ' ' .
+             $raton->funcionario?->paterno . ' ' .
+             $raton->funcionario?->materno .
+             ' - ' .
+             $raton->funcionario?->ci . ' ' .
+             $raton->funcionario?->expedido .
+             ' - ' .
+             ($raton->funcionario?->cargo ?? 'SIN CARGO') .
+             ' - SOPORTE TECNICO-GAMEA';
+}
+
+$datos1 = trim(
+    ($raton->funcionario?->grado_academico ?? '') . ' ' .
+    ($raton->funcionario?->nombre ?? '') . ' ' .
+    ($raton->funcionario?->paterno ?? '') . ' ' .
+    ($raton->funcionario?->materno ?? '')
+);
+
+$datos2 = ($raton->funcionario?->ci ?? '') . ' ' .
+          ($raton->funcionario?->expedido ?? '');
+
+$datos3 = $raton->funcionario?->cargo ?? 'SIN CARGO';
+
+$datos4 = $raton->dependencia?->dependencias ?? 'SIN DEPENDENCIA';
 
         $pdf->write2DBarcode($datos, 'QRCODE,H', 165, 210, 45, 45, $style, 'N');
         $pdf->Text(20, 205, '');
@@ -287,7 +318,7 @@ class RatonController extends Controller
         $pdf->Cell(0, 5, $datos1, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos2, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos3, 0, 1, 'C');
-        $pdf->Cell(0, 5, $datos4, 0, 1, 'C');
+        $pdf->MultiCell(0, 5, $datos4, 0, 'C', false, 1);
 
         $pdfContent = $pdf->Output('raton.pdf', 'S');
 

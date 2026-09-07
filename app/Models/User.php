@@ -15,6 +15,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\OtrosEquipo;
+use App\Models\Especialidad;
 
 
 class User extends Authenticatable
@@ -41,6 +42,7 @@ class User extends Authenticatable
         'materno',
         'id_estadousuario',
         'user_id',
+        'especialidad_id',
     ];
 
     /**
@@ -95,6 +97,23 @@ public function adminlte_image()
     {
         return $this->hasMany(Servicio::class);
     }
+
+
+
+public function especialidades(): BelongsToMany
+{
+    return $this->belongsToMany(
+        Especialidad::class,
+        'especialidad_user',
+        'user_id',
+        'especialidad_id'
+    )->withTimestamps();
+}
+
+    public function especialidad()
+{
+    return $this->belongsTo(Especialidad::class, 'especialidad_id');
+}
 
     protected function name(): Attribute
     {

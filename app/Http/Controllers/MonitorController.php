@@ -274,15 +274,46 @@ class MonitorController extends Controller
             'module_width' => 1, 
             'module_height' => 1 
         );
-        if($monitor->funcionario_activo == 1){
-        $datos = $monitor->funcionario?->grado_academico.' '.$monitor->funcionario?->nombre.' '.$monitor->funcionario?->paterno.' '.$monitor->funcionario?->materno. ' - ' . $monitor->funcionario?->ci.''. $monitor->funcionario?->expedido . ' - ' . $monitor->dependencia->dependencias.' - SOPORTE TECNICO-GAMEA';
-        }else{
-        $datos = $monitor->funcionario?->grado_academico.' '.$monitor->funcionario?->nombre .' '.$monitor->funcionario?->paterno.' '.$monitor->funcionario?->materno. ' - ' . $monitor->funcionario?->ci.''. $monitor->funcionario?->expedido  . ' - ' .$monitor->funcionario?->cargo.' - SOPORTE TECNICO-GAMEA';
-        }
-        $datos1 = $monitor->funcionario?->grado_academico.' '.$monitor->funcionario?->nombre.' '.$monitor->funcionario?->paterno.' '.$monitor->funcionario?->materno ;
-        $datos2 = $monitor->funcionario?->ci.' '.$monitor->funcionario?->expedido ;
-        $datos3 = $monitor->funcionario?->cargo; 
-        $datos4 = $monitor->dependencia?->dependencias; 
+ if ($monitor->funcionario_activo == 1) {
+
+    $datos = $monitor->funcionario?->grado_academico . ' ' .
+             $monitor->funcionario?->nombre . ' ' .
+             $monitor->funcionario?->paterno . ' ' .
+             $monitor->funcionario?->materno .
+             ' - ' .
+             $monitor->funcionario?->ci . ' ' .
+             $monitor->funcionario?->expedido .
+             ' - ' .
+             ($monitor->dependencia?->dependencias ?? 'SIN DEPENDENCIA') .
+             ' - SOPORTE TECNICO-GAMEA';
+
+} else {
+
+    $datos = $monitor->funcionario?->grado_academico . ' ' .
+             $monitor->funcionario?->nombre . ' ' .
+             $monitor->funcionario?->paterno . ' ' .
+             $monitor->funcionario?->materno .
+             ' - ' .
+             $monitor->funcionario?->ci . ' ' .
+             $monitor->funcionario?->expedido .
+             ' - ' .
+             ($monitor->funcionario?->cargo ?? 'SIN CARGO') .
+             ' - SOPORTE TECNICO-GAMEA';
+}
+
+$datos1 = trim(
+    ($monitor->funcionario?->grado_academico ?? '') . ' ' .
+    ($monitor->funcionario?->nombre ?? '') . ' ' .
+    ($monitor->funcionario?->paterno ?? '') . ' ' .
+    ($monitor->funcionario?->materno ?? '')
+);
+
+$datos2 = ($monitor->funcionario?->ci ?? '') . ' ' .
+          ($monitor->funcionario?->expedido ?? '');
+
+$datos3 = $monitor->funcionario?->cargo ?? 'SIN CARGO';
+
+$datos4 = $monitor->dependencia?->dependencias ?? 'SIN DEPENDENCIA';
 
         $pdf->write2DBarcode($datos, 'QRCODE,H', 165, 210, 45, 45, $style, 'N');
         $pdf->Text(20, 205, '');
@@ -290,7 +321,7 @@ class MonitorController extends Controller
         $pdf->Cell(0, 5, $datos1, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos2, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos3, 0, 1, 'C');
-        $pdf->Cell(0, 5, $datos4, 0, 1, 'C');
+        $pdf->MultiCell(0, 5, $datos4, 0, 'C', false, 1);
 
         $pdfContent = $pdf->Output('monitor.pdf', 'S');
 
@@ -454,7 +485,7 @@ public function enviar($id, EquipoPdfService $service)
         // =========================
         // ENVÍO DE NOTIFICACIÓN
         // =========================
-        if (in_array($estadoId, [2, 3, 4])) {
+        if (in_array($estadoId, [3, 4])) {
 
             $this->notificacionService->enviar(
                 $monitor->funcionario,

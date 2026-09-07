@@ -44,6 +44,23 @@ public function boot(): void
     Gate::define('tecnico', function ($user) {
         return $user->hasRole('Tecnico');
     });
+
+        Gate::define('gestion-equipos', function ($user) {
+
+        // Administrador puede acceder
+        if ($user->hasRole('Administrador')) {
+            return true;
+        }
+
+        // Técnico únicamente de SOPORTE
+        return $user->hasRole('Tecnico')
+            && $user->especialidad?->codigo === 'SOPORTE';
+    });
+
+    Gate::define('mis-asignaciones-soporte', function ($user) {
+    return $user->hasRole('Tecnico')
+        && $user->especialidad?->codigo === 'SOPORTE';
+});
 }
 
 

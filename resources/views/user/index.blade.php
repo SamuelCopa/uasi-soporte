@@ -257,4 +257,5 @@ function cambiarEstado(id, id_estadousuario) {
 });
 </script>
 
+
 @stop

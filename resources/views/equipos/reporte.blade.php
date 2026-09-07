@@ -9,7 +9,7 @@
         <div class="header-left">
             <h1 class="header-title">
                     <h4 class="mb-0">
-                        Reporte de equipos ingresados
+                        Reporte de equipos atendidos
                     </h4>
                     <small>
                         Consulta y seguimiento de equipos recepcionados

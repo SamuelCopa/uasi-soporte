@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\CheckSingleSession;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -16,13 +17,14 @@ return Application::configure(basePath: dirname(__DIR__))
         __DIR__.'/../app/Console/Commands',
     ])
 
-    ->withMiddleware(function (Middleware $middleware) {
+->withMiddleware(function (Middleware $middleware) {
 
-        $middleware->alias([
-            'api.token' => \App\Http\Middleware\ApiToken::class,
-        ]);
+    $middleware->alias([
+        'api.token' => ApiToken::class,
+        'single.session' => CheckSingleSession::class,
+    ]);
 
-    })
+})
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

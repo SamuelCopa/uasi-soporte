@@ -268,15 +268,46 @@ class ParlanteController extends Controller
             'module_width' => 1, 
             'module_height' => 1 
         );
-        if($parlante->funcionario_activo == 1){
-        $datos = $parlante->funcionario?->grado_academico.' '.$parlante->funcionario?->nombre.' '.$parlante->funcionario?->paterno.' '.$parlante->funcionario?->materno. ' - ' . $parlante->funcionario?->ci.''. $parlante->funcionario?->expedido . ' - ' . $parlante->dependencia->dependencias.' - SOPORTE TECNICO-GAMEA';
-        }else{
-        $datos = $parlante->funcionario?->grado_academico.' '.$parlante->funcionario?->nombre .' '.$parlante->funcionario?->paterno.' '.$parlante->funcionario?->materno. ' - ' . $parlante->funcionario?->ci.''. $parlante->funcionario?->expedido  . ' - ' .$parlante->funcionario?->cargo.' - SOPORTE TECNICO-GAMEA';
-        }
-        $datos1 = $parlante->funcionario?->grado_academico.' '.$parlante->funcionario?->nombre.' '.$parlante->funcionario?->paterno.' '.$parlante->funcionario?->materno ;
-        $datos2 = $parlante->funcionario?->ci.' '.$parlante->funcionario?->expedido ;
-        $datos3 = $parlante->funcionario?->cargo; 
-        $datos4 = $parlante->dependencia?->dependencias; 
+ if ($parlante->funcionario_activo == 1) {
+
+    $datos = $parlante->funcionario?->grado_academico . ' ' .
+             $parlante->funcionario?->nombre . ' ' .
+             $parlante->funcionario?->paterno . ' ' .
+             $parlante->funcionario?->materno .
+             ' - ' .
+             $parlante->funcionario?->ci . ' ' .
+             $parlante->funcionario?->expedido .
+             ' - ' .
+             ($parlante->dependencia?->dependencias ?? 'SIN DEPENDENCIA') .
+             ' - SOPORTE TECNICO-GAMEA';
+
+} else {
+
+    $datos = $parlante->funcionario?->grado_academico . ' ' .
+             $parlante->funcionario?->nombre . ' ' .
+             $parlante->funcionario?->paterno . ' ' .
+             $parlante->funcionario?->materno .
+             ' - ' .
+             $parlante->funcionario?->ci . ' ' .
+             $parlante->funcionario?->expedido .
+             ' - ' .
+             ($parlante->funcionario?->cargo ?? 'SIN CARGO') .
+             ' - SOPORTE TECNICO-GAMEA';
+}
+
+$datos1 = trim(
+    ($parlante->funcionario?->grado_academico ?? '') . ' ' .
+    ($parlante->funcionario?->nombre ?? '') . ' ' .
+    ($parlante->funcionario?->paterno ?? '') . ' ' .
+    ($parlante->funcionario?->materno ?? '')
+);
+
+$datos2 = ($parlante->funcionario?->ci ?? '') . ' ' .
+          ($parlante->funcionario?->expedido ?? '');
+
+$datos3 = $parlante->funcionario?->cargo ?? 'SIN CARGO';
+
+$datos4 = $parlante->dependencia?->dependencias ?? 'SIN DEPENDENCIA';
 
         $pdf->write2DBarcode($datos, 'QRCODE,H', 165, 210, 45, 45, $style, 'N');
         $pdf->Text(20, 205, '');
@@ -284,7 +315,7 @@ class ParlanteController extends Controller
         $pdf->Cell(0, 5, $datos1, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos2, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos3, 0, 1, 'C');
-        $pdf->Cell(0, 5, $datos4, 0, 1, 'C');
+        $pdf->MultiCell(0, 5, $datos4, 0, 'C', false, 1);
 
         $pdfContent = $pdf->Output('parlante.pdf', 'S');
 

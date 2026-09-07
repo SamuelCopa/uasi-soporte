@@ -68,6 +68,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\TerminoController;
 use App\Http\Controllers\DocumentoController;
+use App\Http\Controllers\EspecialidadController;
 
 Route::get('/', function () {
     return view('inicio.inicio');
@@ -87,6 +88,8 @@ Route::get('/hay-pendientes', function () {
         'hayPendientes' => \App\Models\Servicio::where('visto', 0)->exists()
     ]);
 })->middleware('auth');
+
+Route::resource('especialidades', EspecialidadController::class)->only(['index', 'store', 'update', 'destroy'])->middleware('auth');
 
 Route::get('/perfil', [UserController::class, 'show'])->name('perfil')->middleware('auth');
 
@@ -243,7 +246,14 @@ Route::post('/evaluar/guardar', [TecnicoController::class, 'guardarEvaluacion'])
 //---------------------------------
 Route::resource('otros-equipos', OtrosEquipoController::class);
 Route::resource('tipos-equipos', TiposEquipoController::class);
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('auth');
+// Rutas protegidas
+Route::middleware(['auth', 'single.session'])->group(function () {
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+    // demás rutas del sistema...
+
+});
+
 Route::resource('registros', RegistroController::class)->middleware('auth');
 Route::resource('color-cases', ColorCaseController::class)->middleware('auth');
 Route::resource('marca-cases', MarcaCaseController::class)->middleware('auth');

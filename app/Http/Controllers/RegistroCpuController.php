@@ -625,23 +625,54 @@ public function index(Request $request): View
             'module_height' => 1,
             'font_size' =>9,
         );
-        if($registroCpu->funcionario_activo == 1){
-        $datos = $registroCpu->funcionario?->grado_academico.' '.$registroCpu->funcionario?->nombre.' '.$registroCpu->funcionario?->paterno.' '.$registroCpu->funcionario?->materno. ' - ' . $registroCpu->funcionario?->ci.''. $registroCpu->funcionario?->expedido . ' - ' . $registroCpu->dependencia->dependencias.' - SOPORTE TECNICO-GAMEA';
-        }else{
-        $datos = $registroCpu->funcionario?->grado_academico.' '.$registroCpu->funcionario?->nombre .' '.$registroCpu->funcionario?->paterno.' '.$registroCpu->funcionario?->materno. ' - ' . $registroCpu->funcionario?->ci.''. $registroCpu->funcionario?->expedido  . ' - ' .$registroCpu->funcionario?->cargo.' - SOPORTE TECNICO-GAMEA';
-        }
-        $datos1 = $registroCpu->funcionario?->grado_academico.' '.$registroCpu->funcionario?->nombre.' '.$registroCpu->funcionario?->paterno.' '.$registroCpu->funcionario?->materno ;
-        $datos2 = $registroCpu->funcionario?->ci.' '.$registroCpu->funcionario?->expedido ;
-        $datos3 = $registroCpu->funcionario?->cargo; 
-        $datos4 = $registroCpu->dependencia?->dependencias; 
+ if ($registroCpu->funcionario_activo == 1) {
+
+    $datos = $registroCpu->funcionario?->grado_academico . ' ' .
+             $registroCpu->funcionario?->nombre . ' ' .
+             $registroCpu->funcionario?->paterno . ' ' .
+             $registroCpu->funcionario?->materno .
+             ' - ' .
+             $registroCpu->funcionario?->ci . ' ' .
+             $registroCpu->funcionario?->expedido .
+             ' - ' .
+             ($registroCpu->dependencia?->dependencias ?? 'SIN DEPENDENCIA') .
+             ' - SOPORTE TECNICO-GAMEA';
+
+} else {
+
+    $datos = $registroCpu->funcionario?->grado_academico . ' ' .
+             $registroCpu->funcionario?->nombre . ' ' .
+             $registroCpu->funcionario?->paterno . ' ' .
+             $registroCpu->funcionario?->materno .
+             ' - ' .
+             $registroCpu->funcionario?->ci . ' ' .
+             $registroCpu->funcionario?->expedido .
+             ' - ' .
+             ($registroCpu->funcionario?->cargo ?? 'SIN CARGO') .
+             ' - SOPORTE TECNICO-GAMEA';
+}
+
+$datos1 = trim(
+    ($registroCpu->funcionario?->grado_academico ?? '') . ' ' .
+    ($registroCpu->funcionario?->nombre ?? '') . ' ' .
+    ($registroCpu->funcionario?->paterno ?? '') . ' ' .
+    ($registroCpu->funcionario?->materno ?? '')
+);
+
+$datos2 = ($registroCpu->funcionario?->ci ?? '') . ' ' .
+          ($registroCpu->funcionario?->expedido ?? '');
+
+$datos3 = $registroCpu->funcionario?->cargo ?? 'SIN CARGO';
+
+$datos4 = $registroCpu->dependencia?->dependencias ?? 'SIN DEPENDENCIA';
 
         $pdf->write2DBarcode($datos, 'QRCODE,H', 165, 210, 45, 45, $style, 'N');
         $pdf->Text(20, 205, '');
-        $pdf->SetY(-50); // establece la posición del cursor en la parte inferior de la página
+        $pdf->SetY(-60); // establece la posición del cursor en la parte inferior de la página
         $pdf->Cell(0, 5, $datos1, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos2, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos3, 0, 1, 'C');
-        $pdf->Cell(0, 5, $datos4, 0, 1, 'C');
+        $pdf->MultiCell(0, 5, $datos4, 0, 'C', false, 1);
 
         $pdfContent = $pdf->Output('registro-cpu.pdf', 'S');
 
@@ -841,7 +872,7 @@ public function enviar($id, EquipoPdfService $service)
                     'laptops'         => 'Laptop',
                     'teclados'        => 'Teclado',
                     'ratons'          => 'Mouse',
-                    'upeses'          => 'UPS',
+                    'upeses'          => 'regi$registroCpu',
                     'parlantes'       => 'Parlante',
                     'registroCpus'       => 'Audífono',
                     'estabilizadors'  => 'Estabilizador',

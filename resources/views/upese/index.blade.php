@@ -377,78 +377,66 @@
                                                 </form> 
                                             </td>
                                             <td>
-<div class="d-flex justify-content-center align-items-center gap-1">
+                                                <div class="acciones">
 
-    <!-- FORMULARIO PDF -->
-    <a href="#"
-       class="btn btn-danger btn-sm btn-mini btn-preview-pdf"
-       data-ver="{{ route('pdf.ups.preview', ':id') }}"
-       data-descargar="{{ route('pdf.ups.descargar', ':id') }}"
-       data-enviar="{{ route('pdf.ups.enviar', ':id') }}"
-       data-id="{{ $upese->id }}"
-       title="Formulario">
+                                            <!-- PDF -->
+                                            <a href="#"
+                                            class="btn-mini btn-danger btn-preview-pdf"
+                                            data-ver="{{ route('pdf.ups.preview', ':id') }}"
+                                            data-descargar="{{ route('pdf.ups.descargar', ':id') }}"
+                                            data-enviar="{{ route('pdf.ups.enviar', ':id') }}"
+                                            data-id="{{ $upese->id }}"
+                                            title="Formulario PDF">
+                                                <i class="far fa-file-pdf"></i>
+                                            </a>
 
-        <i class="far fa-file-pdf"></i>
-    </a>
+                                            <!-- VER -->
+                                            <button type="button"
+                                                    data-toggle="modal"
+                                                    data-target="#ver{{ $upese->id }}"
+                                                    class="btn-mini btn-primary"
+                                                    title="Ver">
+                                                <i class="fa fa-eye"></i>
+                                            </button>
 
-    <!-- VER -->
-    <button
-        type="button"
-        data-toggle="modal"
-        data-target="#ver{{ $upese->id }}"
-        class="btn btn-primary btn-sm btn-mini"
-        title="Ver">
+                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                'Administrador',
+                                                'SuperAdministrador'
+                                            ]))
 
-        <i class="fa fa-eye"></i>
-    </button>
+                                                <!-- EDITAR -->
+                                                <button type="button"
+                                                        data-toggle="modal"
+                                                        data-target="#editar{{ $upese->id }}"
+                                                        class="btn-mini btn-success"
+                                                        title="Editar">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
 
-    @if(auth()->check() && auth()->user()->hasAnyRole([
-        'Administrador',
-        'SuperAdministrador'
-    ]))
+                                                <!-- INFORME -->
+                                                <a href="{{ route('informe.ups', $upese->id) }}"
+                                                class="btn-mini btn-secondary"
+                                                title="Informe">
+                                                    <i class="fa fa-file"></i>
+                                                </a>
 
-        <!-- EDITAR -->
-        <button
-            type="button"
-            data-toggle="modal"
-            data-target="#editar{{ $upese->id }}"
-            class="btn btn-success btn-sm btn-mini"
-            title="Editar">
+                                                <!-- ELIMINAR -->
+                                                <form action="{{ route('upeses.destroy', $upese->id) }}"
+                                                    method="POST"
+                                                    class="formEliminar">
+                                                    @csrf
+                                                    @method('DELETE')
 
-            <i class="fa fa-edit"></i>
-        </button>
+                                                    <button type="submit"
+                                                            class="btn-mini btn-danger"
+                                                            title="Eliminar">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
 
-        <!-- INFORME -->
-        <a
-            href="{{ route('informe.ups', $upese->id) }}"
-            class="btn btn-secondary btn-sm btn-mini"
-            title="Informe">
+                                            @endif
 
-            <i class="fa fa-file"></i>
-        </a>
-
-        <!-- ELIMINAR -->
-        <form
-            action="{{ route('upeses.destroy', $upese->id) }}"
-            method="POST"
-            class="formEliminar d-inline">
-
-            @csrf
-            @method('DELETE')
-
-            <button
-                type="submit"
-                class="btn btn-danger btn-sm btn-mini"
-                title="Eliminar">
-
-                <i class="fa fa-trash"></i>
-            </button>
-
-        </form>
-
-    @endif
-
-</div>
+                                        </div>
                                             </td>
                                         </tr>
                                         <!--Ventana Modal para Ver --->

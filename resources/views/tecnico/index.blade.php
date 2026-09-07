@@ -48,6 +48,7 @@
                                                         <th >CELULAR</th>
                                                         <th >CORREO ELECTRONICO (Usuario)</th>
                                                         <th >CARGO</th>
+                                                        <th >ESPECIALIDAD</th>
                                                         <th >ESTADO</th>
                                                         <th>OPCIONES</th>
                                                         </tr>
@@ -63,6 +64,7 @@
                                                                 <td>{{ $user->celular }}</td>
                                                                 <td>{{ $user->email }}</td>
                                                                 <td>{{ $user->roles->pluck('name')->implode(', ') ?? 'Sin rol' }}</td>
+                                                                <td>{{ $user->especialidad?->nombre ?? 'SIN ESPECIALIDAD' }}</td>
                                                                 <td>
                                                                 @if($user->id_estadousuario == '1')
                                                                     <button type="submit"
@@ -153,6 +155,7 @@
                                                             <th >CELULAR</th>
                                                             <th >CORREO ELECTRONICO (Usuario)</th>
                                                             <th >CARGO</th>
+                                                            <th >ESPECIALIDAD</th>
                                                             <th >ESTADO</th>
                                                             <th>OPCIONES</th>
                                                         </tr>

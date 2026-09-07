@@ -9,24 +9,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
-
     use AuthenticatesUsers;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
     protected $redirectTo = '/home';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
@@ -48,9 +38,14 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         if ($user->id_estadousuario !== 1) {
+
             Auth::logout();
+
             return redirect()->route('login')
-            ->with('error', 'Tu cuenta está inactiva. Por favor, contacta con el administrador.');
+                ->with(
+                    'error',
+                    'Tu cuenta está inactiva. Por favor, contacta con el administrador.'
+                );
         }
     }
 
@@ -58,8 +53,19 @@ class LoginController extends Controller
     {
         $request->session()->regenerate();
 
+        $user = Auth::user();
+
+        // Generar nuevo token de sesión
+        $token = Str::random(64);
+
+        // Guardar token en el usuario
+        $user->session_token = $token;
+        $user->save();
+
+        // Guardar token en la sesión actual
+        $request->session()->put('session_token', $token);
+
         return redirect()->back()
             ->with('login_success', true);
     }
-
 }

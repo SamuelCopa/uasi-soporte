@@ -285,16 +285,22 @@
 /* =======================================================
    ALERTA CRÍTICA
 ======================================================= */
-.card-alert{
-    border: 2.5px solid #dc3545;
-    animation: pulsoInstitucional 1.4s infinite;
+
+/* Solo parpadean las letras */
+.alerta-texto {
+    color: #a50606;
+    font-weight: 700;
+    animation: pulsoTexto 1.4s infinite;
 }
 
-/* Línea superior crítica */
-.card-alert::before{
-    background: linear-gradient(90deg,
-                #680404,
-                #680404);
+@keyframes pulsoTexto {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.35;
+    }
 }
 
 /* =========================================

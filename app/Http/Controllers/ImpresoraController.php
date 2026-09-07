@@ -282,15 +282,46 @@ class ImpresoraController extends Controller
             'module_width' => 1, 
             'module_height' => 1 
         );
-        if($impresora->funcionario_activo == 1){
-        $datos = $impresora->funcionario?->nombre.' '.$impresora->funcionario?->paterno.' '.$impresora->funcionario?->materno. ' - ' . $impresora->funcionario?->ci.''.$impresora->funcionario?->expedido  . ' - ' . $impresora->dependencia->dependencias.' - SOPORTE TECNICO-GAMEA';
-        }else{
-        $datos = $impresora->funcionario?->nombre .' '.$impresora->funcionario?->paterno.' '.$impresora->funcionario?->materno. ' - ' . $impresora->funcionario?->ci.''.$impresora->funcionario?->expedido  . ' - ' .$impresora->funcionario?->cargo.' - SOPORTE TECNICO-GAMEA';
-        }
-        $datos1 = $impresora->funcionario?->nombre.' '.$impresora->funcionario?->paterno.' '.$impresora->funcionario?->materno ;
-        $datos2 = $impresora->funcionario?->ci.' '.$impresora->funcionario?->expedido ;
-        $datos3 = $impresora->funcionario?->cargo; 
-        $datos4 = $impresora->dependencia?->dependencias; 
+ if ($impresora->funcionario_activo == 1) {
+
+    $datos = $impresora->funcionario?->grado_academico . ' ' .
+             $impresora->funcionario?->nombre . ' ' .
+             $impresora->funcionario?->paterno . ' ' .
+             $impresora->funcionario?->materno .
+             ' - ' .
+             $impresora->funcionario?->ci . ' ' .
+             $impresora->funcionario?->expedido .
+             ' - ' .
+             ($impresora->dependencia?->dependencias ?? 'SIN DEPENDENCIA') .
+             ' - SOPORTE TECNICO-GAMEA';
+
+} else {
+
+    $datos = $impresora->funcionario?->grado_academico . ' ' .
+             $impresora->funcionario?->nombre . ' ' .
+             $impresora->funcionario?->paterno . ' ' .
+             $impresora->funcionario?->materno .
+             ' - ' .
+             $impresora->funcionario?->ci . ' ' .
+             $impresora->funcionario?->expedido .
+             ' - ' .
+             ($impresora->funcionario?->cargo ?? 'SIN CARGO') .
+             ' - SOPORTE TECNICO-GAMEA';
+}
+
+$datos1 = trim(
+    ($impresora->funcionario?->grado_academico ?? '') . ' ' .
+    ($impresora->funcionario?->nombre ?? '') . ' ' .
+    ($impresora->funcionario?->paterno ?? '') . ' ' .
+    ($impresora->funcionario?->materno ?? '')
+);
+
+$datos2 = ($impresora->funcionario?->ci ?? '') . ' ' .
+          ($impresora->funcionario?->expedido ?? '');
+
+$datos3 = $impresora->funcionario?->cargo ?? 'SIN CARGO';
+
+$datos4 = $impresora->dependencia?->dependencias ?? 'SIN DEPENDENCIA';
 
         $pdf->write2DBarcode($datos, 'QRCODE,H', 165, 210, 45, 45, $style, 'N');
         $pdf->Text(20, 205, '');
@@ -298,9 +329,7 @@ class ImpresoraController extends Controller
         $pdf->Cell(0, 5, $datos1, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos2, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos3, 0, 1, 'C');
-        if($impresora->funcionario_activo == 1){
-        $pdf->Cell(0, 5, $datos4, 0, 1, 'C');
-        }
+        $pdf->MultiCell(0, 5, $datos4, 0, 'C', false, 1);
 
         $pdfContent = $pdf->Output('impresora.pdf', 'S');
 

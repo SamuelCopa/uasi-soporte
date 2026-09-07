@@ -293,6 +293,11 @@ $section = $phpWord->addSection([
                 $ups->resultado_id = $request->input('resultado_id');
                 $ups->save();
         }
+        if($activo === 'equipo'){
+                $equipo = OtrosEquipo::find($id);
+                $equipo->resultado_id = $request->input('resultado_id');
+                $equipo->save();
+        }
 
         // -------------------ENCABEZADO---------------------------------
         $header = $section->addHeader();

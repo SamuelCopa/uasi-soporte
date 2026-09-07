@@ -104,8 +104,7 @@
     <table width="100%">
         <tr>
             <td width="20%" align="center">
-                <img src="{{ public_path('img1/elalto.jpg') }}"
-                     width="65">
+                <img src="{{ public_path('img1/elalto.jpg') }}" width="65">
             </td>
 
             <td width="60%" align="center">
@@ -126,7 +125,8 @@
                 </div>
             </td>
 
-            <td width="20%">
+            <td width="20%" align="center">
+                <img src="{{ public_path('img1/sello1.jpg') }}" width="65">
             </td>
         </tr>
     </table>

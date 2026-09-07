@@ -221,6 +221,7 @@ return [
     'sidebar_scrollbar_auto_hide' => 's',
     'sidebar_nav_accordion' => true,
     'sidebar_nav_animation_speed' => 300,
+    
 
     /*
     |--------------------------------------------------------------------------
@@ -391,14 +392,14 @@ return [
 
     [
         'header' => 'GESTIÓN DE EQUIPOS',
-        'can'  => ['admin', 'tecnico'],
+        'can' => 'gestion-equipos',
     ],
 
 
     [
-        'text' => 'Activos',
+        'text' => 'Equipos',
         'icon' => 'fas fa-fw fa-folder-open',
-        'can'  => ['admin', 'tecnico'],
+        'can' => 'gestion-equipos',
 
         'submenu' => [
 
@@ -478,7 +479,7 @@ return [
     [
         'text' => 'Mis asignaciones',
         'icon' => 'fas fa-fw fa-user-clock',
-        'can'  => 'tecnico',
+        'can'  => 'mis-asignaciones-soporte',
 
         'submenu' => [
 
@@ -876,6 +877,12 @@ return [
                 'text' => 'Dependencias',
                 'url'  => '/dependencias',
                 'icon' => 'fas fa-fw fa-building',
+                'can'  => 'admin',
+            ],
+            [
+                'text' => 'Especialidades',
+                'url'  => '/especialidades',
+                'icon' => 'fas fa-fw fa-tools',
                 'can'  => 'admin',
             ],
 

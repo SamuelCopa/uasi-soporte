@@ -167,6 +167,61 @@
             color: #666;
         }
 
+        .membrete {
+    width: 100%;
+    border-collapse: collapse;
+    border: none !important;
+    margin-bottom: 10px;
+}
+
+.membrete tr,
+.membrete td {
+    border: none !important;
+    padding: 0;
+    vertical-align: middle;
+}
+
+/* Logo izquierdo y derecho */
+.logo-izquierdo,
+.logo-derecho {
+    width: 18%;
+    vertical-align: middle;
+}
+
+.logo-izquierdo {
+    text-align: left;
+}
+
+.logo-derecho {
+    text-align: right;
+}
+
+/* Tamaño de logos */
+.logo-izquierdo img,
+.logo-derecho img {
+    width: 85px;
+    height: 85px;
+    object-fit: contain;
+}
+
+/* Título */
+.titulo-central {
+    width: 64%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.titulo {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.subtitulo {
+    font-size: 10px;
+    margin-bottom: 4px;
+}
+
     </style>
 
 </head>
@@ -178,6 +233,36 @@
     {{-- =====================================================
          ENCABEZADO 
     ====================================================== --}}
+
+    <table class="membrete">
+    <tr>
+
+        <td class="logo-izquierdo">
+            <img src="{{ public_path('img1/elalto.jpg') }}">
+        </td>
+
+        <td class="titulo-central">
+
+            <div class="titulo">
+                GOBIERNO AUTÓNOMO MUNICIPAL DE EL ALTO
+            </div>
+
+            <div class="subtitulo">
+                UNIDAD DE ADMINISTRACIÓN DE SISTEMAS DE INFORMACIÓN
+            </div>
+
+            <div class="titulo">
+                REPORTE DE EQUIPOS ATENDIDOS
+            </div>
+
+        </td>
+
+        <td class="logo-derecho">
+            <img src="{{ public_path('img1/sello1.jpg') }}">
+        </td>
+
+    </tr>
+</table>
 
     <div class="header">
 

@@ -1,161 +1,554 @@
-<div class="modal fade" id="ver{{ $teclado->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-        <div class="modal-header modal-header bg-primary text-white border-0 py-3">
-            <h4>REGISTRO</h4>
-        <button type="button" class="btn-close bg-primary" data-dismiss="modal" aria-label="Cerrar"><i class="fas fa-times"></i></button>
-      </div>
-      <section class="content container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                      <fieldset class="fieldset1">
-                          <legend class="legend1">DATOS DEL SOLICITANTE</legend>
-                        <div class="fila-1">
-                              <div class="div title">
-                                  <label>ESTADO DEL FUNCIONARIO: </label>
-                                  @if($teclado?->funcionario_activo == 1)
-                                <div class="form-control">{{ 'FUNCIONARIO ACTIVO'}}</div>
-                                  @else
-                                <div class="form-control">{{ 'EX FUNCIONARIO'}}</div>
-                                  @endif
-                              </div>
-                              <div class="div title">
-                                  <label>RECEPCIONADO POR: </label>
-                                  <div class="form-control">{{$teclado->reguser?->name}} {{$teclado->reguser?->paterno}} {{$teclado->reguser?->materno}}</div> 
-                              </div>
-                        </div>
-                        <div class="fila-1">
-                              <div class="div title">
-                                  <label>NOMBRE: </label>
-                                <div class="form-control">{{ strtoupper($teclado->funcionario?->grado_academico)}} {{ $teclado->funcionario?->nombre }} {{ $teclado->funcionario?->paterno }} {{ $teclado->funcionario?->materno }}</div>  
-                              </div>
-                              <div class="div title">
-                                <label>C.I.: </label>
-                                  <div class="form-control">{{ $teclado->funcionario?->ci }} {{ $teclado->funcionario?->expedido }}</div> 
+<div class="modal fade"
+     id="ver{{ $teclado->id }}"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="verTecladoLabel{{ $teclado->id }}"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-xl modal-dialog-centered"
+         role="document">
+
+        <div class="modal-content modal-password">
+
+            {{-- =====================================================
+                 HEADER
+                 ===================================================== --}}
+            <div class="modal-header modal-password-header">
+
+                <div class="modal-title-container">
+
+                    <div class="modal-password-icon">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+
+                    <div>
+                        <h5 class="modal-title"
+                            id="verTecladoLabel{{ $teclado->id }}">
+                            REGISTRO DE TECLADO
+                        </h5>
+
+                        <small>
+                            Información detallada del equipo y funcionario
+                        </small>
+                    </div>
+
+                </div>
+
+                <button type="button"
+                        class="close modal-password-close"
+                        data-dismiss="modal"
+                        aria-label="Cerrar">
+
+                    <span aria-hidden="true">&times;</span>
+
+                </button>
+
+            </div>
+
+
+            {{-- =====================================================
+                 BODY
+                 ===================================================== --}}
+            <div class="modal-body modal-password-body">
+
+                {{-- =================================================
+                     DATOS DEL SOLICITANTE
+                     ================================================= --}}
+                <div class="registro-section">
+
+                    <div class="registro-section-title">
+                        <i class="fas fa-user"></i>
+                        DATOS DEL SOLICITANTE
+                    </div>
+
+
+                    <div class="row">
+
+                        {{-- Estado funcionario --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-user-check"></i>
+                                    ESTADO DEL FUNCIONARIO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    @if($teclado?->funcionario_activo == 1)
+                                        FUNCIONARIO ACTIVO
+                                    @else
+                                        EX FUNCIONARIO
+                                    @endif
+
+                                </div>
+
                             </div>
                         </div>
-                        <div class="fila-2">
-                            <div class="div title">
-                              <label>CELULAR: </label>
-                            <div class="form-control">{{ $teclado->funcionario?->celular }}</div> 
-                          </div>
-                          <div class="div title">
-                            <label>CORREO ELECTRÓNICO: </label>
-                            <div class="form-control">{{ $teclado->funcionario?->email }}</div>
-                          </div>
-                          <div class="div title">
-                            <label>CARGO: </label>
-                            <div class="form-control">{{ $teclado->funcionario?->cargo }}</div>
-                          </div>
+
+
+                        {{-- Recepcionado por --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-user-shield"></i>
+                                    RECEPCIONADO POR
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $teclado->reguser?->name }}
+                                    {{ $teclado->reguser?->paterno }}
+                                    {{ $teclado->reguser?->materno }}
+
+                                </div>
+
+                            </div>
                         </div>
-                        <div class="fila-1">
-                          @if(! $teclado->dependencia_id == '')
-                          <div class="div title" >
-                          <label>DEPENDENCIA:</label>
-                            <div class="form-control">{{ $teclado->Dependencia?->dependencias }}</div> 
-                          </div>
-                          @else
-                          <div class="div title" >
-                          <label>DEPENDENCIA:</label>
-                            <div class="form-control">{{'SIN DEPENDENCIA'}}</div> 
-                          </div>
-                          @endif
-                          <div class="div title">
-                            <label>FECHA DE RECEPCIÓN: </label>
-                            @if($teclado->fecha)
-                              <div class="form-control">{{ date('d-m-Y H:i',strtotime($teclado->fecha))}}</div> 
-                            @elseif(! $teclado->fecha)	
-                              <div class="form-control">{{ $teclado->fecha ?? ''}}</div> 
-                            @endif	
-                          </div>
+
+
+                        {{-- Dependencia --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-building"></i>
+                                    DEPENDENCIA
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $teclado->Dependencia?->dependencias ?? 'SIN DEPENDENCIA' }}
+
+                                </div>
+
+                            </div>
                         </div>
-                        <div class="fila-2">
-                          <div class="div title">
-                            <label>TECNICO A CARGO: </label>
-                            <div class="{{ empty($teclado->user_id) ? 'color1' : '' }}" >
-                              @if($teclado->user_id)
-                            <div class="form-control">{{ $teclado->user->name}} {{ $teclado->user->paterno}} {{ $teclado->user->materno}}</div> 
-                              @elseif(! $teclado->user_id)	
-                            <div class="form-control ">{{ $teclado->user->name ?? 'SIN ASIGNAR'}}</div> 
-                              @endif
-                          </div>
-                          </div>
-                          <div class="div title">
-                            <label>FECHA DE ASIGNACIÓN: </label>
-                            <div class="{{ empty($teclado->fecha_asignacion) ? 'color1' : '' }}">
-                              @if($teclado->fecha_asignacion)
-                            <div class="form-control">{{ date('d-m-Y H:i',strtotime($teclado->fecha_asignacion ))}}</div> 
-                              @elseif(! $teclado->fecha_asignacion)	
-                            <div class="form-control">{{ $teclado->fecha_asignacion ?? 'SIN ASIGNAR'}}</div> 
-                              @endif								
-                          </div>
-                          </div>
-                          <div class="div title">
-                            <label>FECHA DE INICIO: </label>
-                            <div class="{{ empty($teclado->fecha_inicio) ? 'color1' : '' }}">
-                              @if($teclado->fecha_inicio)
-                            <div class="form-control">{{ date('d-m-Y H:i',strtotime($teclado->fecha_inicio ))}}</div> 
-                              @elseif(! $teclado->fecha_inicio)	
-                            <div class="form-control">{{ $teclado->fecha_inicio ?? 'EN ESPERA'}}</div> 
-                              @endif								
-                          </div>
-                          </div>
-                        </div>
-                      </fieldset>
-                      <fieldset class="fieldset1">
-                          <legend class="legend1">DATOS DEL TECLADO</legend>
-                        <div class="fila-1">
-                          <div class="div ">
-                            <label>CODIGO GAMEA: </label>
-                          <div class="form-control">{{ $teclado->cod_gamea }}</div> 
-                          </div>
-                          <div class="div title">
-                            <label>NÚMERO DE RECEPCIÓN: </label>
-                              <div class="{{ empty($teclado->cod_registro) ? 'color1' : '' }}">
-                                <div class="form-control">{{ $teclado->cod_registro ?? 'SIN ASIGNAR' }}</div>
-                              </div>
-                          </div>
-                        </div>
-                        <div class="fila-1">
-                          <div class="div title">
-                            <label>MARCA: </label>
-                          <div class="form-control">{{ $teclado->marca }}</div>
-                          </div>
-                          <div class="div title">
-                            <label>MODELO: </label>
-                          <div class="form-control">{{ $teclado->modelo }}</div> 
-                          </div>
-                        </div>
-                        <div class="fila-1">
-                          <div class="div title">
-                            <label>FALLA: </label> 
-                              <div class="form-control">{{ $teclado->falla }}</div>   
-                          </div>
-                          <div class="div title">
-                            <label>ESTADO: </label>
-                            @if ($teclado->estado_id == 5)
-                              <div class="form-control">{{ $teclado->Estado?->nombre }} {{ date('d-m-Y H:i',strtotime($teclado->fecha_entrega ))}}</div>
-                            @else
-                              <div class="form-control">{{ $teclado->Estado?->nombre }}</div> 
-                            @endif
-                          </div>
-                        </div>
-                        <div class="fila-1">
-                          <div class="div title">
-                            <label>OBSERVACIONES: </label>
-                              <div class="form-control">{{ $teclado->observaciones ?? 'SIN OBSERVACIONES' }}</div> 
-                          </div>
-                        </div>
-                      </fieldset>
+
                     </div>
+
+
+                    <div class="row">
+
+                        {{-- Nombre --}}
+                        <div class="col-md-8">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-id-card"></i>
+                                    NOMBRE COMPLETO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ strtoupper($teclado->funcionario?->grado_academico) }}
+                                    {{ $teclado->funcionario?->nombre }}
+                                    {{ $teclado->funcionario?->paterno }}
+                                    {{ $teclado->funcionario?->materno }}
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        {{-- CI --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-address-card"></i>
+                                    C.I.
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $teclado->funcionario?->ci }}
+                                    {{ $teclado->funcionario?->expedido }}
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row">
+
+                        {{-- Celular --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    CELULAR
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $teclado->funcionario?->celular ?? 'SIN REGISTRO' }}
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        {{-- Correo --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-envelope"></i>
+                                    CORREO ELECTRÓNICO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $teclado->funcionario?->email ?? 'SIN REGISTRO' }}
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        {{-- Cargo --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-briefcase"></i>
+                                    CARGO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $teclado->funcionario?->cargo ?? 'SIN REGISTRO' }}
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row">
+
+                        {{-- Fecha recepción --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    FECHA DE RECEPCIÓN
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    @if($teclado->fecha)
+                                        {{ date('d-m-Y H:i', strtotime($teclado->fecha)) }}
+                                    @else
+                                        SIN REGISTRO
+                                    @endif
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        {{-- Técnico --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-user-cog"></i>
+                                    TÉCNICO A CARGO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    @if($teclado->user_id)
+
+                                        {{ $teclado->user?->name }}
+                                        {{ $teclado->user?->paterno }}
+                                        {{ $teclado->user?->materno }}
+
+                                    @else
+
+                                        <span class="text-muted">
+                                            SIN ASIGNAR
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        {{-- Fecha asignación --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-calendar-check"></i>
+                                    FECHA DE ASIGNACIÓN
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    @if($teclado->fecha_asignacion)
+
+                                        {{ date('d-m-Y H:i', strtotime($teclado->fecha_asignacion)) }}
+
+                                    @else
+
+                                        <span class="text-muted">
+                                            SIN ASIGNAR
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row">
+
+                        {{-- Fecha inicio --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-play-circle"></i>
+                                    FECHA DE INICIO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    @if($teclado->fecha_inicio)
+
+                                        {{ date('d-m-Y H:i', strtotime($teclado->fecha_inicio)) }}
+
+                                    @else
+
+                                        <span class="text-muted">
+                                            EN ESPERA
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
+
+
+                {{-- =================================================
+                     DATOS DEL TECLADO
+                     ================================================= --}}
+                <div class="registro-section">
+
+                    <div class="registro-section-title">
+                        <i class="fas fa-keyboard"></i>
+                        DATOS DEL TECLADO
+                    </div>
+
+
+                    <div class="row">
+
+                        {{-- Código GAMEA --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-barcode"></i>
+                                    CÓDIGO GAMEA
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $teclado->cod_gamea ?? 'SIN REGISTRO' }}
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        {{-- Número recepción --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-hashtag"></i>
+                                    NÚMERO DE RECEPCIÓN
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $teclado->cod_registro ?? 'SIN ASIGNAR' }}
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        {{-- Marca --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-tag"></i>
+                                    MARCA
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $teclado->marca ?? 'SIN REGISTRO' }}
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row">
+
+                        {{-- Modelo --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-keyboard"></i>
+                                    MODELO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $teclado->modelo ?? 'SIN REGISTRO' }}
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        {{-- Falla --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    FALLA
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $teclado->falla ?? 'SIN REGISTRO' }}
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        {{-- Estado --}}
+                        <div class="col-md-4">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-tasks"></i>
+                                    ESTADO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $teclado->Estado?->nombre ?? 'SIN ESTADO' }}
+
+                                    @if($teclado->estado_id == 5 && $teclado->fecha_entrega)
+
+                                        <small class="d-block text-muted mt-1">
+                                            <i class="fas fa-calendar-check"></i>
+                                            Entregado:
+                                            {{ date('d-m-Y H:i', strtotime($teclado->fecha_entrega)) }}
+                                        </small>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    {{-- Observaciones --}}
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-comment-alt"></i>
+                                    OBSERVACIONES
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $teclado->observaciones ?? 'SIN OBSERVACIONES' }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">CERRAR</button>
-              </div>
+
+
+            {{-- =====================================================
+                 FOOTER
+                 ===================================================== --}}
+            <div class="modal-footer modal-password-footer">
+
+                <button type="button"
+                        class="btn btn-password-close"
+                        data-dismiss="modal">
+
+                    <i class="fas fa-times"></i>
+                    CERRAR
+
+                </button>
+
+            </div>
+
         </div>
-    </section>
+
     </div>
-  </div>
+
 </div>
+<link rel="stylesheet" href="{{ asset('estilos/password.css') }}"> 

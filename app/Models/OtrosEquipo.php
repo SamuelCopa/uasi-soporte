@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use App\Models\TiposEquipo;
+use App\Models\User;
 
 /**
  * Class OtrosEquipo
@@ -43,7 +44,7 @@ use App\Models\TiposEquipo;
  * @property Dependencia $dependencia
  * @property Estado $estado
  * @property Funcionario $funcionario
- * @property User $user
+ * @property User $reguser
  * @property Responsable $responsable
  * @property Resultado $resultado
  * @property TiposEquipo $tiposEquipo

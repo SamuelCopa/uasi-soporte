@@ -1,124 +1,223 @@
-<!-- ventana para Update -->
-<div class="modal fade" id="eTecnico{{ $monitor->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+<link rel="stylesheet" href="{{ asset('estilos/password.css') }}">
 
-    <div class="modal-dialog modal-lg">
+<!-- =========================================================
+     MODAL ASIGNAR TÉCNICO - OTROS EQUIPOS
+     ========================================================= -->
+<div class="modal fade"
+     id="eTecnico{{ $equipo->id }}"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="asignarTecnicoLabel{{ $equipo->id }}"
+     aria-hidden="true">
 
-        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+    <div class="modal-dialog modal-lg modal-dialog-centered"
+         role="document">
 
-            <div class="modal-header bg-primary text-white border-0 py-3">
+        <div class="modal-content modal-password">
 
-                <h4>
-                    ASIGNAR
-                    <span class="ml-2">
-                        - {{ $monitor->tipoEquipo?->nombre ?? 'EQUIPO' }}
-                    </span>
-                </h4>
+            <!-- =================================================
+                 HEADER
+                 ================================================= -->
+            <div class="modal-header modal-password-header">
+
+                <div class="modal-title-container">
+
+                    <div class="modal-password-icon">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+
+                    <div>
+                        <h5 class="modal-title"
+                            id="asignarTecnicoLabel{{ $equipo->id }}">
+
+                            ASIGNAR TÉCNICO
+
+                        </h5>
+
+                        <small>
+                            {{ $equipo->tipoEquipo?->nombre ?? 'EQUIPO' }}
+                        </small>
+                    </div>
+
+                </div>
 
                 <button type="button"
-                        class="btn-close bg-primary"
+                        class="close modal-password-close"
                         data-dismiss="modal"
                         aria-label="Cerrar">
-                    <i class="fas fa-times"></i>
+
+                    <span aria-hidden="true">&times;</span>
+
                 </button>
 
             </div>
 
-            <section class="content container-fluid">
 
-                <div class="col-md-12">
+            <!-- =================================================
+                 FORMULARIO
+                 ================================================= -->
+            <form method="POST"
+                  action="{{ route('equipo.tecnico', ['id' => $equipo->id]) }}"
+                  autocomplete="off">
 
-                    <div class="card">
+                @method('PATCH')
+                @csrf
 
-                        <form method="POST"
-                              action="{{ route('equipo.tecnico', ['id' => $monitor->id]) }}"
-                              role="form">
 
-                            @method('PATCH')
-                            @csrf
+                <!-- =================================================
+                     BODY
+                     ================================================= -->
+                <div class="modal-body modal-password-body">
 
-                            {{-- TIPO DE EQUIPO --}}
-                            <div class="div title mb-3">
+                    <!-- DATOS DEL EQUIPO -->
+                    <div class="registro-section">
 
-                                <label class="form-label">
-                                    TIPO DE EQUIPO
-                                </label>
+                        <div class="registro-section-title">
+                            <i class="fas fa-desktop"></i>
+                            DATOS DEL EQUIPO
+                        </div>
 
-                                <input type="text"
-                                       class="form-control"
-                                       value="{{ $monitor->tipoEquipo?->nombre ?? 'NO DEFINIDO' }}"
-                                       readonly>
+
+                        <div class="row">
+
+                            <!-- TIPO DE EQUIPO -->
+                            <div class="col-md-6">
+
+                                <div class="registro-field">
+
+                                    <label for="tipo_equipo_{{ $equipo->id }}">
+                                        <i class="fas fa-layer-group"></i>
+                                        TIPO DE EQUIPO
+                                    </label>
+
+                                    <input type="text"
+                                           id="tipo_equipo_{{ $equipo->id }}"
+                                           class="form-control"
+                                           value="{{ $equipo->tipoEquipo?->nombre ?? 'NO DEFINIDO' }}"
+                                           readonly>
+
+                                </div>
 
                             </div>
 
-                            {{-- TÉCNICO --}}
-                            <div class="div title">
 
-                                <label for="user_id{{ $monitor->id }}"
-                                       class="form-label">
-                                    ASIGNAR TECNICO
-                                </label>
+                            <!-- CÓDIGO DE RECEPCIÓN -->
 
-                                <select name="user_id"
-                                        id="user_id{{ $monitor->id }}"
-                                        class="form-control @error('user_id') is-invalid @enderror"
-                                        required>
 
-                                    <option value="" disabled selected>
-                                        SELECCIONE UN TECNICO
+                        </div>
+
+                    </div>
+
+
+                    <!-- ASIGNACIÓN -->
+                    <div class="registro-section">
+
+                        <div class="registro-section-title">
+                            <i class="fas fa-user-cog"></i>
+                            ASIGNACIÓN DEL TÉCNICO
+                        </div>
+
+
+                        <div class="registro-field">
+
+                            <label for="user_id_otro_{{ $equipo->id }}">
+                                <i class="fas fa-user-cog"></i>
+                                TÉCNICO RESPONSABLE
+                                <span class="required">*</span>
+                            </label>
+
+                            <select name="user_id"
+                                    id="user_id_otro_{{ $equipo->id }}"
+                                    class="form-control @error('user_id') is-invalid @enderror"
+                                    required>
+
+                                <option value="" disabled selected>
+                                    SELECCIONE UN TÉCNICO
+                                </option>
+
+                                @foreach($users as $user)
+
+                                    <option value="{{ $user->id }}"
+                                        {{ $equipo->user_id == $user->id ? 'selected' : '' }}>
+
+                                        {{ $user->name }}
+                                        {{ $user->paterno }}
+                                        {{ $user->materno }}
+
                                     </option>
 
-                                    @foreach($users as $user)
+                                @endforeach
 
-                                        <option value="{{ $user->id }}">
-                                            {{ $user->name }}
-                                            {{ $user->paterno }}
-                                            {{ $user->materno }}
-                                        </option>
+                            </select>
 
-                                    @endforeach
+                            @error('user_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
 
-                                </select>
+                        </div>
 
-                                @error('user_id')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
 
-                            </div>
+                        <!-- FECHA -->
+                        <div class="registro-field">
 
-                            {{-- FECHA --}}
+
+                            <input type="hidden"
+                                   class="form-control"
+                                   value="{{ now()->format('d-m-Y H:i') }}"
+                                   readonly>
+
                             <input type="hidden"
                                    name="fecha_asignacion"
-                                   value="{{ date('Y-m-d\TH:i:s') }}">
+                                   value="{{ now()->format('Y-m-d H:i:s') }}">
 
-                            <div class="modal-footer">
+                        </div>
 
-                                <button type="submit"
-                                        class="btn btn-primary rounded-pill px-4 shadow-sm">
-                                    <i class="fas fa-save"></i>
-                                    GUARDAR
-                                </button>
 
-                                <button type="button"
-                                        class="btn btn-danger rounded-pill px-4 shadow-sm"
-                                        data-dismiss="modal">
-                                    <i class="fas fa-times"></i>
-                                    CANCELAR
-                                </button>
+                        <div class="registro-required">
 
-                            </div>
+                            <i class="fas fa-info-circle"></i>
 
-                        </form>
+                            Seleccione el técnico responsable del mantenimiento.
+                            El sistema registrará automáticamente la fecha de asignación.
+
+                        </div>
 
                     </div>
 
                 </div>
 
-            </section>
+
+                <!-- =================================================
+                     FOOTER
+                     ================================================= -->
+                <div class="modal-footer modal-password-footer">
+
+                    <button type="button"
+                            class="btn btn-password-close"
+                            data-dismiss="modal">
+
+                        <i class="fas fa-times"></i>
+                        CANCELAR
+
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-password-save">
+
+                        <i class="fas fa-user-check"></i>
+                        ASIGNAR TÉCNICO
+
+                    </button>
+
+                </div>
+
+            </form>
 
         </div>
 
     </div>
 
 </div>
+

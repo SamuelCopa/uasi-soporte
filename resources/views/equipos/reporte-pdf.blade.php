@@ -49,26 +49,105 @@
             text-align: center;
         }
 
+        .fecha-generacion {
+    text-align: right;
+    font-size: 10px;
+    color: #555;
+    margin-top: 5px;
+    margin-bottom: 8px;
+}
+
+
+.membrete {
+    width: 100%;
+    border-collapse: collapse;
+    border: none !important;
+    margin-bottom: 10px;
+}
+
+.membrete tr,
+.membrete td {
+    border: none !important;
+    padding: 0;
+    vertical-align: middle;
+}
+
+/* Logo izquierdo y derecho */
+.logo-izquierdo,
+.logo-derecho {
+    width: 18%;
+    vertical-align: middle;
+}
+
+.logo-izquierdo {
+    text-align: left;
+}
+
+.logo-derecho {
+    text-align: right;
+}
+
+/* Tamaño de logos */
+.logo-izquierdo img,
+.logo-derecho img {
+    width: 85px;
+    height: 85px;
+    object-fit: contain;
+}
+
+/* Título */
+.titulo-central {
+    width: 64%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.titulo {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.subtitulo {
+    font-size: 10px;
+    margin-bottom: 4px;
+}
     </style>
 
 </head>
 
 <body>
 
-    <div class="titulo">
-        GOBIERNO AUTÓNOMO MUNICIPAL DE EL ALTO
-    </div>
+<table class="membrete">
+    <tr>
 
-    <div class="subtitulo">
-        UNIDAD DE ADMINISTRACIÓN DE SISTEMAS DE INFORMACIÓN
-    </div>
+        <td class="logo-izquierdo">
+            <img src="{{ public_path('img1/elalto.jpg') }}">
+        </td>
 
-    <div class="titulo">
-        REPORTE DE EQUIPOS INGRESADOS
-    </div>
+        <td class="titulo-central">
 
-    <br>
+            <div class="titulo">
+                GOBIERNO AUTÓNOMO MUNICIPAL DE EL ALTO
+            </div>
 
+            <div class="subtitulo">
+                UNIDAD DE ADMINISTRACIÓN DE SISTEMAS DE INFORMACIÓN
+            </div>
+
+            <div class="titulo">
+                REPORTE DE EQUIPOS ATENDIDOS
+            </div>
+
+        </td>
+
+        <td class="logo-derecho">
+            <img src="{{ public_path('img1/sello1.jpg') }}">
+        </td>
+
+    </tr>
+</table>
+<div class="fecha-generacion"> Fecha de generación: {{ now()->format('d-m-Y H:i') }} </div>
     <table>
 
         <thead>
@@ -100,26 +179,17 @@
                     </td>
 
                     <td class="centro">
-
                         {{ $equipo->fecha
                             ? date('d-m-Y', strtotime($equipo->fecha))
                             : '-' }}
-
                     </td>
 
                     <td>
-
                         @if($equipo->tipo_equipo === 'OTRO EQUIPO')
-
-                            {{ $equipo->tipoEquipo?->nombre
-                                ?? 'OTRO EQUIPO' }}
-
+                            {{ $equipo->tipoEquipo?->nombre ?? 'OTRO EQUIPO' }}
                         @else
-
                             {{ $equipo->tipo_equipo }}
-
                         @endif
-
                     </td>
 
                     <td class="centro">
@@ -127,11 +197,9 @@
                     </td>
 
                     <td>
-
                         {{ $equipo->funcionario?->nombre }}
                         {{ $equipo->funcionario?->paterno }}
                         {{ $equipo->funcionario?->materno }}
-
                     </td>
 
                     <td>
@@ -139,26 +207,28 @@
                     </td>
 
                     <td>
-
                         {{ $equipo->Dependencia?->dependencias
                             ?? 'SIN DEPENDENCIA' }}
-
                     </td>
+
                     <td>
-
-                        {{ $equipo->user?->name }}
-                        {{ $equipo->user?->paterno }}
-                        {{ $equipo->user?->materno }}
-
+                        {{ $equipo->user
+                            ? $equipo->user->name . ' ' . $equipo->user->paterno . ' ' . $equipo->user->materno
+                            : 'SIN ASIGNAR' }}
                     </td>
 
                     <td class="centro">
-                    @if($equipo->fecha_entrega)
-                        {{ $equipo->resultado?->nombre }}<br>
-                        {{ date('d-m-Y', strtotime($equipo->fecha_entrega)) }}
-                    @else
-                        {{ $equipo->estado?->nombre }}
-                    @endif	
+                        @if($equipo->fecha_entrega)
+
+                            {{ $equipo->resultado?->nombre }}<br>
+
+                            {{ date('d-m-Y', strtotime($equipo->fecha_entrega)) }}
+
+                        @else
+
+                            {{ $equipo->estado?->nombre }}
+
+                        @endif
                     </td>
 
                 </tr>
@@ -166,11 +236,9 @@
             @empty
 
                 <tr>
-
-                    <td colspan="10" class="centro">
+                    <td colspan="9" class="centro">
                         No se encontraron registros.
                     </td>
-
                 </tr>
 
             @endforelse

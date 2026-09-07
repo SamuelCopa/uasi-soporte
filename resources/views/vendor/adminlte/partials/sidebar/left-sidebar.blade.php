@@ -42,9 +42,13 @@
                     {{ Auth::user()->materno }}
                 </div>
 
-                <div class="sidebar-user-role">
-                    {{ Auth::user()->getRoleNames()->first() ?? 'Usuario' }}
-                </div>
+<div class="sidebar-user-role">
+    {{ Auth::user()->getRoleNames()->first() ?? 'Usuario' }}
+
+    @if(Auth::user()->especialidad)
+        | {{ Auth::user()->especialidad->nombre }}
+    @endif
+</div>
 
             </div>
 

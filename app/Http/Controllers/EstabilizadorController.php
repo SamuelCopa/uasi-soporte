@@ -287,15 +287,46 @@ public function index(Request $request): View
             'module_width' => 1, 
             'module_height' => 1 
         );
-        if($estabilizador->funcionario_activo == 1){
-        $datos = $estabilizador->funcionario?->grado_academico.' '.$estabilizador->funcionario?->nombre.' '. $estabilizador->funcionario?->paterno.' '.$estabilizador->funcionario?->materno . ' - ' . $estabilizador->funcionario?->ci.''.$estabilizador->funcionario?->expedido . ' - ' . $estabilizador->dependencia?->dependencias.' - SOPORTE TECNICO-GAMEA';
-        }else{
-        $datos = $estabilizador->funcionario?->grado_academico.' '.$estabilizador->funcionario?->nombre.' '. $estabilizador->funcionario?->paterno.' '.$estabilizador->funcionario?->materno . ' - ' . $estabilizador->funcionario?->ci.''.$estabilizador->funcionario?->expedido . ' - ' . $estabilizador->funcionario?->cargo.' - SOPORTE TECNICO-GAMEA';
-        }
-        $datos1 = $estabilizador->funcionario?->grado_academico.' '.$estabilizador->funcionario?->nombre.' '.$estabilizador->funcionario?->paterno.' '.$estabilizador->funcionario?->materno ;
-        $datos2 = $estabilizador->funcionario?->ci.' '.$estabilizador->funcionario?->expedido ;
-        $datos3 = $estabilizador->funcionario?->cargo; 
-        $datos4 = $estabilizador->dependencia?->dependencias; 
+ if ($estabilizador->funcionario_activo == 1) {
+
+    $datos = $estabilizador->funcionario?->grado_academico . ' ' .
+             $estabilizador->funcionario?->nombre . ' ' .
+             $estabilizador->funcionario?->paterno . ' ' .
+             $estabilizador->funcionario?->materno .
+             ' - ' .
+             $estabilizador->funcionario?->ci . ' ' .
+             $estabilizador->funcionario?->expedido .
+             ' - ' .
+             ($estabilizador->dependencia?->dependencias ?? 'SIN DEPENDENCIA') .
+             ' - SOPORTE TECNICO-GAMEA';
+
+} else {
+
+    $datos = $estabilizador->funcionario?->grado_academico . ' ' .
+             $estabilizador->funcionario?->nombre . ' ' .
+             $estabilizador->funcionario?->paterno . ' ' .
+             $estabilizador->funcionario?->materno .
+             ' - ' .
+             $estabilizador->funcionario?->ci . ' ' .
+             $estabilizador->funcionario?->expedido .
+             ' - ' .
+             ($estabilizador->funcionario?->cargo ?? 'SIN CARGO') .
+             ' - SOPORTE TECNICO-GAMEA';
+}
+
+$datos1 = trim(
+    ($estabilizador->funcionario?->grado_academico ?? '') . ' ' .
+    ($estabilizador->funcionario?->nombre ?? '') . ' ' .
+    ($estabilizador->funcionario?->paterno ?? '') . ' ' .
+    ($estabilizador->funcionario?->materno ?? '')
+);
+
+$datos2 = ($estabilizador->funcionario?->ci ?? '') . ' ' .
+          ($estabilizador->funcionario?->expedido ?? '');
+
+$datos3 = $estabilizador->funcionario?->cargo ?? 'SIN CARGO';
+
+$datos4 = $estabilizador->dependencia?->dependencias ?? 'SIN DEPENDENCIA';
 
         $pdf->write2DBarcode($datos, 'QRCODE,H', 165, 210, 45, 45, $style, 'N');
         $pdf->Text(20, 205, '');
@@ -303,7 +334,7 @@ public function index(Request $request): View
         $pdf->Cell(0, 5, $datos1, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos2, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos3, 0, 1, 'C');
-        $pdf->Cell(0, 5, $datos4, 0, 1, 'C');
+        $pdf->MultiCell(0, 5, $datos4, 0, 'C', false, 1);
 
         // GENERAR CONTENIDO
         $pdfContent = $pdf->Output('estabilizador.pdf', 'S');

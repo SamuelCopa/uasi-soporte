@@ -292,15 +292,46 @@ public function store(Request $request, CorrelativoService $correlativoService)
             'module_width' => 1, 
             'module_height' => 1 
         );
-        if($audifono->funcionario_activo == 1){
-        $datos = $audifono->funcionario?->grado_academico.' '.$audifono->funcionario?->nombre.' '. $audifono->funcionario?->paterno.' '.$audifono->funcionario?->materno . ' - ' . $audifono->funcionario?->ci.''.$audifono->funcionario?->expedido . ' - ' . $audifono->dependencia?->dependencias.' - SOPORTE TECNICO-GAMEA';
-        }else{
-        $datos = $audifono->funcionario?->grado_academico.' '.$audifono->funcionario?->nombre.' '. $audifono->funcionario?->paterno.' '.$audifono->funcionario?->materno . ' - ' . $audifono->funcionario?->ci.''.$audifono->funcionario?->expedido . ' - ' . $audifono->funcionario?->cargo.' - SOPORTE TECNICO-GAMEA';
-        }
-        $datos1 = $audifono->funcionario?->grado_academico.' '.$audifono->funcionario?->nombre.' '.$audifono->funcionario?->paterno.' '.$audifono->funcionario?->materno ;
-        $datos2 = $audifono->funcionario?->ci.' '.$audifono->funcionario?->expedido ;
-        $datos3 = $audifono->funcionario?->cargo; 
-        $datos4 = $audifono->dependencia?->dependencias; 
+ if ($audifono->funcionario_activo == 1) {
+
+    $datos = $audifono->funcionario?->grado_academico . ' ' .
+             $audifono->funcionario?->nombre . ' ' .
+             $audifono->funcionario?->paterno . ' ' .
+             $audifono->funcionario?->materno .
+             ' - ' .
+             $audifono->funcionario?->ci . ' ' .
+             $audifono->funcionario?->expedido .
+             ' - ' .
+             ($audifono->dependencia?->dependencias ?? 'SIN DEPENDENCIA') .
+             ' - SOPORTE TECNICO-GAMEA';
+
+} else {
+
+    $datos = $audifono->funcionario?->grado_academico . ' ' .
+             $audifono->funcionario?->nombre . ' ' .
+             $audifono->funcionario?->paterno . ' ' .
+             $audifono->funcionario?->materno .
+             ' - ' .
+             $audifono->funcionario?->ci . ' ' .
+             $audifono->funcionario?->expedido .
+             ' - ' .
+             ($audifono->funcionario?->cargo ?? 'SIN CARGO') .
+             ' - SOPORTE TECNICO-GAMEA';
+}
+
+$datos1 = trim(
+    ($audifono->funcionario?->grado_academico ?? '') . ' ' .
+    ($audifono->funcionario?->nombre ?? '') . ' ' .
+    ($audifono->funcionario?->paterno ?? '') . ' ' .
+    ($audifono->funcionario?->materno ?? '')
+);
+
+$datos2 = ($audifono->funcionario?->ci ?? '') . ' ' .
+          ($audifono->funcionario?->expedido ?? '');
+
+$datos3 = $audifono->funcionario?->cargo ?? 'SIN CARGO';
+
+$datos4 = $audifono->dependencia?->dependencias ?? 'SIN DEPENDENCIA';
 
         $pdf->write2DBarcode($datos, 'QRCODE,H', 165, 210, 45, 45, $style, 'N');
         $pdf->Text(20, 205, '');
@@ -308,7 +339,7 @@ public function store(Request $request, CorrelativoService $correlativoService)
         $pdf->Cell(0, 5, $datos1, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos2, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos3, 0, 1, 'C');
-        $pdf->Cell(0, 5, $datos4, 0, 1, 'C');
+        $pdf->MultiCell(0, 5, $datos4, 0, 'C', false, 1);
 
 // GENERAR CONTENIDO
 $pdfContent = $pdf->Output('audifono.pdf', 'S');

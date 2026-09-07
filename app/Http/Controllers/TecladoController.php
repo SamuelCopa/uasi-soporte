@@ -271,15 +271,46 @@ class TecladoController extends Controller
             'module_width' => 1, 
             'module_height' => 1 
         );
-        if($teclado->funcionario_activo == 1){
-        $datos = $teclado->funcionario?->grado_academico.' '.$teclado->funcionario?->nombre.' '.$teclado->funcionario?->paterno.' '.$teclado->funcionario?->materno. ' - ' . $teclado->funcionario?->ci.''.$teclado->funcionario?->expedido  . ' - ' . $teclado->dependencia->dependencias.' - SOPORTE TECNICO-GAMEA';
-        }else{
-        $datos = $teclado->funcionario?->grado_academico.' '.$teclado->funcionario?->nombre .' '.$teclado->funcionario?->paterno.' '.$teclado->funcionario?->materno. ' - ' . $teclado->funcionario?->ci.''.$teclado->funcionario?->expedido  . ' - ' .$teclado->funcionario?->cargo.' - SOPORTE TECNICO-GAMEA';
-        }
-        $datos1 = $teclado->funcionario?->grado_academico.' '.$teclado->funcionario?->nombre.' '.$teclado->funcionario?->paterno.' '.$teclado->funcionario?->materno ;
-        $datos2 = $teclado->funcionario?->ci.' '.$teclado->funcionario?->expedido ;
-        $datos3 = $teclado->funcionario?->cargo; 
-        $datos4 = $teclado->dependencia->dependencias; 
+ if ($teclado->funcionario_activo == 1) {
+
+    $datos = $teclado->funcionario?->grado_academico . ' ' .
+             $teclado->funcionario?->nombre . ' ' .
+             $teclado->funcionario?->paterno . ' ' .
+             $teclado->funcionario?->materno .
+             ' - ' .
+             $teclado->funcionario?->ci . ' ' .
+             $teclado->funcionario?->expedido .
+             ' - ' .
+             ($teclado->dependencia?->dependencias ?? 'SIN DEPENDENCIA') .
+             ' - SOPORTE TECNICO-GAMEA';
+
+} else {
+
+    $datos = $teclado->funcionario?->grado_academico . ' ' .
+             $teclado->funcionario?->nombre . ' ' .
+             $teclado->funcionario?->paterno . ' ' .
+             $teclado->funcionario?->materno .
+             ' - ' .
+             $teclado->funcionario?->ci . ' ' .
+             $teclado->funcionario?->expedido .
+             ' - ' .
+             ($teclado->funcionario?->cargo ?? 'SIN CARGO') .
+             ' - SOPORTE TECNICO-GAMEA';
+}
+
+$datos1 = trim(
+    ($teclado->funcionario?->grado_academico ?? '') . ' ' .
+    ($teclado->funcionario?->nombre ?? '') . ' ' .
+    ($teclado->funcionario?->paterno ?? '') . ' ' .
+    ($teclado->funcionario?->materno ?? '')
+);
+
+$datos2 = ($teclado->funcionario?->ci ?? '') . ' ' .
+          ($teclado->funcionario?->expedido ?? '');
+
+$datos3 = $teclado->funcionario?->cargo ?? 'SIN CARGO';
+
+$datos4 = $teclado->dependencia?->dependencias ?? 'SIN DEPENDENCIA';
 
         $pdf->write2DBarcode($datos, 'QRCODE,H', 165, 210, 45, 45, $style, 'N');
         $pdf->Text(20, 205, '');
@@ -287,7 +318,7 @@ class TecladoController extends Controller
         $pdf->Cell(0, 5, $datos1, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos2, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos3, 0, 1, 'C');
-        $pdf->Cell(0, 5, $datos4, 0, 1, 'C');
+        $pdf->MultiCell(0, 5, $datos4, 0, 'C', false, 1);
 
         $pdfContent = $pdf->Output('teclado.pdf', 'S');
 
@@ -489,7 +520,7 @@ public function enviar($id, EquipoPdfService $service)
                     'laptops'         => 'Laptop',
                     'teclados'        => 'Teclado',
                     'ratons'          => 'Mouse',
-                    'upeses'          => 'UPS',
+                    'upeses'          => 'teclado',
                     'teclados'       => 'teclado',
                     'audifonos'       => 'Audífono',
                     'estabilizadors'  => 'Estabilizador',

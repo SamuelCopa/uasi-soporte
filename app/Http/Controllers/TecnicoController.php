@@ -52,6 +52,7 @@ use App\Models\Servicio;
 use App\Models\Funcionario;
 use Illuminate\Support\Str;
 use App\Models\OtrosEquipo;
+use App\Models\Especialidad;
 
 
 class TecnicoController extends Controller
@@ -59,63 +60,118 @@ class TecnicoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
-    {
-        $users = User::whereHas('roles', function ($query) {
-            $query->where('name','LIKE', 'Tecnico');
-        })->orderBy('paterno', 'asc')->get();
-        $roles = Role:: all();
-        $estados = EstadoUsuario:: all();
-        return view('tecnico.index', compact('users', 'roles','estados'));
+public function index(Request $request)
+{
+    $users = User::with('especialidades')
+        ->whereHas('roles', function ($query) {
+            $query->where('name', 'Tecnico');
+        })
+        ->orderBy('paterno', 'asc')
+        ->get();
+
+    /*
+    |--------------------------------------------------------------------------
+    | ROLES QUE PUEDE VER EL USUARIO ACTUAL
+    |--------------------------------------------------------------------------
+    */
+    $usuarioActual = auth()->user();
+
+    if ($usuarioActual->hasRole('SuperAdministrador')) {
+
+        // SuperAdministrador puede ver todos los roles
+        $roles = Role::all();
+
+    } elseif ($usuarioActual->hasRole('Administrador')) {
+
+        // Administrador solamente puede asignar estos roles
+        $roles = Role::whereIn('name', [
+            'Usuario',
+            'Tecnico'
+        ])->get();
+
+    } else {
+
+        // Los demás no pueden asignar roles
+        $roles = collect();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $user = new User();
-        $roles = Role:: all();
-        $estados = EstadoUsuario:: all();
-        return view('tecnico.create', compact('user', 'roles','estados'));
-    }
+    $estados = EstadoUsuario::all();
+
+    /*
+    |--------------------------------------------------------------------------
+    | ESPECIALIDADES
+    |--------------------------------------------------------------------------
+    */
+    $especialidades = Especialidad::where('activo', true)
+        ->orderBy('nombre')
+        ->get();
+
+    return view('tecnico.index', compact(
+        'users',
+        'roles',
+        'estados',
+        'especialidades'
+    ));
+}
+
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed',
-            'ci' => 'required',
-            'expedido' => 'required',
-            'celular' => 'required',
-            'paterno' => 'required',
-            'materno' => 'required',
-            'id_estadousuario' => 'required',
+public function store(Request $request)
+{
+    $request->validate([
+        'name' => 'required',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|confirmed',
+        'ci' => 'required',
+        'expedido' => 'required',
+        'celular' => 'required',
+        'paterno' => 'required',
+        'materno' => 'required',
+        'id_estadousuario' => 'required',
 
-        ]);
-    
-        $user = new User();
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->ci = $request->input('ci');
-        $user->expedido = $request->input('expedido');
-        $user->celular = $request->input('celular');
-        $user->paterno = $request->input('paterno');
-        $user->materno = $request->input('materno');
-        $user->id_estadousuario = $request->input('id_estadousuario');
-        $user->password = Hash::make($request->input('password'));
-        $user->save();
+        // VARIAS ESPECIALIDADES
+        'especialidades' => 'required|array|min:1',
+        'especialidades.*' => 'exists:especialidades,id',
+    ]);
 
-        $user->assignRole('Tecnico');
-    
-        return redirect()->route('tecnicos.index')
+    $user = new User();
+
+    $user->name = $request->input('name');
+    $user->email = $request->input('email');
+    $user->ci = $request->input('ci');
+    $user->expedido = $request->input('expedido');
+    $user->celular = $request->input('celular');
+    $user->paterno = $request->input('paterno');
+    $user->materno = $request->input('materno');
+    $user->id_estadousuario = $request->input('id_estadousuario');
+
+    $user->password = Hash::make($request->input('password'));
+
+    $user->save();
+
+    /*
+    |--------------------------------------------------------------------------
+    | ASIGNAR ROL
+    |--------------------------------------------------------------------------
+    */
+    $user->assignRole('Tecnico');
+
+    /*
+    |--------------------------------------------------------------------------
+    | ASIGNAR ESPECIALIDADES
+    |--------------------------------------------------------------------------
+    */
+    $user->especialidades()->sync(
+        $request->input('especialidades', [])
+    );
+
+    return redirect()
+        ->route('tecnicos.index')
         ->with('icono', 'success')
         ->with('success', 'TECNICO REGISTRADO CON EXITO');
-    }
+}
 
     /**
      * Display the specified resource.
@@ -139,25 +195,59 @@ class TecnicoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,  $id)
-    {
-        $user = User::find($id);
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->ci = $request->input('ci');
-        $user->expedido = $request->input('expedido');
-        $user->celular = $request->input('celular');
-        $user->paterno = $request->input('paterno');
-        $user->materno = $request->input('materno');
-        $user->id_estadousuario = $request->input('id_estadousuario');
-        $user->update();
-        $user->roles()->sync($request->roles);
+public function update(Request $request, $id)
+{
+    $user = User::findOrFail($id);
 
-        return redirect()->route('tecnicos.index')
-        ->with('success', 'REGISTRADO ACTUALIZADO')
-        ->with('icono', 'success');
+    $request->validate([
+        'name' => 'required',
+        'email' => 'required|email|unique:users,email,' . $user->id,
+        'ci' => 'required',
+        'expedido' => 'required',
+        'celular' => 'required',
+        'paterno' => 'required',
+        'materno' => 'required',
+        'id_estadousuario' => 'required',
+
+        // VARIAS ESPECIALIDADES
+        'especialidades' => 'required|array|min:1',
+        'especialidades.*' => 'exists:especialidades,id',
+    ]);
+
+    $user->name = $request->input('name');
+    $user->email = $request->input('email');
+    $user->ci = $request->input('ci');
+    $user->expedido = $request->input('expedido');
+    $user->celular = $request->input('celular');
+    $user->paterno = $request->input('paterno');
+    $user->materno = $request->input('materno');
+    $user->id_estadousuario = $request->input('id_estadousuario');
+
+    $user->save();
+
+    /*
+    |--------------------------------------------------------------------------
+    | ACTUALIZAR ROL
+    |--------------------------------------------------------------------------
+    */
+    if ($request->filled('roles')) {
+        $user->roles()->sync($request->roles);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | ACTUALIZAR ESPECIALIDADES
+    |--------------------------------------------------------------------------
+    */
+    $user->especialidades()->sync(
+        $request->input('especialidades', [])
+    );
+
+    return redirect()
+        ->route('tecnicos.index')
+        ->with('success', 'REGISTRADO ACTUALIZADO')
+        ->with('icono', 'success');
+}
     /**
      * Remove the specified resource from storage.
      */
