@@ -300,14 +300,26 @@
                 <div class="roles-container">
                     @foreach ($roles as $rol)
                         <label class="rol-option"
-                               for="rol-{{ $user->id }}-{{ $rol->id }}">
-                            <input type="checkbox" name="roles[]" value="{{ $rol->id }}" id="rol-{{ $user->id }}-{{ $rol->id }}"
-                                   {{ in_array(
+                            for="rol-{{ $user->id }}-{{ $rol->id }}">
+
+                            <input type="checkbox"
+                                name="roles[]"
+                                value="{{ $rol->id }}"
+                                id="rol-{{ $user->id }}-{{ $rol->id }}"
+                                {{ in_array(
                                         $rol->id,
                                         $user->roles->pluck('id')->toArray()
-                                   ) ? 'checked' : '' }} onclick="return false;">
+                                ) ? 'checked' : '' }}
+
+                                @if (!auth()->user()->hasRole('SuperAdministrador'))
+                                    onclick="return false;"
+                                @endif
+                            >
+
                             <i class="fas fa-user-check"></i>
+
                             {{ $rol->name }}
+
                         </label>
                     @endforeach
                 </div>
