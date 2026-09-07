@@ -58,7 +58,15 @@
                                             <td>{{ $user->ci }} {{$user->expedido}}</td>
                                             <td>{{ $user->celular }}</td>
                                             <td>{{ $user->email }}</td>
-                                            <td>{{ $user->roles->pluck('name')->implode(', ') ?? 'Sin rol' }}</td>
+                                                <td>
+                                                    @forelse($user->roles as $rol)
+                                                        <span class="badge bg-primary d-block mb-1">
+                                                            {{ $rol->name }}
+                                                        </span>
+                                                    @empty
+                                                        <span class="text-muted">SIN ROL</span>
+                                                    @endforelse
+                                                </td>
                                             <td>
                                                 @if($user->id_estadousuario == '1')
                                                     <button type="submit"

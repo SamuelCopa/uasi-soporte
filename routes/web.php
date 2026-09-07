@@ -142,118 +142,29 @@ Route::get('/buscaUps',[App\Http\Controllers\UpeseController::class,'buscaUps'])
 Route::get('/buscaLaptop',[App\Http\Controllers\LaptopController::class,'buscaLaptop'])->name('buscaLaptop');
 Route::get('/buscaCpu',[App\Http\Controllers\RegistroCpuController::class,'buscaCpu'])->name('buscaCpu');
 
-//---------------ESTADISTICAS--------------------
-Route::get('/estadistica',[PanelController::class,'index'])->name('estadistica')->middleware('auth');
-Route::get('/estadistica/tecnico',[PanelController::class,'estadisticaTecnico1'])->name('estadistica.tecnico')->middleware('auth');
-Route::get('/admin/TecnicoEstadistica/{id}', [TecnicoController::class, 'tecnicoEstadistica'])->name('admin.TecnicoEstadistica')->middleware('auth');
-Route::get('/resultado',[PanelController::class,'resultado'])->name('resultado')->middleware('auth');
-Route::get('/resultado/tecnico',[PanelController::class,'resultadoTecnico1'])->name('resultado.tecnico')->middleware('auth');
-Route::get('/admin/TecnicoResultado/{id}', [TecnicoController::class, 'tecnicoResultado'])->name('admin.TecnicoResultado')->middleware('auth');
 
-//---------------ROLES  Y PERMISOS--------------------
-
-Route::resource('roles', RoleController::class)->middleware('auth');
-Route::resource('users', UserController::class)->middleware('auth');
-Route::resource('permissions', PermissionController::class)->middleware('auth');
-Route::resource('role-has-permissions', RoleHasPermissionController::class)->middleware('auth');
-Route::resource('model-has-roles', ModelHasRoleController::class)->middleware('auth');
-Route::resource('estado-usuarios', EstadoUsuarioController::class)->middleware('auth');
-Route::patch('/user/{id}', [App\Http\Controllers\UserController::class,'updatePassword'])->name('user.pass')->middleware('auth');
-// ----------- ESTADOS DE USUARIOS -------------------
-Route::post('/estado-usuario',[App\Http\Controllers\UserController::class,'cambiarEstado'])->name('estado-usuario')->middleware('auth');
-Route::post('/usuario/cambiar-password', [UserController::class, 'cambiarPassword'])->middleware('auth')->name('usuario.cambiar.password');
-
-//-------------------BACKUP DB---------------------------------------
-
-Route::get('/backup', [BackupController::class, 'backup'])->name('backup')->middleware('auth');
-Route::get('/backupSuccess', [BackupController::class, 'backupSuccess'])->name('backup.success')->middleware('auth');
-
-// ---------------------TECNICOS---------------------------------------
-Route::resource('tecnicos', TecnicoController::class)->middleware('auth');
-Route::post('/estado-tecnico',[App\Http\Controllers\TecnicoController::class,'cambiarEstado'])->name('estado.tecnico')->middleware('auth');
-Route::patch('/tecnico/{id}', [App\Http\Controllers\TecnicoController::class,'updatePassword'])->name('tecnico.pass')->middleware('auth');
-
-//-------------------------REPORTES SERVICIOS----------------------------------------------------
-Route::patch('/password/update', [UserController::class, 'ActualizarPassword'])->name('usuario.password.update')->middleware('auth');
-
-Route::get('/servicio/reporte-pdf', [ServicioController::class, 'reporteServicioPdf'])->name('servicio.reporte.pdf');
-
-
-
-//------------------VER ASIGNACIONES A TECNICOS------------------------------------
-Route::get('/admin/registro/{id}', [TecnicoController::class, 'panelRegistros'])->name('admin.registro')->middleware('auth');
-Route::get('/admin/verTecnico/{id}', [TecnicoController::class, 'tecnicoPanel'])->name('admin.verTecnico')->middleware('auth');
-Route::get('/admin/asigTeclado/{id}', [TecnicoController::class, 'tecnicoTeclado'])->name('admin.asigTeclado')->middleware('auth');
-Route::get('/admin/asigAudifono/{id}', [TecnicoController::class, 'tecnicoAudifono'])->name('admin.asigAudifono')->middleware('auth');
-Route::get('/admin/asigImpresora/{id}', [TecnicoController::class, 'tecnicoImpresora'])->name('admin.asigImpresora')->middleware('auth');
-Route::get('/admin/asigCpu/{id}', [TecnicoController::class, 'tecnicoCpu'])->name('admin.asigCpu')->middleware('auth');
-Route::get('/admin/asigMouse/{id}', [TecnicoController::class, 'tecnicoMouse'])->name('admin.asigMouse')->middleware('auth');
-Route::get('/admin/asigParlante/{id}', [TecnicoController::class, 'tecnicoParlante'])->name('admin.asigParlante')->middleware('auth');
-Route::get('/admin/asigMonitor/{id}', [TecnicoController::class, 'tecnicoMonitor'])->name('admin.asigMonitor')->middleware('auth');
-Route::get('/admin/asigEstabilizador/{id}', [TecnicoController::class, 'tecnicoEstabilizador'])->name('admin.asigEstabilizador')->middleware('auth');
-Route::get('/admin/asigUps/{id}', [TecnicoController::class, 'tecnicoUps'])->name('admin.asigUps')->middleware('auth');
-Route::get('/admin/asigLaptop/{id}', [TecnicoController::class, 'tecnicoLaptop'])->name('admin.asigLaptop')->middleware('auth');
-
-
-//------------------CREAR INFORMES WORD------------------------------------
-Route::get('/informe/equipo/{id}', [InformesController::class, 'crearInformeEquipo'])->name('informe.equipo')->middleware('auth');
-Route::get('/informe/cpu/{id}', [InformesController::class, 'crearInformeCpu'])->name('informe.cpu')->middleware('auth');
-Route::get('/informe/impresora/{id}', [InformesController::class, 'crearInformeImpresora'])->name('informe.impresora')->middleware('auth');
-Route::get('/informe/audifono/{id}', [InformesController::class, 'crearInformeAudifono'])->name('informe.audifono')->middleware('auth');
-Route::get('/informe/teclado/{id}', [InformesController::class, 'crearInformeTeclado'])->name('informe.teclado')->middleware('auth');
-Route::get('/informe/mouse/{id}', [InformesController::class, 'crearInformeMouse'])->name('informe.mouse')->middleware('auth');
-Route::get('/informe/parlante/{id}', [InformesController::class, 'crearInformeParlante'])->name('informe.parlante')->middleware('auth');
-Route::get('/informe/monitor/{id}', [InformesController::class, 'crearInformeMonitor'])->name('informe.monitor')->middleware('auth');
-Route::get('/informe/estabilizador/{id}', [InformesController::class, 'crearInformeEstabilizador'])->name('informe.estabilizador')->middleware('auth');
-Route::get('/informe/ups/{id}', [InformesController::class, 'crearInformeUps'])->name('informe.ups')->middleware('auth');
-Route::get('/informe/laptop/{id}', [InformesController::class, 'crearInformeLaptop'])->name('informe.laptop')->middleware('auth');
-Route::post('/informe/descargar/{id}', [InformesController::class, 'descargarInforme'])->name('informe.descargar')->middleware('auth');
 
 //-----------------------------------------------------------------------------
 
 Route::post('/infresult/estabilizador/{id}', [InformesController::class, 'resultadoEstabilizador'])->name('resultado.estabilizador')->middleware('auth');
 
-Route::resource('responsables', ResponsableController::class)->middleware('auth');
-Route::resource('funcionarios', FuncionarioController::class)->middleware('auth');
-
-//---------------PANEL REGISTRO--------------------
+//---------------EVALUACION DE REQUERIMIENTOS DE SERVICIOS A UNIDADES--------------------
 Route::get('/registrar/activos', [DashboardController::class, 'panelRegistro'])->name('registrar.activos')->middleware('auth');
-
-//---------------ASIGNACIONES A TECNICOS--------------------
-Route::get('/asignaciones/impresora', [DashboardController::class, 'asignacionesImpresora'])->name('asignaciones.impresora')->middleware('auth');
-Route::get('/asignaciones/cpu', [DashboardController::class, 'asignacionesCpu'])->name('asignaciones.cpu')->middleware('auth');
-Route::get('/asignaciones/teclado', [DashboardController::class, 'asignacionesTeclado'])->name('asignaciones.teclado')->middleware('auth');
-Route::get('/asignaciones/mouse', [DashboardController::class, 'asignacionesMouse'])->name('asignaciones.mouse')->middleware('auth');
-Route::get('/asignaciones/parlante', [DashboardController::class, 'asignacionesParlante'])->name('asignaciones.parlante')->middleware('auth');
-Route::get('/asignaciones/audifono', [DashboardController::class, 'asignacionesAudifono'])->name('asignaciones.audifono')->middleware('auth');
-Route::get('/asignaciones/monitor', [DashboardController::class, 'asignacionesMonitor'])->name('asignaciones.monitor')->middleware('auth');
-Route::get('/asignaciones/estabilizador', [DashboardController::class, 'asignacionesEstabilizador'])->name('asignaciones.estabilizador')->middleware('auth');
-Route::get('/asignaciones/ups', [DashboardController::class, 'asignacionesUps'])->name('asignaciones.ups')->middleware('auth');
-Route::get('/asignaciones/laptop', [DashboardController::class, 'asignacionesLaptop'])->name('asignaciones.laptop')->middleware('auth');
-Route::get('/asignaciones/equipos', [DashboardController::class, 'asignacionesEquipos'])->name('asignaciones.Equipos')->middleware('auth');
-
-//---------------------------------ASIGNACIONES DE ASITENCIA TECNICA-----------
-Route::get('/asignaciones/asistencia', [TecnicoController::class, 'asignacionesAsistencia'])->name('asignaciones.asistencia')->middleware('auth');
-Route::put('/asignacion/{id}/atender', [ServicioController::class, 'atender'])->name('asignacion.atender')->middleware('auth');
-
-Route::get('/asignaciones-asistencia/reporte-pdf',[TecnicoController::class, 'reporteAsistenciaPdf'])->name('servicios.asignaciones.reporte.pdf');
-
 Route::get('/evaluar', [TecnicoController::class, 'buscarEvaluacion'])->name('evaluacion.buscar');
 Route::post('/evaluar', [TecnicoController::class, 'mostrarEvaluacion'])->name('evaluacion.mostrar');
 Route::get('/evaluar/{id}', [TecnicoController::class, 'evaluar'])->name('asignacion.evaluar');
 Route::post('/evaluar/guardar', [TecnicoController::class, 'guardarEvaluacion'])->name('evaluacion.guardar');
 
-//---------------------------------
-Route::resource('otros-equipos', OtrosEquipoController::class);
-Route::resource('tipos-equipos', TiposEquipoController::class);
-// Rutas protegidas
+
+
+//----------------------------Rutas protegidas-------------------------------------
 Route::middleware(['auth', 'single.session'])->group(function () {
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-    // demás rutas del sistema...
 
-});
-
+Route::resource('responsables', ResponsableController::class)->middleware('auth');
+Route::resource('funcionarios', FuncionarioController::class)->middleware('auth');
 Route::resource('registros', RegistroController::class)->middleware('auth');
 Route::resource('color-cases', ColorCaseController::class)->middleware('auth');
 Route::resource('marca-cases', MarcaCaseController::class)->middleware('auth');
@@ -297,6 +208,97 @@ Route::resource('cantidad-rams', CantidadRamController::class);
 Route::resource('tipo-rams', TipoRamController::class);
 Route::resource('resultados', ResultadoController::class);
 
+//---------------------------------
+Route::resource('otros-equipos', OtrosEquipoController::class)->middleware('auth');
+Route::resource('tipos-equipos', TiposEquipoController::class)->middleware('auth');
+
+//---------------------------------ASIGNACIONES DE ASITENCIA TECNICA-----------
+Route::get('/asignaciones/asistencia', [TecnicoController::class, 'asignacionesAsistencia'])->name('asignaciones.asistencia')->middleware('auth');
+Route::put('/asignacion/{id}/atender', [ServicioController::class, 'atender'])->name('asignacion.atender')->middleware('auth');
+
+Route::get('/asignaciones-asistencia/reporte-pdf',[TecnicoController::class, 'reporteAsistenciaPdf'])->name('servicios.asignaciones.reporte.pdf');
+
+
+//---------------ASIGNACIONES A TECNICOS--------------------
+Route::get('/asignaciones/impresora', [DashboardController::class, 'asignacionesImpresora'])->name('asignaciones.impresora')->middleware('auth');
+Route::get('/asignaciones/cpu', [DashboardController::class, 'asignacionesCpu'])->name('asignaciones.cpu')->middleware('auth');
+Route::get('/asignaciones/teclado', [DashboardController::class, 'asignacionesTeclado'])->name('asignaciones.teclado')->middleware('auth');
+Route::get('/asignaciones/mouse', [DashboardController::class, 'asignacionesMouse'])->name('asignaciones.mouse')->middleware('auth');
+Route::get('/asignaciones/parlante', [DashboardController::class, 'asignacionesParlante'])->name('asignaciones.parlante')->middleware('auth');
+Route::get('/asignaciones/audifono', [DashboardController::class, 'asignacionesAudifono'])->name('asignaciones.audifono')->middleware('auth');
+Route::get('/asignaciones/monitor', [DashboardController::class, 'asignacionesMonitor'])->name('asignaciones.monitor')->middleware('auth');
+Route::get('/asignaciones/estabilizador', [DashboardController::class, 'asignacionesEstabilizador'])->name('asignaciones.estabilizador')->middleware('auth');
+Route::get('/asignaciones/ups', [DashboardController::class, 'asignacionesUps'])->name('asignaciones.ups')->middleware('auth');
+Route::get('/asignaciones/laptop', [DashboardController::class, 'asignacionesLaptop'])->name('asignaciones.laptop')->middleware('auth');
+Route::get('/asignaciones/equipos', [DashboardController::class, 'asignacionesEquipos'])->name('asignaciones.Equipos')->middleware('auth');
+
+
+//------------------VER ASIGNACIONES A TECNICOS------------------------------------
+Route::get('/admin/registro/{id}', [TecnicoController::class, 'panelRegistros'])->name('admin.registro')->middleware('auth');
+Route::get('/admin/verTecnico/{id}', [TecnicoController::class, 'tecnicoPanel'])->name('admin.verTecnico')->middleware('auth');
+Route::get('/admin/asigTeclado/{id}', [TecnicoController::class, 'tecnicoTeclado'])->name('admin.asigTeclado')->middleware('auth');
+Route::get('/admin/asigAudifono/{id}', [TecnicoController::class, 'tecnicoAudifono'])->name('admin.asigAudifono')->middleware('auth');
+Route::get('/admin/asigImpresora/{id}', [TecnicoController::class, 'tecnicoImpresora'])->name('admin.asigImpresora')->middleware('auth');
+Route::get('/admin/asigCpu/{id}', [TecnicoController::class, 'tecnicoCpu'])->name('admin.asigCpu')->middleware('auth');
+Route::get('/admin/asigMouse/{id}', [TecnicoController::class, 'tecnicoMouse'])->name('admin.asigMouse')->middleware('auth');
+Route::get('/admin/asigParlante/{id}', [TecnicoController::class, 'tecnicoParlante'])->name('admin.asigParlante')->middleware('auth');
+Route::get('/admin/asigMonitor/{id}', [TecnicoController::class, 'tecnicoMonitor'])->name('admin.asigMonitor')->middleware('auth');
+Route::get('/admin/asigEstabilizador/{id}', [TecnicoController::class, 'tecnicoEstabilizador'])->name('admin.asigEstabilizador')->middleware('auth');
+Route::get('/admin/asigUps/{id}', [TecnicoController::class, 'tecnicoUps'])->name('admin.asigUps')->middleware('auth');
+Route::get('/admin/asigLaptop/{id}', [TecnicoController::class, 'tecnicoLaptop'])->name('admin.asigLaptop')->middleware('auth');
+
+
+//------------------CREAR INFORMES WORD------------------------------------
+Route::get('/informe/equipo/{id}', [InformesController::class, 'crearInformeEquipo'])->name('informe.equipo')->middleware('auth');
+Route::get('/informe/cpu/{id}', [InformesController::class, 'crearInformeCpu'])->name('informe.cpu')->middleware('auth');
+Route::get('/informe/impresora/{id}', [InformesController::class, 'crearInformeImpresora'])->name('informe.impresora')->middleware('auth');
+Route::get('/informe/audifono/{id}', [InformesController::class, 'crearInformeAudifono'])->name('informe.audifono')->middleware('auth');
+Route::get('/informe/teclado/{id}', [InformesController::class, 'crearInformeTeclado'])->name('informe.teclado')->middleware('auth');
+Route::get('/informe/mouse/{id}', [InformesController::class, 'crearInformeMouse'])->name('informe.mouse')->middleware('auth');
+Route::get('/informe/parlante/{id}', [InformesController::class, 'crearInformeParlante'])->name('informe.parlante')->middleware('auth');
+Route::get('/informe/monitor/{id}', [InformesController::class, 'crearInformeMonitor'])->name('informe.monitor')->middleware('auth');
+Route::get('/informe/estabilizador/{id}', [InformesController::class, 'crearInformeEstabilizador'])->name('informe.estabilizador')->middleware('auth');
+Route::get('/informe/ups/{id}', [InformesController::class, 'crearInformeUps'])->name('informe.ups')->middleware('auth');
+Route::get('/informe/laptop/{id}', [InformesController::class, 'crearInformeLaptop'])->name('informe.laptop')->middleware('auth');
+Route::post('/informe/descargar/{id}', [InformesController::class, 'descargarInforme'])->name('informe.descargar')->middleware('auth');
+
+
+//---------------ESTADISTICAS--------------------
+Route::get('/estadistica',[PanelController::class,'index'])->name('estadistica')->middleware('auth');
+Route::get('/estadistica/tecnico',[PanelController::class,'estadisticaTecnico1'])->name('estadistica.tecnico')->middleware('auth');
+Route::get('/admin/TecnicoEstadistica/{id}', [TecnicoController::class, 'tecnicoEstadistica'])->name('admin.TecnicoEstadistica')->middleware('auth');
+Route::get('/resultado',[PanelController::class,'resultado'])->name('resultado')->middleware('auth');
+Route::get('/resultado/tecnico',[PanelController::class,'resultadoTecnico1'])->name('resultado.tecnico')->middleware('auth');
+Route::get('/admin/TecnicoResultado/{id}', [TecnicoController::class, 'tecnicoResultado'])->name('admin.TecnicoResultado')->middleware('auth');
+
+//---------------ROLES  Y PERMISOS--------------------
+
+Route::resource('roles', RoleController::class)->middleware('auth');
+Route::resource('users', UserController::class)->middleware('auth');
+Route::resource('permissions', PermissionController::class)->middleware('auth');
+Route::resource('role-has-permissions', RoleHasPermissionController::class)->middleware('auth');
+Route::resource('model-has-roles', ModelHasRoleController::class)->middleware('auth');
+Route::resource('estado-usuarios', EstadoUsuarioController::class)->middleware('auth');
+Route::patch('/user/{id}', [App\Http\Controllers\UserController::class,'updatePassword'])->name('user.pass')->middleware('auth');
+// ----------- ESTADOS DE USUARIOS -------------------
+Route::post('/estado-usuario',[App\Http\Controllers\UserController::class,'cambiarEstado'])->name('estado-usuario')->middleware('auth');
+Route::post('/usuario/cambiar-password', [UserController::class, 'cambiarPassword'])->middleware('auth')->name('usuario.cambiar.password');
+
+//-------------------BACKUP DB---------------------------------------
+
+Route::get('/backup', [BackupController::class, 'backup'])->name('backup')->middleware('auth');
+Route::get('/backupSuccess', [BackupController::class, 'backupSuccess'])->name('backup.success')->middleware('auth');
+
+// ---------------------TECNICOS---------------------------------------
+Route::resource('tecnicos', TecnicoController::class)->middleware('auth');
+Route::post('/estado-tecnico',[App\Http\Controllers\TecnicoController::class,'cambiarEstado'])->name('estado.tecnico')->middleware('auth');
+Route::patch('/tecnico/{id}', [App\Http\Controllers\TecnicoController::class,'updatePassword'])->name('tecnico.pass')->middleware('auth');
+
+//-------------------------REPORTES SERVICIOS----------------------------------------------------
+Route::patch('/password/update', [UserController::class, 'ActualizarPassword'])->name('usuario.password.update')->middleware('auth');
+Route::get('/servicio/reporte-pdf', [ServicioController::class, 'reporteServicioPdf'])->name('servicio.reporte.pdf')->middleware('auth');
+
+
 // ---------------------MODAL ASIGNAR -----------------------
 Route::patch('/audifono/{id}', [App\Http\Controllers\AudifonoController::class,'updateRecepcion'])->name('audi.recepcion')->middleware('auth');
 Route::patch('/audifonoT/{id}', [App\Http\Controllers\AudifonoController::class,'updateTecnico'])->name('audi.tecnico')->middleware('auth');
@@ -322,51 +324,6 @@ Route::patch('/equipoT/{id}', [App\Http\Controllers\OtrosEquipoController::class
 Route::patch('/servicioT/{id}', [App\Http\Controllers\ServicioController::class,'updateTecnico'])->name('servicio.tecnico')->middleware('auth');
 
 
-
-// ------------------SEGUIMIENTO DE EQUIPO-----------------------
-Route::get('/seguimiento', [SeguimientoController::class, 'buscar'])->name('seguimiento.buscar');
-
-// ----------------------FORMULARIO PDF-------------------
-
-Route::get('/resultado/reporte-pdf',[PanelController::class, 'resultadoPdf'])->name('resultado.reporte.pdf');
-
-
-Route::get('pdf/equipo/{id}', [App\Http\Controllers\OtrosEquipoController::class, 'generarPdf'])->name('pdf.equipo.preview');
-Route::get('/pdf/equipo/{id}/descargar', [OtrosEquipoController::class, 'descargar'])->name('pdf.equipo.descargar');
-Route::post('/pdf/equipo/{id}/enviar', [OtrosEquipoController::class, 'enviar'])->name('pdf.equipo.enviar');
-
-Route::get('pdf/audifono/{id}', [App\Http\Controllers\AudifonoController::class, 'generarPdf'])->name('pdf.audifono.preview');
-Route::get('/pdf/audifono/{id}/descargar', [AudifonoController::class, 'descargar'])->name('pdf.audifono.descargar');
-Route::post('/pdf/audifono/{id}/enviar', [AudifonoController::class, 'enviar'])->name('pdf.audifono.enviar');
-Route::get('pdf/estabilizador/{id}', [App\Http\Controllers\EstabilizadorController::class, 'generarPdf'])->name('pdf.estabilizador.preview');
-Route::get('/pdf/estabilizador/{id}/descargar', [EstabilizadorController::class, 'descargar'])->name('pdf.estabilizador.descargar');
-Route::post('/pdf/estabilizador/{id}/enviar', [EstabilizadorController::class, 'enviar'])->name('pdf.estabilizador.enviar');
-Route::get('pdf/impresora/{id}', [App\Http\Controllers\ImpresoraController::class, 'generarPdf'])->name('pdf.impresora.preview');
-Route::get('/pdf/impresora/{id}/descargar', [ImpresoraController::class, 'descargar'])->name('pdf.impresora.descargar');
-Route::post('/pdf/impresora/{id}/enviar', [ImpresoraController::class, 'enviar'])->name('pdf.impresora.enviar');
-Route::get('pdf/cpu/{id}', [App\Http\Controllers\RegistroCpuController::class, 'generarPdf'])->name('pdf.cpu.preview');
-Route::get('/pdf/cpu/{id}/descargar', [RegistroCpuController::class, 'descargar'])->name('pdf.cpu.descargar');
-Route::post('/pdf/cpu/{id}/enviar', [RegistroCpuController::class, 'enviar'])->name('pdf.cpu.enviar');
-Route::get('pdf/laptop/{id}', [App\Http\Controllers\LaptopController::class, 'generarPdf'])->name('pdf.laptop.preview');
-Route::get('/pdf/laptop/{id}/descargar', [LaptopController::class, 'descargar'])->name('pdf.laptop.descargar');
-Route::post('/pdf/laptop/{id}/enviar', [LaptopController::class, 'enviar'])->name('pdf.laptop.enviar');
-Route::get('pdf/monitor/{id}', [App\Http\Controllers\MonitorController::class, 'generarPdf'])->name('pdf.monitor.preview');
-Route::get('/pdf/monitor/{id}/descargar', [MonitorController::class, 'descargar'])->name('pdf.monitor.descargar');
-Route::post('/pdf/monitor/{id}/enviar', [MonitorController::class, 'enviar'])->name('pdf.monitor.enviar');
-Route::get('pdf/ups/{id}', [App\Http\Controllers\UpeseController::class, 'generarPdf'])->name('pdf.ups.preview');
-Route::get('/pdf/ups/{id}/descargar', [UpeseController::class, 'descargar'])->name('pdf.ups.descargar');
-Route::post('/pdf/ups/{id}/enviar', [UpeseController::class, 'enviar'])->name('pdf.ups.enviar');
-Route::get('pdf/teclado/{id}', [App\Http\Controllers\TecladoController::class, 'generarPdf'])->name('pdf.teclado.preview');
-Route::get('/pdf/teclado/{id}/descargar', [TecladoController::class, 'descargar'])->name('pdf.teclado.descargar');
-Route::post('/pdf/teclado/{id}/enviar', [TecladoController::class, 'enviar'])->name('pdf.teclado.enviar');
-Route::get('pdf/mouse/{id}', [App\Http\Controllers\RatonController::class, 'generarPdf'])->name('pdf.mouse.preview');
-Route::get('/pdf/mouse/{id}/descargar', [RatonController::class, 'descargar'])->name('pdf.mouse.descargar');
-Route::post('/pdf/mouse/{id}/enviar', [RatonController::class, 'enviar'])->name('pdf.mouse.enviar');
-Route::get('pdf/parlante/{id}', [App\Http\Controllers\ParlanteController::class, 'generarPdf'])->name('pdf.parlante.preview');
-Route::get('/pdf/parlante/{id}/descargar', [ParlanteController::class, 'descargar'])->name('pdf.parlante.descargar');
-Route::post('/pdf/parlante/{id}/enviar', [ParlanteController::class, 'enviar'])->name('pdf.parlante.enviar');
-
-
 // ----------- ESTADOS DE PROCESOS -------------------
 Route::post('/estado-equipo',[App\Http\Controllers\OtrosEquipoController::class,'cambiarEstado'])->name('estado-equipo')->middleware('auth');
 Route::post('/estado-audifono',[App\Http\Controllers\AudifonoController::class,'cambiarEstado'])->name('estado-audifono')->middleware('auth');
@@ -381,11 +338,8 @@ Route::post('/estado-cpu',[App\Http\Controllers\RegistroCpuController::class,'ca
 Route::post('/estado-laptop',[App\Http\Controllers\LaptopController::class,'cambiarEstado'])->name('estado-laptop')->middleware('auth');
 
 // ----------------REPORTES EQUIPOS----------
-
-
 Route::get('/equipos/reporte', [EquipoController::class, 'reporte'])->name('equipos.reporte')->middleware('auth');
 Route::get('/equipos/reporte/pdf', [EquipoController::class, 'reportePdf'])->name('equipos.reporte.pdf')->middleware('auth');
-
 
 // ----------------REPORTES----------
 
@@ -460,4 +414,50 @@ Route::get('/pdfLaptop',[App\Http\Controllers\LaptopController::class,'pdfLaptop
 Route::get('/searchYearLaptop', [App\Http\Controllers\LaptopController::class,'searchYearLaptop'])->name('search.YearLaptop');
 Route::get('/pdfYearLaptop',[App\Http\Controllers\LaptopController::class,'pdfYearLaptop'])->name('pdf.YearLaptop')->middleware('auth');
 
-Route::get('/manual-usuario', [DashboardController::class, 'manual'])->name('manual.usuario');
+Route::get('/manual-usuario', [DashboardController::class, 'manual'])->name('manual.usuario')->middleware('auth');
+});
+
+// ------------------SEGUIMIENTO DE EQUIPO-----------------------
+Route::get('/seguimiento', [SeguimientoController::class, 'buscar'])->name('seguimiento.buscar');
+
+// ----------------------FORMULARIO PDF-------------------
+
+Route::get('/resultado/reporte-pdf',[PanelController::class, 'resultadoPdf'])->name('resultado.reporte.pdf');
+
+
+Route::get('pdf/equipo/{id}', [App\Http\Controllers\OtrosEquipoController::class, 'generarPdf'])->name('pdf.equipo.preview');
+Route::get('/pdf/equipo/{id}/descargar', [OtrosEquipoController::class, 'descargar'])->name('pdf.equipo.descargar');
+Route::post('/pdf/equipo/{id}/enviar', [OtrosEquipoController::class, 'enviar'])->name('pdf.equipo.enviar');
+
+Route::get('pdf/audifono/{id}', [App\Http\Controllers\AudifonoController::class, 'generarPdf'])->name('pdf.audifono.preview');
+Route::get('/pdf/audifono/{id}/descargar', [AudifonoController::class, 'descargar'])->name('pdf.audifono.descargar');
+Route::post('/pdf/audifono/{id}/enviar', [AudifonoController::class, 'enviar'])->name('pdf.audifono.enviar');
+Route::get('pdf/estabilizador/{id}', [App\Http\Controllers\EstabilizadorController::class, 'generarPdf'])->name('pdf.estabilizador.preview');
+Route::get('/pdf/estabilizador/{id}/descargar', [EstabilizadorController::class, 'descargar'])->name('pdf.estabilizador.descargar');
+Route::post('/pdf/estabilizador/{id}/enviar', [EstabilizadorController::class, 'enviar'])->name('pdf.estabilizador.enviar');
+Route::get('pdf/impresora/{id}', [App\Http\Controllers\ImpresoraController::class, 'generarPdf'])->name('pdf.impresora.preview');
+Route::get('/pdf/impresora/{id}/descargar', [ImpresoraController::class, 'descargar'])->name('pdf.impresora.descargar');
+Route::post('/pdf/impresora/{id}/enviar', [ImpresoraController::class, 'enviar'])->name('pdf.impresora.enviar');
+Route::get('pdf/cpu/{id}', [App\Http\Controllers\RegistroCpuController::class, 'generarPdf'])->name('pdf.cpu.preview');
+Route::get('/pdf/cpu/{id}/descargar', [RegistroCpuController::class, 'descargar'])->name('pdf.cpu.descargar');
+Route::post('/pdf/cpu/{id}/enviar', [RegistroCpuController::class, 'enviar'])->name('pdf.cpu.enviar');
+Route::get('pdf/laptop/{id}', [App\Http\Controllers\LaptopController::class, 'generarPdf'])->name('pdf.laptop.preview');
+Route::get('/pdf/laptop/{id}/descargar', [LaptopController::class, 'descargar'])->name('pdf.laptop.descargar');
+Route::post('/pdf/laptop/{id}/enviar', [LaptopController::class, 'enviar'])->name('pdf.laptop.enviar');
+Route::get('pdf/monitor/{id}', [App\Http\Controllers\MonitorController::class, 'generarPdf'])->name('pdf.monitor.preview');
+Route::get('/pdf/monitor/{id}/descargar', [MonitorController::class, 'descargar'])->name('pdf.monitor.descargar');
+Route::post('/pdf/monitor/{id}/enviar', [MonitorController::class, 'enviar'])->name('pdf.monitor.enviar');
+Route::get('pdf/ups/{id}', [App\Http\Controllers\UpeseController::class, 'generarPdf'])->name('pdf.ups.preview');
+Route::get('/pdf/ups/{id}/descargar', [UpeseController::class, 'descargar'])->name('pdf.ups.descargar');
+Route::post('/pdf/ups/{id}/enviar', [UpeseController::class, 'enviar'])->name('pdf.ups.enviar');
+Route::get('pdf/teclado/{id}', [App\Http\Controllers\TecladoController::class, 'generarPdf'])->name('pdf.teclado.preview');
+Route::get('/pdf/teclado/{id}/descargar', [TecladoController::class, 'descargar'])->name('pdf.teclado.descargar');
+Route::post('/pdf/teclado/{id}/enviar', [TecladoController::class, 'enviar'])->name('pdf.teclado.enviar');
+Route::get('pdf/mouse/{id}', [App\Http\Controllers\RatonController::class, 'generarPdf'])->name('pdf.mouse.preview');
+Route::get('/pdf/mouse/{id}/descargar', [RatonController::class, 'descargar'])->name('pdf.mouse.descargar');
+Route::post('/pdf/mouse/{id}/enviar', [RatonController::class, 'enviar'])->name('pdf.mouse.enviar');
+Route::get('pdf/parlante/{id}', [App\Http\Controllers\ParlanteController::class, 'generarPdf'])->name('pdf.parlante.preview');
+Route::get('/pdf/parlante/{id}/descargar', [ParlanteController::class, 'descargar'])->name('pdf.parlante.descargar');
+Route::post('/pdf/parlante/{id}/enviar', [ParlanteController::class, 'enviar'])->name('pdf.parlante.enviar');
+
+
