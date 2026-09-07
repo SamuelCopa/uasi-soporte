@@ -176,23 +176,17 @@ public function reporte(Request $request)
             continue;
 
         }
-
-
         /*
         |--------------------------------------------------------------------------
         | CONSULTA
         |--------------------------------------------------------------------------
         */
-
         $query = $modelo::query();
-
-
         /*
         |--------------------------------------------------------------------------
         | AÑO
         |--------------------------------------------------------------------------
         */
-
         if ($request->filled('year')) {
 
             $query->whereYear(
@@ -201,14 +195,11 @@ public function reporte(Request $request)
             );
 
         }
-
-
         /*
         |--------------------------------------------------------------------------
         | FECHA DESDE
         |--------------------------------------------------------------------------
         */
-
         if ($request->filled('fecha_desde')) {
 
             $query->whereDate(
@@ -218,14 +209,11 @@ public function reporte(Request $request)
             );
 
         }
-
-
         /*
         |--------------------------------------------------------------------------
         | FECHA HASTA
         |--------------------------------------------------------------------------
         */
-
         if ($request->filled('fecha_hasta')) {
 
             $query->whereDate(
@@ -235,8 +223,6 @@ public function reporte(Request $request)
             );
 
         }
-
-
         /*
         |--------------------------------------------------------------------------
         | DEPENDENCIA
@@ -251,8 +237,6 @@ public function reporte(Request $request)
             );
 
         }
-
-
         /*
         |--------------------------------------------------------------------------
         | CÓDIGO
@@ -268,8 +252,6 @@ public function reporte(Request $request)
             );
 
         }
-
-
         /*
         |--------------------------------------------------------------------------
         | RELACIONES
@@ -285,34 +267,25 @@ public function reporte(Request $request)
                 'estado'
             ])
             ->get();
-
-
         /*
         |--------------------------------------------------------------------------
         | IDENTIFICAR TIPO
         |--------------------------------------------------------------------------
         */
-
         foreach ($registros as $registro) {
 
             $registro->tipo_equipo = $tipo;
 
         }
-
-
         /*
         |--------------------------------------------------------------------------
         | AGREGAR RESULTADOS
         |--------------------------------------------------------------------------
         */
-
         $equipos = $equipos->merge(
             $registros
         );
-
     }
-
-
     /*
     |--------------------------------------------------------------------------
     | PROCESAR OTROS EQUIPOS
@@ -791,11 +764,89 @@ public function reportePdf(Request $request)
     |--------------------------------------------------------------------------
     | GENERAR PDF
     |--------------------------------------------------------------------------
-    */
-    $pdf = Pdf::loadView(
-        'equipos.reporte-pdf',
-        compact('equipos')
+
+    /*
+|--------------------------------------------------------------------------
+| FILTROS PARA MOSTRAR EN EL PDF
+|--------------------------------------------------------------------------
+*/
+
+$year = $request->input('year');
+$tipoEquipo = $request->input('tipo_equipo');
+$fechaDesde = $request->input('fecha_desde');
+$fechaHasta = $request->input('fecha_hasta');
+$codigo = $request->input('codigo');
+
+/*
+|--------------------------------------------------------------------------
+| NOMBRE DE LA DEPENDENCIA
+|--------------------------------------------------------------------------
+*/
+
+$dependenciaNombre = null;
+
+if ($request->filled('dependencia')) {
+
+    $dependenciaNombre = Dependencia::find(
+        $request->dependencia
+    )?->dependencias;
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| NOMBRE DEL TIPO DE EQUIPO
+|--------------------------------------------------------------------------
+*/
+
+$tipoEquipoNombre = null;
+
+if ($tipoSeleccionado) {
+
+    if ($tipoOtroEquipo) {
+
+        $tipoEquipoNombre = $tipoOtroEquipo->nombre;
+
+    } else {
+
+        $tipoEquipoNombre = strtoupper(
+            $tipoSeleccionado
+        );
+
+    }
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| NOMBRE DEL MES
+|--------------------------------------------------------------------------
+*/
+
+$mesNombre = null;
+
+if ($fechaDesde) {
+
+    $mesNombre = strtoupper(
+        \Carbon\Carbon::parse($fechaDesde)
+            ->locale('es')
+            ->translatedFormat('F')
     );
+
+}
+$pdf = Pdf::loadView(
+    'equipos.reporte-pdf',
+    compact(
+        'equipos',
+        'year',
+        'tipoEquipoNombre',
+        'fechaDesde',
+        'fechaHasta',
+        'dependenciaNombre',
+        'codigo',
+        'mesNombre'
+    )
+
 
 
     /*
@@ -804,8 +855,7 @@ public function reportePdf(Request $request)
     |--------------------------------------------------------------------------
     */
 
-    $pdf->setPaper(
-        'letter'
+
     );
     /*
     |--------------------------------------------------------------------------

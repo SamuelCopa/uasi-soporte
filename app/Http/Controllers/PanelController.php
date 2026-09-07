@@ -1416,7 +1416,7 @@ public function reportePdf(User $user)
 
     $pdf = Pdf::loadView('asigTecnicos.asignaciones', compact('user', 'datos', 'anio'));
 
-    $pdf->setPaper('A4', 'portrait');
+    $pdf->setPaper('letter', 'portrait');
 
     return $pdf->stream(
         'reporte_asignaciones_' . $user->id . '_' . $anio . '.pdf'

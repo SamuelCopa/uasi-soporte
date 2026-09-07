@@ -125,13 +125,25 @@ public function reporteServicioPdf(Request $request)
         'user'
     ]);
 
+    /*
+    |--------------------------------------------------------------------------
+    | FILTRO POR GESTIÓN
+    |--------------------------------------------------------------------------
+    */
     if ($request->filled('year')) {
+
         $query->whereYear(
             'created_at',
             $request->year
         );
+
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | FILTRO POR ESTADO
+    |--------------------------------------------------------------------------
+    */
     if ($request->filled('estado')) {
 
         if ($request->estado == 'pendiente') {
@@ -152,6 +164,11 @@ public function reporteServicioPdf(Request $request)
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | FILTRO POR TÉCNICO
+    |--------------------------------------------------------------------------
+    */
     if ($request->filled('tecnico')) {
 
         $query->where(
@@ -161,6 +178,11 @@ public function reporteServicioPdf(Request $request)
 
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | FILTRO POR DEPENDENCIA
+    |--------------------------------------------------------------------------
+    */
     if ($request->filled('dependencia')) {
 
         $query->where(
@@ -170,6 +192,11 @@ public function reporteServicioPdf(Request $request)
 
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | FILTRO POR FECHA DESDE
+    |--------------------------------------------------------------------------
+    */
     if ($request->filled('fecha_desde')) {
 
         $query->whereDate(
@@ -180,6 +207,11 @@ public function reporteServicioPdf(Request $request)
 
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | FILTRO POR FECHA HASTA
+    |--------------------------------------------------------------------------
+    */
     if ($request->filled('fecha_hasta')) {
 
         $query->whereDate(
@@ -190,13 +222,113 @@ public function reporteServicioPdf(Request $request)
 
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | OBTENER SERVICIOS
+    |--------------------------------------------------------------------------
+    */
     $servicios = $query
         ->orderBy('created_at', 'desc')
         ->get();
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | DATOS PARA EL ENCABEZADO DEL PDF
+    |--------------------------------------------------------------------------
+    */
+
+    // Si se seleccionó una gestión, usarla.
+    // Si no, usar la gestión actual.
+    $year = $request->year ?? now()->year;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | MES
+    |--------------------------------------------------------------------------
+    |
+    | Si tienes un filtro "mes", lo utilizamos.
+    | Si no existe, mostramos "TODOS LOS MESES".
+    |
+    */
+
+/*
+|--------------------------------------------------------------------------
+| MES PARA EL ENCABEZADO
+|--------------------------------------------------------------------------
+*/
+
+$year = $request->year ?? now()->year;
+
+if ($request->filled('mes')) {
+
+    $mesNombre = \Carbon\Carbon::create()
+        ->month((int) $request->mes)
+        ->locale('es')
+        ->translatedFormat('F');
+
+    $mesNombre = strtoupper($mesNombre);
+
+} elseif (
+    $request->filled('fecha_desde') &&
+    $request->filled('fecha_hasta')
+) {
+
+    $desde = \Carbon\Carbon::parse($request->fecha_desde);
+    $hasta = \Carbon\Carbon::parse($request->fecha_hasta);
+
+    if ($desde->format('Y-m') === $hasta->format('Y-m')) {
+
+        $mesNombre = strtoupper(
+            $desde->locale('es')->translatedFormat('F')
+        );
+
+    } else {
+
+        $mesNombre = strtoupper(
+            $desde->locale('es')->translatedFormat('F')
+        ) . ' - ' .
+        strtoupper(
+            $hasta->locale('es')->translatedFormat('F')
+        );
+    }
+
+} elseif ($request->filled('fecha_desde')) {
+
+    $mesNombre = strtoupper(
+        \Carbon\Carbon::parse($request->fecha_desde)
+            ->locale('es')
+            ->translatedFormat('F')
+    );
+
+} elseif ($request->filled('fecha_hasta')) {
+
+    $mesNombre = strtoupper(
+        \Carbon\Carbon::parse($request->fecha_hasta)
+            ->locale('es')
+            ->translatedFormat('F')
+    );
+
+} else {
+
+    $mesNombre = null;
+}
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | GENERAR PDF
+    |--------------------------------------------------------------------------
+    */
+
     $pdf = Pdf::loadView(
         'servicio.reporte-pdf',
-        compact('servicios')
+        compact(
+            'servicios',
+            'year',
+            'mesNombre'
+        )
     )->setPaper('letter');
 
     return $pdf->stream('reporte-servicios.pdf');

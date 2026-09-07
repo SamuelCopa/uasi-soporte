@@ -112,6 +112,14 @@
     font-size: 10px;
     margin-bottom: 4px;
 }
+
+.filtros-reporte {
+    margin-top: 5px;
+    font-size: 9px;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+}
     </style>
 
 </head>
@@ -125,21 +133,69 @@
             <img src="{{ public_path('img1/elalto.jpg') }}">
         </td>
 
-        <td class="titulo-central">
+            <td class="titulo-central">
 
-            <div class="titulo">
-                GOBIERNO AUTÓNOMO MUNICIPAL DE EL ALTO
-            </div>
+                <div class="titulo">
+                    GOBIERNO AUTÓNOMO MUNICIPAL DE EL ALTO
+                </div>
 
-            <div class="subtitulo">
-                UNIDAD DE ADMINISTRACIÓN DE SISTEMAS DE INFORMACIÓN
-            </div>
+                <div class="subtitulo">
+                    UNIDAD DE ADMINISTRACIÓN DE SISTEMAS DE INFORMACIÓN
+                </div>
 
-            <div class="titulo">
-                REPORTE DE EQUIPOS ATENDIDOS
-            </div>
+                <div class="titulo">
+                    REPORTE DE EQUIPOS ATENDIDOS
+                </div>
 
-        </td>
+                {{-- =====================================================
+                    FILTROS UTILIZADOS PARA EL REPORTE
+                    ===================================================== --}}
+                <div class="filtros-reporte">
+
+                    @php
+                        $filtros = [];
+
+                        if (!empty($year)) {
+                            $filtros[] = 'GESTIÓN: ' . $year;
+                        }
+
+                        if (!empty($mesNombre)) {
+                            $filtros[] = 'MES: ' . $mesNombre;
+                        }
+
+                        if (!empty($estadoNombre)) {
+                            $filtros[] = 'ESTADO: ' . $estadoNombre;
+                        }
+
+                        if (!empty($tecnicoNombre)) {
+                            $filtros[] = 'TÉCNICO: ' . $tecnicoNombre;
+                        }
+
+                        if (!empty($dependenciaNombre)) {
+                            $filtros[] = 'DEPENDENCIA: ' . $dependenciaNombre;
+                        }
+
+                        if (!empty($fechaInicio) && !empty($fechaFin)) {
+                            $filtros[] = 'PERIODO: ' .
+                                date('d-m-Y', strtotime($fechaInicio)) .
+                                ' AL ' .
+                                date('d-m-Y', strtotime($fechaFin));
+                        }
+                    @endphp
+
+                    @if(count($filtros) > 0)
+
+                        {{ implode(' | ', $filtros) }}
+
+                    @else
+
+                        TODOS LOS REGISTROS
+
+                    @endif
+
+                </div>
+
+            </td>
 
         <td class="logo-derecho">
             <img src="{{ public_path('img1/sello1.jpg') }}">

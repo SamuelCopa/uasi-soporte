@@ -157,7 +157,7 @@ Route::post('/evaluar/guardar', [TecnicoController::class, 'guardarEvaluacion'])
 
 
 
-//----------------------------Rutas protegidas-------------------------------------
+//---------------------------RUTAS PROTEGIDAS------------------------------------
 Route::middleware(['auth', 'single.session'])->group(function () {
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

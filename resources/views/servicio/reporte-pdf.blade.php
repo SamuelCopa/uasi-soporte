@@ -20,12 +20,78 @@
             color: #222;
         }
 
-        .encabezado {
-            width: 100%;
-            border-bottom: 2px solid #0052cc;
-            padding-bottom: 8px;
-            margin-bottom: 10px;
-        }
+.encabezado {
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+    border: none;
+    margin-bottom: 8px;
+}
+
+.logo-izquierdo,
+.logo-derecho,
+.institucion {
+    display: table-cell;
+    vertical-align: middle;
+    border: none;
+}
+
+.logo-izquierdo {
+    width: 18%;
+    text-align: center;
+}
+
+.logo-derecho {
+    width: 18%;
+    text-align: center;
+}
+
+.logo-izquierdo img,
+.logo-derecho img {
+    width: 75px;
+    height: 75px;
+    object-fit: contain;
+}
+
+.institucion {
+    width: 64%;
+    text-align: center;
+}
+
+.nombre-institucion {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.unidad {
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+.area {
+    font-size: 10px;
+}
+
+.titulo-reporte {
+    width: 100%;
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: none;
+}
+
+.titulo-principal {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.periodo {
+    font-size: 11px;
+    font-weight: bold;
+}
 
         .institucion {
             text-align: center;
@@ -123,22 +189,96 @@
             font-size: 8px;
             font-weight: bold;
         }
+        .encabezado {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.encabezado td {
+    border: none;
+    vertical-align: middle;
+}
+
+.logo-izquierdo,
+.logo-derecho {
+    width: 18%;
+    text-align: center;
+}
+
+.logo-izquierdo img,
+.logo-derecho img {
+    width: 75px;
+    height: 75px;
+    object-fit: contain;
+}
+
+.institucion {
+    width: 64%;
+    text-align: center;
+}
+
+.institucion-nombre {
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.unidad {
+    margin-top: 5px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
     </style>
 </head>
 <body>
 
-    <div class="encabezado">
+<div class="encabezado">
 
-        <div class="institucion">
+    <!-- LOGO IZQUIERDO -->
+    <div class="logo-izquierdo">
+        <img src="{{ public_path('img1/elalto.jpg') }}" alt="GAMEA">
+    </div>
+
+    <!-- INFORMACIÓN INSTITUCIONAL -->
+    <div class="institucion">
+        <div class="nombre-institucion">
             GOBIERNO AUTÓNOMO MUNICIPAL DE EL ALTO
         </div>
+
         <div class="unidad">
             UNIDAD DE ADMINISTRACIÓN DE SISTEMAS DE INFORMACIÓN - UASI
         </div>
+
+        <!-- <div class="area">
+            ÁREA DE SOPORTE TÉCNICO
+        </div> -->
     </div>
-    <div class="titulo">
+
+    <!-- LOGO DERECHO -->
+    <div class="logo-derecho">
+        <img src="{{ public_path('img1/sello1.jpg')}}" alt="UASI">
+    </div>
+
+</div>
+
+<!-- TÍTULO DEL REPORTE -->
+<div class="titulo-reporte">
+    <div class="titulo-principal">
         REPORTE DE SERVICIOS DE SOPORTE TÉCNICO
     </div>
+
+<div class="periodo">
+
+    GESTIÓN: {{ $year }}
+
+    @if($mesNombre)
+        | MES: {{ $mesNombre }}
+    @endif
+
+</div>
+</div>
     <div class="fecha-reporte">
         Fecha de generación:
         {{ now()->format('d-m-Y H:i') }}
@@ -158,7 +298,7 @@
                 <th style="width: 7%;">Fecha de Asignación</th>
                 <th style="width: 7%;">Fecha de Atención</th>
                 <th style="width: 5%;">Estado</th>
-                <th style="width: 6%;">Puntaje</th>
+                <!-- <th style="width: 6%;">Puntaje</th> -->
             </tr>
         </thead>
         <tbody>
@@ -242,7 +382,7 @@
                             </span>
                         @endif
                     </td>
-                    <td class="puntaje">
+                    <!-- <td class="puntaje">
                         @switch($servicio->puntuacion)
                             @case(1)
                                 Muy malo
@@ -264,7 +404,7 @@
                                     Sin evaluar
                                 </span>
                         @endswitch
-                    </td>
+                    </td> -->
                 </tr>
             @endforeach
         </tbody>

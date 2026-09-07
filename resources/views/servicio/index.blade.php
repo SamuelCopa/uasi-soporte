@@ -89,6 +89,48 @@
                 </div>
 
             </div>
+            {{-- FECHA DESDE --}}
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+
+                <label class="filtro-label">
+                    <i class="fas fa-calendar-day"></i>
+                    Fecha desde
+                </label>
+
+                <div class="campo-filtro">
+
+                    <i class="fas fa-calendar campo-icono"></i>
+
+                    <input type="date"
+                           name="fecha_desde"
+                           class="form-control filtro-control"
+                           value="{{ request('fecha_desde') }}">
+
+                </div>
+
+            </div>
+
+
+            {{-- FECHA HASTA --}}
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+
+                <label class="filtro-label">
+                    <i class="fas fa-calendar-check"></i>
+                    Fecha hasta
+                </label>
+
+                <div class="campo-filtro">
+
+                    <i class="fas fa-calendar campo-icono"></i>
+
+                    <input type="date"
+                           name="fecha_hasta"
+                           class="form-control filtro-control"
+                           value="{{ request('fecha_hasta') }}">
+
+                </div>
+
+            </div>
 
 
             {{-- ESTADO --}}
@@ -268,50 +310,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 </script>
-
-
-            {{-- FECHA DESDE --}}
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
-
-                <label class="filtro-label">
-                    <i class="fas fa-calendar-day"></i>
-                    Fecha desde
-                </label>
-
-                <div class="campo-filtro">
-
-                    <i class="fas fa-calendar campo-icono"></i>
-
-                    <input type="date"
-                           name="fecha_desde"
-                           class="form-control filtro-control"
-                           value="{{ request('fecha_desde') }}">
-
-                </div>
-
-            </div>
-
-
-            {{-- FECHA HASTA --}}
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
-
-                <label class="filtro-label">
-                    <i class="fas fa-calendar-check"></i>
-                    Fecha hasta
-                </label>
-
-                <div class="campo-filtro">
-
-                    <i class="fas fa-calendar campo-icono"></i>
-
-                    <input type="date"
-                           name="fecha_hasta"
-                           class="form-control filtro-control"
-                           value="{{ request('fecha_hasta') }}">
-
-                </div>
-
-            </div>
 
         </div>
 
