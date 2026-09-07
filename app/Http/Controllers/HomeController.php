@@ -26,22 +26,31 @@ public function index()
 {
     $user = auth()->user();
 
+    // Cargar las especialidades del usuario
+    $user->load('especialidades');
+
+    // Valores por defecto
+    $nuevasSolicitudes = $this->nuevasSolicitudes ?? 0;
+    $nuevasSolicitudesTecnico = $this->nuevasSolicitudesTecnico ?? 0;
+
     // Administrador y SuperAdministrador
     if ($user->hasAnyRole(['Administrador', 'SuperAdministrador'])) {
         return view('home', [
             'user' => $user,
-            'nuevasSolicitudes' => $this->nuevasSolicitudes ?? 0,
+            'nuevasSolicitudes' => $nuevasSolicitudes,
+            'nuevasSolicitudesTecnico' => $nuevasSolicitudesTecnico,
         ]);
     }
 
-    // Técnico de SOPORTE
+    // Técnico que tiene la especialidad SOPORTE
     if (
         $user->hasRole('Tecnico') &&
-        $user->especialidad?->codigo === 'SOPORTE'
+        $user->especialidades->contains('codigo', 'SOPORTE')
     ) {
         return view('home', [
             'user' => $user,
-            'nuevasSolicitudesTecnico' => $this->nuevasSolicitudesTecnico ?? 0,
+            'nuevasSolicitudes' => $nuevasSolicitudes,
+            'nuevasSolicitudesTecnico' => $nuevasSolicitudesTecnico,
         ]);
     }
 

@@ -164,9 +164,9 @@
                                     {{-- ELIMINAR --}}
                                     @if($especialidad->usuarios_count == 0)
 
-                                        <form action="{{ route('especialidades.destroy', $especialidad->id) }}"
+                                        <form action="{{ route('especialidades.destroy', $especialidad->id) }} "
                                               method="POST"
-                                              class="d-inline formulario-eliminar">
+                                              class="d-inline formEliminar">
 
                                             @csrf
                                             @method('DELETE')
