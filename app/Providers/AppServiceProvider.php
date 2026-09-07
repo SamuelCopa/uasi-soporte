@@ -45,23 +45,24 @@ public function boot(): void
         return $user->hasRole('Tecnico');
     });
 
-        Gate::define('gestion-equipos', function ($user) {
+Gate::define('gestion-equipos', function ($user) {
 
-        // Administrador puede acceder
-        if ($user->hasRole('Administrador')) {
-            return true;
-        }
+    // SuperAdministrador y Administrador
+    if ($user->hasAnyRole([
+        'SuperAdministrador',
+        'Administrador'
+    ])) {
+        return true;
+    }
 
-        // Técnico únicamente de SOPORTE
-        return $user->hasRole('Tecnico')
-            && $user->especialidad?->codigo === 'SOPORTE';
-    });
+    // Técnico únicamente de SOPORTE
+    return $user->hasRole('Tecnico')
+        && $user->especialidad?->codigo === 'SOPORTE';
+});
 
     Gate::define('mis-asignaciones-soporte', function ($user) {
     return $user->hasRole('Tecnico')
         && $user->especialidad?->codigo === 'SOPORTE';
 });
 }
-
-
 }

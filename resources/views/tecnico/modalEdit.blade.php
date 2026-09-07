@@ -1,78 +1,45 @@
-<div class="modal fade"
-     id="editar{{ $user->id }}"
-     tabindex="-1"
-     role="dialog"
-     aria-labelledby="editarModalLabel{{ $user->id }}"
-     aria-hidden="true">
-
+<!--ventana para Update--->
+<div class="modal fade" id="editar{{ $user->id }}" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel{{ $user->id }}" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
-
         <div class="modal-content modal-password">
-
             {{-- CABECERA --}}
             <div class="modal-header modal-password-header">
-
                 <div class="modal-title-container">
-
                     <div class="modal-password-icon">
                         <i class="fas fa-user-edit"></i>
                     </div>
-
                     <div>
                         <h4 class="modal-title">
-                            ACTUALIZAR TÉCNICO
+                            ACTUALIZAR REGISTRO
                         </h4>
-
                         <small>
-                            Modificación de los datos del técnico
+                            Modificación de los datos del usuario
                         </small>
                     </div>
                 </div>
-
                 <button type="button"
                         class="close modal-password-close"
                         data-dismiss="modal"
                         aria-label="Cerrar">
 
                     <span aria-hidden="true">&times;</span>
-
                 </button>
-
             </div>
-
-
             {{-- FORMULARIO --}}
-            <form method="POST"
-                  action="{{ route('tecnicos.update', $user->id) }}"
-                  role="form"
-                  enctype="multipart/form-data">
-
+            <form method="POST" action="{{ route('tecnicos.update', $user->id) }}" role="form" enctype="multipart/form-data">
                 {{ method_field('PATCH') }}
-
                 @csrf
-
-
                 {{-- CUERPO --}}
                 <div class="modal-body modal-password-body">
-
                     {{-- DATOS DEL USUARIO --}}
                     <div class="registro-section">
-
                         <div class="registro-section-title">
-
                             <i class="fas fa-id-card"></i>
-
                             DATOS DEL USUARIO
-
                         </div>
-
-                        @include('user.form')
-
+                        @include('tecnico.form')
                     </div>
-
                 </div>
-
-
                 {{-- FOOTER --}}
                 <div class="modal-footer modal-password-footer">
 

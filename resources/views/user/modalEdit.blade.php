@@ -43,37 +43,20 @@
 
 
             {{-- FORMULARIO --}}
-            <form method="POST"
-                  action="{{ route('users.update', $user->id) }}"
-                  role="form"
-                  enctype="multipart/form-data">
-
+            <form method="POST" action="{{ route('users.update', $user->id) }}" role="form" enctype="multipart/form-data">
                 {{ method_field('PATCH') }}
-
                 @csrf
-
-
                 {{-- CUERPO --}}
                 <div class="modal-body modal-password-body">
-
                     {{-- DATOS DEL USUARIO --}}
                     <div class="registro-section">
-
                         <div class="registro-section-title">
-
                             <i class="fas fa-id-card"></i>
-
                             DATOS DEL USUARIO
-
                         </div>
-
                         @include('user.form')
-
                     </div>
-
                 </div>
-
-
                 {{-- FOOTER --}}
                 <div class="modal-footer modal-password-footer">
 

@@ -74,56 +74,7 @@
                 </div>
             </div>
 
-            <div class="row">
-    <!-- ESPECIALIDAD -->
-<!-- =====================================================
-     ESPECIALIDADES
-     ===================================================== -->
-<div class="col-md-12">
-
-    <div class="registro-field">
-
-        <label>
-            <i class="fas fa-tools"></i>
-            ESPECIALIDADES
-            <span class="required">*</span>
-        </label>
-
-        <div class="roles-container">
-
-            @foreach ($especialidades as $especialidad)
-
-                <label class="rol-option"
-                       for="especialidad-{{ $user->id }}-{{ $especialidad->id }}">
-
-                    <input type="checkbox"
-                           name="especialidades[]"
-                           value="{{ $especialidad->id }}"
-                           id="especialidad-{{ $user->id }}-{{ $especialidad->id }}"
-                           {{ $user->especialidades->contains('id', $especialidad->id) ? 'checked' : '' }}>
-
-                    <i class="fas fa-tools"></i>
-
-                    {{ $especialidad->nombre }}
-
-                </label>
-
-            @endforeach
-
-        </div>
-
-        @error('especialidades')
-            <div class="invalid-feedback d-block">
-                <strong>{{ $message }}</strong>
-            </div>
-        @enderror
-
-    </div>
-
-</div>
-        </div>
-
-        
+       
         <!-- =====================================================
              DOCUMENTACIÓN Y CONTACTO
              ===================================================== -->
@@ -293,6 +244,47 @@
                 </div>
             </div>
         </div>
+
+        <div class="registro-section">
+            <div class="row">
+            <!-- =====================================================
+                ESPECIALIDADES
+                ===================================================== -->
+            <div class="col-md-12">
+
+                <div class="registro-field">
+                    <div class="registro-section-title">
+                        <label>
+                            <i class="fas fa-tools"></i>
+                            ESPECIALIDADES
+                            <span class="required">*</span>
+                        </label>
+                    </div>
+
+                    <div class="roles-container">
+                        @foreach ($especialidades as $especialidad)
+                            <label class="rol-option"
+                                for="especialidad-{{ $user->id }}-{{ $especialidad->id }}">
+                                <input type="checkbox" name="especialidades[]" value="{{ $especialidad->id }}"
+                                    id="especialidad-{{ $user->id }}-{{ $especialidad->id }}"
+                                    {{ $user->especialidades->contains('id', $especialidad->id) ? 'checked' : '' }}>
+                                <i class="fas fa-tools"></i>
+                                {{ $especialidad->nombre }}
+                            </label>
+                        @endforeach
+                   </div>
+
+                    @error('especialidades')
+                        <div class="invalid-feedback d-block">
+                            <strong>{{ $message }}</strong>
+                        </div>
+                    @enderror
+
+                </div>
+
+            </div>
+        </div>
+        </div>
         <!-- =====================================================
              ROLES DEL TÉCNICO
              ===================================================== -->
@@ -300,28 +292,20 @@
 
             <div class="registro-section-title">
                 <i class="fas fa-user-shield"></i>
-                ROLES DEL TÉCNICO
+                ROL
             </div>
 
             <div class="registro-field">
 
-                <label>
-                    <i class="fas fa-shield-alt"></i>
-                    SELECCIONE LOS ROLES
-                    <span class="required">*</span>
-                </label>
                 <div class="roles-container">
                     @foreach ($roles as $rol)
                         <label class="rol-option"
                                for="rol-{{ $user->id }}-{{ $rol->id }}">
-                            <input type="checkbox"
-                                   name="roles[]"
-                                   value="{{ $rol->id }}"
-                                   id="rol-{{ $user->id }}-{{ $rol->id }}"
+                            <input type="checkbox" name="roles[]" value="{{ $rol->id }}" id="rol-{{ $user->id }}-{{ $rol->id }}"
                                    {{ in_array(
                                         $rol->id,
                                         $user->roles->pluck('id')->toArray()
-                                   ) ? 'checked' : '' }}>
+                                   ) ? 'checked' : '' }} onclick="return false;">
                             <i class="fas fa-user-check"></i>
                             {{ $rol->name }}
                         </label>
