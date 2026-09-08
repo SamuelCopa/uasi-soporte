@@ -35,7 +35,7 @@
 
                                 @case(4)
                                     <p style="font-family: Arial; font-size: 14px;">✅ <strong>*CONCLUIDO*</strong><br>
-                                        El mantenimiento ha finalizado. Puede pasar a recoger su equipo por secretaría.</p>
+                                        El mantenimiento ha finalizado. Puede pasar a recoger su equipo.</p>
                                     @break
                                 @default
                                     <p>El estado de su equipo ha sido actualizado.</p>
@@ -45,7 +45,7 @@
                             <li>
                                 <p style="font-size: 14px;">
                                     🖥️ <strong>Tipo de equipo:</strong>
-                                    {{ $equipo->tipoEquipo?->nombre ?? 'OTRO EQUIPO' }}
+                                    {{ $nombreEquipo ?? 'OTRO EQUIPO' }}
                                 </p>
                             </li>
                                 <li>

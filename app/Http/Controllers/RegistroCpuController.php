@@ -52,6 +52,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Correlativo;
 use App\Services\CorrelativoService;
 use App\Models\Termino;
+use Illuminate\Support\Facades\Storage;
+use App\Mail\EquipoPdfEnviado;
 
 class RegistroCpuController extends Controller
 {
@@ -666,15 +668,18 @@ $datos3 = $registroCpu->funcionario?->cargo ?? 'SIN CARGO';
 
 $datos4 = $registroCpu->dependencia?->dependencias ?? 'SIN DEPENDENCIA';
 
-        $pdf->write2DBarcode($datos, 'QRCODE,H', 165, 210, 45, 45, $style, 'N');
-        $pdf->Text(20, 205, '');
-        $pdf->SetY(-60); // establece la posición del cursor en la parte inferior de la página
-        $pdf->Cell(0, 5, $datos1, 0, 1, 'C');
-        $pdf->Cell(0, 5, $datos2, 0, 1, 'C');
-        $pdf->Cell(0, 5, $datos3, 0, 1, 'C');
-        $pdf->MultiCell(0, 5, $datos4, 0, 'C', false, 1);
+$pdf->write2DBarcode($datos, 'QRCODE,H', 165, 210, 45, 45, $style, 'N');
 
-        $pdfContent = $pdf->Output('registro-cpu.pdf', 'S');
+$pdf->SetFont('helvetica', '', 8);
+
+$pdf->SetY(-50);
+
+$pdf->Cell(0, 4, $datos1, 0, 1, 'C');
+$pdf->Cell(0, 4, $datos2, 0, 1, 'C');
+$pdf->Cell(0, 4, $datos3, 0, 1, 'C');
+$pdf->MultiCell(0, 4, $datos4, 0, 'C', false, 1);
+
+$pdfContent = $pdf->Output('registro-cpu.pdf', 'S');
 
         // RESPUESTA CORRECTA PARA MODAL (iframe)
         return response($pdfContent)
@@ -764,10 +769,17 @@ public function descargar($id, EquipoPdfService $service)
      */
 public function enviar($id, EquipoPdfService $service)
 {
-    $equipo = RegistroCpu::with(['funcionario', 'dependencia'])->findOrFail($id);
+    $equipo = RegistroCpu::with([
+        'funcionario',
+        'dependencia'
+    ])->findOrFail($id);
+
     $data = $this->armarDataregistroCpu($equipo);
+
     $pdf = $service->generar($data, 'registro-cpu.pdf');
+
     $correo = $this->obtenerCorreoDestino($equipo);
+
     if (!$correo) {
         return response()->json([
             'success' => false,
@@ -775,13 +787,17 @@ public function enviar($id, EquipoPdfService $service)
         ], 422);
     }
 
-    Mail::send('emails.equipo', [], function ($message) use ($pdf, $correo) {
-        $message->to($correo)
-            ->subject('Remisión del formulario de recepción correspondiente')
-            ->attachData($pdf, 'documento.pdf', [
-                'mime' => 'application/pdf',
-            ]);
-    });
+    // Nombre temporal del PDF
+    $nombreArchivo = 'documentos/registro_cpu_' . $equipo->id . '_' . time() . '.pdf';
+
+    // Guardar PDF temporalmente
+    Storage::disk('local')->put($nombreArchivo, $pdf);
+
+    // Enviar a la cola solamente la ruta del archivo
+    Mail::to($correo)
+        ->queue(new EquipoPdfEnviado(
+            Storage::disk('local')->path($nombreArchivo)
+        ));
 
     return response()->json([
         'success' => true,
@@ -799,59 +815,60 @@ public function enviar($id, EquipoPdfService $service)
 
 // ===========CAMBIAR ESTADO Y ENVIAR ALERTA==================
 
-    public function cambiarEstado(Request $request)
-    {
-        $cpu = RegistroCpu::findOrFail($request->id);
+public function cambiarEstado(Request $request)
+{
+    $cpu = RegistroCpu::findOrFail($request->id);
 
-        $estadoId = (int) $request->input('estado_id');
+    $estadoId = (int) $request->input('estado_id');
 
-        // =========================
-        // ACTUALIZAR ESTADO
-        // =========================
-        $cpu->estado_id = $estadoId;
+    // =========================
+    // ACTUALIZAR ESTADO
+    // =========================
+    $cpu->estado_id = $estadoId;
 
-        // Mapeo de fechas por estado
-        $fechas = [
-            2 => 'fecha_inicio',
-            5 => 'fecha_entrega',
-        ];
+    $fechas = [
+        2 => 'fecha_inicio',
+        5 => 'fecha_entrega',
+    ];
 
-        $cpu->estado_id = $estadoId;
+    if (isset($fechas[$estadoId])) {
 
-        if (isset($fechas[$estadoId])) {
+        $campoFecha = $fechas[$estadoId];
 
-            $campoFecha = $fechas[$estadoId];
-
-            // Controla la fecha
-            if (empty($cpu->$campoFecha)) {
-                $cpu->$campoFecha = now();
-            }
+        if (empty($cpu->$campoFecha)) {
+            $cpu->$campoFecha = now();
         }
-
-        $cpu->save();
-
-        // =========================
-        // ENVÍO DE NOTIFICACIÓN
-        // =========================
-        if (in_array($estadoId, [3, 4])) {
-
-            $this->notificacionService->enviar(
-                $cpu->funcionario,
-                $estadoId,
-                $cpu
-            );
-        }
-
-        // =========================
-        // RESPUESTA
-        // =========================
-        return response()->json([
-            'estado' => $estadoId == 5
-                ? $cpu->resultado?->nombre
-                : $cpu->estado?->nombre
-        ]);
     }
 
+    $cpu->save();
+
+    // =========================
+    // TIPO DE EQUIPO
+    // =========================
+    $nombreEquipo = 'CPU';
+
+    // =========================
+    // ENVÍO DE NOTIFICACIÓN
+    // =========================
+    if (in_array($estadoId, [3, 4])) {
+
+        $this->notificacionService->enviar(
+            $cpu->funcionario,
+            $estadoId,
+            $cpu,
+            $nombreEquipo
+        );
+    }
+
+    // =========================
+    // RESPUESTA
+    // =========================
+    return response()->json([
+        'estado' => $estadoId == 5
+            ? $cpu->resultado?->nombre
+            : $cpu->estado?->nombre
+    ]);
+}
     //numero de recepcion
     public function updateRecepcion(Request $request, $id){
     $request->validate([
@@ -915,7 +932,7 @@ public function enviar($id, EquipoPdfService $service)
     // 📧 enviar correo
     if ($user?->email) {
         Mail::to($user->email)
-            ->send(new TecnicoAsignado($equipo, $user));
+            ->queue(new TecnicoAsignado($equipo, $user));
     }
 
     return Redirect::route('registro-cpus.index')

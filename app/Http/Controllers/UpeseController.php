@@ -25,6 +25,8 @@ use App\Mail\TecnicoAsignado;
 use App\Services\EquipoPdfService;
 use Illuminate\Support\Facades\DB;
 use App\Services\CorrelativoService;
+use Illuminate\Support\Facades\Storage;
+use App\Mail\EquipoPdfEnviado;
 
 class UpeseController extends Controller
 {
@@ -417,11 +419,14 @@ public function descargar($id, EquipoPdfService $service)
      */
 public function enviar($id, EquipoPdfService $service)
 {
-    $equipo = Upese::with(['funcionario', 'dependencia'])->findOrFail($id);
+    $equipo = Teclado::with([
+        'funcionario',
+        'dependencia'
+    ])->findOrFail($id);
 
-    $data = $this->armarDataups($equipo);
+    $data = $this->armarDatateclado($equipo);
 
-    $pdf = $service->generar($data, 'upese.pdf');
+    $pdf = $service->generar($data, 'teclado.pdf');
 
     $correo = $this->obtenerCorreoDestino($equipo);
 
@@ -432,13 +437,17 @@ public function enviar($id, EquipoPdfService $service)
         ], 422);
     }
 
-    Mail::send('emails.equipo', [], function ($message) use ($pdf, $correo) {
-        $message->to($correo)
-            ->subject('Remisión del formulario de recepción correspondiente')
-            ->attachData($pdf, 'documento.pdf', [
-                'mime' => 'application/pdf',
-            ]);
-    });
+    // Nombre temporal del PDF
+    $nombreArchivo = 'documentos/teclado_' . $equipo->id . '_' . time() . '.pdf';
+
+    // Guardar PDF temporalmente
+    Storage::disk('local')->put($nombreArchivo, $pdf);
+
+    // Enviar a la cola solamente la ruta del archivo
+    Mail::to($correo)
+        ->queue(new EquipoPdfEnviado(
+            Storage::disk('local')->path($nombreArchivo)
+        ));
 
     return response()->json([
         'success' => true,
@@ -520,7 +529,7 @@ public function enviar($id, EquipoPdfService $service)
     // 📧 enviar correo
     if ($user?->email) {
         Mail::to($user->email)
-            ->send(new TecnicoAsignado($equipo, $user));
+            ->queue(new TecnicoAsignado($equipo, $user));
     }
 
     return Redirect::route('upeses.index')

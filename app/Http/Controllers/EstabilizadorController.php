@@ -26,6 +26,9 @@ use App\Services\EquipoPdfService;
 use Illuminate\Support\Facades\DB;
 use App\Models\Correlativo;
 use App\Services\CorrelativoService;
+use Illuminate\Support\Facades\Storage;
+use App\Mail\EquipoPdfEnviado;
+
 
 class EstabilizadorController extends Controller
 {
@@ -427,9 +430,12 @@ public function descargar($id, EquipoPdfService $service)
      */
 public function enviar($id, EquipoPdfService $service)
 {
-    $equipo = Estabilizador::with(['funcionario', 'dependencia'])->findOrFail($id);
+    $equipo = Estabilizador::with([
+        'funcionario',
+        'dependencia'
+    ])->findOrFail($id);
 
-    $data = $this->armarDataestabilizador($equipo);
+    $data = $this->armarDataEstabilizador($equipo);
 
     $pdf = $service->generar($data, 'estabilizador.pdf');
 
@@ -442,13 +448,17 @@ public function enviar($id, EquipoPdfService $service)
         ], 422);
     }
 
-    Mail::send('emails.equipo', [], function ($message) use ($pdf, $correo) {
-        $message->to($correo)
-            ->subject('Remisión del formulario de recepción correspondiente')
-            ->attachData($pdf, 'documento.pdf', [
-                'mime' => 'application/pdf',
-            ]);
-    });
+    // Nombre temporal del PDF
+    $nombreArchivo = 'documentos/estabilizador_' . $equipo->id . '_' . time() . '.pdf';
+
+    // Guardar PDF
+    Storage::disk('local')->put($nombreArchivo, $pdf);
+
+    // Enviar a la cola solamente la ruta del archivo
+    Mail::to($correo)
+        ->queue(new EquipoPdfEnviado(
+            Storage::disk('local')->path($nombreArchivo)
+        ));
 
     return response()->json([
         'success' => true,
@@ -521,27 +531,31 @@ public function enviar($id, EquipoPdfService $service)
         ]);
     }
 
-    public function updateTecnico(Request $request, $id){
 
+public function updateTecnico(Request $request, $id)
+{
     $equipo = Estabilizador::findOrFail($id);
+
     $equipo->user_id = $request->input('user_id');
     $equipo->fecha_asignacion = $request->input('fecha_asignacion');
     $equipo->save();
 
-    //obtener usuario (técnico)
+    // Obtener usuario (técnico)
     $user = $equipo->user;
 
-    // 📧 enviar correo
+    // 📧 Enviar correo
     if ($user?->email) {
         Mail::to($user->email)
-            ->send(new TecnicoAsignado($equipo, $user));
+            ->queue(new TecnicoAsignado($equipo, $user));
     }
 
     return Redirect::route('estabilizadors.index')
-        ->with('success', 'ASIGNADO CORRECTAMENTE') 
-        ->with('text', 'Se ha enviado la notificación de asignación al técnico.')          
-        ->with('icono', 'success');     
-    }
+        ->with('success', 'ASIGNADO CORRECTAMENTE')
+        ->with('text', 'Se ha enviado la notificación de asignación al técnico.')
+        ->with('icono', 'success');
+}
+
+
 
     public function updateFecha(Request $request, $id){
         $estabilizador = Estabilizador::find($id);

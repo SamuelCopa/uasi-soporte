@@ -29,6 +29,10 @@ use App\Services\EquipoPdfService;
 use Illuminate\Support\Facades\DB;
 use App\Models\Correlativo;
 use App\Services\CorrelativoService;
+use App\Mail\EquipoPdfEnviado;
+use Illuminate\Support\Facades\Storage;
+
+
 
 class AudifonoController extends Controller
 {
@@ -334,8 +338,9 @@ $datos3 = $audifono->funcionario?->cargo ?? 'SIN CARGO';
 $datos4 = $audifono->dependencia?->dependencias ?? 'SIN DEPENDENCIA';
 
         $pdf->write2DBarcode($datos, 'QRCODE,H', 165, 210, 45, 45, $style, 'N');
+        
         $pdf->Text(20, 205, '');
-        $pdf->SetY(-70); // establece la posición del cursor en la parte inferior de la página
+        $pdf->SetY(-60); // establece la posición del cursor en la parte inferior de la página
         $pdf->Cell(0, 5, $datos1, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos2, 0, 1, 'C');
         $pdf->Cell(0, 5, $datos3, 0, 1, 'C');
@@ -431,7 +436,10 @@ public function descargar($id, EquipoPdfService $service)
      */
 public function enviar($id, EquipoPdfService $service)
 {
-    $equipo = Audifono::with(['funcionario', 'dependencia'])->findOrFail($id);
+    $equipo = Audifono::with([
+        'funcionario',
+        'dependencia'
+    ])->findOrFail($id);
 
     $data = $this->armarDataAudifono($equipo);
 
@@ -446,13 +454,17 @@ public function enviar($id, EquipoPdfService $service)
         ], 422);
     }
 
-    Mail::send('emails.equipo', [], function ($message) use ($pdf, $correo) {
-        $message->to($correo)
-            ->subject('Remisión del formulario de recepción correspondiente')
-            ->attachData($pdf, 'documento.pdf', [
-                'mime' => 'application/pdf',
-            ]);
-    });
+    // Nombre temporal del PDF
+    $nombreArchivo = 'documentos/audifono_' . $equipo->id . '_' . time() . '.pdf';
+
+    // Guardar PDF
+    Storage::disk('local')->put($nombreArchivo, $pdf);
+
+    // Enviar a la cola solamente la ruta
+    Mail::to($correo)
+        ->queue(new EquipoPdfEnviado(
+            Storage::disk('local')->path($nombreArchivo)
+        ));
 
     return response()->json([
         'success' => true,
@@ -531,7 +543,7 @@ return response()->json([
     // 📧 enviar correo
     if ($user?->email) {
         Mail::to($user->email)
-            ->send(new TecnicoAsignado($equipo, $user));
+            ->queue(new TecnicoAsignado($equipo, $user));
     }
 
     return Redirect::route('audifonos.index')

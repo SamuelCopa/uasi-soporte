@@ -560,7 +560,7 @@ return [
         'can'  => 'admin1',
     ],
     [
-        'text' => 'PIEZAS CPU',
+        'text' => 'Piezas CPU',
         'icon' => 'fas fa-fw fa-cogs',
         'can'  => 'admin1',
 

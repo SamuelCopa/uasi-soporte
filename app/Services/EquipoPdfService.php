@@ -8,7 +8,14 @@ class EquipoPdfService
 {
     public function generar(array $data, string $view)
     {
-        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, 'LETTER', true, 'UTF-8', false);
+        $pdf = new TCPDF(
+            PDF_PAGE_ORIENTATION,
+            PDF_UNIT,
+            'LETTER',
+            true,
+            'UTF-8',
+            false
+        );
 
         $pdf->SetTitle('Documento');
         $pdf->setPrintHeader(false);
@@ -16,20 +23,30 @@ class EquipoPdfService
 
         $pdf->AddPage();
 
-        // Vista dinámica
+        // ==========================
+        // CONTENIDO DEL PDF
+        // ==========================
         $html = view($view, $data)->render();
+
         $pdf->writeHTML($html);
 
-        // QR dinámico
+        // ==========================
+        // QR
+        // ==========================
         if (!empty($data['qr'])) {
             $this->generarQr($pdf, $data['qr']);
         }
 
-        // Footer dinámico
+        // ==========================
+        // FOOTER
+        // ==========================
         if (!empty($data['footer'])) {
             $this->generarFooter($pdf, $data['footer']);
         }
 
+        // ==========================
+        // DEVOLVER PDF
+        // ==========================
         return $pdf->Output('documento.pdf', 'S');
     }
 
@@ -38,21 +55,44 @@ class EquipoPdfService
         $style = [
             'vpadding' => 'auto',
             'hpadding' => 'auto',
-            'fgcolor' => [0,0,0],
+            'fgcolor' => [0, 0, 0],
             'bgcolor' => false,
             'module_width' => 1,
             'module_height' => 1
         ];
 
-        $pdf->write2DBarcode($texto, 'QRCODE,H', 165, 210, 45, 45, $style, 'N');
+        $pdf->write2DBarcode(
+            $texto,
+            'QRCODE,H',165, 210, 45, 45, $style,'N'
+        );
     }
 
     private function generarFooter($pdf, $lineas)
     {
-        $pdf->SetY(-70);
+        // Misma fuente que el código original
+        $pdf->SetFont('helvetica', '', 9);
 
-        foreach ($lineas as $linea) {
-            $pdf->Cell(0, 5, $linea, 0, 1, 'C');
+        // Misma posición
+        $pdf->SetY(-50);
+
+        // $datos1
+        if (!empty($lineas[0])) {
+            $pdf->Cell( 0, 4,  $lineas[0], 0, 1, 'C'  );
+        }
+
+        // $datos2
+        if (!empty($lineas[1])) {
+            $pdf->Cell(0, 4, $lineas[1], 0, 1, 'C');
+        }
+
+        // $datos3
+        if (!empty($lineas[2])) {
+            $pdf->Cell( 0, 4, $lineas[2], 0, 1, 'C');
+        }
+
+        // $datos4
+        if (!empty($lineas[3])) {
+            $pdf->MultiCell(4,$lineas[3], 0, 'C', false,);
         }
     }
 }

@@ -23,15 +23,14 @@
         <!-- CONTENIDO -->
         <tr>
             <td style="padding:20px; font-size:14px; color:#343a40; line-height:1.6;">
-
                 <p>
-                    Por medio del presente, se remite el documento en formato PDF generado por el sistema.
+                    Por medio del presente, se remite el <strong>Formulario de Recepción</strong>
+                    en formato PDF, adjunto al presente correo para su conocimiento, revisión
+                    y fines pertinentes.
                 </p>
-
                 <p>
-                    Se adjunta el archivo correspondiente para su revisión y fines pertinentes.
+                    Sin otro particular, saludamos a usted con las consideraciones más distinguidas.
                 </p>
-
                 <p style="margin-top:20px;">
                     Atentamente,<br>
                     <strong>Área de Soporte Técnico</strong>
@@ -39,10 +38,8 @@
                 <p style="font-size: 13px;">
                     No responda a este correo electrónico.
                 </p>
-
             </td>
         </tr>
-
         <!-- FOOTER -->
         <tr>
             <td style="background-color: #f1f1f1; text-align: center; font-size: 12px; color: #777; border-radius: 0 0 8px 8px;">
@@ -51,9 +48,7 @@
                 {{ date('Y') }} © S@mmy
             </td>
         </tr>
-
     </table>
-
 </td>
 </tr>
 </table>

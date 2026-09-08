@@ -22,13 +22,14 @@ class NotificacionService
         // =========================
         // CORREO
         // =========================
-        if (!empty($correo)) {
-            try {
-                Mail::to($correo)
-                    ->send(new AlertaMantenimiento($estadoId, $equipo));
-            } catch (\Exception $e) {
-                \Log::error("Error correo: " . $e->getMessage());
+            if (!empty($correo)) {
+                try {
+                    Mail::to($correo)
+                        ->queue(new AlertaMantenimiento($estadoId, $equipo));
+
+                } catch (\Exception $e) {
+                    \Log::error("Error correo: " . $e->getMessage());
+                }
             }
-        }
     }
 }
