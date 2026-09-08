@@ -67,32 +67,30 @@ class EquipoPdfService
         );
     }
 
-    private function generarFooter($pdf, $lineas)
-    {
-        // Misma fuente que el código original
-        $pdf->SetFont('helvetica', '', 9);
+private function generarFooter($pdf, $lineas)
+{
+    $pdf->SetFont('helvetica', '', 9);
 
-        // Misma posición
-        $pdf->SetY(-50);
+    $pdf->SetY(-50);
 
-        // $datos1
-        if (!empty($lineas[0])) {
-            $pdf->Cell( 0, 4,  $lineas[0], 0, 1, 'C'  );
-        }
-
-        // $datos2
-        if (!empty($lineas[1])) {
-            $pdf->Cell(0, 4, $lineas[1], 0, 1, 'C');
-        }
-
-        // $datos3
-        if (!empty($lineas[2])) {
-            $pdf->Cell( 0, 4, $lineas[2], 0, 1, 'C');
-        }
-
-        // $datos4
-        if (!empty($lineas[3])) {
-            $pdf->MultiCell(4,$lineas[3], 0, 'C', false,);
-        }
+    // $datos1
+    if (!empty($lineas[0])) {
+        $pdf->Cell(0, 4, $lineas[0], 0, 1, 'C');
     }
+
+    // $datos2
+    if (!empty($lineas[1])) {
+        $pdf->Cell(0, 4, $lineas[1], 0, 1, 'C');
+    }
+
+    // $datos3
+    if (!empty($lineas[2])) {
+        $pdf->Cell(0, 4, $lineas[2], 0, 1, 'C');
+    }
+
+    // $datos4
+    if (!empty($lineas[3])) {
+        $pdf->MultiCell(0, 4, $lineas[3], 0, 'C', false);
+    }
+}
 }
