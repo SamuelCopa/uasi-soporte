@@ -23,17 +23,41 @@
         ]))
         <div class="header-actions">
                 <a href="{{ route('equipos.reporte') }}" class="btn-header">
-                    <i class="fas fa-chart-line"></i>
-                    Reportes
+                    <i class="fas fa-file-pdf""></i>
+                    REPORTES DE EQUIPOS ATENDIDOS
                 </a>
                 <a href="{{ route('resultado') }}" class="btn-header">
-                    <i class="fas fa-chart-line"></i>
-                    Ver Resultados del mantenimiento
+                    <i class="fas fa-file-pdf""></i>
+                    RESULTADOS DE MANTENIMIENTO
                 </a>
+                <button type="button" class="btn-header"" data-toggle="modal" data-target="#modalReporte">
+                        <i class="fas fa-file-pdf"></i>REPORTE GENERAL TÉCNICOS
+                </button>
+                    <!--Ventana Modal para Reporte--->
+                    @include('tecnico.modalReporte')  
+
+                 <script>
+                document.addEventListener('DOMContentLoaded', function () {
+
+                    const tipo = document.getElementById('tipoReporte');
+                    const contenedorMes = document.getElementById('contenedorMes');
+
+                    tipo.addEventListener('change', function () {
+
+                        if (this.value === 'mes') {
+                            contenedorMes.style.display = 'block';
+                        } else {
+                            contenedorMes.style.display = 'none';
+                        }
+
+                    });
+
+                });
+                </script>
         </div>
             <a href="{{ route('estadistica') }}" class="btn-header">
                 <i class="fas fa-chart-line"></i>
-                Estadística general
+                ESTADISTICA GENERAL
             </a>
 
             <div>

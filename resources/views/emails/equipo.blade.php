@@ -33,7 +33,7 @@
                 </p>
                 <p style="margin-top:20px;">
                     Atentamente,<br>
-                    <strong>Área de Soporte Técnico</strong>
+                    <strong>UASI - Soporte Técnico</strong>
                 </p>
                 <p style="font-size: 13px;">
                     No responda a este correo electrónico.
