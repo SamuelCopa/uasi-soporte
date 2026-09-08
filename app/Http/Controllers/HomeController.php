@@ -5,61 +5,80 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Servicio;
 use Illuminate\Http\Request;
+
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-public function index()
-{
-    $user = auth()->user();
+    public function index()
+    {
+        $user = auth()->user();
 
-    // Cargar las especialidades del usuario
-    $user->load('especialidades');
+        // Cargar las especialidades del usuario
+        $user->load('especialidades');
 
-    // Valores por defecto
-    $nuevasSolicitudes = $this->nuevasSolicitudes ?? 0;
-    $nuevasSolicitudesTecnico = $this->nuevasSolicitudesTecnico ?? 0;
+        // ==========================================
+        // SOLICITUDES NUEVAS
+        // ==========================================
 
-    // Administrador y SuperAdministrador
-    if ($user->hasAnyRole(['Administrador', 'SuperAdministrador'])) {
-        return view('home', [
-            'user' => $user,
-            'nuevasSolicitudes' => $nuevasSolicitudes,
-            'nuevasSolicitudesTecnico' => $nuevasSolicitudesTecnico,
-        ]);
-    }
+        // Para Administrador:
+        // todas las solicitudes que todavía no fueron vistas
+        $nuevasSolicitudes = Servicio::where('visto', 0)->count();
 
-    // Técnico que tiene la especialidad SOPORTE
-    if (
-        $user->hasRole('Tecnico') &&
-        $user->especialidades->contains('codigo', 'SOPORTE')
-    ) {
-        return view('home', [
-            'user' => $user,
-            'nuevasSolicitudes' => $nuevasSolicitudes,
-            'nuevasSolicitudesTecnico' => $nuevasSolicitudesTecnico,
-        ]);
-    }
+        // Para Técnico:
+        // solamente sus solicitudes que todavía no fueron vistas
+        $nuevasSolicitudesTecnico = Servicio::where('visto', 0)
+            ->where('user_id', $user->id)
+            ->count();
 
-    // Los demás técnicos
-    if ($user->hasRole('Tecnico')) {
+
+        // ==========================================
+        // ADMINISTRADOR Y SUPERADMINISTRADOR
+        // ==========================================
+
+        if ($user->hasAnyRole(['Administrador', 'SuperAdministrador'])) {
+
+            return view('home', [
+                'user' => $user,
+                'nuevasSolicitudes' => $nuevasSolicitudes,
+                'nuevasSolicitudesTecnico' => $nuevasSolicitudesTecnico,
+            ]);
+        }
+
+
+        // ==========================================
+        // TÉCNICO CON ESPECIALIDAD SOPORTE
+        // ==========================================
+
+        if (
+            $user->hasRole('Tecnico') &&
+            $user->especialidades->contains('codigo', 'SOPORTE')
+        ) {
+
+            return view('home', [
+                'user' => $user,
+                'nuevasSolicitudes' => $nuevasSolicitudes,
+                'nuevasSolicitudesTecnico' => $nuevasSolicitudesTecnico,
+            ]);
+        }
+
+
+        // ==========================================
+        // LOS DEMÁS TÉCNICOS
+        // ==========================================
+
+        if ($user->hasRole('Tecnico')) {
+            return redirect()->route('asignaciones.asistencia');
+        }
+
+
+        // ==========================================
+        // CUALQUIER OTRO USUARIO
+        // ==========================================
+
         return redirect()->route('asignaciones.asistencia');
     }
-
-    // Cualquier otro usuario
-    return redirect()->route('asignaciones.asistencia');
-}
 }

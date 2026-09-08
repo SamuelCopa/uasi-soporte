@@ -392,14 +392,14 @@ return [
 
     [
         'header' => 'GESTIÓN DE EQUIPOS',
-        'can' => 'gestion-equipos',
+        'can' => 'registro-equipos',
     ],
 
 
     [
         'text' => 'Equipos',
         'icon' => 'fas fa-fw fa-folder-open',
-        'can' => 'gestion-equipos',
+        'can' => 'registro-equipos',
 
         'submenu' => [
 
