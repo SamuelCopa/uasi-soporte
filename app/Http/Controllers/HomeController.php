@@ -81,4 +81,6 @@ class HomeController extends Controller
 
         return redirect()->route('asignaciones.asistencia');
     }
+
+}
 }

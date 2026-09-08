@@ -60,9 +60,29 @@ Gate::define('gestion-equipos', function ($user) {
         && $user->especialidad?->codigo === 'SOPORTE';
 });
 
-    Gate::define('mis-asignaciones-soporte', function ($user) {
-    return $user->hasRole('Tecnico')
-        && $user->especialidad?->codigo === 'SOPORTE';
+Gate::define('mis-asignaciones-soporte', function ($user) {
+
+    $user->loadMissing('especialidades');
+
+    return $user->hasRole('Administrador')
+        || (
+            $user->hasRole('Tecnico')
+            && $user->especialidades->contains('codigo', 'SOPORTE')
+        );
+});
+
+Gate::define('registro-equipos', function ($user) {
+
+    $user->loadMissing('especialidades');
+
+    return $user->hasAnyRole([
+        'Administrador',
+        'SuperAdministrador'
+    ])
+    || (
+        $user->hasRole('Tecnico')
+        && $user->especialidades->contains('codigo', 'SOPORTE')
+    );
 });
 }
 }
