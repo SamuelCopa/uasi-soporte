@@ -1,12 +1,15 @@
 /* =========================================================
-   SIDEBAR - ESTILO ELEGANTE
-
+   SIDEBAR SISOT
+   ESTILO INSTITUCIONAL Y SOBRIO
    ========================================================= */
-.nav-sidebar .nav-link .nav-icon {
-    margin-right: 15px;
-}
+
+
+/* =========================================================
+   CONTENEDOR PRINCIPAL
+   ========================================================= */
+
 .main-sidebar .sidebar {
-    padding: 8px 10px;
+    padding: 10px 9px;
 }
 
 
@@ -15,109 +18,124 @@
    ========================================================= */
 
 .main-sidebar .nav-sidebar > .nav-item {
-    margin-bottom: 3px;
+    margin-bottom: 4px;
 }
 
+
 .main-sidebar .nav-sidebar > .nav-item > .nav-link {
-    min-height: 42px;
+    min-height: 44px;
+
     padding: 10px 12px !important;
+
     margin: 0;
+
     display: flex;
     align-items: center;
+
     border-radius: 7px;
+
     transition:
         background-color .18s ease,
         color .18s ease,
         box-shadow .18s ease,
         transform .18s ease;
-        
 }
+
 
 /* =========================================================
    ICONOS PRINCIPALES
    ========================================================= */
 
 .main-sidebar .nav-sidebar > .nav-item > .nav-link > .nav-icon {
-    width: 28px;
-    min-width: 28px;
+    width: 30px;
+    min-width: 30px;
+
     margin-left: 0 !important;
     margin-right: 8px !important;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     text-align: center;
+
     font-size: 16px;
+
     transition:
-        transform .18s ease,
-        color .18s ease;
+        color .18s ease,
+        transform .18s ease;
 }
 
 
 /* =========================================================
-   TEXTO
+   TEXTO PRINCIPAL
    ========================================================= */
 
-.main-sidebar .nav-sidebar .nav-link p {
-
+.main-sidebar .nav-sidebar > .nav-item > .nav-link p {
     margin: 0 !important;
     padding: 0 !important;
+
     flex: 1;
+
     display: flex;
     align-items: center;
-    font-size: 18px;
+
+    font-size: 15px;
+    font-weight: 400;
+
+    line-height: 1.2;
 }
 
 
 /* =========================================================
-   FLECHAS
+   FLECHAS DE SUBMENÚ
    ========================================================= */
 
 .main-sidebar .nav-sidebar .nav-link > .right {
     position: static;
+
     margin-left: auto !important;
-    font-size: 10px;
-    opacity: .75;
+
+    font-size: 11px;
+
+    opacity: .70;
+
     transition:
-        transform .2s ease,
-        opacity .2s ease;
+        transform .20s ease,
+        opacity .20s ease;
 }
 
 
 /* =========================================================
    HOVER
-   Mantiene el color original
    ========================================================= */
 
-.main-sidebar .nav-sidebar .nav-link:hover {
-    border-radius: 7px;
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:hover {
     transform: translateX(2px);
+
+    border-radius: 7px;
 }
 
 
-.main-sidebar .nav-sidebar .nav-link:hover > .nav-icon {
+.main-sidebar .nav-sidebar > .nav-item > .nav-link:hover > .nav-icon {
     transform: scale(1.05);
 }
 
 
 /* =========================================================
-   ELEMENTO ACTIVO
+   ELEMENTO ACTIVO PRINCIPAL
    ========================================================= */
 
 .main-sidebar .nav-sidebar > .nav-item > .nav-link.active {
-
     font-weight: 600;
 
     box-shadow:
-        0 2px 6px rgba(0,0,0,.08);
+        0 2px 8px rgba(0, 0, 0, .12);
 }
 
 
-.main-sidebar .nav-treeview > .nav-item > .nav-link.active {
-
+.main-sidebar .nav-sidebar > .nav-item > .nav-link.active p {
     font-weight: 600;
-
-    box-shadow:
-        0 2px 5px rgba(0,0,0,.06);
 }
 
 
@@ -126,11 +144,10 @@
    ========================================================= */
 
 .main-sidebar .nav-sidebar > .nav-item.menu-open > .nav-link {
-
     border-radius: 7px;
 
     box-shadow:
-        0 1px 4px rgba(0,0,0,.04);
+        0 1px 5px rgba(0, 0, 0, .08);
 }
 
 
@@ -139,53 +156,47 @@
    ========================================================= */
 
 .main-sidebar .nav-sidebar > .nav-item > .nav-treeview {
-
-    padding-left: 10px !important;
-
-    margin-top: 4px !important;
-    margin-bottom: 5px !important;
-
     position: relative;
+
+    padding-left: 12px !important;
+
+    margin-top: 5px !important;
+    margin-bottom: 6px !important;
 }
 
 
-/* Línea vertical elegante */
+/* =========================================================
+   LÍNEA VERTICAL DEL SUBMENÚ
+   ========================================================= */
 
 .main-sidebar .nav-sidebar > .nav-item > .nav-treeview::before {
-
     content: "";
 
     position: absolute;
 
-    left: 6px;
-    top: 2px;
-    bottom: 5px;
+    left: 8px;
+    top: 5px;
+    bottom: 6px;
 
     width: 1px;
 
-    background: rgba(255,255,255,.12);
+    background: rgba(255, 255, 255, .14);
 }
 
 
 /* =========================================================
-   ELEMENTOS SUBMENÚ
+   ELEMENTOS DEL SUBMENÚ
    ========================================================= */
 
 .main-sidebar .nav-treeview > .nav-item {
-
     margin-bottom: 2px;
 }
 
 
-/* =========================================================
-   ENLACES SUBMENÚ
-   ========================================================= */
-
 .main-sidebar .nav-treeview > .nav-item > .nav-link {
+    min-height: 38px;
 
-    min-height: 37px;
-
-    padding: 8px 12px 8px 18px !important;
+    padding: 8px 10px 8px 15px !important;
 
     display: flex;
     align-items: center;
@@ -200,22 +211,21 @@
 
 
 /* =========================================================
-   ICONOS SUBMENÚ
+   ICONOS DEL SUBMENÚ
    ========================================================= */
 
 .main-sidebar .nav-treeview .nav-link > .nav-icon {
-
-    width: 25px;
-    min-width: 25px;
+    width: 26px;
+    min-width: 26px;
 
     margin-left: 0 !important;
-    margin-right: 8px !important;
-
-    font-size: 14px;
+    margin-right: 7px !important;
 
     display: flex;
     align-items: center;
     justify-content: center;
+
+    font-size: 13px;
 
     transition:
         transform .18s ease;
@@ -223,16 +233,16 @@
 
 
 /* =========================================================
-   TEXTO SUBMENÚ
+   TEXTO DEL SUBMENÚ
    ========================================================= */
 
 .main-sidebar .nav-treeview .nav-link p {
-
     margin: 0 !important;
 
-    font-size: 15px;
+    font-size: 14px;
+    font-weight: 400;
 
-    line-height: 1.2;
+    line-height: 1.25;
 }
 
 
@@ -240,48 +250,59 @@
    HOVER SUBMENÚ
    ========================================================= */
 
-.main-sidebar .nav-treeview .nav-link:hover {
-
+.main-sidebar .nav-treeview > .nav-item > .nav-link:hover {
     transform: translateX(2px);
-
-    border-radius: 6px;
 }
 
 
 .main-sidebar .nav-treeview .nav-link:hover .nav-icon {
-
     transform: scale(1.05);
 }
 
 
 /* =========================================================
-   ENCABEZADOS
+   ELEMENTO ACTIVO DEL SUBMENÚ
    ========================================================= */
 
-.main-sidebar .nav-header {
-
-    padding: 13px 12px 6px;
-
-    margin-top: 7px;
-
-    font-size: 13px;
-
+.main-sidebar .nav-treeview > .nav-item > .nav-link.active {
     font-weight: 600;
 
-    letter-spacing: .5px;
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, .10);
+}
 
-    text-transform: uppercase;
 
-    opacity: .65;
+.main-sidebar .nav-treeview > .nav-item > .nav-link.active p {
+    font-weight: 600;
 }
 
 
 /* =========================================================
-   SEPARACIÓN ENTRE SECCIONES
+   ENCABEZADOS DE SECCIÓN
+   ========================================================= */
+
+.main-sidebar .nav-header {
+    padding: 15px 12px 7px;
+
+    margin-top: 6px;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: .7px;
+
+    text-transform: uppercase;
+
+    opacity: .60;
+}
+
+
+/* =========================================================
+   SEPARACIÓN DESPUÉS DEL ENCABEZADO
    ========================================================= */
 
 .main-sidebar .nav-header + .nav-item {
-    margin-top: 2px;
+    margin-top: 3px;
 }
 
 
@@ -290,12 +311,12 @@
    ========================================================= */
 
 .main-sidebar .nav-sidebar .nav-link .badge {
-
     margin-left: auto;
 
-    padding: 3px 6px;
+    padding: 4px 7px;
 
     font-size: 10px;
+    font-weight: 600;
 
     border-radius: 10px;
 }
@@ -306,12 +327,10 @@
    ========================================================= */
 
 .main-sidebar .sidebar > .form-inline {
-
     width: 100% !important;
-
     max-width: 100% !important;
 
-    padding: 8px 2px 11px !important;
+    padding: 7px 2px 12px !important;
 
     margin: 0 !important;
 
@@ -320,19 +339,16 @@
 
 
 .main-sidebar .sidebar > .form-inline .input-group {
-
     width: 100% !important;
 
     margin: 0 !important;
 
     display: flex;
-
     flex-wrap: nowrap;
 }
 
 
 .main-sidebar .sidebar > .form-inline .form-control-sidebar {
-
     width: 100% !important;
 
     min-width: 0 !important;
@@ -348,19 +364,15 @@
 
 
 .main-sidebar .sidebar > .form-inline .btn-sidebar {
-
     flex: 0 0 40px;
 
     width: 40px !important;
-
     height: 38px;
 
     padding: 0 !important;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
     border-radius: 0 6px 6px 0;
@@ -372,30 +384,30 @@
    ========================================================= */
 
 .sidebar-user-bottom {
-
     margin-top: auto;
 
-    padding: 10px 2px 2px;
+    padding: 12px 3px 3px;
 
-    border-top: 1px solid rgba(255,255,255,.12);
+    border-top:
+        1px solid rgba(255, 255, 255, .12);
 }
 
 
 /* =========================================================
-   TRANSICIÓN AL COLAPSAR
+   TRANSICIONES
    ========================================================= */
 
 .main-sidebar,
 .main-sidebar .nav-link,
 .main-sidebar .nav-icon,
 .main-sidebar .nav-link p {
-
     transition:
-        width .2s ease,
-        margin .2s ease,
-        padding .2s ease,
+        width .20s ease,
+        margin .20s ease,
+        padding .20s ease,
         transform .18s ease,
-        background-color .18s ease;
+        background-color .18s ease,
+        color .18s ease;
 }
 
 
@@ -405,14 +417,12 @@
 
 .sidebar-mini.sidebar-collapse
 .main-sidebar .nav-sidebar > .nav-item > .nav-link {
-
     justify-content: center;
 }
 
 
 .sidebar-mini.sidebar-collapse
 .main-sidebar .nav-sidebar > .nav-item > .nav-link > .nav-icon {
-
     margin-right: 0 !important;
 }
 
@@ -424,18 +434,19 @@
 @media (max-width: 767.98px) {
 
     .main-sidebar .sidebar {
-
         padding: 8px;
     }
 
+
     .main-sidebar .nav-sidebar > .nav-item > .nav-link {
+        min-height: 43px;
 
         padding: 10px 12px !important;
     }
 
-    .main-sidebar .nav-treeview > .nav-item > .nav-link {
 
-        padding: 8px 12px 8px 18px !important;
+    .main-sidebar .nav-treeview > .nav-item > .nav-link {
+        padding: 8px 10px 8px 15px !important;
     }
 
 }

@@ -1,277 +1,724 @@
-.swal-institucional {
-    font-family: "Segoe UI", Arial, sans-serif;
-}
+/* ============================================================
+   SISOT
+   SEGUIMIENTO DEL TÉCNICO
+   PANEL ADMINISTRADOR
+   ============================================================ */
 
-.swal-grid {
+.tecnico-dashboard-toolbar {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    gap: 20px;
+}
+
+/* RESUMEN */
+
+.dashboard-summary {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.summary-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 190px;
+    padding: 12px 16px;
+    background: #ffffff;
+    border: 1px solid #e1e6eb;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(30, 42, 56, .06);
+}
+
+.summary-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
     justify-content: center;
-}
-
-.swal-card {
-    flex: 1 1 45%;
-    padding: 12px;
-    border: 1px solid #dfe5f2;
-    font-size: 13px;
     border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.04);
-    transition: all .2s ease;
-    position: relative;
-    overflow: hidden;
+    background: #eaf3ff;
+    color: #0052cc;
+    font-size: 18px;
 }
 
-/* Línea superior institucional */
-/* .swal-card::before {
-    content: "";
+.summary-warning {
+    background: #fff7df;
+    color: #b77900;
+}
+
+.summary-label {
+    display: block;
+    color: #6c757d;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+}
+
+.summary-number {
+    display: block;
+    margin-top: 2px;
+    color: #1e2a38;
+    font-size: 21px;
+    line-height: 1;
+}
+
+
+/* ============================================================
+   CAMPANA
+   ============================================================ */
+
+.btn-notificaciones-tecnico {
+    width: 48px;
+    height: 46px;
+    border: 1px solid #dce2e8;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #1e2a38;
+    box-shadow: 0 3px 10px rgba(30, 42, 56, .07);
+    transition: .2s ease;
+}
+
+.btn-notificaciones-tecnico:hover {
+    background: #f5f8fb;
+    transform: translateY(-1px);
+}
+
+.btn-notificaciones-tecnico i {
+    font-size: 19px;
+}
+
+.badge-notificacion {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(90deg, #0c1bed, #134deb);
-} */
-
-/* Hover elegante */
-.swal-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(12,27,237,0.10);
+    top: -6px;
+    right: -6px;
+    min-width: 21px;
+    height: 21px;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #dc3545;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
 }
 
-.swal-icon {
-    margin-right: 6px;
-    color: #0c1bed;
-}
 
-.swal-msg {
-    margin-top: 12px;
-    font-size: 12.5px;
-    border: 3px solid #0c1bed;
-    padding: 10px 12px;
-    border-radius: 8px;
-    line-height: 1.5;
-}
+/* ============================================================
+   PANEL DE NOTIFICACIONES
+   ============================================================ */
 
-/* =======================================================
-   DASHBOARD ELEGANTE E INSTITUCIONAL
-======================================================= */
-
-/* Barras */
-.mini-bar {
-    height: 8px;
-    border-radius: 10px;
-    margin-bottom: 8px;
+.notification-panel-tecnico {
+    width: 350px;
+    max-width: 90vw;
+    padding: 0;
+    border: 1px solid #dfe4e9;
+    border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 8px 25px rgba(30, 42, 56, .15);
+}
+
+.notification-header-tecnico {
+    padding: 14px 17px;
+    background: #1e2a38;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.notification-header-tecnico small {
+    display: block;
+    margin-top: 4px;
+    color: rgba(255,255,255,.72);
+    font-weight: 400;
+}
+
+.notification-empty {
+    padding: 28px 20px;
+    text-align: center;
+}
+
+.notification-empty i {
+    display: block;
+    margin-bottom: 10px;
+    color: #28a745;
+    font-size: 34px;
+}
+
+.notification-empty strong {
+    display: block;
+    color: #343a40;
+}
+
+.notification-empty small {
+    display: block;
+    margin-top: 4px;
+    color: #6c757d;
+}
+
+.notification-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 15px;
+    border-bottom: 1px solid #edf0f2;
+    color: #343a40;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.notification-title i {
+    color: #dc3545;
+}
+
+.notification-title span {
+    margin-left: auto;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: #fff0f1;
+    color: #dc3545;
+    font-size: 11px;
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 15px;
+    border-bottom: 1px solid #f0f2f4;
+}
+
+.notification-item:hover {
+    background: #f8fafc;
+}
+
+.notification-item-icon {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: #f1f4f7;
+    font-size: 17px;
+}
+
+.notification-item-info {
+    flex: 1;
+}
+
+.notification-item-info strong {
+    display: block;
+    color: #343a40;
+    font-size: 12px;
+}
+
+.notification-item-info small {
+    display: block;
+    margin-top: 2px;
+    color: #8a939c;
+    font-size: 10px;
+}
+
+.notification-count {
+    min-width: 27px;
+    padding: 4px 7px;
+    border-radius: 20px;
+    background: #f1f3f5;
+    color: #495057;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.notification-footer {
+    padding: 8px;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    text-align: center;
+}
+
+
+/* ============================================================
+   ENCABEZADO
+   ============================================================ */
+
+.header-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 15px 18px;
+    margin-bottom: 20px;
+    background: #ffffff;
+    border: 1px solid #e0e5ea;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(30,42,56,.06);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.header-user-icon {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    background: #eaf3ff;
+    color: #0052cc;
+    font-size: 19px;
+}
+
+.header-section {
+    display: block;
+    margin-bottom: 2px;
+    color: #7a838c;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .7px;
+}
+
+.header-title {
+    margin: 0;
+    color: #1e2a38;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.header-title strong {
+    font-weight: 700;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-header {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 12px;
+    background: #ffffff;
+    border: 1px solid #dce2e8;
+    border-radius: 8px;
+    color: #1e2a38;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: .2s ease;
+}
+
+.btn-header:hover {
+    background: #f4f7fa;
+    border-color: #c8d0d8;
+    color: #0052cc;
+    transform: translateY(-1px);
+}
+
+.btn-header i {
+    font-size: 13px;
+}
+
+
+/* ============================================================
+   TARJETAS
+   ============================================================ */
+
+.dashboard-card-prof {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border: 1px solid #e2e7eb;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(30,42,56,.07);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.dashboard-card-prof:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 22px rgba(30,42,56,.12);
+}
+
+.dashboard-card-prof .card-body {
+    flex: 1;
+    padding: 17px;
+}
+
+.card-alert {
+    border-color: #f0caca;
+}
+
+.card-header-custom {
+    padding-bottom: 13px;
+    border-bottom: 1px solid #edf0f2;
+}
+
+.card-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.card-icon-wrapper {
+    width: 39px;
+    height: 39px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: #eef4fb;
+    color: #1e2a38;
+}
+
+.card-icon-wrapper i {
+    font-size: 20px;
+}
+
+.card-title {
+    display: block;
+    color: #263442;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.card-subtitle {
+    display: block;
+    margin-top: 3px;
+    color: #89929b;
+    font-size: 10px;
+}
+
+
+/* TOTAL */
+
+.card-main-total {
+    padding: 16px 0 12px;
+}
+
+.total-number {
+    display: block;
+    color: #1e2a38;
+    font-size: 29px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.total-label {
+    display: block;
+    margin-top: 5px;
+    color: #7b858e;
+    font-size: 11px;
+}
+
+
+/* ESTADOS */
+
+.card-stats {
+    padding-top: 2px;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    color: #5e6872;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.stat-icon {
+    margin-right: 5px;
+    font-size: 10px;
+}
+
+.stat-value {
+    color: #1e2a38;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.progress-custom {
+    height: 5px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    background: #edf0f2;
+    border-radius: 10px;
 }
 
 .mini-bar-fill {
     height: 100%;
     border-radius: 10px;
-    transition: width 0.6s ease;
+    transition: width .4s ease;
 }
 
-/* =======================================================
-   CARD BASE
-======================================================= */
-.dashboard-card-prof {
-    position: relative;
-    border: 1px solid #dfe5f2;
-    border-radius: 14px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.04);
-    transition: all 0.25s ease;
-    overflow: hidden;
-}
 
-/* Línea superior institucional */
-/* .dashboard-card-prof::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, #0c1bed, #134deb);
-} */
+/* ESTADO TÉCNICO */
 
-/* Hover elegante */
-.dashboard-card-prof:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 24px rgba(12,27,237,0.10);
-}
-
-/* =======================================================
-   HEADER
-======================================================= */
-.card-header-custom {
+.technician-status {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #edf0f5;
-    padding-bottom: 10px;
-    margin-bottom: 12px;
+    gap: 9px;
+    margin-top: 13px;
+    padding: 9px 10px;
+    border-radius: 9px;
 }
 
-/* Título */
-.card-title {
-    font-weight: 700;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: .4px;
+.technician-pending {
+    background: #fff5f5;
+    border: 1px solid #f3d2d2;
 }
 
-/* Icono */
-.card-header-custom i {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
+.technician-ok {
+    background: #f1faf4;
+    border: 1px solid #d4eedb;
+}
+
+.technician-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
-    transition: all .2s ease;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: rgba(255,255,255,.7);
+    color: #495057;
 }
 
-/* Animación icono */
-/* =======================================================
-   ESTADÍSTICAS
-======================================================= */
-.stat-row {
+.technician-info {
+    flex: 1;
+}
+
+.technician-info span {
+    display: block;
+    color: #6c757d;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.technician-info strong {
+    display: block;
+    margin-top: 2px;
+    color: #343a40;
+    font-size: 14px;
+}
+
+.technician-alert {
+    color: #dc3545;
+}
+
+.technician-check {
+    color: #28a745;
+}
+
+
+/* FOOTER */
+
+.card-footer-custom {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    font-size: 13px;
-    margin-top: 6px;
-    padding: 4px 0;
+    justify-content: space-between;
+    padding: 11px 15px;
+    background: #f8fafc;
+    border-top: 1px solid #e8edf1;
+    color: #4f5b66;
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: .2s ease;
 }
 
-/* Labels */
-.label {
-    font-weight: 500;
+.card-footer-custom:hover {
+    background: #eef4fa;
+    color: #0052cc;
 }
 
-/* Valores */
-.value {
+.card-footer-custom i {
+    transition: transform .2s ease;
+}
+
+.card-footer-custom:hover i {
+    transform: translateX(4px);
+}
+
+
+/* ============================================================
+   SWEETALERT
+   ============================================================ */
+
+.swal-institucional {
+    border-radius: 14px !important;
+    border: 1px solid #dfe4e8 !important;
+    box-shadow: 0 10px 35px rgba(30,42,56,.18) !important;
+}
+
+.swal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.swal-card {
+    padding: 12px;
+    background: #f8fafc;
+    border: 1px solid #e1e6eb;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.swal-card-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #343a40;
+    font-size: 12px;
     font-weight: 700;
 }
 
-/* =======================================================
-   PROGRESS
-======================================================= */
-.progress-custom {
-    height: 12px;
-    background: #dbdcde;
-    border-radius: 20px;
-    margin-bottom: 8px;
-    overflow: hidden;
+.swal-icon {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: #eef4fb;
+    color: #1e2a38;
+    font-size: 19px;
 }
 
-/* =======================================================
-   TOTAL
-======================================================= */
-.card-total {
-    margin-top: 12px;
-    font-size: 13.5px;
-    border-top: 1px solid #edf0f5;
-    padding-top: 10px;
-    font-weight: 600;
+.swal-icon i {
+    font-size: 19px;
 }
 
-/* =======================================================
-   ACTIONS
-======================================================= */
-.card-actions {
-    margin-top: 10px;
-    font-size: 12.5px;
+.swal-card-body {
+    margin-top: 8px;
 }
 
-.action-item {
-    margin-top: 6px;
+.swal-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.swal-item .label {
     color: #6c757d;
+    font-size: 10px;
 }
 
-/* =======================================================
-   FOOTER
-======================================================= */
-.card-footer-custom {
-    display: block;
-    text-align: center;
-    padding: 12px;
-    font-size: 13px;
-    font-weight: 600;
-    background: #f8faff;
-    border-top: 1px solid #e5eaf3;
-    color: #0c1bed;
-    text-decoration: none;
-    transition: all .2s ease;
+.swal-item .value {
+    padding: 3px 8px;
+    border-radius: 15px;
+    background: #e9ecef;
+    color: #343a40;
+    font-size: 11px;
+    font-weight: 700;
 }
 
-/* Hover footer */
-.card-footer-custom:hover {
-    background: #eef3ff;
-    color: #134deb;
+.swal-msg {
+    margin-top: 13px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    color: #6c757d;
+    font-size: 11px;
+    line-height: 1.5;
 }
 
-/* =======================================================
-   ALERTA CRÍTICA
-======================================================= */
-/* .card-alert{
-    border: 2.5px solid #dc3545;
-    animation: pulsoInstitucional 1.4s infinite;
-} */
 
-/* Línea superior crítica */
-/* .card-alert::before{
-    background: linear-gradient(90deg,
-                #680404,
-                #680404);
-} */
-
-/* =========================================
-   ANIMACIÓN PULSO INSTITUCIONAL INTENSO
-========================================= */
-
-@keyframes pulsoInstitucional {
-
-    0%{
-        box-shadow:
-            0 0 0 0 rgba(139, 30, 45, 0.75),
-            0 0 12px rgba(139, 30, 45, 0.45);
-    }
-
-    50%{
-        box-shadow:
-            0 0 0 10px rgba(139, 30, 45, 0.25),
-            0 0 24px rgba(139, 30, 45, 0.55);
-    }
-
-    100%{
-        box-shadow:
-            0 0 0 18px rgba(139, 30, 45, 0),
-            0 0 0 rgba(139, 30, 45, 0);
-    }
-}
-
-/* =======================================================
+/* ============================================================
    RESPONSIVE
-======================================================= */
-@media(max-width:768px){
+   ============================================================ */
 
-    .card-header-custom{
-        padding: 15px;
+@media (max-width: 992px) {
+
+    .header-panel {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
-    .card-body-custom{
-        padding: 15px;
+    .header-actions {
+        width: 100%;
+        flex-wrap: wrap;
     }
 
-    .card-header-custom i{
-        width: 38px;
-        height: 38px;
-        font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+
+    .tecnico-dashboard-toolbar {
+        align-items: stretch;
+        flex-direction: column;
     }
 
-    .card-title{
-        font-size: .85rem;
+    .dashboard-summary {
+        flex-wrap: wrap;
+    }
+
+    .summary-item {
+        flex: 1;
+        min-width: 160px;
+    }
+
+    .tecnico-dashboard-toolbar > .dropdown {
+        align-self: flex-end;
+    }
+
+    .swal-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .header-title {
+        font-size: 15px;
+    }
+
+    .header-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-header {
+        justify-content: center;
+    }
+
+    .dashboard-summary {
+        flex-direction: column;
+    }
+
+    .summary-item {
+        width: 100%;
+    }
+
+    .notification-panel-tecnico {
+        width: 310px;
     }
 
 }

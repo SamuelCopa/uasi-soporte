@@ -16,37 +16,61 @@ class InicioController extends Controller
      */
 public function index()
 {
-    $modelos = [
-        \App\Models\RegistroCpu::class,
-        \App\Models\Laptop::class,
-        \App\Models\Impresora::class,
-        \App\Models\Parlante::class,
-        \App\Models\Teclado::class,
-        \App\Models\Raton::class,
-        \App\Models\Laptop::class,
-        \App\Models\Upese::class,
-        \App\Models\Audifono::class,
-        \App\Models\Estabilizador::class,
-    ];
+$modelos = [
+    \App\Models\RegistroCpu::class,
+    \App\Models\Laptop::class,
+    \App\Models\Impresora::class,
+    \App\Models\Parlante::class,
+    \App\Models\Teclado::class,
+    \App\Models\Raton::class,
+    \App\Models\Upese::class,
+    \App\Models\Audifono::class,
+    \App\Models\Estabilizador::class,
+    \App\Models\OtrosEquipo::class,
+];
 
-    $totalEquipos = collect($modelos)->sum(function ($modelo) {
-        return $modelo::count();
-    });
-    $totalEquipos2 = collect($modelos)->sum(function ($modelo) {
-        return $modelo::where('estado_id', 2)->count();
-    });
-    $totalEquipos3 = collect($modelos)->sum(function ($modelo) {
-        return $modelo::where('estado_id', 3)->count();
-    });
-    $totalEquipos4 = collect($modelos)->sum(function ($modelo) {
-        return $modelo::where('estado_id', 4)->count();
-    });
-    $hayPendientes = Servicio::where('visto', 0)->exists();
-    $dependencia = Dependencia::orderBy('dependencias', 'asc')->get();
-    $documentos = Documento::latest()->get();
+$totalEquipos = collect($modelos)->sum(function ($modelo) {
+    return $modelo::count();
+});
 
+$totalEquipos2 = collect($modelos)->sum(function ($modelo) {
+    return $modelo::where('estado_id', 2)->count();
+});
 
-    return view('inicio.inicio', compact('documentos', 'totalEquipos','totalEquipos2', 'totalEquipos3', 'totalEquipos4', 'hayPendientes', 'dependencia'));
+$totalEquipos3 = collect($modelos)->sum(function ($modelo) {
+    return $modelo::where('estado_id', 3)->count();
+});
+
+$totalEquipos4 = collect($modelos)->sum(function ($modelo) {
+    return $modelo::where('estado_id', 4)->count();
+});
+
+/*
+|--------------------------------------------------------------------------
+| SERVICIOS
+|--------------------------------------------------------------------------
+*/
+
+$hayPendientes = Servicio::where('visto', 0)->exists();
+
+$totalServiciosAtendidos = Servicio::whereNotNull('user_id')
+    ->where('visto', 1)
+    ->count();
+
+$dependencia = Dependencia::orderBy('dependencias', 'asc')->get();
+
+$documentos = Documento::latest()->get();
+
+return view('inicio.inicio', compact(
+    'documentos',
+    'totalEquipos',
+    'totalEquipos2',
+    'totalEquipos3',
+    'totalEquipos4',
+    'hayPendientes',
+    'totalServiciosAtendidos',
+    'dependencia'
+));
 }
     
 

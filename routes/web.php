@@ -161,7 +161,7 @@ Route::post('/evaluar/guardar', [TecnicoController::class, 'guardarEvaluacion'])
 Route::middleware(['auth', 'single.session'])->group(function () {
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+Route::get('/panel', [PanelController::class, 'panel'])->name('panel.panel');
 
 Route::resource('responsables', ResponsableController::class)->middleware('auth');
 Route::resource('funcionarios', FuncionarioController::class)->middleware('auth');
