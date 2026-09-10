@@ -1275,31 +1275,20 @@ public function resultadoPdf(Request $request)
     $pdf = Pdf::loadView(
         'panel.resultadoPdf',
         compact(
-
             'detalle',
-
             'totales',
-
             'year',
-
             'month',
-
             'nombreMes',
-
             'equipoFiltro',
-
             'resultadoFiltro'
-
         )
     );
-
-
     /*
     |--------------------------------------------------------------------------
     | PAPEL
     |--------------------------------------------------------------------------
     */
-
     /*
     |--------------------------------------------------------------------------
     | GENERAR PDF
@@ -1528,5 +1517,191 @@ public function reportePdf2(Request $request, $id)
     return $pdf->stream(
         'reporte_asignaciones_' . $anio . '.pdf'
     );
+}
+
+public function panel()
+{
+    $gestion = now()->year;
+
+    $modelos = [
+        'CPU' => [
+            'modelo' => RegistroCpu::class,
+            'color' => '#3498db',
+            'icon' => 'ion-ios-cog',
+            'ruta' => '/registro-cpus',
+        ],
+
+        'IMPRESORAS' => [
+            'modelo' => Impresora::class,
+            'color' => '#2ecc71',
+            'icon' => 'ion-printer',
+            'ruta' => '/impresoras',
+        ],
+
+        'MONITORES' => [
+            'modelo' => Monitor::class,
+            'color' => '#f1c40f',
+            'icon' => 'ion-monitor',
+            'ruta' => '/monitors',
+        ],
+
+        'AUDIFONOS' => [
+            'modelo' => Audifono::class,
+            'color' => '#9b59b6',
+            'icon' => 'ion-headphone',
+            'ruta' => '/audifonos',
+        ],
+
+        'LAPTOPS' => [
+            'modelo' => Laptop::class,
+            'color' => '#8e44ad',
+            'icon' => 'ion-laptop',
+            'ruta' => '/laptops',
+        ],
+
+        'TECLADOS' => [
+            'modelo' => Teclado::class,
+            'color' => '#e67e22',
+            'icon' => 'ion-stop',
+            'ruta' => '/teclados',
+        ],
+
+        'PARLANTES' => [
+            'modelo' => Parlante::class,
+            'color' => '#1abc9c',
+            'icon' => 'ion-volume-high',
+            'ruta' => '/parlantes',
+        ],
+
+        'MOUSE' => [
+            'modelo' => Raton::class,
+            'color' => '#e74c3c',
+            'icon' => 'ion-mouse',
+            'ruta' => '/ratons',
+        ],
+
+        'UPS' => [
+            'modelo' => Upese::class,
+            'color' => '#34495e',
+            'icon' => 'ion-stop',
+            'ruta' => '/upeses',
+        ],
+
+        'ESTABILIZADOR' => [
+            'modelo' => Estabilizador::class,
+            'color' => '#16a085',
+            'icon' => 'ion-outlet',
+            'ruta' => '/estabilizadors',
+        ],
+
+        'OTROS EQUIPOS' => [
+            'modelo' => OtrosEquipo::class,
+            'color' => '#7f8c8d',
+            'icon' => 'ion-outlet',
+            'ruta' => '/otros-equipos',
+        ],
+    ];
+
+    $equipos = [];
+    $pendientes = [];
+    $pendientesInforme = [];
+
+    foreach ($modelos as $nombre => $info) {
+
+        $modelo = $info['modelo'];
+
+        // Estados
+        $recepcionados = $modelo::where('estado_id', 1)
+            ->whereYear('created_at', $gestion)
+            ->count();
+
+        $enProceso = $modelo::where('estado_id', 2)
+            ->whereYear('created_at', $gestion)
+            ->count();
+
+        $apersonarse = $modelo::where('estado_id', 3)
+            ->whereYear('created_at', $gestion)
+            ->count();
+
+        $concluido = $modelo::where('estado_id', 4)
+            ->whereYear('created_at', $gestion)
+            ->count();
+
+        $entregados = $modelo::where('estado_id', 5)
+            ->whereYear('created_at', $gestion)
+            ->count();
+
+        // Total
+        $total = $modelo::where('estado_id', '!=', 6)
+            ->whereYear('created_at', $gestion)
+            ->count();
+
+        // Sin código
+        $sinCod = $modelo::whereNull('cod_registro')
+            ->whereYear('created_at', $gestion)
+            ->count();
+
+        // Sin técnico
+        $sinUser = $modelo::whereNotNull('cod_registro')
+            ->whereNull('user_id')
+            ->whereYear('created_at', $gestion)
+            ->count();
+
+        // RECEPCIONADO durante 3 días o más sin resultado
+        $informePendiente = $modelo::where('estado_id', 1)
+            ->whereNull('resultado_id')
+            ->where('created_at', '<=', now()->subDays(3))
+            ->whereYear('created_at', $gestion)
+            ->count();
+
+        // Datos para las tarjetas
+        $equipos[] = [
+            'nombre' => $nombre,
+            'color' => $info['color'],
+            'icon' => $info['icon'],
+            'ruta' => $info['ruta'],
+
+            'recepcionados' => $recepcionados,
+            'en_proceso' => $enProceso,
+            'apersonarse' => $apersonarse,
+            'concluido' => $concluido,
+            'entregados' => $entregados,
+
+            'total' => $total,
+
+            'sin_cod' => $sinCod,
+            'sin_user' => $sinUser,
+        ];
+
+        // Técnicos por asignar
+        if ($sinUser > 0) {
+
+            $pendientes[] = [
+                'nombre' => $nombre,
+                'color' => $info['color'],
+                'icon' => $info['icon'],
+                'sinCod' => $sinCod,
+                'sinUser' => $sinUser,
+            ];
+        }
+
+        // Informes pendientes
+        if ($informePendiente > 0) {
+
+            $pendientesInforme[] = [
+                'nombre' => $nombre,
+                'cantidad' => $informePendiente,
+            ];
+        }
+    }
+
+    $user = Auth::user();
+
+    return view('panel.panel', compact(
+        'user',
+        'equipos',
+        'pendientes',
+        'pendientesInforme'
+    ));
 }
 }

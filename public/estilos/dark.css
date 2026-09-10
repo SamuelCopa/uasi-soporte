@@ -415,3 +415,166 @@ Opción con mix-blend-mode
     background: #374151;
 }
 
+.dark-mode .dashboard-card-prof .card-body {
+
+    padding: 20px;
+
+    background: #1f2937;
+
+    flex: 1;
+}
+
+
+/* ============================================================
+   TÍTULO
+   ============================================================ */
+
+.dark-mode .card-title {
+
+    display: block;
+
+    color: #e5e7eb;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    letter-spacing: .3px;
+
+    line-height: 1.3;
+}
+
+
+/* ============================================================
+   SUBTÍTULO
+   ============================================================ */
+
+.dark-mode .card-subtitle {
+
+    display: block;
+
+    margin-top: 3px;
+
+    color: #e5e7eb;
+
+    font-size: 11px;
+
+    font-weight: 400;
+
+    line-height: 1.2;
+}
+
+
+/* ============================================================
+   TOTAL PRINCIPAL
+   ============================================================ */
+
+.dark-mode .card-main-total {
+
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 8px;
+
+    margin: 15px 0 18px;
+}
+
+
+/* NÚMERO TOTAL */
+
+.dark-mode .total-number {
+
+    color: #e5e7eb;
+
+    font-size: 32px;
+
+    font-weight: 700;
+
+    line-height: 1;
+}
+
+
+/* TEXTO "EQUIPOS REGISTRADOS" */
+
+.dark-mode .total-label {
+
+    color: #e5e7eb;
+
+    font-size: 11px;
+
+    font-weight: 400;
+}
+
+
+
+/* FILA DE ESTADO */
+
+.dark-mode .stat-row {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-top: 9px;
+
+    min-height: 20px;
+}
+
+
+/* NOMBRE DEL ESTADO */
+
+.dark-mode .stat-label {
+
+    display: flex;
+
+    align-items: center;
+
+    color: #e5e7eb;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    line-height: 1.2;
+}
+
+
+
+
+
+/* CANTIDAD */
+
+.dark-mode .stat-value {
+
+    min-width: 24px;
+
+    text-align: right;
+
+    color: #e5e7eb;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   BARRA DE PROGRESO
+   ============================================================ */
+
+.dark-mode .progress-custom {
+
+    height: 4px;
+
+    margin-top: 5px;
+
+    overflow: hidden;
+
+    background: #edf0f3;
+
+    border-radius: 10px;
+}
+

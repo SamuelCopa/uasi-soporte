@@ -27,19 +27,11 @@
                     <div class="flex gap-3 mt-6">
 
                     <div class="bg-white/10 p-3 rounded-lg">
-                    <p class="text-2xl font-bold">{{ $totalEquipos }}</p>
-                      <p class="text-xs">Total de equipos</p>
+                    <p class="text-2xl font-bold">{{ $totalServiciosAtendidos }}</p>
+                      <p class="text-xs">Total de equipos atendidos </p>
                     </div>
 
-                        <div class="bg-white/10 p-3 rounded-lg">
-                            <p class="text-2xl font-bold">{{ $totalEquipos2}}</p>
-                            <p class="text-xs">En proceso</p>
-                        </div>
 
-                        <div class="bg-white/10 p-3 rounded-lg">
-                            <p class="text-2xl font-bold">{{ $totalEquipos4}}</p>
-                            <p class="text-xs">Concluidos</p>
-                        </div>
                     </div>
                     </aside>
                 </div>
