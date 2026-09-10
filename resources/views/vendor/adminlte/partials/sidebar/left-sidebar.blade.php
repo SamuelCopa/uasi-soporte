@@ -7,129 +7,236 @@
         @include('adminlte::partials.common.brand-logo-xs')
     @endif
 
-    {{-- Sidebar menu --}}
-    <div class="sidebar">
+    {{-- Sidebar --}}
+<div class="sidebar">
+
+    {{-- =====================================================
+         MENÚ DEL SIDEBAR
+         ===================================================== --}}
+    <div class="sidebar-menu-scroll">
+
         <nav class="pt-2">
+
             <ul class="nav nav-pills nav-sidebar flex-column {{ config('adminlte.classes_sidebar_nav', '') }}"
-                data-widget="treeview" role="menu"
+                data-widget="treeview"
+                role="menu"
                 @if(config('adminlte.sidebar_nav_animation_speed') != 300)
                     data-animation-speed="{{ config('adminlte.sidebar_nav_animation_speed') }}"
                 @endif
                 @if(!config('adminlte.sidebar_nav_accordion'))
                     data-accordion="false"
                 @endif>
-                {{-- Configured sidebar links --}}
-                @each('adminlte::partials.sidebar.menu-item', $adminlte->menu('sidebar'), 'item')
- {{-- USUARIO - PARTE INFERIOR DEL SIDEBAR --}}
-@if(Auth::check())
 
-    <div class="sidebar-user-bottom">
+                @each(
+                    'adminlte::partials.sidebar.menu-item',
+                    $adminlte->menu('sidebar'),
+                    'item'
+                )
 
-        {{-- NOMBRE DEL USUARIO --}}
-        <button type="button"
-                class="sidebar-user-toggle"
-                onclick="toggleSidebarUser()">
+            </ul>
 
-            <div class="sidebar-user-avatar">
-                <i class="fas fa-user"></i>
-            </div>
+        </nav>
 
-            <div class="sidebar-user-data">
+    </div>
 
-                <div class="sidebar-user-name">
-                    {{ Auth::user()->name }}
-                    {{ Auth::user()->paterno }}
-                    {{ Auth::user()->materno }}
+
+    {{-- =====================================================
+         USUARIO - SIEMPRE FIJO ABAJO
+         ===================================================== --}}
+    @if(Auth::check())
+
+        <div class="sidebar-user-bottom">
+
+            <button type="button"
+                    class="sidebar-user-toggle"
+                    onclick="toggleSidebarUser()">
+
+                <div class="sidebar-user-avatar">
+                    <i class="fas fa-user"></i>
                 </div>
 
-<div class="sidebar-user-role">
-    {{ Auth::user()->getRoleNames()->first() ?? 'Usuario' }}
+                <div class="sidebar-user-data">
 
-    @if(Auth::user()->especialidad)
-        | {{ Auth::user()->especialidad->nombre }}
-    @endif
-</div>
+                    <div class="sidebar-user-name">
+                        {{ Auth::user()->name }}
+                        {{ Auth::user()->paterno }}
+                        {{ Auth::user()->materno }}
+                    </div>
+
+                    <div class="sidebar-user-role">
+                        {{ Auth::user()->getRoleNames()->first() ?? 'Usuario' }}
+
+                        @if(Auth::user()->especialidad)
+                            | {{ Auth::user()->especialidad->nombre }}
+                        @endif
+                    </div>
+
+                </div>
+
+                <i id="sidebar-user-arrow"
+                   class="fas fa-chevron-up sidebar-user-arrow"></i>
+
+            </button>
+
+
+            {{-- OPCIONES --}}
+            <div id="sidebar-user-options"
+                 class="sidebar-user-options">
+
+                <a href="{{ route('perfil') }}"
+                   class="btn-footer">
+
+                    <i class="fas fa-user-circle"></i>
+                    <span>Mi perfil</span>
+
+                </a>
+
+                <form method="POST"
+                      action="{{ route('logout') }}">
+
+                    @csrf
+
+                    <button type="submit"
+                            class="btn-footer logout-btn">
+
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Cerrar sesión</span>
+
+                    </button>
+
+                </form>
 
             </div>
-
-            <i id="sidebar-user-arrow"
-               class="fas fa-chevron-up sidebar-user-arrow"></i>
-
-        </button>
-
-
-        {{-- OPCIONES --}}
-        <div id="sidebar-user-options"
-             class="sidebar-user-options">
-
-            {{-- PERFIL --}}
-            <a href="{{ route('perfil') }}"
-               class="btn-footer">
-
-                <i class="fas fa-user-circle"></i>
-                <span>Mi perfil</span>
-
-            </a>
-
-            {{-- CERRAR SESIÓN --}}
-            <form method="POST"
-                  action="{{ route('logout') }}">
-
-                @csrf
-
-                <button type="submit"
-                        class="btn-footer logout-btn">
-
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Cerrar sesión</span>
-
-                </button>
-
-            </form>
 
         </div>
 
-    </div>
+    @endif
 
-@endif
-            </ul>
-        </nav>
-    </div>
+</div>
 
 </aside>
 <style>
 /* =====================================================
-   USUARIO INFERIOR DEL SIDEBAR
+   SIDEBAR
+   MENÚ CON SCROLL + USUARIO FIJO
+   ===================================================== */
+
+/* =====================================================
+   SIDEBAR PRINCIPAL
    ===================================================== */
 
 .main-sidebar .sidebar {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+    position: relative !important;
+
+    height: calc(100vh - 57px) !important;
+    min-height: calc(100vh - 57px) !important;
+
+    padding: 0 !important;
+
+    overflow: hidden !important;
 }
 
-.sidebar-user-bottom {
-    margin-top: auto;
+
+/* =====================================================
+   SOLO EL MENÚ TIENE SCROLL
+   ===================================================== */
+
+.main-sidebar .sidebar-menu-scroll {
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 76px;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    padding: 8px 10px 20px 10px;
+
+    width: 100%;
+}
+
+
+/* =====================================================
+   SCROLLBAR
+   ===================================================== */
+
+.main-sidebar .sidebar-menu-scroll::-webkit-scrollbar {
+    width: 5px;
+}
+
+.main-sidebar .sidebar-menu-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.main-sidebar .sidebar-menu-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.20);
+    border-radius: 10px;
+}
+
+.main-sidebar .sidebar-menu-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,.35);
+}
+
+.main-sidebar .sidebar-menu-scroll {
+    scrollbar-width: thin;
+}
+
+
+/* =====================================================
+   USUARIO
+   FIJO EN LA PARTE INFERIOR
+   ===================================================== */
+
+.main-sidebar .sidebar-user-bottom {
+
+    position: absolute !important;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    width: 100%;
+
     padding: 10px;
+
     border-top: 1px solid rgba(255,255,255,.15);
-    background: rgba(0,0,0,.12);
+
+    background: #1e2a38;
+
+    z-index: 2000 !important;
 }
 
 
-/* BOTÓN DEL NOMBRE */
+/* =====================================================
+   BOTÓN USUARIO
+   ===================================================== */
 
 .sidebar-user-toggle {
+
     width: 100%;
+
     display: flex;
+
     align-items: center;
+
     border: none;
+
     background: transparent;
+
     color: #fff;
+
     padding: 7px;
+
     cursor: pointer;
+
     text-align: left;
+
     border-radius: 6px;
-    transition: .2s ease;
+
+    transition: background .2s ease;
 }
 
 .sidebar-user-toggle:hover {
@@ -137,14 +244,19 @@
 }
 
 
-/* AVATAR */
+/* =====================================================
+   AVATAR
+   ===================================================== */
 
 .sidebar-user-avatar {
+
     width: 38px;
     height: 38px;
+
     min-width: 38px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -157,38 +269,61 @@
     );
 
     color: #fff;
+
     font-size: 16px;
 }
 
 
-/* DATOS */
+/* =====================================================
+   DATOS DEL USUARIO
+   ===================================================== */
 
 .sidebar-user-data {
+
     margin-left: 10px;
+
     min-width: 0;
+
     flex: 1;
 }
 
 .sidebar-user-name {
+
     color: #fff;
+
     font-size: 13px;
+
     font-weight: 600;
 
     white-space: nowrap;
+
     overflow: hidden;
+
     text-overflow: ellipsis;
 }
 
 .sidebar-user-role {
+
     color: rgba(255,255,255,.60);
+
     font-size: 11px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
 }
 
 
-/* FLECHA */
+/* =====================================================
+   FLECHA
+   ===================================================== */
 
 .sidebar-user-arrow {
+
     font-size: 11px;
+
     color: rgba(255,255,255,.60);
 
     transition: transform .25s ease;
@@ -200,7 +335,9 @@
    ===================================================== */
 
 .sidebar-user-options {
+
     display: none;
+
     margin-top: 7px;
 }
 
@@ -209,18 +346,24 @@
 }
 
 
-/* BOTONES */
+/* =====================================================
+   BOTONES INFERIORES
+   ===================================================== */
 
 .btn-footer {
+
     width: 100%;
 
     display: flex;
+
     align-items: center;
 
     padding: 8px 10px;
+
     margin-top: 4px;
 
     border: none;
+
     border-radius: 5px;
 
     background: rgba(255,255,255,.05);
@@ -233,26 +376,30 @@
 }
 
 .btn-footer i {
+
     width: 22px;
+
     margin-right: 8px;
+
     text-align: center;
 }
 
 .btn-footer:hover {
+
     background: rgba(255,255,255,.12);
+
     color: #fff;
+
     text-decoration: none;
 }
 
 
-/* ICONOS */
+/* =====================================================
+   ICONOS
+   ===================================================== */
 
 .btn-footer .fa-user-circle {
     color: #80b3ff;
-}
-
-.btn-footer .fa-key {
-    color: #ffd166;
 }
 
 .btn-footer .fa-sign-out-alt {
@@ -260,12 +407,18 @@
 }
 
 
-/* LOGOUT */
+/* =====================================================
+   LOGOUT
+   ===================================================== */
 
 .logout-btn {
+
     cursor: pointer;
+
     font-family: inherit;
+
     font-size: inherit;
+
     text-align: left;
 }
 </style>
