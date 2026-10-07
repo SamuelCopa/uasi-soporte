@@ -43,7 +43,7 @@ class Servicio extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['servicio', 'equipo', 'falla', 'user_id', 'visto', 'dependencia_id', 'funcionario_id'];
+    protected $fillable = ['servicio', 'equipo', 'cod_gamea', 'falla', 'user_id', 'visto', 'dependencia_id', 'funcionario_id'];
 
     protected static function booted()
 {

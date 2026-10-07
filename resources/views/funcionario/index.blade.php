@@ -28,21 +28,21 @@
 
                     <div class="card">
                         <div class="table-responsive">
-                            <table id="mitabla" class="table-modern table-striped table-hover table-bordered">
-                                <thead class="thead">
+                            <table id="mitabla" class="table table-modern align-middle">
+                                <thead>
                                     <tr align="center">
-                                    <th>No</th>
-									<th >GRADO ACADEMICO</th>
-									<th >PATERNO</th>
-									<th >MATERNO</th>
-									<th >APELLIDO DE CASADA</th>
-									<th >NOMBRE</th>
-									<th >C.I.</th>
-									<th >CELULAR</th>
-									<th >CORREO ELECTRÓNICO</th>
-									<th >CARGO</th>
-									<th >DEPENDENCIA</th>
-                                    <th>OPCIONES</th>
+                                        <th>No</th>
+                                        <th >GRADO ACADEMICO</th>
+                                        <th >PATERNO</th>
+                                        <th >MATERNO</th>
+                                        <th >APELLIDO DE CASADA</th>
+                                        <th >NOMBRE</th>
+                                        <th >C.I.</th>
+                                        <th >CELULAR</th>
+                                        <th >CORREO ELECTRÓNICO</th>
+                                        <th >CARGO</th>
+                                        <th >DEPENDENCIA</th>
+                                        <th>OPCIONES</th>
                                     </tr>
                                 </thead>
                                 <tbody>

@@ -227,6 +227,147 @@ Swal.fire({
 </style>
 
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const campoCodigo = document.getElementById('cod_gamea');
+    const resultado = document.getElementById('resultadoActivo');
+
+    const activoEncontrado = document.getElementById('activo_encontrado');
+    const tipoActivo = document.getElementById('tipo_activo');
+    const activoId = document.getElementById('activo_id');
+    const equipo = document.getElementById('equipo');
+
+    let timeoutActivo = null;
+
+    if (!campoCodigo) {
+        console.error('No se encontró #cod_gamea');
+        return;
+    }
+
+    campoCodigo.addEventListener('input', function () {
+
+        clearTimeout(timeoutActivo);
+
+        const codigo = this.value.trim();
+
+        // Limpiar resultados anteriores
+        resultado.innerHTML = '';
+
+        activoEncontrado.value = '0';
+        tipoActivo.value = '';
+        activoId.value = '';
+        equipo.value = '';
+
+        // No consultar códigos muy cortos
+        if (codigo.length < 3) {
+            return;
+        }
+
+        // Esperar 500 ms después de escribir
+        timeoutActivo = setTimeout(function () {
+
+            resultado.innerHTML =
+                '<span class="text-primary">' +
+                '<i class="fas fa-spinner fa-spin"></i> ' +
+                'Buscando activo...' +
+                '</span>';
+
+            fetch(
+                "{{ route('servicios.buscarActivo') }}" +
+                "?cod_gamea=" +
+                encodeURIComponent(codigo),
+                {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                }
+            )
+            .then(function (response) {
+
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+
+                return response.json();
+            })
+            .then(function (data) {
+
+                console.log('Respuesta:', data);
+
+if (data.encontrado) {
+
+    let detalleEquipo = '';
+
+    if (data.nombre_equipo) {
+        detalleEquipo =
+            '<br>' +
+            '<small>' +
+                'Equipo: <strong>' +
+                data.nombre_equipo +
+                '</strong>' +
+            '</small>';
+    }
+
+    resultado.innerHTML =
+        '<div class="alert alert-success py-2 mt-2 mb-0">' +
+            '<i class="fas fa-check-circle me-1"></i>' +
+            '<strong>ACTIVO ENCONTRADO</strong><br>' +
+
+            '<small>' +
+                'Tipo: <strong>' +
+                data.tipo +
+                '</strong>' +
+            '</small>' +
+
+            detalleEquipo +
+
+        '</div>';
+
+    activoEncontrado.value = '1';
+    tipoActivo.value = data.tipo;
+    activoId.value = data.id;
+    equipo.value = data.equipo;
+} else {
+
+                    resultado.innerHTML =
+                        '<div class="alert alert-danger py-2 mt-2 mb-0">' +
+                            '<i class="fas fa-times-circle me-1"></i>' +
+                            '<strong>ACTIVO NO ENCONTRADO</strong><br>' +
+                            '<small>' +
+                                'Verifique el código del activo ingresado.' +
+                            '</small>' +
+                        '</div>';
+
+                    activoEncontrado.value = '0';
+                    tipoActivo.value = '';
+                    activoId.value = '';
+                    equipo.value = '';
+                }
+            })
+            .catch(function (error) {
+
+                console.error('Error:', error);
+
+                resultado.innerHTML =
+                    '<div class="alert alert-danger py-2 mt-2 mb-0">' +
+                        '<i class="fas fa-exclamation-triangle me-1"></i>' +
+                        '<strong>ERROR DE CONSULTA</strong><br>' +
+                        '<small>No fue posible consultar el activo.</small>' +
+                    '</div>';
+
+                activoEncontrado.value = '0';
+                tipoActivo.value = '';
+                activoId.value = '';
+                equipo.value = '';
+            });
+
+        }, 500);
+    });
+
+});
+</script>
+
+<script>
 const tituloOriginal = document.title;
 const tituloAlerta = "🔴 ¡Nuevo requerimiento de servicio!";
 

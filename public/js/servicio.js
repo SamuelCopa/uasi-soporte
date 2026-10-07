@@ -1,50 +1,157 @@
+
 $(document).ready(function() {
+
     var timeout = null;
+
     $('#ci').on('keyup', function() {
+
         clearTimeout(timeout);
+
         timeout = setTimeout(function() {
+
             var query = $('#ci').val();
+
             if (query.length >= 6) {
+
                 $.ajax({
+
                     type: 'GET',
+
                     url: '/buscarFuncionario',
-                    data: { query: query },
+
+                    data: {
+                        query: query
+                    },
+
                     success: function(data) {
-                        // Limpiar los inputs antes de agregar nuevos resultados
-                        // $('#grado_academico').val('');
+
+                        // =====================================================
+                        // LIMPIAR DATOS
+                        // =====================================================
+
                         $('#nombre').val('');
                         $('#paterno').val('');
                         $('#materno').val('');
+                        $('#funcionario_id').val('');
+
                         $('#celular').val('');
                         $('#email').val('');
                         $('#cargo').val('');
                         $('#expedido').val('');
+
                         $('#search-input').val('');
                         $('#id-selected').val('');
 
-                        // Mostrar el primer resultado en los inputs
+
+                        // =====================================================
+                        // FUNCIONARIO ENCONTRADO
+                        // =====================================================
+
                         if (data.length > 0) {
-                            $('#nombre').val(data[0].nombre);
-                            $('#nombre').val(
-                                // data[0].grado_academico + ' ' +
-                                data[0].nombre + ' ' +
-                                data[0].paterno + ' ' +
-                                data[0].materno
+
+                            var funcionario = data[0];
+
+                            // ---------------------------------------------
+                            // Guardar ID del funcionario
+                            // ---------------------------------------------
+
+                            $('#funcionario_id').val(funcionario.id);
+
+
+                            // ---------------------------------------------
+                            // Ocultar campos para funcionario nuevo
+                            // ---------------------------------------------
+
+                            $('#funcionario-nuevo').hide();
+
+                            // Mostrar funcionario encontrado
+                            $('#funcionario-existente').show();
+
+
+                            // ---------------------------------------------
+                            // Mostrar nombre completo
+                            // ---------------------------------------------
+
+                            $('#nombre-existente').val(
+                                funcionario.nombre + ' ' +
+                                funcionario.paterno + ' ' +
+                                funcionario.materno
                             );
-                            $('#celular').val(data[0].celular);
-                            $('#cargo').val(data[0].cargo);
-                            $('select[name="expedido"]').val(data[0].expedido);
-                            // Capturar ID del funcionario
-                             $('#funcionario_id').val(data[0].id);
-                            $('#search-input').val(data[0].dependencia.dependencias);
-                            $('#id-selected').val(data[0].dependencia_id);
+
+
+                            // ---------------------------------------------
+                            // Dependencia
+                            // ---------------------------------------------
+
+                            $('#search-input').val(
+                                funcionario.dependencia.dependencias
+                            );
+
+                            $('#id-selected').val(
+                                funcionario.dependencia_id
+                            );
+
+
+                            // ---------------------------------------------
+                            // Otros datos existentes
+                            // ---------------------------------------------
+
+                            $('#celular').val(funcionario.celular);
+                            $('#cargo').val(funcionario.cargo);
+
+                            $('select[name="expedido"]').val(
+                                funcionario.expedido
+                            );
+
                         }
+
+
+                        // =====================================================
+                        // FUNCIONARIO NO ENCONTRADO
+                        // =====================================================
+
+                        else {
+
+                            // ---------------------------------------------
+                            // Mostrar campos para registrar funcionario
+                            // ---------------------------------------------
+
+                            $('#funcionario-existente').hide();
+
+                            $('#funcionario-nuevo').show();
+
+
+                            // ---------------------------------------------
+                            // Limpiar campos nuevos
+                            // ---------------------------------------------
+
+                            $('#nombre').val('');
+                            $('#paterno').val('');
+                            $('#materno').val('');
+
+
+                            // ---------------------------------------------
+                            // Quitar funcionario_id
+                            // ---------------------------------------------
+
+                            $('#funcionario_id').val('');
+
+                        }
+
                     },
+
                     error: function(xhr, status, error) {
+
                         console.error(xhr.responseText);
+
                     }
+
                 });
+
             }
+
         }, 500);
+
     });
+
 });

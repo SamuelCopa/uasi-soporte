@@ -23,14 +23,14 @@
         ]))
         <div class="header-actions">
                 <a href="{{ route('equipos.reporte') }}" class="btn-header">
-                    <i class="fas fa-file-pdf""></i>
+                    <i class="fas fa-file-pdf"></i>
                     REPORTES DE EQUIPOS ATENDIDOS
                 </a>
                 <a href="{{ route('resultado') }}" class="btn-header">
-                    <i class="fas fa-file-pdf""></i>
+                    <i class="fas fa-file-pdf"></i>
                     RESULTADOS DE MANTENIMIENTO
                 </a>
-                <button type="button" class="btn-header"" data-toggle="modal" data-target="#modalReporte">
+                <button type="button" class="btn-header" data-toggle="modal" data-target="#modalReporte">
                         <i class="fas fa-file-pdf"></i>REPORTE GENERAL TÉCNICOS
                 </button>
                     <!--Ventana Modal para Reporte--->
@@ -167,7 +167,6 @@
     /* =========================================
    NOTIFICACIÓN DE SERVICIOS
    ========================================= */
-
 .notificacion-servicios {
     display: flex;
     align-items: center;
@@ -272,30 +271,23 @@
 .btn-notificacion-servicios:has(.badge-notificacion) .icono-campana i {
     animation: campanaNotificacion 1.8s ease-in-out infinite;
 }
-
 @keyframes campanaNotificacion {
-
     0%,
     100% {
         transform: rotate(0deg);
     }
-
     10% {
         transform: rotate(10deg);
     }
-
     20% {
         transform: rotate(-10deg);
     }
-
     30% {
         transform: rotate(7deg);
     }
-
     40% {
         transform: rotate(-7deg);
     }
-
     50% {
         transform: rotate(0deg);
     }
@@ -304,25 +296,20 @@
 /* Responsive */
 
 @media (max-width: 768px) {
-
     .btn-notificacion-servicios {
         min-width: auto;
         padding: 8px 10px;
     }
-
     .texto-notificacion {
         display: none;
     }
-
     .icono-campana {
         width: 36px;
         height: 36px;
     }
 }
 </style>
-
 @stop
-
 @section('js')
 
 @stop

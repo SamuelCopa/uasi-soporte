@@ -1,6 +1,5 @@
 {{-- ============================================================
-    PANEL DEL TÉCNICO - SISOT
-    Sistema de Soporte Tecnológico
+    PANEL DEL TÉCNICO
     ============================================================ --}}
 
 @php
@@ -136,34 +135,23 @@
     */
 
     $totalPendientes = 0;
-
     $totalInformesPendientes = 0;
-
     $detallePendientes = [];
-
     $detalleInformes = [];
-
-
     /*
     |--------------------------------------------------------------------------
     | RECORRER CADA TIPO DE EQUIPO
     |--------------------------------------------------------------------------
     */
-
     foreach ($asignaciones as $item) {
-
         $relacion = $item['relacion'];
-
         /*
         |--------------------------------------------------------------------------
         | CONSULTA BASE DEL TÉCNICO
         |--------------------------------------------------------------------------
         */
-
         $consulta = $user->$relacion()
             ->whereYear('fecha_asignacion', now()->year);
-
-
         /*
         |--------------------------------------------------------------------------
         | TRABAJOS PENDIENTES
@@ -175,12 +163,10 @@
         | 4 = Concluido
         |--------------------------------------------------------------------------
         */
-
         $pendientes = $user->$relacion()
             ->whereYear('fecha_asignacion', now()->year)
             ->whereIn('estado_id', [1, 2, 3, 4])
             ->count();
-
 
         if ($pendientes > 0) {
 
@@ -191,10 +177,7 @@
                 'cantidad' => $pendientes,
                 'ruta' => route($item['ruta'])
             ];
-
         }
-
-
         /*
         |--------------------------------------------------------------------------
         | INFORME PENDIENTE
@@ -211,33 +194,23 @@
             ->whereNull('resultado_id')
             ->where('fecha_asignacion', '<=', now()->subDays(3))
             ->count();
-
-
         if ($informes > 0) {
-
             $totalInformesPendientes += $informes;
-
             $detalleInformes[] = [
                 'titulo' => $item['titulo'],
                 'cantidad' => $informes,
                 'ruta' => route($item['ruta'])
             ];
-
         }
-
     }
-
-
     /*
     |--------------------------------------------------------------------------
     | TOTAL DE NOTIFICACIONES
     |--------------------------------------------------------------------------
     */
-
     $totalNotificaciones =
         $totalPendientes +
         $totalInformesPendientes;
-
 @endphp
 
 
@@ -861,23 +834,18 @@
     | CAMPANA
     |--------------------------------------------------------------------------
     */
-
     #btnNotificaciones {
         transition: all .2s ease;
     }
-
     #btnNotificaciones:hover {
         background: #f1f4f7;
         transform: translateY(-1px);
     }
-
-
     /*
     |--------------------------------------------------------------------------
     | NOTIFICACIONES
     |--------------------------------------------------------------------------
     */
-
     .notification-section button {
         color: inherit;
     }
@@ -891,8 +859,6 @@
         background: #f8f9fa;
         color: #0052cc !important;
     }
-
-
     /*
     |--------------------------------------------------------------------------
     | TARJETAS CON PENDIENTES

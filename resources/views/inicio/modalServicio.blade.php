@@ -45,85 +45,217 @@
             </header>
 
                     <!-- FORM -->
-            <form method="POST" action="{{ route('servicios.store') }}"  role="form" enctype="multipart/form-data" class="space-y-5">
-            @csrf
-            <input type="hidden" id="funcionario_id" name="funcionario_id">
-                      <div class="div title">
-                        <label for="ci" class="form-label">{{ __('C.I.') }}<span class="required">*</span></label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-id-card text-primary"></i></span>
-                            <input type="number" name="ci" class="form-control @error('ci') is-invalid @enderror" id="ci" placeholder="Ci">
-                            {!! $errors->first('ci', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-                        </div>
-                      </div>
-                <div>
-                      <div>
+<form method="POST" action="{{ route('servicios.store') }}" role="form" enctype="multipart/form-data" class="space-y-5">
+    @csrf
+    {{-- =========================================================
+         ID DEL FUNCIONARIO
+         Lo utiliza el JavaScript cuando encuentra el C.I.
+         ========================================================= --}}
+    <input type="hidden" id="funcionario_id" name="funcionario_id">
+    {{-- =========================================================
+         C.I.
+         ========================================================= --}}
+    <div class="div title">
+        <label for="ci" class="form-label">
+            {{ __('C.I.') }}
+            <span class="required">*</span>
+        </label>
+        <div class="input-group">
+            <span class="input-group-text">
+                <i class="fas fa-id-card text-primary"></i>
+            </span>
+            <input type="number"name="ci" id="ci" class="form-control @error('ci') is-invalid @enderror" placeholder="Ingrese el C.I." value="{{ old('ci') }}"  required>
+            {!! $errors->first('ci', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+        </div>
+    </div>
+    {{-- =========================================================
+         DATOS DEL FUNCIONARIO EXISTENTE
+         ========================================================= --}}
+    <div id="funcionario-existente" style="display: none;">
+        <div class="div title">
+            <label for="nombre-existente" class="form-label">
+                FUNCIONARIO
+            </label>
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fas fa-user-tie text-primary"></i>
+                </span>
+                <input type="text"
+                       id="nombre-existente"
+                       class="form-control"
+                       readonly>
+            </div>
+        </div>
+    </div>
+    {{-- =========================================================
+         DATOS PARA FUNCIONARIO NUEVO
+         Inicialmente están ocultos.
+         Se muestran solamente cuando el C.I. NO existe.
+         ========================================================= --}}
+    <div id="funcionario-nuevo" style="display: none;">
+        {{-- NOMBRES --}}
+        <div class="div title">
+            <label for="nombre" class="form-label">
+                NOMBRES
+                <span class="required">*</span>
+            </label>
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fas fa-user"></i>
+                </span>
+                <input type="text"
+                       name="nombre"
+                       id="nombre"
+                       class="form-control @error('nombre') is-invalid @enderror"
+                       placeholder="Ingrese los nombres"
+                       value="{{ old('nombre') }}"
+                       oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '')">
+            </div>
+            {!! $errors->first('nombre','<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+        </div>
+        {{-- APELLIDO PATERNO --}}
+        <div class="div title">
+            <label for="paterno" class="form-label">
+                APELLIDO PATERNO
+                <span class="required">*</span>
+            </label>
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fas fa-user"></i>
+                </span>
+                <input type="text"
+                       name="paterno"
+                       id="paterno"
+                       class="form-control @error('paterno') is-invalid @enderror"
+                       placeholder="Ingrese el apellido paterno"
+                       value="{{ old('paterno') }}"
+                       oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '')">
+            </div>
+            {!! $errors->first('paterno','<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+        </div>
+        {{-- APELLIDO MATERNO --}}
+        <div class="div title">
+            <label for="materno" class="form-label">
+                APELLIDO MATERNO
+                <span class="required">*</span>
+            </label>
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fas fa-user"></i>
+                </span>
+                <input type="text"name="materno" id="materno" class="form-control @error('materno') is-invalid @enderror" placeholder="Ingrese el apellido materno"
+                       value="{{ old('materno') }}" oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '')">
+            </div>
+            {!! $errors->first('materno','<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+        </div>
+    </div>
+    {{-- =========================================================
+         DEPENDENCIA
+         ========================================================= --}}
+    <div class="div title">
+        <label for="search-input" class="form-label">
+            DEPENDENCIA
+            <span class="required">*</span>
+        </label>
+        <input type="text" id="search-input" list="options" placeholder="Buscar dependencia ..." class="form-control" autocomplete="off" required>
+        <datalist id="options">
+            @foreach ($dependencia as $item)
+                <option
+                    value="{{ $item->dependencias }}"
+                    data-id="{{ $item->id }}">
+                </option>
+            @endforeach
+        </datalist>
+        {{-- ID REAL QUE SE ENVÍA AL CONTROLADOR --}}
+        <input type="hidden" id="id-selected" name="dependencia_id">
+    </div>
+{{-- =========================================================
+     CÓDIGO DEL ACTIVO
+     ========================================================= --}}
+<div class="div title">
+
+    <label for="cod_gamea" class="form-label">
+        CÓDIGO DEL ACTIVO
+        <span class="required">*</span>
+    </label>
+
+    <div class="input-group">
+
+        <span class="input-group-text">
+            <i class="fas fa-barcode text-primary"></i>
+        </span>
+        <input type="text" name="cod_gamea" id="cod_gamea" class="form-control" placeholder="Ingrese el código del activo" autocomplete="off" required>
+    </div>
+
+<div id="resultadoActivo" class="mt-2"></div>
+    <input type="hidden" name="equipo" id="equipo">
+    <input type="hidden" id="activo_encontrado" value="0">
+    <input type="hidden" id="tipo_activo" name="tipo_activo">
+    <input type="hidden" id="activo_id"  name="activo_id">
+
+</div>
+
+    {{-- =========================================================
+         DETALLE DE LA FALLA
+         ========================================================= --}}
+    <div class="div title">
+
+        <label for="falla"
+               class="block text-sm font-medium text-gray-700 mb-1">
+
+            BREVE DETALLE DE LA FALLA
+            <span class="required">*</span>
+
+        </label>
+
+        <textarea name="falla"
+                  id="falla"
+                  placeholder="Ingrese la falla del equipo"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg
+                         focus:ring-2 focus:ring-sky-600 focus:outline-none text-sm">{{ old('falla') }}</textarea>
+
+        @error('falla')
+            <div class="text-danger small mt-1">
+                <strong>{{ $message }}</strong>
+            </div>
+        @enderror
+
+    </div>
 
 
-                          <div class="div title">
-                              <label for="nombre" class="form-label">{{ __('NOMBRE DEL FUNCIONARIO')}}<span class="required">*</span></label>
-                              <div class="input-group">
-                                  <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
-                                  <input type="text" name="nombre" class="form-control @error('nombre') is-invalid @enderror" id="nombre" placeholder="Nombre" oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '')">
-                              </div>
-                              {!! $errors->first('nombre', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-                          </div>
-                        </div>
-                    <div class="div title">
-                        <label for="search-input" class="form-label">
-                            DEPENDENCIA <span class="required">*</span>
-                        </label>
-                        <input type="text" id="search-input" list="options" placeholder="Buscar dependencia ..." class="form-control" autocomplete="off" required >
-                        <datalist id="options">
-                            @foreach ($dependencia as $item)
-                                <option
-                                    value="{{ $item->dependencias }}"
-                                    data-id="{{ $item->id }}">
-                                </option>
-                            @endforeach
-                        </datalist>
-                        <input type="hidden" id="id-selected" name="dependencia_id" >
-                    </div>
-                </div>
-                <div class="div title">
-                    <label for="equipo" class="block text-sm font-medium text-gray-700 mb-1">
-                        TIPO DE EQUIPO
-                    </label>
+    {{-- =========================================================
+         BOTÓN ENVIAR
+         ========================================================= --}}
+    <button type="submit"
+            class="w-full bg-gradient-to-r from-sky-700 to-blue-800
+                   hover:from-sky-800 hover:to-blue-900
+                   text-white py-3 rounded-lg
+                   font-semibold tracking-wide shadow-lg
+                   hover:shadow-2xl transition-all duration-300">
 
-                    <select id="equipo" name="equipo" required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-600 focus:outline-none text-sm">
-                        
-                        <option value="">Seleccione una opción</option>
-                        <option value="cpu">C.P.U.</option>
-                        <option value="impresora">Impresora</option>
-                        <option value="teclado">Teclado</option>
-                        <option value="monitor">Monitor</option>
-                        <option value="estabilizador">Estabilizador</option>
-                        <option value="internet">Internet</option>
-                    </select>
-                </div>
+        <i class="bi bi-search me-2"></i>
+        ENVIAR REQUERIMIENTO
 
-                <!-- INPUT -->
-                <div class="div title">
-                    <label for="falla" class="block text-sm font-medium text-gray-700 mb-1">
-                        Breve detalle de la falla
-                    </label>
-                    <textarea name="falla" id="falla" placeholder="Ingrese la falla del equipo" required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-600 focus:outline-none text-sm"></textarea>
-                </div>
+    </button>
 
-                <!-- BOTÓN -->
-                <button type="submit" class="w-full bg-gradient-to-r from-sky-700 to-blue-800 hover:from-sky-800 hover:to-blue-900 text-white py-3 rounded-lg
-                        font-semibold tracking-wide shadow-lg hover:shadow-2xl transition-all duration-300"> 
-                    <i class="bi bi-search me-2"></i>ENVIAR REQUERIMIENTO
-                </button>
 
-                <!-- CERRAR -->
-                <button type="button" data-bs-dismiss="modal" class="w-full mt-3 bg-white border border-gray-300 hover:bg-gray-100
-                        text-gray-700 py-3 rounded-lg font-semibold shadow-md transition-all duration-300">
-                    <i class="bi bi-box-arrow-left me-2"></i>CERRAR
-                </button>
-            </form>
+    {{-- =========================================================
+         BOTÓN CERRAR
+         ========================================================= --}}
+    <button type="button"
+            data-bs-dismiss="modal"
+            class="w-full mt-3 bg-white border border-gray-300
+                   hover:bg-gray-100 text-gray-700 py-3 rounded-lg
+                   font-semibold shadow-md transition-all duration-300">
+
+        <i class="bi bi-box-arrow-left me-2"></i>
+        CERRAR
+
+    </button>
+
+</form>
+
                     <!-- FOOTER -->
                     <div class="mt-6 text-center text-xs text-gray-500 border-t pt-4">
                         GAMEA | {{ date('Y') }} © S@mmy  
@@ -190,6 +322,135 @@ input.addEventListener('blur', () => {
     }, 200);
 });
 </script>
+
+<!-- <script>
+$(document).ready(function () {
+
+    let timeoutActivo = null;
+
+    $('#cod_gamea').on('keyup', function () {
+
+        clearTimeout(timeoutActivo);
+
+        let codigo = $(this).val().trim();
+
+        // Limpiar resultados anteriores
+        $('#resultadoActivo').html('');
+        $('#activo_encontrado').val('0');
+        $('#tipo_activo').val('');
+        $('#activo_id').val('');
+        $('#equipo').val('');
+
+        // No buscar códigos demasiado cortos
+        if (codigo.length < 3) {
+            return;
+        }
+
+        timeoutActivo = setTimeout(function () {
+
+            $.ajax({
+
+                url: "{{ route('servicios.buscarActivo') }}",
+
+                type: "GET",
+
+                data: {
+                    cod_gamea: codigo
+                },
+
+                beforeSend: function () {
+
+                    $('#resultadoActivo').html(
+                        '<span class="text-primary">' +
+                            '<i class="fas fa-spinner fa-spin"></i> ' +
+                            'Buscando activo...' +
+                        '</span>'
+                    );
+
+                },
+
+                success: function (data) {
+
+                    if (data.encontrado) {
+
+                        // Mostrar resultado
+                        $('#resultadoActivo').html(
+                            '<div class="alert alert-success py-2 mt-2 mb-0">' +
+                                '<i class="fas fa-check-circle me-1"></i>' +
+                                '<strong>ACTIVO ENCONTRADO</strong><br>' +
+                                '<small>' +
+                                    'Tipo de equipo: <strong>' +
+                                    data.tipo +
+                                    '</strong>' +
+                                '</small>' +
+                            '</div>'
+                        );
+
+                        // Guardar información del activo
+                        $('#activo_encontrado').val('1');
+
+                        $('#tipo_activo').val(data.tipo);
+
+                        $('#activo_id').val(data.id);
+
+                        // Guardar automáticamente el tipo
+                        // que utilizará servicios.equipo
+                        $('#equipo').val(data.equipo);
+
+                    } else {
+
+                        $('#resultadoActivo').html(
+                            '<div class="alert alert-danger py-2 mt-2 mb-0">' +
+                                '<i class="fas fa-times-circle me-1"></i>' +
+                                '<strong>ACTIVO NO ENCONTRADO</strong><br>' +
+                                '<small>' +
+                                    'Verifique el código del activo ingresado.' +
+                                '</small>' +
+                            '</div>'
+                        );
+
+                        $('#activo_encontrado').val('0');
+
+                        $('#tipo_activo').val('');
+
+                        $('#activo_id').val('');
+
+                        $('#equipo').val('');
+                    }
+
+                },
+
+                error: function () {
+
+                    $('#resultadoActivo').html(
+                        '<div class="alert alert-danger py-2 mt-2 mb-0">' +
+                            '<i class="fas fa-exclamation-triangle me-1"></i>' +
+                            '<strong>ERROR DE CONSULTA</strong><br>' +
+                            '<small>' +
+                                'No fue posible consultar el activo.' +
+                            '</small>' +
+                        '</div>'
+                    );
+
+                    $('#activo_encontrado').val('0');
+
+                    $('#tipo_activo').val('');
+
+                    $('#activo_id').val('');
+
+                    $('#equipo').val('');
+                }
+
+            });
+
+        }, 500);
+
+    });
+
+});
+</script> -->
+
+
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="{{ asset('js/servicio.js') }}"></script>

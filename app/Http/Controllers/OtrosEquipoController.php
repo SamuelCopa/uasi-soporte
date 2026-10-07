@@ -323,7 +323,8 @@ public function store(Request $request, CorrelativoService $correlativoService)
         OtrosEquipo::find($id)->delete();
 
         return Redirect::route('otros-equipos.index')
-            ->with('success', 'OtrosEquipo deleted successfully');
+           ->with('success', 'ELIMINADO CON EXITO')
+            ->with('icono', 'success');
     }
 
 public function updateTecnico(Request $request, $id)
