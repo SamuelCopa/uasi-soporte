@@ -59,7 +59,7 @@ class Audifono extends Model
      */
     protected $fillable = ['nombre', 'ci', 'cargo', 'celular', 'cod_gamea', 'tecnico', 'cod_registro', 'fecha',
      'fecha_inicio','fecha_entrega', 'marca', 'modelo', 'falla', 'observaciones', 'dependencia_id', 'estado_id',
-      'user_id', 'responsable_id','reguser_id','funcionario_id', 'resutado_id','fecha_asignacion'];
+      'user_id', 'responsable_id','reguser_id','funcionario_id', 'resultado_id','fecha_asignacion'];
 
 
     /**

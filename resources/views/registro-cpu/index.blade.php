@@ -380,7 +380,7 @@
 
                                             <!-- PDF -->
                                             <a href="#"
-                                            class="btn-mini btn-danger btn-preview-pdf"
+                                            class="btn-mini btn-danger btn-preview-pdf tooltip-salto"
                                             data-ver="{{ route('pdf.cpu.preview', ':id') }}"
                                             data-descargar="{{ route('pdf.cpu.descargar', ':id') }}"
                                             data-enviar="{{ route('pdf.cpu.enviar', ':id') }}"

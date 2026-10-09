@@ -357,6 +357,7 @@ document.addEventListener('DOMContentLoaded', function () {
 									<th >ci</th>
 									<th >Dependencia</th>
 									<th >Equipo</th>
+                                    <th>CÓDIGO GAMEA</th>
 									<th >Falla</th>
 									<th >Tipo de Servicio</th>
 									<th >tecnico</th>
@@ -376,6 +377,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                          <td >{{ $servicio->funcionario?->ci }}</td>
 										<td >{{ $servicio->Dependencia?->dependencias }}</td>
 										<td >{{ $servicio->equipo ?? '' }}</td>
+                                        <td>{{ $servicio->cod_gamea ?? 'Sin código' }}</td>
 										<td >{{ $servicio->falla ?? '' }}</td>
 										<td >{{ $servicio->servicio ?? '' }}</td>
                                         <td class="{{ empty($servicio->user_id) ? 'color1' : '' }}">

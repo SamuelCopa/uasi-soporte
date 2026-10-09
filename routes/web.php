@@ -70,6 +70,20 @@ use App\Http\Controllers\TerminoController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EspecialidadController;
 
+
+use Illuminate\Support\Facades\Mail;
+
+    /*
+    |--------------------------------------------------------------------------
+    | BUSCAR ACTIVOS DESDE SERVICIO
+    |--------------------------------------------------------------------------
+    */
+Route::get('/buscarActivo', [ServicioController::class, 'buscarActivo'])->name('servicios.buscarActivo');
+Route::get('/buscarActivo', [ServicioController::class, 'buscarActivo'])->name('servicios.buscarActivo');
+
+Route::get('/historial-equipo', [ServicioController::class, 'historialEquipo'])->name('servicios.historial')->middleware('auth');
+Route::get('/historial-equipo/pdf', [ServicioController::class, 'historialEquipoPdf'])->name('servicios.historial.pdf')->middleware('auth');
+
 Route::get('/', function () {
     return view('inicio.inicio');
 });
@@ -84,9 +98,68 @@ Route::resource('servicios', ServicioController::class);
 Route::post('/servicio/marcar-visto', [ServicioController::class, 'marcarVisto'])->name('servicio.marcarVisto')->middleware('auth');
 
 Route::get('/hay-pendientes', function () {
+    $usuario = auth()->user();
+    /*
+    |--------------------------------------------------------------------------
+    | ADMINISTRADOR / SUPERADMINISTRADOR
+    |--------------------------------------------------------------------------
+    */
+
+    if ($usuario->hasAnyRole([
+        'Administrador',
+        'SuperAdministrador'
+    ])) {
+
+        $servicio = \App\Models\Servicio::where('visto', 0)
+            ->whereNull('user_id')
+            ->latest('id')
+            ->first();
+
+        return response()->json([
+
+            'hayPendientes' => $servicio !== null,
+
+            'tipo' => 'nuevo_requerimiento',
+
+            'id' => $servicio?->id,
+
+        ]);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | TÉCNICO
+    |--------------------------------------------------------------------------
+    */
+
+    if ($usuario->hasRole('Tecnico')) {
+
+        $servicio = \App\Models\Servicio::where(
+                'user_id',
+                $usuario->id
+            )
+            ->whereNotNull('fecha_asignacion')
+            ->latest('fecha_asignacion')
+            ->first();
+
+        return response()->json([
+            'hayPendientes' => $servicio !== null,
+            'tipo' => 'asignacion',
+            'id' => $servicio?->id,
+        ]);
+    }
+    /*
+    |--------------------------------------------------------------------------
+    | OTROS
+    |--------------------------------------------------------------------------
+    */
     return response()->json([
-        'hayPendientes' => \App\Models\Servicio::where('visto', 0)->exists()
+        'hayPendientes' => false,
+        'tipo' => null,
+        'id' => null,
     ]);
+
 })->middleware('auth');
 
 Route::resource('especialidades', EspecialidadController::class)->only(['index', 'store', 'update', 'destroy'])->middleware('auth');

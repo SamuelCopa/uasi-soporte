@@ -81,49 +81,232 @@
 <script src="{{ asset('js/editar.js') }}"></script>
 
 <script>
-const tituloOriginal = document.title;
-const tituloAlerta = "🔴 ¡Nuevo requerimiento de servicio!";
-
-let intervalo = null;
-
-function iniciarParpadeo() {
-    if (intervalo) return;
-
-    intervalo = setInterval(() => {
-        document.title = document.title === tituloOriginal
-            ? tituloAlerta
-            : tituloOriginal;
-    }, 1000);
-}
-
-function detenerParpadeo() {
-    if (!intervalo) return;
-
-    clearInterval(intervalo);
-    intervalo = null;
-    document.title = tituloOriginal;
-}
-
-function verificarPendientes() {
-    fetch('/hay-pendientes')
-        .then(response => response.json())
-        .then(data => {
-            if (data.hayPendientes) {
-                iniciarParpadeo();
-            } else {
-                detenerParpadeo();
+document.addEventListener('DOMContentLoaded', function () {
+    const tituloOriginal = document.title;
+    let intervaloParpadeo = null;
+    /*
+    |--------------------------------------------------------------------------
+    | ROL DEL USUARIO
+    |--------------------------------------------------------------------------
+    */
+    const esAdministrador = @json(
+        auth()->check() &&
+        auth()->user()->hasAnyRole([
+            'Administrador',
+            'SuperAdministrador'
+        ])
+    );
+    const esTecnico = @json(
+        auth()->check() &&
+        auth()->user()->hasRole('Tecnico')
+    );
+    /*
+    |--------------------------------------------------------------------------
+    | IDENTIFICADORES GUARDADOS
+    |--------------------------------------------------------------------------
+    */
+    let ultimoAvisado = esAdministrador
+        ? localStorage.getItem('ultimoServicioAvisadoAdmin')
+        : localStorage.getItem('ultimaAsignacionAvisadaTecnico');
+    /*
+    |--------------------------------------------------------------------------
+    | PRIMERA CONSULTA
+    |--------------------------------------------------------------------------
+    |
+    | Evita que al abrir/reload el Home hable de una notificación
+    | que ya existía anteriormente.
+    |
+    */
+    let primeraConsulta = true;
+    /*
+    |--------------------------------------------------------------------------
+    | PARPADEO
+    |--------------------------------------------------------------------------
+    */
+    function iniciarParpadeo() {
+        if (intervaloParpadeo) return;
+        intervaloParpadeo = setInterval(() => {
+            document.title =
+                document.title === tituloOriginal
+                    ? '🔴 ¡Nueva notificación!'
+                    : tituloOriginal;
+        }, 1000);
+    }
+    function detenerParpadeo() {
+        if (!intervaloParpadeo) return;
+        clearInterval(intervaloParpadeo);
+        intervaloParpadeo = null;
+        document.title = tituloOriginal;
+    }
+    /*
+    |--------------------------------------------------------------------------
+    | VOZ
+    |--------------------------------------------------------------------------
+    */
+    function hablar(mensaje) {
+        if (!('speechSynthesis' in window)) {
+            console.log(
+                'El navegador no soporta síntesis de voz.'
+            );
+            return;
+        }
+        window.speechSynthesis.cancel();
+        const voz = new SpeechSynthesisUtterance(mensaje);
+        voz.lang = 'es-ES';
+        voz.rate = 0.9;
+        voz.pitch = 1;
+        voz.volume = 1;
+        window.speechSynthesis.speak(voz);
+    }
+    /*
+    |--------------------------------------------------------------------------
+    | VERIFICAR NOTIFICACIONES
+    |--------------------------------------------------------------------------
+    */
+    function verificarNotificaciones() {
+        fetch('/hay-pendientes', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
             }
         })
-        .catch(error => console.error(error));
-}
+        .then(response => response.json())
+        .then(data => {
+            /*
+            |--------------------------------------------------------------------------
+            | ADMINISTRADOR
+            |--------------------------------------------------------------------------
+            */
+            if (
+                esAdministrador &&
+                data.tipo === 'nuevo_requerimiento'
+            ) {
+                if (data.hayPendientes) {
+                    iniciarParpadeo();
+                    /*
+                    |----------------------------------------------------------
+                    | PRIMERA CONSULTA
+                    |----------------------------------------------------------
+                    */
+                    if (primeraConsulta) {
+                        if (data.id) {
+                            ultimoAvisado = data.id;
 
-// Verificar al cargar la página
-verificarPendientes();
+                            localStorage.setItem(
+                                'ultimoServicioAvisadoAdmin',
+                                data.id
+                            );
+                        }
+                    }
+                    /*
+                    |----------------------------------------------------------
+                    | NUEVO REQUERIMIENTO
+                    |----------------------------------------------------------
+                    */
+                    else if (
+                        data.id &&
+                        String(data.id) !==
+                        String(ultimoAvisado)
+                    ) {
+                        hablar(
+                            'Atención. Se ha recibido un nuevo requerimiento de servicio.'
+                        );
+                        ultimoAvisado = data.id;
+                        localStorage.setItem(
+                            'ultimoServicioAvisadoAdmin',
+                            data.id
+                        );
+                    }
+                } else {
+                    detenerParpadeo();
+                }
+            }
+            /*
+            |--------------------------------------------------------------------------
+            | TÉCNICO
+            |--------------------------------------------------------------------------
+            */
+            if (
+                esTecnico &&
+                data.tipo === 'asignacion'
+            ) {
+                if (data.hayPendientes) {
+                    iniciarParpadeo();
+                    /*
+                    |----------------------------------------------------------
+                    | PRIMERA CONSULTA
+                    |----------------------------------------------------------
+                    */
 
-// Verificar cada 10 segundos
-setInterval(verificarPendientes, 10000);
+                    if (primeraConsulta) {
+                        if (data.id) {
+                            ultimoAvisado = data.id;
+                            localStorage.setItem(
+                                'ultimaAsignacionAvisadaTecnico',
+                                data.id
+                            );
+                        }
+                    }
+                    /*
+                    |----------------------------------------------------------
+                    | NUEVA ASIGNACIÓN
+                    |----------------------------------------------------------
+                    */
+                    else if (
+                        data.id &&
+                        String(data.id) !==
+                        String(ultimoAvisado)
+                    ) {
+                        hablar(
+                            'Atención. Se le ha asignado un nuevo requerimiento de servicio.'
+                        );
+                        ultimoAvisado = data.id;
+                        localStorage.setItem(
+                            'ultimaAsignacionAvisadaTecnico',
+                            data.id
+                        );
+                    }
+                } else {
+                    detenerParpadeo();
+                }
+            }
+            /*
+            |--------------------------------------------------------------------------
+            | YA SE REALIZÓ LA PRIMERA CONSULTA
+            |--------------------------------------------------------------------------
+            */
+            primeraConsulta = false;
+        })
+        .catch(error => {
+            console.error(
+                'Error al verificar notificaciones:',
+                error
+            );
+        });
+    }
+    /*
+    |--------------------------------------------------------------------------
+    | INICIAR
+    |--------------------------------------------------------------------------
+    */
+    verificarNotificaciones();
+    /*
+    |--------------------------------------------------------------------------
+    | COMPROBAR CADA 10 SEGUNDOS
+    |--------------------------------------------------------------------------
+    */
+
+    setInterval(
+        verificarNotificaciones,
+        10000
+    );
+});
 </script>
 
+
+/* =====================================================
+   DATATABLE
+   ===================================================== */
 <script>
 $(document).ready(function () {
     $('#mitabla').DataTable({

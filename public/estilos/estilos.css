@@ -7,6 +7,54 @@
     gap: 5px;
     margin: auto;
 } */
+.tooltip-salto {
+    position: relative;
+}
+
+.tooltip-salto span {
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
+
+    background: #1e2a38;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Al pasar el mouse */
+.tooltip-salto:hover span {
+    animation: tooltipSalto 0.4s ease-out forwards;
+}
+
+@keyframes tooltipSalto {
+    0% {
+        opacity: 0;
+        visibility: visible;
+        transform: translateX(-50%) translateY(12px);
+    }
+
+    60% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-4px);
+    }
+
+    80% {
+        transform: translateX(-50%) translateY(2px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
 
 .btn-mini {
     width: 35px;

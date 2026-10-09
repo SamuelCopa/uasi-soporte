@@ -832,6 +832,17 @@ return [
         'icon' => 'fas fa-fw fa-user-cog',
         'can'  => 'tecnico',
     ],
+    // =========================================================
+    // HISTORIAL
+    // =========================================================
+    [
+        'header' => 'HISTORIAL DE EQUIPOS',
+    ],
+    [
+        'text' => 'Historial',
+        'url'  => '/historial-equipo',
+        'icon' => 'fas fa-fw fa-history',
+    ],
 
     // =========================================================
     // OTROS

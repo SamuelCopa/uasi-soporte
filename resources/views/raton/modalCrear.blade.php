@@ -92,7 +92,7 @@
                                             C.I.
                                             <span class="required">*</span>
                                         </label>
-                                        <input type="number" name="ci" id="ci" class="form-control @error('ci') is-invalid @enderror" placeholder="Carnet de identidad">
+                                        <input type="text" name="ci" id="ci" class="form-control @error('ci') is-invalid @enderror" placeholder="Carnet de identidad">
                                         {!! $errors->first('ci','<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                                     </div>
                                 </div>

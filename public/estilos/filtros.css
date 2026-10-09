@@ -1,52 +1,106 @@
-    /* =========================================================
+/* =========================================================
+   PALETA INSTITUCIONAL
+   ========================================================= */
+
+:root {
+    --institucional-violeta: #5B2C83;
+    --institucional-violeta-oscuro: #472267;
+
+    --institucional-amarillo: #F2C300;
+    --institucional-amarillo-oscuro: #D9AD00;
+
+    --institucional-verde: #3A8D3F;
+    --institucional-verde-oscuro: #2E7132;
+
+    --institucional-rosado: #D94F8A;
+    --institucional-rosado-oscuro: #B83D73;
+
+    --gris-texto: #344054;
+    --gris-secundario: #667085;
+    --gris-borde: #d9dee7;
+    --gris-fondo: #f9fafb;
+}
+
+
+/* =========================================================
    PANEL DE FILTROS - SERVICIOS
    ========================================================= */
 
 .filtros-servicios {
+
     border: 1px solid #e6eaf0;
+
     border-radius: 14px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.06);
+
     overflow: hidden;
+
     margin-bottom: 20px;
+
+    background: #fff;
 }
 
 
-/* ENCABEZADO */
+/* =========================================================
+   ENCABEZADO
+   ========================================================= */
 
 .filtros-header {
 
     padding: 15px 20px;
 
+    background: linear-gradient(
+        135deg,
+        var(--institucional-violeta),
+        var(--institucional-violeta-oscuro)
+    );
+
+    color: #fff;
 }
 
 
 .filtros-titulo {
+
     display: flex;
+
     align-items: center;
+
     gap: 12px;
 }
 
 
 .filtros-icono {
+
     width: 40px;
+
     height: 40px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(242, 195, 0, 0.18);
+
+    border: 1px solid rgba(242, 195, 0, 0.35);
 
     border-radius: 10px;
 
     font-size: 17px;
+
+    color: var(--institucional-amarillo);
 }
 
 
 .filtros-titulo h5 {
+
     margin: 0;
 
     font-size: 16px;
+
     font-weight: 600;
 
     letter-spacing: 0.2px;
@@ -54,6 +108,7 @@
 
 
 .filtros-titulo span {
+
     display: block;
 
     margin-top: 2px;
@@ -64,21 +119,29 @@
 }
 
 
-/* FORMULARIO */
+/* =========================================================
+   FORMULARIO
+   ========================================================= */
 
 .filtros-form {
+
     padding: 20px;
+
+    background: #fff;
 }
 
 
-/* LABEL */
+/* =========================================================
+   LABEL
+   ========================================================= */
 
 .filtro-label {
+
     display: block;
 
     margin-bottom: 7px;
 
-    color: #344054;
+    color: var(--gris-texto);
 
     font-size: 12px;
 
@@ -91,20 +154,25 @@
 
 
 .filtro-label i {
+
     margin-right: 5px;
 
-    color: #0052cc;
+    color: var(--institucional-violeta);
 }
 
 
-/* CONTENEDOR DEL CAMPO */
+/* =========================================================
+   CONTENEDOR DEL CAMPO
+   ========================================================= */
 
 .campo-filtro {
+
     position: relative;
 }
 
 
 .campo-icono {
+
     position: absolute;
 
     left: 12px;
@@ -113,7 +181,7 @@
 
     transform: translateY(-50%);
 
-    color: #667085;
+    color: var(--gris-secundario);
 
     font-size: 13px;
 
@@ -123,20 +191,23 @@
 }
 
 
-/* INPUT Y SELECT */
+/* =========================================================
+   INPUT Y SELECT
+   ========================================================= */
 
 .filtro-control {
+
     height: 42px;
 
     padding-left: 36px;
 
-    border: 1px solid #d9dee7;
+    border: 1px solid var(--gris-borde);
 
     border-radius: 9px;
 
-    background-color: #f9fafb;
+    background-color: var(--gris-fondo);
 
-    color: #344054;
+    color: var(--gris-texto);
 
     font-size: 13px;
 
@@ -148,24 +219,32 @@
 
 
 .filtro-control:hover {
+
     background-color: #ffffff;
+
+    border-color: #b9bec8;
 }
 
 
 .filtro-control:focus {
+
     background-color: #ffffff;
 
-    border-color: #2684ff;
+    border-color: var(--institucional-violeta);
 
-    box-shadow: 0 0 0 3px rgba(38, 132, 255, 0.12);
+    box-shadow:
+        0 0 0 3px rgba(91, 44, 131, 0.12);
 
     outline: none;
 }
 
 
-/* ACCIONES */
+/* =========================================================
+   ACCIONES
+   ========================================================= */
 
 .filtros-acciones {
+
     display: flex;
 
     align-items: center;
@@ -180,9 +259,12 @@
 }
 
 
-/* BOTONES */
+/* =========================================================
+   BOTONES
+   ========================================================= */
 
 .btn-filtro {
+
     min-height: 40px;
 
     padding: 0 17px;
@@ -215,6 +297,7 @@
 
 
 .btn-filtro:hover {
+
     transform: translateY(-1px);
 
     text-decoration: none;
@@ -222,35 +305,45 @@
 
 
 .btn-filtro i {
+
     font-size: 13px;
 }
 
 
-/* APLICAR */
+/* =========================================================
+   APLICAR / FILTRAR
+   ========================================================= */
 
 .btn-aplicar {
+
     background: linear-gradient(
         135deg,
-        #0052cc,
-        #2684ff
+        var(--institucional-violeta),
+        #7543a0
     );
 
     color: #ffffff;
 
-    box-shadow: 0 3px 8px rgba(0, 82, 204, 0.22);
+    box-shadow:
+        0 3px 8px rgba(91, 44, 131, 0.22);
 }
 
 
 .btn-aplicar:hover {
+
     color: #ffffff;
 
-    box-shadow: 0 5px 13px rgba(0, 82, 204, 0.28);
+    box-shadow:
+        0 5px 13px rgba(91, 44, 131, 0.30);
 }
 
 
-/* LIMPIAR */
+/* =========================================================
+   LIMPIAR
+   ========================================================= */
 
 .btn-limpiar {
+
     background: #f2f4f7;
 
     color: #475467;
@@ -260,68 +353,88 @@
 
 
 .btn-limpiar:hover {
-    background: #e9ecf1;
 
-    color: #344054;
+    background: #ffffff;
+
+    color: var(--institucional-violeta);
+
+    border-color: var(--institucional-violeta);
 }
 
 
-/* PDF */
+/* =========================================================
+   PDF
+   ========================================================= */
 
 .btn-pdf {
+
     margin-left: auto;
 
-    background: #dc3545;
+    background: linear-gradient(
+        135deg,
+        var(--institucional-rosado),
+        var(--institucional-rosado-oscuro)
+    );
 
     color: #ffffff;
 
-    box-shadow: 0 3px 8px rgba(220, 53, 69, 0.20);
+    box-shadow:
+        0 3px 8px rgba(217, 79, 138, 0.20);
 }
 
 
 .btn-pdf:hover {
-    background: #c82333;
+
+    background: var(--institucional-rosado-oscuro);
 
     color: #ffffff;
 
-    box-shadow: 0 5px 13px rgba(220, 53, 69, 0.28);
+    box-shadow:
+        0 5px 13px rgba(217, 79, 138, 0.28);
 }
 
 
-/* RESPONSIVE */
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media (max-width: 768px) {
 
     .filtros-form {
+
         padding: 15px;
     }
 
     .filtros-acciones {
+
         flex-wrap: wrap;
     }
 
     .btn-filtro {
+
         flex: 1;
     }
 
     .btn-pdf {
+
         margin-left: 0;
     }
-
 }
 
 
 @media (max-width: 480px) {
 
     .filtros-acciones {
+
         flex-direction: column;
+
         align-items: stretch;
     }
 
     .btn-filtro {
+
         width: 100%;
     }
-
 }
 
 
@@ -330,57 +443,99 @@
    ========================================================= */
 
 .filtros-asistencia {
+
     border: 0;
+
     border-radius: 14px;
+
     overflow: hidden;
+
     background: #fff;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
-/* CABECERA */
+
+/* =========================================================
+   CABECERA
+   ========================================================= */
 
 .filtros-asistencia .card-header {
-    background: linear-gradient(135deg, #0052cc, #2684ff);
+
+    background: linear-gradient(
+        135deg,
+        var(--institucional-violeta),
+        var(--institucional-violeta-oscuro)
+    );
+
     border: 0;
+
+    border-bottom: 3px solid var(--institucional-amarillo);
+
     padding: 14px 20px;
 }
 
+
 .titulo-filtros {
+
     font-size: 15px;
+
     font-weight: 600;
+
     color: #fff;
 }
 
+
 .titulo-filtros i {
+
     margin-right: 8px;
+
+    color: var(--institucional-amarillo);
 }
 
+
 .badge-registros {
+
     background: rgba(255, 255, 255, 0.95);
-    color: #0052cc;
+
+    color: var(--institucional-violeta);
+
     font-weight: 600;
+
     padding: 7px 12px;
+
     border-radius: 20px;
 }
 
 
-/* CUERPO */
+/* =========================================================
+   CUERPO
+   ========================================================= */
 
 .filtros-asistencia .card-body {
+
     padding: 20px;
 }
 
 
-/* LABELS */
+/* =========================================================
+   LABELS
+   ========================================================= */
 
 .filtros-asistencia .form-label {
-    color: #344054;
+
+    color: var(--gris-texto);
+
     font-size: 13px;
+
     margin-bottom: 6px;
 }
 
 
-/* INPUTS Y SELECTS */
+/* =========================================================
+   INPUTS Y SELECTS
+   ========================================================= */
 
 .filtros-asistencia .form-control,
 .filtros-asistencia .form-select {
@@ -393,7 +548,7 @@
 
     font-size: 13px;
 
-    color: #344054;
+    color: var(--gris-texto);
 
     background-color: #fff;
 
@@ -415,10 +570,10 @@
 .filtros-asistencia .form-control:focus,
 .filtros-asistencia .form-select:focus {
 
-    border-color: #2684ff;
+    border-color: var(--institucional-violeta);
 
     box-shadow:
-        0 0 0 3px rgba(38, 132, 255, 0.12);
+        0 0 0 3px rgba(91, 44, 131, 0.12);
 }
 
 
@@ -430,7 +585,9 @@
 }
 
 
-/* BOTONES */
+/* =========================================================
+   BOTONES
+   ========================================================= */
 
 .contenedor-botones {
 
@@ -442,6 +599,7 @@
 
     flex-wrap: wrap;
 }
+
 
 .filtros-asistencia .btn {
 
@@ -459,20 +617,23 @@
 }
 
 
-/* FILTRAR */
+/* =========================================================
+   FILTRAR
+   ========================================================= */
 
 .btn-filtrar {
 
     background: linear-gradient(
         135deg,
-        #0052cc,
-        #2684ff
+        var(--institucional-violeta),
+        #7543a0
     );
 
     border: none;
 
     color: #fff;
 }
+
 
 .btn-filtrar:hover {
 
@@ -481,11 +642,13 @@
     transform: translateY(-1px);
 
     box-shadow:
-        0 4px 10px rgba(0, 82, 204, 0.25);
+        0 4px 10px rgba(91, 44, 131, 0.25);
 }
 
 
-/* LIMPIAR */
+/* =========================================================
+   LIMPIAR
+   ========================================================= */
 
 .btn-limpiar {
 
@@ -496,41 +659,51 @@
     color: #475467;
 }
 
+
 .btn-limpiar:hover {
 
-    background: #f8f9fa;
+    background: #fafafa;
 
-    border-color: #98a2b3;
+    border-color: var(--institucional-violeta);
 
-    color: #344054;
+    color: var(--institucional-violeta);
 }
 
 
-/* PDF */
+/* =========================================================
+   PDF
+   ========================================================= */
 
 .btn-pdf {
 
-    background: #dc3545;
+    background: linear-gradient(
+        135deg,
+        var(--institucional-rosado),
+        var(--institucional-rosado-oscuro)
+    );
 
     border: none;
 
     color: #fff;
 }
 
+
 .btn-pdf:hover {
 
-    background: #c82333;
+    background: var(--institucional-rosado-oscuro);
 
     color: #fff;
 
     transform: translateY(-1px);
 
     box-shadow:
-        0 4px 10px rgba(220, 53, 69, 0.25);
+        0 4px 10px rgba(217, 79, 138, 0.25);
 }
 
 
-/* ESPACIADO */
+/* =========================================================
+   ESPACIADO
+   ========================================================= */
 
 .filtros-asistencia .row {
 
@@ -538,7 +711,9 @@
 }
 
 
-/* RESPONSIVE */
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media (max-width: 768px) {
 
@@ -556,5 +731,4 @@
 
         flex: 1;
     }
-
 }

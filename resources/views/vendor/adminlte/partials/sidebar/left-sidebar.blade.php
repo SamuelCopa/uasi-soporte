@@ -55,23 +55,23 @@
                     <i class="fas fa-user"></i>
                 </div>
 
-                <div class="sidebar-user-data">
+                    <div class="sidebar-user-data">
 
-                    <div class="sidebar-user-name">
-                        {{ Auth::user()->name }}
-                        {{ Auth::user()->paterno }}
-                        {{ Auth::user()->materno }}
-                    </div>
+                        <div class="sidebar-user-name">
+                            {{ Auth::user()->name }}
+                            {{ Auth::user()->paterno }}
+                            <!-- {{ Auth::user()->materno }} -->
+                        </div>
 
-                    <div class="sidebar-user-role">
-                        {{ Auth::user()->getRoleNames()->first() ?? 'Usuario' }}
-
+                    <div class="usuario-info">
                         @if(Auth::user()->especialidad)
-                            | {{ Auth::user()->especialidad->nombre }}
+                            <div class="usuario-especialidad">
+                                {{ Auth::user()->especialidad->nombre }}
+                            </div>
                         @endif
                     </div>
 
-                </div>
+                    </div>
 
                 <i id="sidebar-user-arrow"
                    class="fas fa-chevron-up sidebar-user-arrow"></i>
@@ -124,7 +124,26 @@
 /* =====================================================
    SIDEBAR PRINCIPAL
    ===================================================== */
+.usuario-info {
+    line-height: 1.3;
+}
 
+.usuario-email {
+    font-size: 13px;
+    color: #d5dbe1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.usuario-especialidad {
+    font-size: 11px;
+    color: #9da8b3;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .main-sidebar .sidebar {
     position: relative !important;
 

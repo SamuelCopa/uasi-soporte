@@ -255,7 +255,8 @@ public function update(Request $request, $id)
     {
         User::find($id)->delete();
         return Redirect::route('tecnicos.index')
-            ->with('success', 'User deleted successfully');
+           ->with('success', 'ELIMINADO CON EXITO')
+            ->with('icono', 'success');
     }
 
     public function updatePassword(Request $request, $id){
@@ -710,16 +711,12 @@ $pdf = Pdf::loadView(
 public function asignacionesAsistencia(Request $request)
 {
     $user = Auth::user();
-
     $query = Servicio::where('user_id', $user->id);
-
-
     /*
     |--------------------------------------------------------------------------
     | FILTRO POR GESTIÓN
     |--------------------------------------------------------------------------
     */
-
     if ($request->filled('year')) {
 
         $query->whereYear(
@@ -727,8 +724,6 @@ public function asignacionesAsistencia(Request $request)
             $request->year
         );
     }
-
-
     /*
     |--------------------------------------------------------------------------
     | FECHA DESDE
@@ -743,8 +738,6 @@ public function asignacionesAsistencia(Request $request)
             $request->fecha_desde
         );
     }
-
-
     /*
     |--------------------------------------------------------------------------
     | FECHA HASTA
@@ -759,14 +752,11 @@ public function asignacionesAsistencia(Request $request)
             $request->fecha_hasta
         );
     }
-
-
     /*
     |--------------------------------------------------------------------------
     | DEPENDENCIA
     |--------------------------------------------------------------------------
     */
-
     if ($request->filled('dependencia_id')) {
 
         $query->where(
@@ -774,7 +764,6 @@ public function asignacionesAsistencia(Request $request)
             $request->dependencia_id
         );
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -789,8 +778,6 @@ public function asignacionesAsistencia(Request $request)
             $request->equipo
         );
     }
-
-
     /*
     |--------------------------------------------------------------------------
     | ESTADO
@@ -810,7 +797,6 @@ public function asignacionesAsistencia(Request $request)
         }
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | SERVICIO
@@ -824,8 +810,6 @@ public function asignacionesAsistencia(Request $request)
             $request->tipo_servicio
         );
     }
-
-
     /*
     |--------------------------------------------------------------------------
     | RESULTADOS
