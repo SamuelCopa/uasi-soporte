@@ -143,7 +143,7 @@
                                             <span class="required">*</span>
                                         </label>
 
-                                        <input type="number"
+                                        <input type="text"
                                                name="ci"
                                                id="ci"
                                                class="form-control @error('ci') is-invalid @enderror"

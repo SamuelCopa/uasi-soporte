@@ -37,7 +37,7 @@
             <div class="fila-2">
                 <div class="div title">
                     <label for="ci" class="form-label">{{ __('C.I.') }}</label>
-                    <input type="number" name="ci" class="form-control @error('ci') is-invalid @enderror" value="{{ old('ci', $funcionario?->ci) }}" id="ci" placeholder="Ci">
+                    <input type="text" name="ci" class="form-control @error('ci') is-invalid @enderror" value="{{ old('ci', $funcionario?->ci) }}" id="ci" placeholder="Ci">
                     {!! $errors->first('ci', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                 </div>
             <div class="div title">
