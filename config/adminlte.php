@@ -843,6 +843,14 @@ return [
         'url'  => '/historial-equipo',
         'icon' => 'fas fa-fw fa-history',
     ],
+    [
+        'header' => 'CONFIGURACIONES',
+    ],
+    [
+        'text' => 'CONFIGURACIONES',
+        'url'  => '/configuracion/institucional',
+        'icon' => 'fas fa-fw fa-cog',
+    ],
 
     // =========================================================
     // OTROS

@@ -84,4 +84,44 @@ class ConfiguracionController extends Controller
         ->with('success', 'ELIMINADO CORRECTAMENTE')
         ->with('icono', 'success');
     }
+
+
+    /**
+     * Cambiar el estado del envío de correos.
+     */
+    public function cambiar()
+    {
+        $configuracion = Configuracion::firstOrCreate(
+            ['clave' => 'envio_correo_habilitado'],
+            ['valor' => '1']
+        );
+
+        $habilitado = $configuracion->valor === '1';
+
+        $configuracion->update([
+            'valor' => $habilitado ? '0' : '1',
+        ]);
+
+        return back()->with(
+            'success',
+            $habilitado
+                ? 'Envío de correos deshabilitado correctamente.'
+                : 'Envío de correos habilitado correctamente.'
+        );
+    }
+
+
+public function institucional()
+{
+    $valor = Configuracion::where(
+        'clave',
+        'envio_correo_habilitado'
+    )->value('valor');
+
+    $correoHabilitado = $valor !== '0';
+
+    return view('configuracion.institucional', compact(
+        'correoHabilitado'
+    ));
+}
 }

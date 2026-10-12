@@ -590,29 +590,19 @@
    ========================================================= */
 
 .contenedor-botones {
-
     display: flex;
-
     align-items: center;
-
     gap: 8px;
-
     flex-wrap: wrap;
 }
 
 
 .filtros-asistencia .btn {
-
     min-height: 40px;
-
     border-radius: 8px;
-
     padding: 8px 15px;
-
     font-size: 13px;
-
     font-weight: 500;
-
     transition: all 0.2s ease;
 }
 
@@ -622,19 +612,14 @@
    ========================================================= */
 
 .btn-filtrar {
-
     background: linear-gradient(
         135deg,
         var(--institucional-violeta),
         #7543a0
     );
-
     border: none;
-
     color: #fff;
 }
-
-
 .btn-filtrar:hover {
 
     color: #fff;
@@ -644,73 +629,45 @@
     box-shadow:
         0 4px 10px rgba(91, 44, 131, 0.25);
 }
-
-
 /* =========================================================
    LIMPIAR
    ========================================================= */
 
 .btn-limpiar {
-
     background: #fff;
-
     border: 1px solid #d0d5dd;
-
     color: #475467;
 }
-
-
 .btn-limpiar:hover {
-
     background: #fafafa;
-
     border-color: var(--institucional-violeta);
-
     color: var(--institucional-violeta);
 }
-
-
 /* =========================================================
    PDF
    ========================================================= */
-
 .btn-pdf {
-
     background: linear-gradient(
         135deg,
         var(--institucional-rosado),
         var(--institucional-rosado-oscuro)
     );
-
     border: none;
-
     color: #fff;
 }
-
-
 .btn-pdf:hover {
-
     background: var(--institucional-rosado-oscuro);
-
     color: #fff;
-
     transform: translateY(-1px);
-
     box-shadow:
         0 4px 10px rgba(217, 79, 138, 0.25);
 }
-
-
 /* =========================================================
    ESPACIADO
-   ========================================================= */
-
+   ======================================================== */
 .filtros-asistencia .row {
-
     row-gap: 16px;
 }
-
-
 /* =========================================================
    RESPONSIVE
    ========================================================= */
@@ -721,12 +678,10 @@
 
         padding: 15px;
     }
-
     .contenedor-botones {
 
         width: 100%;
     }
-
     .contenedor-botones .btn {
 
         flex: 1;

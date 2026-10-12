@@ -78,6 +78,9 @@ use Illuminate\Support\Facades\Mail;
     | BUSCAR ACTIVOS DESDE SERVICIO
     |--------------------------------------------------------------------------
     */
+
+Route::get('/configuracion/institucional', [ConfiguracionController::class, 'institucional'])->middleware('auth')->name('configuracion.institucional');
+Route::post('/configuracion-correo/cambiar', [ConfiguracionController::class, 'cambiar'])->middleware('auth')->name('configuracion.correo.cambiar');
 Route::get('/buscarActivo', [ServicioController::class, 'buscarActivo'])->name('servicios.buscarActivo');
 Route::get('/buscarActivo', [ServicioController::class, 'buscarActivo'])->name('servicios.buscarActivo');
 

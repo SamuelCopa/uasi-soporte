@@ -1417,4 +1417,3 @@ document.addEventListener('DOMContentLoaded', function () {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 @stop
-```
