@@ -370,46 +370,36 @@
                             {{-- DEPENDENCIA / FECHA --}}
                             <div class="row">
 
-                                <div class="col-md-6">
+<div class="col-md-6">
+    <div class="registro-field" id="search-inputTT">
 
-                                    <div class="registro-field"
-                                         id="search-inputTT">
+        <label for="search-inputT">
+            <i class="fas fa-building"></i>
+            DEPENDENCIA
+        </label>
 
-                                        <label for="search-inputT">
-                                            <i class="fas fa-building"></i>
-                                            DEPENDENCIA
-                                        </label>
+        <input type="text"
+               id="search-inputT"
+               list="optionsT"
+               placeholder="Buscar dependencia..."
+               class="form-control"
+               autocomplete="off">
 
-                                        <input type="text"
-                                               id="search-inputT"
-                                               list="optionsT"
-                                               placeholder="Buscar dependencia..."
-                                               class="form-control">
+        <datalist id="optionsT">
+            @foreach ($dependencia as $item)
+                <option value="{{ $item->dependencias }}"
+                        data-id="{{ $item->id }}">
+                </option>
+            @endforeach
+        </datalist>
 
-                                        <datalist id="optionsT"
-                                                  style="display:none">
+        <input type="hidden"
+               id="id-selectedT"
+               name="dependencia_id"
+               value="">
 
-                                            @foreach ($dependencia as $item)
-
-                                                <option value="{{ $item->dependencias }}"
-                                                        data-id="{{ $item->id }}">
-                                                </option>
-
-                                            @endforeach
-
-                                            <option value=" ">
-                                                QUITAR
-                                            </option>
-
-                                        </datalist>
-
-                                        <input type="hidden"
-                                               id="id-selectedT"
-                                               name="dependencia_id">
-
-                                    </div>
-
-                                </div>
+    </div>
+</div>
 
 
                                 <div class="col-md-6">

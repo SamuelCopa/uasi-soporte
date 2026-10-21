@@ -303,10 +303,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-
-/* =====================================================
-   DATATABLE
-   ===================================================== */
 <script>
 $(document).ready(function () {
     $('#mitabla').DataTable({
@@ -318,7 +314,7 @@ $(document).ready(function () {
         scrollCollapse: true,
 
         // Paginación
-        pageLength: 10,
+        pageLength: 25,
         lengthMenu: [5, 10, 25, 50, 100],
 
         // Idioma
@@ -376,7 +372,7 @@ $(document).ready(function () {
     })
 </script>
 
-<script>
+<!-- <script>
     $('.actualizarFecha').submit(function(e){
         e.preventDefault();
 
@@ -395,7 +391,7 @@ $(document).ready(function () {
         }
         });
     })
-</script>
+</script> -->
 <script>
 
 function toggleDarkMode() {

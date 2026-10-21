@@ -7,6 +7,11 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
 
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -23,7 +28,18 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
 public function boot(): void
-{
+{    DB::listen(function ($query) {
+
+        if ($query->time > 200) {
+
+            Log::warning('Consulta SQL lenta', [
+                'sql' => $query->sql,
+                'tiempo_ms' => $query->time,
+            ]);
+
+        }
+
+    });
     Gate::define('admin', function ($user) {
         return $user->hasRole('Administrador')
             || $user->hasRole('SuperAdministrador');
@@ -85,4 +101,6 @@ Gate::define('registro-equipos', function ($user) {
     );
 });
 }
+
+
 }

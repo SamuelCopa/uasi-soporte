@@ -478,8 +478,45 @@
                             </div>
                         </div>
 
+                        <!-- Observaciones -->
+                        <div class="col-md-6">
 
-                        <!-- Estado -->
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-comment-alt"></i>
+                                    DETALLE DEL TRABAJO REALIZADO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $parlante->detalle_trabajo ?? 'EN ESPERA' }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-comment-alt"></i>
+                                    OBSERVACIONES
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $parlante->observaciones ?? 'SIN OBSERVACIONES' }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                                            <!-- Estado -->
                         <div class="col-md-12">
                             <div class="registro-view-field">
 
@@ -502,27 +539,6 @@
                                 </div>
 
                             </div>
-                        </div>
-
-
-                        <!-- Observaciones -->
-                        <div class="col-md-12">
-
-                            <div class="registro-view-field">
-
-                                <div class="registro-view-label">
-                                    <i class="fas fa-comment-alt"></i>
-                                    OBSERVACIONES
-                                </div>
-
-                                <div class="registro-view-value">
-
-                                    {{ $parlante->observaciones ?? 'SIN OBSERVACIONES' }}
-
-                                </div>
-
-                            </div>
-
                         </div>
 
                     </div>

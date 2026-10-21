@@ -413,13 +413,14 @@
                                                             title="Editar">
                                                         <i class="fa fa-edit"></i>
                                                     </button>
-
-                                                    <!-- INFORME -->
-                                                    <a href="{{ route('informe.estabilizador', $estabilizador->id) }}"
-                                                    class="btn-mini btn-secondary"
-                                                    title="Informe">
-                                                        <i class="fa fa-file"></i>
-                                                    </a>
+                                                <!-- DETALLE DEL TRABAJO REALIZADO -->
+                                                <button type="button"
+                                                        class="btn btn-sm btn-secondary"
+                                                        data-toggle="modal"
+                                                        data-target="#modalResultado{{ $estabilizador->id }}"
+                                                        title="Registrar detalle del trabajo realizado">
+                                                    <i class="fas fa-file-alt"></i>
+                                                </button>  
 
                                                     <!-- ELIMINAR -->
                                                     <form action="{{ route('estabilizadors.destroy', $estabilizador->id) }}"
@@ -448,6 +449,7 @@
                                         @include('estabilizador.registroTecnico')
                                         <!--Ventana Modal para Actualizar--->
                                         @include('estabilizador.modalEdit')
+                                        @include('estabilizador.modalResultado')
                                     @endforeach
                                 </tbody>
                                 <tfoot>
@@ -538,16 +540,24 @@ function cambiarEstado(id, estadoId, tieneResultado) {
         }
         else if (event.target.id === 'entregado') {
         if (tieneResultado) {
+
+            // Si tiene resultado, actualizar el estado a Entregado
             cambiarEstadoAjax(id, 5);
             console.log(id);
+
         } else {
-                Swal.fire({
-                    position: "top-center",
-                    icon: "error",
-                    title: 'Debes llenar el informe antes de actualizar el estado',
-                    showConfirmButton: true,
-                });
-            }
+
+            // Mostrar únicamente el mensaje
+            Swal.fire({
+                position: 'top-center',
+                icon: 'warning',
+                title: 'Detalle del trabajo pendiente',
+                text: 'Debes llenar el detalle de trabajo realizado para actualizar el estado a Entregado.',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#3085d6'
+            });
+
+        }
         }
     })
 }
@@ -660,16 +670,61 @@ Swal.fire({
 <script src="{{ asset('js/equipoPdf.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('estilos/equipoPdf.css') }}"> 
 <link rel="stylesheet" href="{{ asset('estilos/fechas.css') }}">  
-<script>
-const searchInputE = document.getElementById('search-inputE');
-const optionsE = document.getElementById('optionsE').options;
-const idSelectedInputE = document.getElementById('id-selectedE');
 
-searchInputE.addEventListener('input', () => {
-    const selectedOption = Array.from(optionsE).find(option => option.value === searchInputE.value);
-    if (selectedOption) {
-        idSelectedInputE.value = selectedOption.dataset.id;
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const searchInputE = document.getElementById('search-inputE');
+    const optionsE = document.getElementById('optionsE');
+    const idSelectedE = document.getElementById('id-selectedE');
+
+    if (!searchInputE || !optionsE || !idSelectedE) {
+        return;
     }
+
+    function validarDependenciaE() {
+
+        const valor = searchInputE.value.trim();
+
+        // Limpiar cualquier ID anterior.
+        idSelectedE.value = '';
+
+        const opcion = Array.from(optionsE.options).find(option =>
+            option.value.trim() === valor &&
+            option.dataset.id &&
+            /^[1-9]\d*$/.test(option.dataset.id)
+        );
+
+        if (valor !== '' && opcion) {
+            idSelectedE.value = opcion.dataset.id;
+            searchInputE.setCustomValidity('');
+        } else if (valor === '') {
+            searchInputE.setCustomValidity('');
+        } else {
+            searchInputE.setCustomValidity(
+                'Seleccione una dependencia registrada en la lista.'
+            );
+        }
+    }
+
+    searchInputE.addEventListener('input', validarDependenciaE);
+    searchInputE.addEventListener('change', validarDependenciaE);
+
+    const formulario = searchInputE.closest('form');
+
+    if (formulario) {
+        formulario.addEventListener('submit', function (event) {
+
+            validarDependenciaE();
+
+            if (searchInputE.value.trim() !== '' && !idSelectedE.value) {
+                event.preventDefault();
+                searchInputE.reportValidity();
+                searchInputE.focus();
+            }
+        });
+    }
+
 });
 </script>
 

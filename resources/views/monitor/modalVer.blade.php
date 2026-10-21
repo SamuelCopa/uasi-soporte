@@ -448,7 +448,7 @@
 
 
                         <!-- Falla -->
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                             <div class="registro-view-field">
 
                                 <div class="registro-view-label">
@@ -465,7 +465,7 @@
 
 
                         <!-- Tamaño -->
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="registro-view-field">
 
                                 <div class="registro-view-label">
@@ -488,7 +488,45 @@
 
 
                         <!-- Estado -->
+
+
+
+                        <!-- Observaciones -->
                         <div class="col-md-6">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-comment-alt"></i>
+                                    DETALLE DEL TRABAJO REAIZADO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $monitor->detalle_trabajo
+                                        ?? 'EN ESPERA' }}
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-comment-alt"></i>
+                                    OBSERVACIONES
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $monitor->observaciones
+                                        ?? 'SIN OBSERVACIONES' }}
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-12">
                             <div class="registro-view-field">
 
                                 <div class="registro-view-label">
@@ -517,27 +555,6 @@
 
                             </div>
                         </div>
-
-
-                        <!-- Observaciones -->
-                        <div class="col-md-6">
-                            <div class="registro-view-field">
-
-                                <div class="registro-view-label">
-                                    <i class="fas fa-comment-alt"></i>
-                                    OBSERVACIONES
-                                </div>
-
-                                <div class="registro-view-value">
-
-                                    {{ $monitor->observaciones
-                                        ?? 'SIN OBSERVACIONES' }}
-
-                                </div>
-
-                            </div>
-                        </div>
-
                     </div>
 
                 </div>

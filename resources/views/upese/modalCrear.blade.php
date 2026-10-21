@@ -1,4 +1,3 @@
-```blade
 <div class="modal fade"
      id="crearu"
      tabindex="-1"
@@ -358,45 +357,35 @@
                             {{-- DEPENDENCIA / FECHA --}}
                             <div class="row">
 
-                                <div class="col-md-6">
+<div class="col-md-6">
+    <div class="registro-field">
 
-                                    <div class="registro-field">
+        <label for="search-inputU">
+            DEPENDENCIA
+        </label>
 
-                                        <label for="search-inputU">
-                                            DEPENDENCIA
-                                        </label>
+        <input type="text"
+               id="search-inputU"
+               list="optionsU"
+               placeholder="Buscar dependencia..."
+               class="form-control"
+               autocomplete="off">
 
-                                        <input type="text"
-                                               id="search-inputU"
-                                               list="optionsU"
-                                               placeholder="Buscar dependencia..."
-                                               class="form-control">
+        <datalist id="optionsU">
+            @foreach ($dependencia as $item)
+                <option value="{{ $item->dependencias }}"
+                        data-id="{{ $item->id }}">
+                </option>
+            @endforeach
+        </datalist>
 
-                                        <datalist id="optionsU">
+        <input type="hidden"
+               id="id-selectedU"
+               name="dependencia_id"
+               value="">
 
-                                            <option value=""></option>
-
-                                            @foreach ($dependencia as $item)
-
-                                                <option value="{{ $item->dependencias }}"
-                                                        data-id="{{ $item->id }}">
-                                                </option>
-
-                                            @endforeach
-
-                                            <option value=" ">
-                                                QUITAR
-                                            </option>
-
-                                        </datalist>
-
-                                        <input type="hidden"
-                                               id="id-selectedU"
-                                               name="dependencia_id">
-
-                                    </div>
-
-                                </div>
+    </div>
+</div>
 
 
                                 <div class="col-md-6">

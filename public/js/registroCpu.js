@@ -345,6 +345,106 @@ $(document).ready(function() {
         if(tipo_texto) lista.append('<li>TIPO: ' + tipo_texto + '</li>');
     }
 });
+//--------- DISCO DURO 2----------------------------------------------------------
+
+$(document).ready(function() {
+
+    // selección
+    let marca_texto = null, capacidad_texto = null, tipo_texto = null;
+
+    // --- Selección de MARCA ---
+    $(document).on("click", ".nivel-82", function(e){
+        e.preventDefault();
+        let id = $(this).data('id');
+        marcadisco2_id = id;
+        marca_texto = $(this).text();
+        $('#marcadisco2_id').val(id);
+
+        $('.nivel-83').hide();
+        if(id == 'otroMarcadisco2') {
+            $('.otra_marca_disco2').show().focus();
+      // Buscar el submenú más cercano y mostrarlo
+      $(this).closest('ul').find('.nivel-83').first().show();
+        } else {
+            $('.otra_marca_disco2').hide();
+      // Mostrar el siguiente nivel
+      $(this).closest('li').find('.nivel-83').first().show();
+        }
+
+        actualizarListaDD2();
+    });
+
+    $('.otra_marca_disco2').on('input', function() {
+        marca_texto = $(this).val();
+        $('#marcadisco2_id').val('otroMarcadisco2');
+        actualizarListaDD2();
+
+    // Al escribir en el input "Otro", mostrar el siguiente nivel
+    $(this).closest('ul').find('.nivel-83').first().show();
+    });
+
+    // --- Selección de CAPACIDAD ---
+    $(document).on("click", ".nivel-84", function(e){
+        e.preventDefault();
+        let id = $(this).data('id');
+        capacidad_texto = $(this).text();
+        $('#capacdisco2_id').val(id);
+    // Ocultar todos los submenús de color antes de abrir el nuevo
+    $('.nivel-85').hide();
+
+        if(id == 'otroCapdisco2') {
+            $('.otra_capacidad_disco2').show().focus();
+
+      $(this).closest('ul').find('.nivel-85').first().show();
+        } else {
+            $('.otra_capacidad_disco2').hide();
+      // Mostrar el siguiente nivel
+      $(this).closest('ul').find('.nivel-85').first().show();
+        }
+        actualizarListaDD2();
+    });
+
+    $('.otra_capacidad_disco2').on('input', function() {
+        capacidad_texto = $(this).val();
+        $('#capacdisco2_id').val('otroCapdisco2');
+        actualizarListaDD2();
+
+    // Al escribir en el input "Otro", mostrar el siguiente nivel
+    $(this).closest('ul').find('.nivel-85').first().show();
+    });
+
+
+        $(document).on("click", ".nivel-86", function(e){
+        e.preventDefault();
+        let id = $(this).data("id");
+        $("#tipodisco2_id").val(id);
+         tipo_texto = $(this).text();
+
+        if (id == "otroTipodisco2") {
+            $(".otro_tipo_disco2").show().focus();
+        } else {
+            $(".otro_tipo_disco2").hide();
+        }
+        actualizarListaDD2();
+    });
+        // Cuando escriba en el input 
+        $('.otro_tipo_disco2').on('input', function(){
+            tipo_texto = $(this).val();
+            $('#tipodisco2_id').val("otroTipodisco2");
+            actualizarListaDD2();
+        });
+
+
+    // Actualizar la lista visible
+    function actualizarListaDD2() {
+        let lista = $('#seleccionesdd2');
+        lista.empty();
+        if(marca_texto) lista.append('<li>MARCA: ' + marca_texto + '</li>');
+        if(capacidad_texto) lista.append('<li>CAPACIDAD: ' + capacidad_texto + '</li>');
+        if(tipo_texto) lista.append('<li>TIPO: ' + tipo_texto + '</li>');
+    }
+});
+
 
 
 //---------MEMORIA RAM---------------------------------------------------------------------

@@ -49,6 +49,7 @@ $(document).ready(function() {
     $('#selecciones').hide();
     $('#seleccionesp').hide();
     $('#seleccionesdd').hide();
+    $('#seleccionesdd2').hide();
     $('#seleccionestm').hide();
     $('#seleccionesram').hide();
     $('#seleccionesram2').hide();
@@ -90,6 +91,13 @@ $(document).ready(function() {
                             $('#marcadisco').text('-------');
                             $('#capdisco').text('-------');
                             $('#tipodisco').text('-------');
+
+                            $('#marcadisco2_id').val(''); 
+                            $('#capacdisco2_id').val(''); 
+                            $('#tipodisco2_id').val(''); 
+                            $('#marcadisco2').text('-------');
+                            $('#capdisco2').text('-------');
+                            $('#tipodisco2').text('-------');
 
                             $('#marcatmadre_id').val(''); 
                             $('#modtmadre_id').val(''); 
@@ -193,6 +201,14 @@ $(document).ready(function() {
                             $('#marcadisco').text(ultimoResultado.marcadisco && ultimoResultado.marcadisco.marca ? 'MARCA: ' + ultimoResultado.marcadisco.marca : '-------');
                             $('#capdisco').text(ultimoResultado.capacidaddisco && ultimoResultado.capacidaddisco.capacidad ? 'CAPACIDAD: ' + ultimoResultado.capacidaddisco.capacidad : '-------');
                             $('#tipodisco').text(ultimoResultado.tipodisco && ultimoResultado.tipodisco.tipo ? 'TIPO: ' + ultimoResultado.tipodisco.tipo : '-------');
+
+                            $('#seleccionesdd2').show();
+                            $('#marcadisco2_id').val(ultimoResultado.marcadisco2_id); 
+                            $('#capacdisco2_id').val(ultimoResultado.capacdisco2_id);
+                            $('#tipodisco2_id').val(ultimoResultado.tipodisco2_id);
+                            $('#marcadisco2').text(ultimoResultado.marcadisco && ultimoResultado.marcadisco.marca ? 'MARCA: ' + ultimoResultado.marcadisco.marca : '-------');
+                            $('#capdisco2').text(ultimoResultado.capacidaddisco && ultimoResultado.capacidaddisco.capacidad ? 'CAPACIDAD: ' + ultimoResultado.capacidaddisco.capacidad : '-------');
+                            $('#tipodisco2').text(ultimoResultado.tipodisco && ultimoResultado.tipodisco.tipo ? 'TIPO: ' + ultimoResultado.tipodisco.tipo : '-------');
 
                             $('#seleccionestm').show();
                             $('#marcatmadre_id').val(ultimoResultado.marcatmadre_id); 

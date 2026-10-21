@@ -15,13 +15,6 @@
         {{-- Custom left links --}}
         @yield('content_top_nav_left')
     </ul>
-    <!-- <ul class="navbar-nav ml-auto">
-            <button id="dark-mode-toggle"
-                    onclick="toggleDarkMode()"
-                    aria-label="Cambiar modo oscuro">
-                <i id="dark-mode-icon" class="fas fa-sun"></i>
-            </button>
-    </ul> -->
     <ul class="navbar-nav ml-auto">
     </ul>
     {{-- Navbar right links --}}

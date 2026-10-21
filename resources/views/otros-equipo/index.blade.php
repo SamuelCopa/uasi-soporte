@@ -600,13 +600,14 @@
                                                         title="Editar">
                                                     <i class="fa fa-edit"></i>
                                                 </button>
-
-                                                <!-- INFORME -->
-                                                <a href="{{ route('informe.equipo', $equipo->id) }}"
-                                                class="btn-mini btn-secondary"
-                                                title="Informe">
-                                                    <i class="fa fa-file"></i>
-                                                </a>
+                                                <!-- DETALLE DEL TRABAJO REALIZADO -->
+                                                <button type="button"
+                                                        class="btn btn-sm btn-secondary"
+                                                        data-toggle="modal"
+                                                        data-target="#modalResultado{{ $equipo->id }}"
+                                                        title="Registrar detalle del trabajo realizado">
+                                                    <i class="fas fa-file-alt"></i>
+                                                </button>  
 
                                                 <!-- ELIMINAR -->
                                                 <form action="{{ route('otros-equipos.destroy', $equipo->id) }}"
@@ -629,6 +630,7 @@
                                         </tr>
                                         <!--Ventana Modal para Ver --->
                                         @include('otros-equipo.modalVer')
+                                        @include('otros-equipo.modalResultado')
                                         <!--Ventana Modal eRecepcion --->
                                         @include('otros-equipo.registroTecnico')
                                         <!--Ventana Modal para Actualizar--->
@@ -874,16 +876,24 @@ function cambiarEstado(id, estadoId, tieneResultado) {
         }
         else if (event.target.id === 'entregado') {
         if (tieneResultado) {
+
+            // Si tiene resultado, actualizar el estado a Entregado
             cambiarEstadoAjax(id, 5);
             console.log(id);
+
         } else {
-                Swal.fire({
-                    position: "top-center",
-                    icon: "error",
-                    title: 'Debes llenar el informe antes de actualizar el estado',
-                    showConfirmButton: true,
-                });
-            }
+
+            // Mostrar únicamente el mensaje
+            Swal.fire({
+                position: 'top-center',
+                icon: 'warning',
+                title: 'Detalle del trabajo pendiente',
+                text: 'Debes llenar el detalle de trabajo realizado para actualizar el estado a Entregado.',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#3085d6'
+            });
+
+        }
         }
     })
 }
@@ -996,16 +1006,57 @@ Swal.fire({
 <link rel="stylesheet" href="{{ asset('estilos/fechas.css') }}">  
 <script src="{{ asset('js/equipoPdf.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('estilos/equipoPdf.css') }}"> 
+```html
 <script>
-const searchInputM = document.getElementById('search-inputA');
-const optionsM = document.getElementById('optionsA').options;
-const idSelectedInputM = document.getElementById('id-selectedA');
+document.addEventListener('DOMContentLoaded', function () {
 
-searchInputM.addEventListener('input', () => {
-    const selectedOption = Array.from(optionsM).find(option => option.value === searchInputM.value);
-    if (selectedOption) {
-        idSelectedInputM.value = selectedOption.dataset.id;
+    const input = document.getElementById('search-inputA');
+    const lista = document.getElementById('optionsA');
+    const hidden = document.getElementById('id-selectedA');
+
+    if (!input || !lista || !hidden) return;
+
+    function validarDependencia() {
+
+        const valor = input.value.trim();
+
+        // Nunca reutilizar un ID anterior.
+        hidden.value = '';
+
+        const opcion = Array.from(lista.options).find(option =>
+            option.value.trim() === valor &&
+            option.dataset.id &&
+            /^[1-9]\d*$/.test(option.dataset.id)
+        );
+
+        if (valor !== '' && opcion) {
+            hidden.value = opcion.dataset.id;
+            input.setCustomValidity('');
+        } else {
+            input.setCustomValidity(
+                'Seleccione una dependencia registrada en la lista.'
+            );
+        }
+    }
+
+    input.addEventListener('input', validarDependencia);
+    input.addEventListener('change', validarDependencia);
+
+    const formulario = input.closest('form');
+
+    if (formulario) {
+        formulario.addEventListener('submit', function (event) {
+
+            validarDependencia();
+
+            if (!hidden.value) {
+                event.preventDefault();
+                input.reportValidity();
+                input.focus();
+            }
+        });
     }
 });
 </script>
+```
 @endpush

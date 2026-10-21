@@ -222,39 +222,28 @@
 .nav-sidebar
 > .nav-item
 > .nav-link.active {
-
     background: var(--satec-sidebar-active) !important;
-
     color: #ffffff !important;
-
     font-weight: 500;
-
     box-shadow: none !important;
 }
-
 
 .main-sidebar
 .nav-sidebar
 > .nav-item
 > .nav-link.active
 > .nav-icon {
-
     color: #ffffff !important;
 }
-
 
 .main-sidebar
 .nav-sidebar
 > .nav-item
 > .nav-link.active
 > p {
-
     color: #ffffff !important;
-
     font-weight: 500;
 }
-
-
 /* =========================================================
    HOVER SOBRE ACTIVO
    ========================================================= */
@@ -263,11 +252,8 @@
 .nav-sidebar
 > .nav-item
 > .nav-link.active:hover {
-
     background: var(--satec-sidebar-active-hover) !important;
 }
-
-
 /* =========================================================
    FLECHA DE SUBMENÚ
    ========================================================= */
@@ -276,23 +262,15 @@
 .nav-sidebar
 .nav-link
 > .right {
-
     position: static;
-
     margin-left: auto !important;
-
     color: var(--satec-text-muted);
-
     font-size: 11px;
-
     opacity: .9;
-
     transition:
         transform .20s ease,
         color .20s ease;
 }
-
-
 /* =========================================================
    FLECHA CUANDO EL MENÚ ESTÁ ABIERTO
    ========================================================= */

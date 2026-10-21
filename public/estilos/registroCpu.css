@@ -308,6 +308,28 @@
   z-index: 1007;
 }
 
+/* ===================DISCO DURO 2 =====================*/
+.nivel-82 {
+  position: relative;
+  z-index: 1007;
+}
+.nivel-83 {
+  position: relative;
+  z-index: 1007;
+}
+.nivel-84 {
+  position: relative;
+  z-index: 1007;
+}
+.nivel-85 {
+  position: relative;
+  z-index: 1007;
+}
+.nivel-86 {
+  position: relative;
+  z-index: 1007;
+}
+/* ============================================================ */
 .nivel-69.selected {
   background-color: #ccc;
   color: #333;
@@ -430,16 +452,23 @@
   display: none;
 }
 
-/* Scroll general */
-.nav {
-max-height: calc(100vh - 180px);
-overflow-y: auto;
-overflow-x: hidden;
+
+/* Scroll exclusivo del menú personalizado */
+#menu_principal {
+    max-height: 100vh;
+
 }
 
+
 /* Ocultar elementos no usados */
-[id^="drop"], .mif-expand-more {
+/* [id^="drop"], .mif-expand-more {
   display: none;
+} */
+
+
+#menu_principal [id^="drop"],
+#menu_principal .mif-expand-more {
+    display: none;
 }
 
 /* --- Responsividad --- */
@@ -470,6 +499,11 @@ overflow-x: hidden;
 @keyframes aparecer {
   from { opacity: 0; transform: translateX(10px); }
   to { opacity: 1; transform: translateX(0); }
+}
+
+#menu_principal1 [id^="drop"],
+#menu_principal1 .mif-expand-more {
+    display: none;
 }
 
 /* Estilos generales del menú */

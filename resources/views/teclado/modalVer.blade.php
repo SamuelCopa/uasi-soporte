@@ -503,8 +503,24 @@
 
                     {{-- Observaciones --}}
                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="registro-view-field">
 
-                        <div class="col-md-12">
+                                <div class="registro-view-label">
+                                    <i class="fas fa-comment-alt"></i>
+                                    DETALLE DEL TRABAJO REAIZADO
+                                </div>
+
+                                <div class="registro-view-value">
+
+                                    {{ $teclado->detalle_trabajo
+                                        ?? 'EN ESPERA' }}
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
 
                             <div class="registro-view-field">
 

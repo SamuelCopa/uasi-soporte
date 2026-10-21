@@ -69,10 +69,34 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\TerminoController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EspecialidadController;
+use App\Http\Controllers\ResultadoEquipoController;
 
 
 use Illuminate\Support\Facades\Mail;
 
+    /*
+    |--------------------------------------------------------------------------
+    | ACTUALIZAR 
+    |--------------------------------------------------------------------------
+    */
+
+Route::post('/audifonos/guardar-resultado/{id}', [AudifonoController::class, 'guardarResultado'])->name('audifonos.guardarResultado');
+Route::post('/cpu/guardar-resultado/{id}', [RegistroCpuController::class, 'guardarResultado'])->name('cpu.guardarResultado');
+Route::post('/estabilizador/guardar-resultado/{id}', [EstabilizadorController::class, 'guardarResultado'])->name('estabilizador.guardarResultado');
+
+
+
+Route::post('/equipos/{tipo}/{id}/guardar-resultado',[ResultadoEquipoController::class, 'guardar'])->name('equipos.guardarResultado');
+
+
+Route::post('/audifonos/guardar-resultado/{id}', [AudifonoController::class, 'guardarResultado'])->name('audifonos.guardarResultado');
+Route::post('/audifonos/guardar-resultado/{id}', [AudifonoController::class, 'guardarResultado'])->name('audifonos.guardarResultado');
+Route::post('/audifonos/guardar-resultado/{id}', [AudifonoController::class, 'guardarResultado'])->name('audifonos.guardarResultado');
+Route::post('/audifonos/guardar-resultado/{id}', [AudifonoController::class, 'guardarResultado'])->name('audifonos.guardarResultado');
+Route::post('/audifonos/guardar-resultado/{id}', [AudifonoController::class, 'guardarResultado'])->name('audifonos.guardarResultado');
+Route::post('/audifonos/guardar-resultado/{id}', [AudifonoController::class, 'guardarResultado'])->name('audifonos.guardarResultado');
+Route::post('/audifonos/guardar-resultado/{id}', [AudifonoController::class, 'guardarResultado'])->name('audifonos.guardarResultado');
+Route::post('/audifonos/guardar-resultado/{id}', [AudifonoController::class, 'guardarResultado'])->name('audifonos.guardarResultado');
     /*
     |--------------------------------------------------------------------------
     | BUSCAR ACTIVOS DESDE SERVICIO

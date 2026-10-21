@@ -3,14 +3,17 @@
 namespace App\Services;
 
 use App\Models\Correlativo;
+use Illuminate\Support\Facades\DB;
 
 class CorrelativoService
 {
-    public function generarNumeroRecepcion()
+    public function generarNumeroRecepcion(): string
     {
-        $anio = now()->year;
+        $anio = (int) now()->year;
 
-        $correlativo = Correlativo::where('anio', $anio)
+        // Debe ejecutarse dentro de una transacción.
+        $correlativo = Correlativo::query()
+            ->where('anio', $anio)
             ->lockForUpdate()
             ->first();
 
@@ -19,12 +22,18 @@ class CorrelativoService
                 'anio' => $anio,
                 'ultimo_numero' => 0,
             ]);
+
+            // Bloquear la fila recién creada.
+            $correlativo = Correlativo::query()
+                ->whereKey($correlativo->getKey())
+                ->lockForUpdate()
+                ->firstOrFail();
         }
 
         $correlativo->increment('ultimo_numero');
 
         return str_pad(
-            $correlativo->ultimo_numero,
+            (string) $correlativo->ultimo_numero,
             3,
             '0',
             STR_PAD_LEFT

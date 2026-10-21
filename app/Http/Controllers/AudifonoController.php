@@ -658,4 +658,23 @@ return response()->json([
         return response()->json($datos);
     }
 
+public function guardarResultado(Request $request, $id)
+{
+    $request->validate([
+        'detalle_trabajo' => 'required|string|min:3',
+        'resultado_id' => 'required|integer|in:1,2,3,4,5',
+    ]);
+
+    $audifono = Audifono::findOrFail($id);
+
+    $audifono->detalle_trabajo = $request->detalle_trabajo;
+    $audifono->resultado_id = $request->resultado_id;
+    $audifono->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'El resultado se guardó correctamente.'
+    ]);
+}
+
 }

@@ -167,8 +167,19 @@
             <td class="celda35">
                 <strong>DISCO DURO :</strong>  
             </td> 
-            <td class="celda65">                        
-                {{ $registroCpu->Marcadisco?->marca }} {{ $registroCpu->CapacidadDisco?->capacidad }}  {{ $registroCpu->TipoDisco?->tipo }}  
+            <td class="celda65">        
+                                    @if($registroCpu->Marcadisco?->marca || $registroCpu->CapacidadDisco?->capacidad || $registroCpu->TipoDisco?->tipo)
+                                            {{ $registroCpu->Marcadisco?->marca }} {{ $registroCpu->CapacidadDisco?->capacidad }}  {{ $registroCpu->TipoDisco?->tipo }}  
+                                    @else
+                                        SIN REGISTRO
+                                    @endif
+                                    @if($registroCpu->Marcadisco2?->marca || $registroCpu->CapacidadDisco2?->capacidad || $registroCpu->TipoDisco2?->tipo)
+                                           / {{ $registroCpu->Marcadisco2?->marca ?? 'SIN MARCA' }} {{ $registroCpu->CapacidadDisco2?->capacidad }} {{ $registroCpu->TipoDisco2?->tipo }}
+                                    @else
+                                        SIN REGISTRO
+                                    @endif
+
+               
             </td> 
         </tr>
         <tr class="fila-dividida1">

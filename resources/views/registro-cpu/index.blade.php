@@ -177,12 +177,7 @@
                                         @endif
 										<td >
                                                 @if(
-                                                    (!empty($registroCpu->cod_registro) &&
-                                                    !empty($registroCpu->user_id) &&
-                                                    !empty($registroCpu->fecha_asignacion))
-                                                    ||
-                                                    $registroCpu->estado_id != '1'
-                                                )
+                                                    (!empty($registroCpu->cod_registro) && !empty($registroCpu->user_id) && !empty($registroCpu->fecha_asignacion)) || $registroCpu->estado_id != '1' )
 
                                                     @if($registroCpu->estado_id == '1')
 
@@ -288,38 +283,27 @@
                                                             </button>
 
                                                         @elseif($registroCpu->resultado_id == '2')
-
                                                             <button class="boton300 badge-reposicion">
                                                                 {{ $registroCpu->resultado?->nombre }}<br>
                                                                 {{ date('d-m-Y H:i:s', strtotime($registroCpu->fecha_entrega)) }}
                                                             </button>
-
                                                         @elseif($registroCpu->resultado_id == '3')
-
                                                             <button class="boton300 badge-repliegue">
                                                                 {{ $registroCpu->resultado?->nombre }}<br>
                                                                 {{ date('d-m-Y H:i:s', strtotime($registroCpu->fecha_entrega)) }}
                                                             </button>
-
                                                         @elseif($registroCpu->resultado_id == '4')
-
                                                             <button class="boton300 badge-custodio">
                                                                 {{ $registroCpu->resultado?->nombre }}<br>
                                                                 {{ date('d-m-Y H:i:s', strtotime($registroCpu->fecha_entrega)) }}
                                                             </button>
-
                                                         @elseif($registroCpu->resultado_id == '5')
-
                                                             <button class="boton300 badge-baja">
                                                                 {{ $registroCpu->resultado?->nombre }}<br>
                                                                 {{ date('d-m-Y H:i:s', strtotime($registroCpu->fecha_entrega)) }}
                                                             </button>
-
                                                         @endif
-
                                                     @endif
-
-
                                                 @else
 
                                                     @if(empty($registroCpu->user_id))
@@ -379,13 +363,8 @@
                                            <div class="acciones">
 
                                             <!-- PDF -->
-                                            <a href="#"
-                                            class="btn-mini btn-danger btn-preview-pdf tooltip-salto"
-                                            data-ver="{{ route('pdf.cpu.preview', ':id') }}"
-                                            data-descargar="{{ route('pdf.cpu.descargar', ':id') }}"
-                                            data-enviar="{{ route('pdf.cpu.enviar', ':id') }}"
-                                            data-id="{{ $registroCpu->id }}"
-                                            title="Formulario PDF">
+                                            <a href="#" class="btn-mini btn-danger btn-preview-pdf tooltip-salto" data-ver="{{ route('pdf.cpu.preview', ':id') }}" data-descargar="{{ route('pdf.cpu.descargar', ':id') }}"
+                                            data-enviar="{{ route('pdf.cpu.enviar', ':id') }}" data-id="{{ $registroCpu->id }}"  title="Formulario PDF">
                                                 <i class="far fa-file-pdf"></i>
                                             </a>
 
@@ -412,14 +391,17 @@
                                                     <i class="fa fa-edit"></i>
                                                 </button>
 
-                                                <!-- INFORME -->
-                                                <a href="{{ route('informe.cpu', $registroCpu->id) }}"
-                                                class="btn-mini btn-secondary"
-                                                title="Informe">
-                                                    <i class="fa fa-file"></i>
-                                                </a>
+                                                <!-- DETALLE DEL TRABAJO REALIZADO -->
+                                                <button type="button"
+                                                        class="btn btn-sm btn-secondary"
+                                                        data-toggle="modal"
+                                                        data-target="#modalResultado{{ $registroCpu->id }}"
+                                                        title="Registrar detalle del trabajo realizado">
+                                                    <i class="fas fa-file-alt"></i>
+                                                </button>                                               
 
-                                                <!-- ELIMINAR -->
+                                            @endif
+                                            @role('superAdministrador')
                                                 <form action="{{ route('registro-cpus.destroy', $registroCpu->id) }}"
                                                     method="POST"
                                                     class="formEliminar">
@@ -432,12 +414,13 @@
                                                         <i class="fa fa-trash"></i>
                                                     </button>
                                                 </form>
-
-                                            @endif
-
+                                            @endrole
+                                                <!-- ELIMINAR -->
                                         </div>
                                         </td>
                                         </tr>
+                                        <!--Ventana Modal para Actualizar--->
+                                        @include('registro-cpu.modalResultado')
                                         <!--Ventana Modal para Ver --->
                                         @include('registro-cpu.modalVer')
                                         <!--Ventana Modal eRecepcion --->
@@ -467,6 +450,7 @@
                                     </tr>
                                 </tfoot>
                             </table>
+                            
                         </div>
                     </div>
                 </div>
@@ -521,7 +505,7 @@ function cambiarEstado(id, estadoId, tieneResultado) {
         }
     })
 
-    // Agregar evento a los botones
+       // Agregar evento a los botones
     document.addEventListener('click', (event) => {
         if (event.target.id === 'en-proceso') {
             cambiarEstadoAjax(id, 2); 
@@ -535,16 +519,24 @@ function cambiarEstado(id, estadoId, tieneResultado) {
         }
         else if (event.target.id === 'entregado') {
         if (tieneResultado) {
+
+            // Si tiene resultado, actualizar el estado a Entregado
             cambiarEstadoAjax(id, 5);
             console.log(id);
+
         } else {
-                Swal.fire({
-                    position: "top-center",
-                    icon: "error",
-                    title: 'Debes llenar el informe antes de actualizar el estado',
-                    showConfirmButton: true,
-                });
-            }
+
+            // Mostrar únicamente el mensaje
+            Swal.fire({
+                position: 'top-center',
+                icon: 'warning',
+                title: 'Detalle del trabajo pendiente',
+                text: 'Debes llenar el detalle de trabajo realizado para actualizar el estado a Entregado.',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#3085d6'
+            });
+
+        }
         }
     })
 }
@@ -563,8 +555,7 @@ let texto, botonConfirm;
         botonConfirm = "Sí, cambiar y enviar alerta!";
     }
 
-// Llamada a SweetAlert
-Swal.fire({
+    Swal.fire({
     title: '¿Estás seguro?',
     text: texto,
     icon: 'warning',
@@ -573,7 +564,7 @@ Swal.fire({
     cancelButtonColor: '#d33',
     confirmButtonText: botonConfirm,
     cancelButtonText: 'Cancelar'
-}).then((result) => {
+    }).then((result) => {
         if (result.isConfirmed) {
                 Swal.fire({
                 title: 'Actualizando...',
@@ -581,7 +572,8 @@ Swal.fire({
                 didOpen: () => {
                     Swal.showLoading();
                 }
-                });
+            });
+
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '{{ route('estado-cpu') }}', true);
             xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
@@ -678,6 +670,67 @@ Swal.fire({
         submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
     });
 }); 
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const input = document.getElementById('search-inputC');
+    const lista = document.getElementById('optionsC');
+    const hidden = document.getElementById('id-selectedC');
+
+    if (!input || !lista || !hidden) return;
+
+    function validarDependencia() {
+
+        const valor = input.value.trim();
+
+        // No conservar identificadores anteriores.
+        hidden.value = '';
+
+        if (valor === '') {
+            input.setCustomValidity('');
+            return;
+        }
+
+        const opcion = Array.from(lista.options).find(option =>
+            option.value.trim() === valor &&
+            option.dataset.id &&
+            /^[1-9]\d*$/.test(option.dataset.id)
+        );
+
+        if (opcion) {
+            hidden.value = opcion.dataset.id;
+            input.setCustomValidity('');
+        } else {
+            input.setCustomValidity(
+                'Seleccione una dependencia registrada en la lista.'
+            );
+        }
+    }
+
+    input.addEventListener('input', validarDependencia);
+    input.addEventListener('change', validarDependencia);
+
+    const formulario = input.closest('form');
+
+    if (formulario) {
+        formulario.addEventListener('submit', function (event) {
+
+            validarDependencia();
+
+            if (input.value.trim() !== '' && !hidden.value) {
+                event.preventDefault();
+                input.reportValidity();
+                input.focus();
+            }
+        });
+    }
+
+    // Validar también los valores restaurados mediante old().
+    validarDependencia();
+
+});
 </script>
 <script src="{{ asset('js/funcion.js') }}"></script>
 <script src="{{ asset('js/mov.js') }}"></script>

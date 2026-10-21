@@ -551,8 +551,23 @@
 
                     <!-- OBSERVACIONES -->
                     <div class="row">
+                        <div class="col-md-6">
 
-                        <div class="col-md-12">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-comment-alt"></i>
+                                    DETALLE DEL TRABAJO REALIZADO
+                                </div>
+
+                                <div class="registro-view-value">
+                                    {{ $impresora->detalle_trabajo ?? 'EN ESPERA' }}
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
 
                             <div class="registro-view-field">
 

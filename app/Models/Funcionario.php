@@ -33,7 +33,7 @@ class Funcionario extends Model
 {
     use SoftDeletes;
     use Auditable;
-    protected $perPage = 500;
+    protected $perPage = 1000;
 
     /**
      * The attributes that are mass assignable.

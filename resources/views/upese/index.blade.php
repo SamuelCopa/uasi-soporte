@@ -412,13 +412,21 @@
                                                         title="Editar">
                                                     <i class="fa fa-edit"></i>
                                                 </button>
-
-                                                <!-- INFORME -->
-                                                <a href="{{ route('informe.ups', $upese->id) }}"
-                                                class="btn-mini btn-secondary"
-                                                title="Informe">
+                                                <button type="button"
+                                                        data-toggle="modal"
+                                                        data-target="#modalResultado{{ $upese->id }}"
+                                                        class="btn-mini btn-success"
+                                                        title="Detalle del trabajo realizado">
                                                     <i class="fa fa-file"></i>
-                                                </a>
+                                                </button>
+                                                <!-- DETALLE DEL TRABAJO REALIZADO -->
+                                                <button type="button"
+                                                        class="btn btn-sm btn-secondary"
+                                                        data-toggle="modal"
+                                                        data-target="#modalResultado{{ $upese->id }}"
+                                                        title="Registrar detalle del trabajo realizado">
+                                                    <i class="fas fa-file-alt"></i>
+                                                </button>  
 
                                                 <!-- ELIMINAR -->
                                                 <form action="{{ route('upeses.destroy', $upese->id) }}"
@@ -447,6 +455,7 @@
                                         @include('upese.registroTecnico')
                                         <!--Ventana Modal para Actualizar--->
                                         @include('upese.modalEdit')
+                                        @include('upese.modalResultado')
                                     @endforeach
                                 </tbody>
                                 <tfoot>
@@ -537,16 +546,24 @@ function cambiarEstado(id, estadoId, tieneResultado) {
         }
         else if (event.target.id === 'entregado') {
         if (tieneResultado) {
+
+            // Si tiene resultado, actualizar el estado a Entregado
             cambiarEstadoAjax(id, 5);
             console.log(id);
+
         } else {
-                Swal.fire({
-                    position: "top-center",
-                    icon: "error",
-                    title: 'Debes llenar el informe antes de actualizar el estado',
-                    showConfirmButton: true,
-                });
-            }
+
+            // Mostrar únicamente el mensaje
+            Swal.fire({
+                position: 'top-center',
+                icon: 'warning',
+                title: 'Detalle del trabajo pendiente',
+                text: 'Debes llenar el detalle de trabajo realizado para actualizar el estado a Entregado.',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#3085d6'
+            });
+
+        }
         }
     })
 }
@@ -661,14 +678,57 @@ Swal.fire({
 <script src="{{ asset('js/equipoPdf.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('estilos/equipoPdf.css') }}">  
 <script>
-const searchInputU = document.getElementById('search-inputU');
-const optionsU = document.getElementById('optionsU').options;
-const idSelectedInputU = document.getElementById('id-selectedU');
+document.addEventListener('DOMContentLoaded', function () {
 
-searchInputU.addEventListener('input', () => {
-    const selectedOption = Array.from(optionsU).find(option => option.value === searchInputU.value);
-    if (selectedOption) {
-        idSelectedInputU.value = selectedOption.dataset.id;
+    const searchInputU = document.getElementById('search-inputU');
+    const optionsU = document.getElementById('optionsU');
+    const idSelectedU = document.getElementById('id-selectedU');
+
+    if (!searchInputU || !optionsU || !idSelectedU) {
+        return;
+    }
+
+    function validarDependenciaU() {
+
+        const valor = searchInputU.value.trim();
+
+        // Nunca conservar el ID de una selección anterior.
+        idSelectedU.value = '';
+
+        const opcion = Array.from(optionsU.options).find(option =>
+            option.value.trim() === valor &&
+            option.dataset.id &&
+            /^[1-9]\d*$/.test(option.dataset.id)
+        );
+
+        if (valor !== '' && opcion) {
+            idSelectedU.value = opcion.dataset.id;
+            searchInputU.setCustomValidity('');
+        } else if (valor === '') {
+            searchInputU.setCustomValidity('');
+        } else {
+            searchInputU.setCustomValidity(
+                'Seleccione una dependencia registrada en la lista.'
+            );
+        }
+    }
+
+    searchInputU.addEventListener('input', validarDependenciaU);
+    searchInputU.addEventListener('change', validarDependenciaU);
+
+    const formulario = searchInputU.closest('form');
+
+    if (formulario) {
+        formulario.addEventListener('submit', function (event) {
+
+            validarDependenciaU();
+
+            if (searchInputU.value.trim() !== '' && !idSelectedU.value) {
+                event.preventDefault();
+                searchInputU.reportValidity();
+                searchInputU.focus();
+            }
+        });
     }
 });
 </script>

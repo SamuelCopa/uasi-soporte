@@ -1,4 +1,4 @@
-```blade
+
 @section('content')
 
 @php
@@ -776,108 +776,149 @@ document.addEventListener('DOMContentLoaded', function () {
     |--------------------------------------------------------------------------
     */
 
-    function mostrarPendientesAsignacion() {
 
-        /*
-        |--------------------------------------------------------------------------
-        | IMPORTANTE:
-        | SOLO MOSTRAR LA ALERTA SI REALMENTE EXISTEN EQUIPOS
-        | SIN TÉCNICO.
-        |--------------------------------------------------------------------------
-        */
+function mostrarPendientesAsignacion() {
 
-        const existenAsignaciones = pendientesAsignacion.some(function (item) {
+    /*
+    |--------------------------------------------------------------------------
+    | VERIFICAR SI EXISTEN EQUIPOS SIN TÉCNICO ASIGNADO
+    |--------------------------------------------------------------------------
+    */
 
-            return item.sinUser > 0;
+    const asignacionesPendientes = pendientesAsignacion.filter(function (item) {
+        return Number(item.sinUser) > 0;
+    });
 
-        });
+    /*
+    |--------------------------------------------------------------------------
+    | SI NO EXISTEN ASIGNACIONES PENDIENTES
+    |--------------------------------------------------------------------------
+    */
 
-
-        if (!existenAsignaciones) {
-
-            return;
-
-        }
-
-
-        let htmlDashboard = `
-
-            <div class="swal-grid">
-
-                ${pendientesAsignacion
-
-                    .filter(item => item.sinUser > 0)
-
-                    .map(item => `
-
-                        <div class="swal-card">
-
-                            <div class="swal-card-title">
-
-                                <span class="swal-icon">
-                                    ${item.icon}
-                                </span>
-
-                                <span>
-                                    ${item.nombre}
-                                </span>
-
-                            </div>
-
-
-                            <div class="swal-card-body">
-
-                                <div class="swal-item">
-
-                                    <span class="label">
-                                        Técnicos por asignar
-                                    </span>
-
-                                    <span class="value">
-                                        ${item.sinUser}
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    `).join('')}
-
-            </div>
-
-
-            <div class="swal-msg">
-
-                Existen asignaciones pendientes en el sistema.
-
-            </div>
-
-        `;
-
+    if (asignacionesPendientes.length === 0) {
 
         Swal.fire({
 
-            title: 'Notificación de asignaciones pendientes',
+            title: '¡Buen trabajo!',
 
-            html: htmlDashboard,
+            html: `
+                <div style="padding: 10px 5px;">
 
-            icon: 'info',
+                    <div style="
+                        font-size: 55px;
+                        color: #28a745;
+                        margin-bottom: 15px;
+                    ">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
 
-            confirmButtonText: 'Aceptar',
+                    <p style="
+                        font-size: 16px;
+                        margin-bottom: 8px;
+                    ">
+                        No existen equipos pendientes de asignación a técnicos.
+                    </p>
 
-            width: '520px',
+                    <p style="
+                        font-size: 13px;
+                        color: #6c757d;
+                        margin-bottom: 0;
+                    ">
+                        Todas las asignaciones se encuentran al día.
+                    </p>
+
+                </div>
+            `,
+
+            icon: 'success',
+
+            confirmButtonText: 'Excelente',
+
+            width: '480px',
 
             customClass: {
-
                 popup: 'swal-institucional'
-
             }
 
         });
 
+        return;
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | MOSTRAR LAS ASIGNACIONES PENDIENTES
+    |--------------------------------------------------------------------------
+    */
+
+    let htmlDashboard = `
+
+        <div class="swal-grid">
+
+            ${asignacionesPendientes.map(item => `
+
+                <div class="swal-card">
+
+                    <div class="swal-card-title">
+
+                        <span class="swal-icon">
+                            ${item.icon}
+                        </span>
+
+                        <span>
+                            ${item.nombre}
+                        </span>
+
+                    </div>
+
+                    <div class="swal-card-body">
+
+                        <div class="swal-item">
+
+                            <span class="label">
+                                Técnicos por asignar
+                            </span>
+
+                            <span class="value">
+                                ${item.sinUser}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `).join('')}
+
+        </div>
+
+        <div class="swal-msg">
+            Existen equipos pendientes de asignación a técnicos.
+        </div>
+
+    `;
+
+    Swal.fire({
+
+        title: 'Notificación de asignaciones pendientes',
+
+        html: htmlDashboard,
+
+        icon: 'info',
+
+        confirmButtonText: 'Aceptar',
+
+        width: '520px',
+
+        customClass: {
+            popup: 'swal-institucional'
+        }
+
+    });
+
+}
+
 
 });
 
@@ -1417,3 +1458,4 @@ document.addEventListener('DOMContentLoaded', function () {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 @stop
+

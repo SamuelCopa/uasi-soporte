@@ -54,6 +54,7 @@ use App\Services\CorrelativoService;
 use App\Models\Termino;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\EquipoPdfEnviado;
+use Illuminate\Support\Facades\Cache;
 
 class RegistroCpuController extends Controller
 {
@@ -67,389 +68,494 @@ class RegistroCpuController extends Controller
         $this->notificacionService = $notificacionService;
     }
 
+
 public function index(Request $request): View
 {
-    $gestionPasada = date('Y') - 1;
+    $gestionActual = (int) now()->year;
+    $gestionPasada = $gestionActual - 1;
 
-    // Últimos 30 días de la gestión pasada
-    $fechaFinPasada = Carbon::create($gestionPasada, 12, 31);
-    $fechaInicioPasada = $fechaFinPasada->copy()->subDays(29);
+    // Rango de los últimos 30 días de la gestión pasada.
+    $fechaFinPasada = Carbon::create($gestionPasada, 12, 31)->endOfDay();
+    $fechaInicioPasada = $fechaFinPasada->copy()->subDays(29)->startOfDay();
 
-    // Últimos 30 días gestión pasada OR registros de la gestión actual
-    $registroCpus = RegistroCpu::where(function ($query) use ($fechaInicioPasada, $fechaFinPasada) {
-            $query->whereBetween('fecha', [$fechaInicioPasada, $fechaFinPasada])
-                  ->where('estado_id', '!=', 5);
+    // Registros de los últimos 30 días de la gestión pasada
+    // (excepto estado 5) o de toda la gestión actual.
+    $inicioGestionActual = Carbon::create($gestionActual, 1, 1)->startOfDay();
+    $inicioGestionSiguiente = Carbon::create($gestionActual + 1, 1, 1)->startOfDay();
+
+    $registroCpus = RegistroCpu::query()
+        ->where(function ($query) use (
+            $fechaInicioPasada,
+            $fechaFinPasada,
+            $inicioGestionActual,
+            $inicioGestionSiguiente
+        ) {
+            $query->where(function ($subquery) use (
+                $fechaInicioPasada,
+                $fechaFinPasada
+            ) {
+                $subquery->whereBetween('fecha', [
+                    $fechaInicioPasada,
+                    $fechaFinPasada,
+                ])
+                ->where('estado_id', '!=', 5);
+            })
+            ->orWhere(function ($subquery) use (
+                $inicioGestionActual,
+                $inicioGestionSiguiente
+            ) {
+                $subquery->where('fecha', '>=', $inicioGestionActual)
+                         ->where('fecha', '<', $inicioGestionSiguiente);
+            });
         })
-        ->orWhereYear('fecha', date('Y'))
         ->orderByDesc('fecha')
-        ->paginate();
+        ->paginate(15)
+        ->withQueryString();
 
+    // Catálogos: se conservan los mismos nombres utilizados por la vista.
     $catalogos = [
         'capdisco'        => CapacidadDisco::class,
         'capram'          => CapacidadRam::class,
         'captvideo'       => CapacidadTvideo::class,
-        'colorcase'       => fn() => ColorCase::orderBy('color', 'asc')->get(),
-        'dependencia'     => fn() => Dependencia::orderBy('dependencias', 'asc')->get(),
+        'colorcase'       => fn() => ColorCase::orderBy('color')->get(),
+        'dependencia'     => fn() => Dependencia::orderBy('dependencias')->get(),
         'estado'          => Estado::class,
         'genprocesador'   => GenProcesador::class,
-        'marcacase'       => fn() => MarcaCase::orderBy('marca', 'asc')->get(),
-        'marcadisco'      => fn() => MarcaDisco::orderBy('marca', 'asc')->get(),
+        'marcacase'       => fn() => MarcaCase::orderBy('marca')->get(),
+        'marcadisco'      => fn() => MarcaDisco::orderBy('marca')->get(),
         'marcafuente'     => MarcaFuente::class,
         'marcalectorcd'   => MarcaLectorcd::class,
         'marcaprocesador' => MarcaProcesador::class,
-        'marcaram'        => fn() => MarcaRam::orderBy('marca', 'asc')->get(),
-        'marcatmadre'     => fn() => MarcaTmadre::orderBy('marca', 'asc')->get(),
-        'modelotmadre'    => fn() => ModeloTmadre::orderBy('modelo', 'asc')->get(),
-        'marcatred'       => fn() => MarcaTred::orderBy('marca', 'asc')->get(),
-        'marcatvideo'     => fn() => MarcaTvideo::orderBy('marca', 'asc')->get(),
-        'marcatwifi'      => fn() => MarcaTwifi::orderBy('marca', 'asc')->get(),
-        'modelowifi'      => fn() => ModeloWifi::orderBy('modelo', 'asc')->get(),
+        'marcaram'        => fn() => MarcaRam::orderBy('marca')->get(),
+        'marcatmadre'     => fn() => MarcaTmadre::orderBy('marca')->get(),
+        'modelotmadre'    => fn() => ModeloTmadre::orderBy('modelo')->get(),
+        'marcatred'       => fn() => MarcaTred::orderBy('marca')->get(),
+        'marcatvideo'     => fn() => MarcaTvideo::orderBy('marca')->get(),
+        'marcatwifi'      => fn() => MarcaTwifi::orderBy('marca')->get(),
+        'modelowifi'      => fn() => ModeloWifi::orderBy('modelo')->get(),
         'disipadorram'    => DisipadorRam::class,
         'modprocesador'   => ModeloProcesador::class,
         'tiporam'         => TipoRam::class,
-        'modelotred'      => fn() => ModeloTred::orderBy('modelo', 'asc')->get(),
+        'modelotred'      => fn() => ModeloTred::orderBy('modelo')->get(),
         'cantidadram'     => CantidadRam::class,
         'potenciafuente'  => PotenciaFuente::class,
         'tipodisco'       => TipoDisco::class,
         'tipotvideo'      => TipoTvideo::class,
-        'funcionario'     => Funcionario::class,
     ];
 
-    // Obtener términos y condiciones
-    $termino = Termino::first();
+    // Cachear los catálogos durante una hora.
+    $catalogosData = Cache::remember(
+        'registro_cpu.catalogos.v1',
+        now()->addHour(),
+        function () use ($catalogos) {
+            return collect($catalogos)->mapWithKeys(
+                function ($origen, $clave) {
+                    $resultado = is_callable($origen)
+                        ? $origen()
+                        : $origen::query()->get();
 
-    $data = collect($catalogos)->mapWithKeys(function ($class, $key) {
-        return [
-            $key => is_callable($class)
-                ? $class()
-                : $class::all()
-        ];
-    });
+                    return [$clave => $resultado];
+                }
+            )->all();
+        }
+    );
 
-    $data['users'] = User::whereHas('roles', fn($q) =>
-            $q->where('name', 'Tecnico')
-        )
-        ->where('id_estadousuario', 1)
-        ->orderBy('paterno', 'asc')
-        ->get();
+    // Funcionarios: se mantiene la colección completa por compatibilidad
+    // con la vista actual, pero la consulta se reutiliza desde caché.
+    $funcionarios = Cache::remember(
+        'registro_cpu.funcionarios.v1',
+        now()->addHour(),
+        fn() => Funcionario::query()->get()
+    );
 
-    $data['registroCpus'] = $registroCpus;
+    // Técnicos activos.
+    $tecnicos = Cache::remember(
+        'registro_cpu.tecnicos.v1',
+        now()->addHour(),
+        fn() => User::query()
+            ->where('id_estadousuario', 1)
+            ->whereHas('roles', fn($query) =>
+                $query->where('name', 'Tecnico')
+            )
+            ->orderBy('paterno')
+            ->get()
+    );
 
-    // Enviar términos a la vista
-    $data['termino'] = $termino;
+    // Términos y condiciones.
+    $termino = Cache::remember(
+        'registro_cpu.termino.v1',
+        now()->addHour(),
+        fn() => Termino::query()->first()
+    );
 
-    $data['i'] = ($request->input('page', 1) - 1)
-        * $registroCpus->perPage();
+    $data = array_merge($catalogosData, [
+        'funcionario' => $funcionarios,
+        'users'       => $tecnicos,
+        'registroCpus' => $registroCpus,
+        'termino'      => $termino,
+        'i'            => ($registroCpus->currentPage() - 1)
+                        * $registroCpus->perPage(),
+    ]);
 
-    return view('registro-cpu.index', $data->all());
+    return view('registro-cpu.index', $data);
 }
+
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, CorrelativoService $correlativoService)
-    {
+public function store(Request $request,CorrelativoService $correlativoService) 
+{
+    /*
+    |--------------------------------------------------------------------------
+    | 1. VALIDAR ANTES DE ESCRIBIR EN LA BASE DE DATOS
+    |--------------------------------------------------------------------------
+    */
     $request->validate([
         'ci'        => 'required',
         'celular'   => 'required|string',
-        'email'   => 'required|string',
+        'email'     => 'required|string',
         'cod_gamea' => 'required|integer',
         'falla'     => 'required|string',
+        'respaldo'  => 'required|string',
     ]);
 
-    $funcionario = Funcionario::firstOrNew(['ci' => $request->ci]);
-
-    // Si es nuevo: asignar todos los campos desde el request
-        if (!$funcionario->exists) {
-            if (empty($request->cargo)) {
-                $funcionario->cargo = null;
-                $funcionario->dependencia_id = null;
-            }
-            // CELULAR, EMAIL para NUEVO registro
-            $funcionario->celular = $request->celular;
-            $funcionario->email = $request->email;
-        } else {
-            // Si existe: actualizar celular, email si es q cambio de numero
-            if ($funcionario->celular != $request->celular) {
-                $funcionario->celular = $request->celular;
-            }
-            if ($funcionario->email != $request->email) {
-                $funcionario->email = $request->email;
-            }
-        }
-        // Asignar los valores de los campos
-        $funcionario->grado_academico = $request->input('grado_academico');
-        $funcionario->paterno = $request->input('paterno');
-        $funcionario->materno = $request->input('materno');
-        $funcionario->nombre = $request->input('nombre');
-        $funcionario->ci = $request->input('ci');
-        $funcionario->expedido = $request->input('expedido');
-        $funcionario->celular = $request->input('celular');
-        $funcionario->email = $request->input('email');
-        $funcionario->cargo = $request->input('cargo');
-        $funcionario->dependencia_id = $request->input('dependencia_id');
-        // Guardar los cambios
-        $funcionario->save();
-
-
-    //  Case
-    if ($request->marcacase_id == 'otroMarcacase' && $request->filled('otra_marca')) {
-        $request->merge([
-            'marcacase_id' => MarcaCase::create(['marca' => $request->otra_marca])->id
-        ]);
-    }
-    if ($request->colorcase_id == 'otroColorcase' && $request->filled('otro_color')) {
-        $request->merge([
-            'colorcase_id' => ColorCase::create(['color' => $request->otro_color])->id
-        ]);
-    }
-
-    //  Procesador
-    if ($request->marcaprocesador_id == 'otroMarcapro' && $request->filled('otra_marca_procesador')) {
-        $request->merge([
-            'marcaprocesador_id' => MarcaProcesador::create(['marca' => $request->otra_marca_procesador])->id
-        ]);
-    }
-    if ($request->modeloprocesador_id == 'otroModpro' && $request->filled('otro_modelo_procesador')) {
-        $request->merge([
-            'modeloprocesador_id' => ModeloProcesador::create(['modelo' => $request->otro_modelo_procesador])->id
-        ]);
-    }
-    if ($request->genprocesador_id == 'otroGenpro' && $request->filled('otra_generacion')) {
-        $request->merge([
-            'genprocesador_id' => GenProcesador::create(['generacion' => $request->otra_generacion])->id
-        ]);
-    }
-    //----------------------TARJETA MADRE--------------------------------
-    if ($request->marcatmadre_id == 'otroMarcatm' && $request->filled('otra_marcatm')) {
-        $request->merge([
-            'marcatmadre_id' => MarcaTmadre::create(['marca' => $request->otra_marcatm])->id
-        ]);
-    }
-    if ($request->modtmadre_id == 'otroModtm' && $request->filled('otro_modtm')) {
-        $request->merge([
-            'modtmadre_id' => ModeloTmadre::create(['modelo' => $request->otro_modtm])->id
-        ]);
-    }
-    //-----------------DISCO DURO--------------------------
-    if ($request->marcadisco_id == 'otroMarcadisco' && $request->filled('otra_marca_disco')) {
-        $request->merge([
-            'marcadisco_id' => MarcaDisco::create(['marca' => $request->otra_marca_disco])->id
-        ]);
-    }
-    if ($request->capacdisco_id == 'otroCapdisco' && $request->filled('otra_capacidad_disco')) {
-        $request->merge([
-            'capacdisco_id' => CapacidadDisco::create(['capacidad' => $request->otra_capacidad_disco])->id
-        ]);
-    }
-    if ($request->tipodisco_id == 'otroTipodisco' && $request->filled('otro_tipo_disco')) {
-        $request->merge([
-            'tipodisco_id' => TipoDisco::create(['tipo' => $request->otro_tipo_disco])->id
-        ]);
-    }
-    //------------RAM 1--------------------
-    if ($request->marcaram_id == 'otroMarcaram' && $request->filled('otra_marca_ram')) {
-        $request->merge([
-            'marcaram_id' => MarcaRam::create(['marca' => $request->otra_marca_ram])->id
-        ]);
-    }
-    if ($request->capacram_id == 'otroCapram' && $request->filled('otra_capacidad_ram')) {
-        $request->merge([
-            'capacram_id' => CapacidadRam::create(['capacidad' => $request->otra_capacidad_ram])->id
-        ]);
-    }
-    if ($request->tiporam_id == 'otroTiporam' && $request->filled('otra_tipo_ram')) {
-        $request->merge([
-            'tiporam_id' => TipoRam::create(['tipo' => $request->otra_tipo_ram])->id
-        ]);
-    }
-    //------------RAM 2--------------------
-    if ($request->marcaram2_id == 'otroMarcaram2' && $request->filled('otra_marca_ram2')) {
-        $request->merge([
-            'marcaram2_id' => MarcaRam::create(['marca' => $request->otra_marca_ram2])->id
-        ]);
-    }
-    if ($request->capacram2_id == 'otroCapram2' && $request->filled('otra_capacidad_ram2')) {
-        $request->merge([
-            'capacram2_id' => CapacidadRam::create(['capacidad' => $request->otra_capacidad_ram2])->id
-        ]);
-    }
-    if ($request->tiporam2_id == 'otroTiporam2' && $request->filled('otra_tipo_ram2')) {
-        $request->merge([
-            'tiporam2_id' => TipoRam::create(['tipo' => $request->otra_tipo_ram2])->id
-        ]);
-    }
-    //------------RAM 3--------------------
-    if ($request->marcaram3_id == 'otroMarcaram3' && $request->filled('otra_marca_ram3')) {
-        $request->merge([
-            'marcaram3_id' => MarcaRam::create(['marca' => $request->otra_marca_ram3])->id
-        ]);
-    }
-    if ($request->capacram3_id == 'otroCapram3' && $request->filled('otra_capacidad_ram3')) {
-        $request->merge([
-            'capacram3_id' => CapacidadRam::create(['capacidad' => $request->otra_capacidad_ram3])->id
-        ]);
-    }
-    if ($request->tiporam3_id == 'otroTiporam3' && $request->filled('otra_tipo_ram3')) {
-        $request->merge([
-            'tiporam3_id' => TipoRam::create(['tipo' => $request->otra_tipo_ram3])->id
-        ]);
-    }
-    //------------RAM 4--------------------
-    if ($request->marcaram4_id == 'otroMarcaram4' && $request->filled('otra_marca_ram4')) {
-        $request->merge([
-            'marcaram4_id' => MarcaRam::create(['marca' => $request->otra_marca_ram4])->id
-        ]);
-    }
-    if ($request->capacram4_id == 'otroCapram4' && $request->filled('otra_capacidad_ram4')) {
-        $request->merge([
-            'capacram4_id' => CapacidadRam::create(['capacidad' => $request->otra_capacidad_ram4])->id
-        ]);
-    }
-    if ($request->tiporam4_id == 'otroTiporam4' && $request->filled('otra_tipo_ram4')) {
-        $request->merge([
-            'tiporam4_id' => TipoRam::create(['tipo' => $request->otra_tipo_ram4])->id
-        ]);
-    }
-    //------------TARJETA DE VIDEO--------------------
-    if ($request->marcatvideo_id == 'otroMarcatv' && $request->filled('otra_marca_tvideo')) {
-        $request->merge([
-            'marcatvideo_id' => MarcaTvideo::create(['marca' => $request->otra_marca_tvideo])->id
-        ]);
-    }
-    if ($request->capactvideo_id == 'otroCaptv' && $request->filled('otra_capacidad_tvideo')) {
-        $request->merge([
-            'capactvideo_id' => CapacidadTvideo::create(['capacidad' => $request->otra_capacidad_tvideo])->id
-        ]);
-    }
-
-    //------------TARJETA DE RED--------------------
-    if ($request->marcatred_id == 'otroMarcatred' && $request->filled('otra_marca_tred')) {
-        $request->merge([
-            'marcatred_id' => MarcaTred::create(['marca' => $request->otra_marca_tred])->id
-        ]);
-    }
-    if ($request->modtred_id == 'otroModtred' && $request->filled('otro_modelo_tred')) {
-        $request->merge([
-            'modtred_id' => ModeloTred::create(['modelo' => $request->otro_modelo_tred])->id
-        ]);
-    }
-
-    //------------TARJETA WIFI--------------------
-    if ($request->marcawifi_id == 'otroMarcawifi' && $request->filled('otra_marca_wifi')) {
-        $request->merge([
-            'marcawifi_id' => MarcaTwifi::create(['marca' => $request->otra_marca_wifi])->id
-        ]);
-    }
-    if ($request->modcawifi_id == 'otroModwifi' && $request->filled('otra_modelo_wifi')) {
-        $request->merge([
-            'modcawifi_id' => ModeloWifi::create(['modelo' => $request->otra_modelo_wifi])->id
-        ]);
-    }
-
-    //------------FUENTE DE PODER--------------------
-    if ($request->marcafuente_id == 'otroMarcafuente' && $request->filled('otra_marca_fuente')) {
-        $request->merge([
-            'marcafuente_id' => MarcaFuente::create(['marca' => $request->otra_marca_fuente])->id
-        ]);
-    }
-    if ($request->potfuente_id == 'otroPotenciafuente' && $request->filled('otra_potencia_fuente')) {
-        $request->merge([
-            'potfuente_id' => PotenciaFuente::create(['potencia' => $request->otra_potencia_fuente])->id
-        ]);
-    }
-
-    //------------LECTOR CD/DVD--------------------
-    if ($request->marcacd_id == 'otroMarcacd' && $request->filled('otro_marca_cd')) {
-        $request->merge([
-            'marcacd_id' => MarcaLectorcd::create(['marca' => $request->otro_marca_cd])->id
-        ]);
-    }
-
+    /*
+    |--------------------------------------------------------------------------
+    | 2. PROCESAR FUNCIONARIO, CATÁLOGOS Y CPU EN UNA TRANSACCIÓN
+    |--------------------------------------------------------------------------
+    */
     $registroCpu = DB::transaction(function () use (
         $request,
-        $funcionario,
         $correlativoService
     ) {
+
+        /*
+        |--------------------------------------------------------------------------
+        | FUNCIONARIO
+        |--------------------------------------------------------------------------
+        */
+        $funcionario = Funcionario::firstOrNew([
+            'ci' => $request->input('ci'),
+        ]);
+
+        $funcionario->grado_academico = $request->input('grado_academico');
+        $funcionario->paterno         = $request->input('paterno');
+        $funcionario->materno         = $request->input('materno');
+        $funcionario->nombre          = $request->input('nombre');
+        $funcionario->ci              = $request->input('ci');
+        $funcionario->expedido         = $request->input('expedido');
+        $funcionario->celular          = $request->input('celular');
+        $funcionario->email            = $request->input('email');
+        $funcionario->cargo            = $request->input('cargo');
+        $funcionario->dependencia_id   = $request->input('dependencia_id');
+
+        $funcionario->save();
+
+        /*
+        |--------------------------------------------------------------------------
+        | CATÁLOGOS: CREAR OPCIONES "OTRO" SOLO CUANDO CORRESPONDA
+        |--------------------------------------------------------------------------
+        |
+        | Formato:
+        | campo_id => [valor_otro, campo_texto, modelo, columna]
+        |
+        */
+
+        $catalogos = [
+
+            // CASE
+            'marcacase_id' => [
+                'otroMarcacase', 'otra_marca',
+                \App\Models\MarcaCase::class, 'marca'
+            ],
+            'colorcase_id' => [
+                'otroColorcase', 'otro_color',
+                \App\Models\ColorCase::class, 'color'
+            ],
+
+            // PROCESADOR
+            'marcaprocesador_id' => [
+                'otroMarcapro', 'otra_marca_procesador',
+                \App\Models\MarcaProcesador::class, 'marca'
+            ],
+            'modeloprocesador_id' => [
+                'otroModpro', 'otro_modelo_procesador',
+                \App\Models\ModeloProcesador::class, 'modelo'
+            ],
+            'genprocesador_id' => [
+                'otroGenpro', 'otra_generacion',
+                \App\Models\GenProcesador::class, 'generacion'
+            ],
+
+            // TARJETA MADRE
+            'marcatmadre_id' => [
+                'otroMarcatm', 'otra_marcatm',
+                \App\Models\MarcaTmadre::class, 'marca'
+            ],
+            'modtmadre_id' => [
+                'otroModtm', 'otro_modtm',
+                \App\Models\ModeloTmadre::class, 'modelo'
+            ],
+
+            // DISCO DURO
+            'marcadisco_id' => [
+                'otroMarcadisco', 'otra_marca_disco',
+                \App\Models\MarcaDisco::class, 'marca'
+            ],
+            'capacdisco_id' => [
+                'otroCapdisco', 'otra_capacidad_disco',
+                \App\Models\CapacidadDisco::class, 'capacidad'
+            ],
+            'tipodisco_id' => [
+                'otroTipodisco', 'otro_tipo_disco',
+                \App\Models\TipoDisco::class, 'tipo'
+            ],
+
+            // RAM 1
+            'marcaram_id' => [
+                'otroMarcaram', 'otra_marca_ram',
+                \App\Models\MarcaRam::class, 'marca'
+            ],
+            'capacram_id' => [
+                'otroCapram', 'otra_capacidad_ram',
+                \App\Models\CapacidadRam::class, 'capacidad'
+            ],
+            'tiporam_id' => [
+                'otroTiporam', 'otra_tipo_ram',
+                \App\Models\TipoRam::class, 'tipo'
+            ],
+
+            // RAM 2
+            'marcaram2_id' => [
+                'otroMarcaram2', 'otra_marca_ram2',
+                \App\Models\MarcaRam::class, 'marca'
+            ],
+            'capacram2_id' => [
+                'otroCapram2', 'otra_capacidad_ram2',
+                \App\Models\CapacidadRam::class, 'capacidad'
+            ],
+            'tiporam2_id' => [
+                'otroTiporam2', 'otra_tipo_ram2',
+                \App\Models\TipoRam::class, 'tipo'
+            ],
+
+            // RAM 3
+            'marcaram3_id' => [
+                'otroMarcaram3', 'otra_marca_ram3',
+                \App\Models\MarcaRam::class, 'marca'
+            ],
+            'capacram3_id' => [
+                'otroCapram3', 'otra_capacidad_ram3',
+                \App\Models\CapacidadRam::class, 'capacidad'
+            ],
+            'tiporam3_id' => [
+                'otroTiporam3', 'otra_tipo_ram3',
+                \App\Models\TipoRam::class, 'tipo'
+            ],
+
+            // RAM 4
+            'marcaram4_id' => [
+                'otroMarcaram4', 'otra_marca_ram4',
+                \App\Models\MarcaRam::class, 'marca'
+            ],
+            'capacram4_id' => [
+                'otroCapram4', 'otra_capacidad_ram4',
+                \App\Models\CapacidadRam::class, 'capacidad'
+            ],
+            'tiporam4_id' => [
+                'otroTiporam4', 'otra_tipo_ram4',
+                \App\Models\TipoRam::class, 'tipo'
+            ],
+
+            // TARJETA DE VIDEO
+            'marcatvideo_id' => [
+                'otroMarcatv', 'otra_marca_tvideo',
+                \App\Models\MarcaTvideo::class, 'marca'
+            ],
+            'capactvideo_id' => [
+                'otroCaptv', 'otra_capacidad_tvideo',
+                \App\Models\CapacidadTvideo::class, 'capacidad'
+            ],
+
+            // TARJETA DE RED
+            'marcatred_id' => [
+                'otroMarcatred', 'otra_marca_tred',
+                \App\Models\MarcaTred::class, 'marca'
+            ],
+            'modtred_id' => [
+                'otroModtred', 'otro_modelo_tred',
+                \App\Models\ModeloTred::class, 'modelo'
+            ],
+
+            // WIFI
+            'marcawifi_id' => [
+                'otroMarcawifi', 'otra_marca_wifi',
+                \App\Models\MarcaTwifi::class, 'marca'
+            ],
+            'modcawifi_id' => [
+                'otroModwifi', 'otra_modelo_wifi',
+                \App\Models\ModeloWifi::class, 'modelo'
+            ],
+
+            // FUENTE DE PODER
+            'marcafuente_id' => [
+                'otroMarcafuente', 'otra_marca_fuente',
+                \App\Models\MarcaFuente::class, 'marca'
+            ],
+            'potfuente_id' => [
+                'otroPotenciafuente', 'otra_potencia_fuente',
+                \App\Models\PotenciaFuente::class, 'potencia'
+            ],
+
+            // LECTOR CD/DVD
+            'marcacd_id' => [
+                'otroMarcacd', 'otro_marca_cd',
+                \App\Models\MarcaLectorcd::class, 'marca'
+            ],
+        ];
+
+        foreach ($catalogos as $campoId => $configuracion) {
+            [
+                $valorOtro,
+                $campoTexto,
+                $modelo,
+                $columna
+            ] = $configuracion;
+
+            if ($request->input($campoId) !== $valorOtro) {
+                continue;
+            }
+
+            $texto = trim((string) $request->input($campoTexto));
+
+            $id = $texto !== ''
+                ? $modelo::create([$columna => $texto])->id
+                : null;
+
+            $request->merge([
+                $campoId => $id,
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | REGISTRO CPU
+        |--------------------------------------------------------------------------
+        */
         $registroCpu = new RegistroCpu();
+
         $registroCpu->funcionario_id = $funcionario->id;
         $registroCpu->dependencia_id = $request->input('dependencia_id');
-        $registroCpu->cargo = $request->input('cargo');
-        $registroCpu->fecha = $request->input('fecha');
-        $registroCpu->fecha_inicio = $request->input('fecha_inicio');
-        $registroCpu->cod_gamea = $request->input('cod_gamea');
-        $registroCpu->cod_registro = $request->input('cod_registro');
-        $registroCpu->usuario = $request->input('usuario');
+        $registroCpu->cargo          = $request->input('cargo');
+        $registroCpu->fecha          = $request->input('fecha');
+        $registroCpu->fecha_inicio   = $request->input('fecha_inicio');
+        $registroCpu->cod_gamea      = $request->input('cod_gamea');
+
+        // Generar el número de recepción una sola vez.
+        $registroCpu->cod_registro =
+            $correlativoService->generarNumeroRecepcion();
+
+        $registroCpu->usuario    = $request->input('usuario');
         $registroCpu->contrasena = $request->input('contrasena');
-                // GENERAR CORRELATIVO
-        $registroCpu->cod_registro = $correlativoService->generarNumeroRecepcion();
 
-        $registroCpu->marcacase_id = $request->input('marcacase_id');
-        $registroCpu->colorcase_id = $request->input('colorcase_id');
-        $registroCpu->marcaprocesador_id = $request->input('marcaprocesador_id');
-        $registroCpu->modeloprocesador_id = $request->input('modeloprocesador_id');
-        $registroCpu->genprocesador_id = $request->input('genprocesador_id');
-        $registroCpu->marcatmadre_id = $request->input('marcatmadre_id');
-        $registroCpu->modtmadre_id = $request->input('modtmadre_id');
-        $registroCpu->marcadisco_id = $request->input('marcadisco_id');
-        $registroCpu->capacdisco_id = $request->input('capacdisco_id');
-        $registroCpu->tipodisco_id = $request->input('tipodisco_id');
-        $registroCpu->disipador_id = $request->input('disipador_id');
-        $registroCpu->marcaram_id = $request->input('marcaram_id');
-        $registroCpu->tiporam_id = $request->input('tiporam_id');
-        $registroCpu->capacram_id = $request->input('capacram_id');
-        $registroCpu->cantidad_id = $request->input('cantidad_id');
-        $registroCpu->marcatvideo_id = $request->input('marcatvideo_id');
-        $registroCpu->capactvideo_id = $request->input('capactvideo_id');
-        $registroCpu->tipotvideo_id = $request->input('tipotvideo_id');
-        $registroCpu->marcatred_id = $request->input('marcatred_id');
-        $registroCpu->modtred_id = $request->input('modtred_id');
-        $registroCpu->marcawifi_id = $request->input('marcawifi_id');
-        $registroCpu->modcawifi_id = $request->input('modcawifi_id');
-        $registroCpu->marcafuente_id = $request->input('marcafuente_id');
-        $registroCpu->potfuente_id = $request->input('potfuente_id');
-        $registroCpu->marcacd_id = $request->input('marcacd_id');
+        /*
+         * Campos de los componentes.
+         * Se conservan los nombres originales de las columnas.
+         */
+        $camposComponentes = [
+            'marcacase_id',
+            'colorcase_id',
+            'marcaprocesador_id',
+            'modeloprocesador_id',
+            'genprocesador_id',
+            'marcatmadre_id',
+            'modtmadre_id',
+            'marcadisco_id',
+            'capacdisco_id',
+            'tipodisco_id',
+            'disipador_id',
 
-        $registroCpu->marcaram2_id = $request->input('marcaram2_id');
-        $registroCpu->disipador2_id = $request->input('disipador2_id');
-        $registroCpu->capacram2_id = $request->input('capacram2_id');
-        $registroCpu->tiporam2_id = $request->input('tiporam2_id');
-        $registroCpu->cantidad2_id = $request->input('cantidad2_id');
-        $registroCpu->marcaram3_id = $request->input('marcaram3_id');
-        $registroCpu->disipador3_id = $request->input('disipador3_id');
-        $registroCpu->capacram3_id = $request->input('capacram3_id');
-        $registroCpu->tiporam3_id = $request->input('tiporam3_id');
-        $registroCpu->cantidad3_id = $request->input('cantidad3_id');
-        $registroCpu->marcaram4_id = $request->input('marcaram4_id');
-        $registroCpu->disipador4_id = $request->input('disipador4_id');
-        $registroCpu->capacram4_id = $request->input('capacram4_id');
-        $registroCpu->tiporam4_id = $request->input('tiporam4_id');
-        $registroCpu->cantidad4_id = $request->input('cantidad4_id');
-        $registroCpu->cable_id = $request->input('cable_id');
-        $registroCpu->antena_id = $request->input('antena_id');
+            // RAM 1
+            'marcaram_id',
+            'tiporam_id',
+            'capacram_id',
+            'cantidad_id',
 
-        $request->validate([
-        'respaldo' => 'required|string',
-        ]);
-        $registroCpu->falla = $request->input('falla');
-        $registroCpu->respaldo = $request->input('respaldo');
-        $registroCpu->observaciones = $request->input('observaciones');
+            // Tarjeta de video
+            'marcatvideo_id',
+            'capactvideo_id',
+            'tipotvideo_id',
+
+            // Tarjeta de red y WiFi
+            'marcatred_id',
+            'modtred_id',
+            'marcawifi_id',
+            'modcawifi_id',
+
+            // Fuente y lector
+            'marcafuente_id',
+            'potfuente_id',
+            'marcacd_id',
+
+            // RAM 2
+            'marcaram2_id',
+            'disipador2_id',
+            'capacram2_id',
+            'tiporam2_id',
+            'cantidad2_id',
+
+            // RAM 3
+            'marcaram3_id',
+            'disipador3_id',
+            'capacram3_id',
+            'tiporam3_id',
+            'cantidad3_id',
+
+            // RAM 4
+            'marcaram4_id',
+            'disipador4_id',
+            'capacram4_id',
+            'tiporam4_id',
+            'cantidad4_id',
+
+            // Otros componentes
+            'cable_id',
+            'antena_id',
+        ];
+
+        foreach ($camposComponentes as $campo) {
+            $registroCpu->{$campo} = $request->input($campo);
+        }
+
+        /*
+         * Información del registro.
+         */
+        $registroCpu->falla              = $request->input('falla');
+        $registroCpu->respaldo           = $request->input('respaldo');
+        $registroCpu->observaciones      = $request->input('observaciones');
         $registroCpu->funcionario_activo = $request->input('funcionario_activo');
-        $registroCpu->otro = $request->input('otro');
-        $registroCpu->condiciones = $request->input('condiciones');
-        $registroCpu->estado_id = $request->input('estado_id');
-        $registroCpu->user_id = $request->input('user_id');
-        $registroCpu->reguser_id = Auth::id();
+        $registroCpu->otro               = $request->input('otro');
+        $registroCpu->condiciones        = $request->input('condiciones');
+        $registroCpu->estado_id          = $request->input('estado_id');
+        $registroCpu->user_id             = $request->input('user_id');
 
+        // El modelo RegistroCpu ya asigna reguser_id en su evento creating.
         $registroCpu->save();
+
         return $registroCpu;
-    });
-        return Redirect::route('registro-cpus.index')
+    }, 3);
+
+    /*
+    |--------------------------------------------------------------------------
+    | REDIRECCIÓN
+    |--------------------------------------------------------------------------
+    */
+    return Redirect::route('registro-cpus.index')
         ->with('success', 'REGISTRADO CORRECTAMENTE')
         ->with('text', 'Número de recepción: ' . $registroCpu->cod_registro)
         ->with('icono', 'success');
-
-    }
+}
 
 // NUMERO CORRELATIVO
     private function generarNumeroRecepcion()
@@ -536,6 +642,9 @@ public function index(Request $request): View
         $registroCpu->marcadisco_id = $request->input('marcadisco_id');
         $registroCpu->capacdisco_id = $request->input('capacdisco_id');
         $registroCpu->tipodisco_id = $request->input('tipodisco_id');
+        $registroCpu->marcadisco2_id = $request->input('marcadisco2_id');
+        $registroCpu->capacdisco2_id = $request->input('capacdisco2_id');
+        $registroCpu->tipodisco2_id = $request->input('tipodisco2_id');
         $registroCpu->disipador_id = $request->input('disipador_id');
         $registroCpu->marcaram_id = $request->input('marcaram_id');
         $registroCpu->tiporam_id = $request->input('tiporam_id');
@@ -1050,5 +1159,46 @@ public function buscaCpu(Request $request) {
     return response()->json($datos);
 
     }
+
+public function guardar(Request $request, string $tipo, int $id)
+{
+    $request->validate([
+        'detalle_trabajo' => 'required|string|min:3',
+        'resultado_id' => 'required|integer|in:1,2,3,4,5',
+    ]);
+
+    $modelos = [
+        'audifono' => Audifono::class,
+        'cpu' => RegistroCpu::class,
+        'estabilizador' => Estabilizador::class,
+        'impresora' => Impresora::class,
+        'laptop' => Laptop::class,
+        'ups' => Upese::class,
+        'parlante' => Parlante::class,
+        'teclado' => Teclado::class,
+        'mouse' => Raton::class,
+        'monitor' => Monitor::class,
+        'otro' => OtrosEquipo::class,
+    ];
+
+    abort_unless(
+        isset($modelos[$tipo]),
+        404,
+        'Tipo de equipo no válido.'
+    );
+
+    $modelo = $modelos[$tipo];
+
+    $equipo = $modelo::findOrFail($id);
+
+    $equipo->detalle_trabajo = $request->detalle_trabajo;
+    $equipo->resultado_id = $request->resultado_id;
+    $equipo->save();
+
+    return redirect()->back()
+        ->with('success', 'REGISTRADO CORRECTAMENTE')
+        ->with('text', 'El detalle del trabajo y el resultado se guardaron correctamente.')
+        ->with('icono', 'success');
+}
 
 }

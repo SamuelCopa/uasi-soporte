@@ -523,9 +523,24 @@
                                 </div>
 
                                 <div class="registro-view-value">
-                                    {{ $registroCpu->Marcadisco?->marca ?? 'SIN MARCA' }}
-                                    {{ $registroCpu->CapacidadDisco?->capacidad }}
-                                    {{ $registroCpu->TipoDisco?->tipo }}
+                                    @if($registroCpu->Marcadisco?->marca || $registroCpu->CapacidadDisco?->capacidad || $registroCpu->TipoDisco?->tipo)
+                                        <div>
+                                            {{ $registroCpu->Marcadisco?->marca ?? 'SIN MARCA' }}
+                                            {{ $registroCpu->CapacidadDisco?->capacidad }}
+                                            {{ $registroCpu->TipoDisco?->tipo }}
+                                        </div>
+                                    @else
+                                        SIN REGISTRO
+                                    @endif
+                                    @if($registroCpu->Marcadisco2?->marca || $registroCpu->CapacidadDisco2?->capacidad || $registroCpu->TipoDisco2?->tipo)
+                                        <div>
+                                            {{ $registroCpu->Marcadisco2?->marca ?? 'SIN MARCA' }}
+                                            {{ $registroCpu->CapacidadDisco2?->capacidad }}
+                                            {{ $registroCpu->TipoDisco2?->tipo }}
+                                        </div>
+                                    @else
+                                        SIN REGISTRO
+                                    @endif
                                 </div>
 
                             </div>
@@ -795,9 +810,27 @@
 
                         </div>
 
+                        <!-- DETALLE TRABAJO REALIZADO -->
+                        <div class="col-md-6">
+
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-comment-alt"></i>
+                                    DETALLE DEL TRABAJO REALIZADO
+                                </div>
+
+                                <div class="registro-view-value">
+                                    {{ $registroCpu->detalle_trabajo ?? 'EN ESPERA' }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
 
                         <!-- ESTADO -->
-                        <div class="col-md-12">
+                        <div class="col-md-6">
 
                             <div class="registro-view-field">
 

@@ -380,67 +380,70 @@
                                         <td>
                                            <div class="acciones">
 
-    <!-- PDF -->
-    <a href="#"
-       class="btn-mini btn-danger btn-preview-pdf"
-       data-ver="{{ route('pdf.impresora.preview', ':id') }}"
-       data-descargar="{{ route('pdf.impresora.descargar', ':id') }}"
-       data-enviar="{{ route('pdf.impresora.enviar', ':id') }}"
-       data-id="{{ $impresora->id }}"
-       title="Formulario PDF">
-        <i class="far fa-file-pdf"></i>
-    </a>
+                                        <!-- PDF -->
+                                        <a href="#"
+                                        class="btn-mini btn-danger btn-preview-pdf"
+                                        data-ver="{{ route('pdf.impresora.preview', ':id') }}"
+                                        data-descargar="{{ route('pdf.impresora.descargar', ':id') }}"
+                                        data-enviar="{{ route('pdf.impresora.enviar', ':id') }}"
+                                        data-id="{{ $impresora->id }}"
+                                        title="Formulario PDF">
+                                            <i class="far fa-file-pdf"></i>
+                                        </a>
 
-    <!-- VER -->
-    <button type="button"
-            data-toggle="modal"
-            data-target="#ver{{ $impresora->id }}"
-            class="btn-mini btn-primary"
-            title="Ver">
-        <i class="fa fa-eye"></i>
-    </button>
+                                        <!-- VER -->
+                                        <button type="button"
+                                                data-toggle="modal"
+                                                data-target="#ver{{ $impresora->id }}"
+                                                class="btn-mini btn-primary"
+                                                title="Ver">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
 
-    @if(auth()->check() && auth()->user()->hasAnyRole([
-        'Administrador',
-        'SuperAdministrador'
-    ]))
+                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                            'Administrador',
+                                            'SuperAdministrador'
+                                        ]))
 
-        <!-- EDITAR -->
-        <button type="button"
-                data-toggle="modal"
-                data-target="#editar{{ $impresora->id }}"
-                class="btn-mini btn-success"
-                title="Editar">
-            <i class="fa fa-edit"></i>
-        </button>
+                                            <!-- EDITAR -->
+                                            <button type="button"
+                                                    data-toggle="modal"
+                                                    data-target="#editar{{ $impresora->id }}"
+                                                    class="btn-mini btn-success"
+                                                    title="Editar">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
 
-        <!-- INFORME -->
-        <a href="{{ route('informe.impresora', $impresora->id) }}"
-           class="btn-mini btn-secondary"
-           title="Informe">
-            <i class="fa fa-file"></i>
-        </a>
+                                                <!-- DETALLE DEL TRABAJO REALIZADO -->
+                                                <button type="button"
+                                                        class="btn btn-sm btn-secondary"
+                                                        data-toggle="modal"
+                                                        data-target="#modalResultado{{ $impresora->id }}"
+                                                        title="Registrar detalle del trabajo realizado">
+                                                    <i class="fas fa-file-alt"></i>
+                                                </button>  
 
-        <!-- ELIMINAR -->
-        <form action="{{ route('impresoras.destroy', $impresora->id) }}"
-              method="POST"
-              class="formEliminar">
-            @csrf
-            @method('DELETE')
+                                            <!-- ELIMINAR -->
+                                            <form action="{{ route('impresoras.destroy', $impresora->id) }}"
+                                                method="POST"
+                                                class="formEliminar">
+                                                @csrf
+                                                @method('DELETE')
 
-            <button type="submit"
-                    class="btn-mini btn-danger"
-                    title="Eliminar">
-                <i class="fa fa-trash"></i>
-            </button>
-        </form>
+                                                <button type="submit"
+                                                        class="btn-mini btn-danger"
+                                                        title="Eliminar">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
 
-    @endif
+                                        @endif
 
-</div>
+                                    </div>
                                         </td>
                                     </tr>
                                     <!--Ventana Modal para Ver --->
+                                    @include('impresora.modalResultado')
                                     @include('impresora.modalVer')
                                     <!--Ventana Modal eRecepcion --->
                                     @include('impresora.modalRecepcion')
@@ -539,16 +542,24 @@ function cambiarEstado(id, estadoId, tieneResultado) {
         }
         else if (event.target.id === 'entregado') {
         if (tieneResultado) {
+
+            // Si tiene resultado, actualizar el estado a Entregado
             cambiarEstadoAjax(id, 5);
             console.log(id);
+
         } else {
-                Swal.fire({
-                    position: "top-center",
-                    icon: "error",
-                    title: 'Debes llenar el informe antes de actualizar el estado',
-                    showConfirmButton: true,
-                });
-            }
+
+            // Mostrar únicamente el mensaje
+            Swal.fire({
+                position: 'top-center',
+                icon: 'warning',
+                title: 'Detalle del trabajo pendiente',
+                text: 'Debes llenar el detalle de trabajo realizado para actualizar el estado a Entregado.',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#3085d6'
+            });
+
+        }
         }
     })
 }
@@ -663,15 +674,62 @@ Swal.fire({
 <script src="{{ asset('js/equipoPdf.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('estilos/equipoPdf.css') }}"> 
 <script>
-const searchInputI = document.getElementById('search-inputI');
-const optionsI = document.getElementById('optionsI').options;
-const idSelectedInputI = document.getElementById('id-selectedI');
+document.addEventListener('DOMContentLoaded', function () {
 
-searchInputI.addEventListener('input', () => {
-    const selectedOption = Array.from(optionsI).find(option => option.value === searchInputI.value);
-    if (selectedOption) {
-        idSelectedInputI.value = selectedOption.dataset.id;
+    const searchInputI = document.getElementById('search-inputI');
+    const optionsI = document.getElementById('optionsI');
+    const idSelectedI = document.getElementById('id-selectedI');
+
+    if (!searchInputI || !optionsI || !idSelectedI) {
+        return;
     }
+
+    function validarDependenciaI() {
+
+        const valor = searchInputI.value.trim();
+
+        // Eliminar cualquier ID anterior.
+        idSelectedI.value = '';
+
+        const opcion = Array.from(optionsI.options).find(option =>
+            option.value.trim() === valor &&
+            option.dataset.id &&
+            /^[1-9]\d*$/.test(option.dataset.id)
+        );
+
+        if (valor === '') {
+            searchInputI.setCustomValidity('');
+            return;
+        }
+
+        if (opcion) {
+            idSelectedI.value = opcion.dataset.id;
+            searchInputI.setCustomValidity('');
+        } else {
+            searchInputI.setCustomValidity(
+                'Seleccione una dependencia registrada en la lista.'
+            );
+        }
+    }
+
+    searchInputI.addEventListener('input', validarDependenciaI);
+    searchInputI.addEventListener('change', validarDependenciaI);
+
+    const formulario = searchInputI.closest('form');
+
+    if (formulario) {
+        formulario.addEventListener('submit', function (event) {
+
+            validarDependenciaI();
+
+            if (searchInputI.value.trim() !== '' && !idSelectedI.value) {
+                event.preventDefault();
+                searchInputI.reportValidity();
+                searchInputI.focus();
+            }
+        });
+    }
+
 });
 </script>
 <script src="//unpkg.com/alpinejs" defer></script>

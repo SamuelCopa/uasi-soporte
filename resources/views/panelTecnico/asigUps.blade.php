@@ -103,8 +103,15 @@
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#ver{{ $upese->id }}"><i class="fa fa-fw fa-eye"></i> {{ __('VER') }}</button>
-                                                    @if($upese->estado_id == '4' || $upese->estado_id == '5')
-                                                    <a class="btn btn-sm btn-secondary" href="{{ route('informe.ups', $upese->id) }}"><i class="fa fa-fw fa-file"></i>{{ __('INFORME') }}</a>
+                                                    @if($upese->estado_id == 4)
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-sm btn-secondary"
+                                                            data-toggle="modal"
+                                                            data-target="#modalResultado{{ $upese->id }}">
+                                                            <i class="fa fa-fw fa-file"></i>
+                                                            DETALLE DEL TRABAJO REALIZADO
+                                                        </button>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -172,16 +179,24 @@ function cambiarEstado(id, estadoId, tieneResultado) {
         }
         else if (event.target.id === 'entregado') {
         if (tieneResultado) {
+
+            // Si tiene resultado, actualizar el estado a Entregado
             cambiarEstadoAjax(id, 5);
             console.log(id);
+
         } else {
-                Swal.fire({
-                    position: "top-center",
-                    icon: "error",
-                    title: 'Debes llenar el informe antes de actualizar el estado',
-                    showConfirmButton: true,
-                });
-            }
+
+            // Mostrar únicamente el mensaje
+            Swal.fire({
+                position: 'top-center',
+                icon: 'warning',
+                title: 'Detalle del trabajo pendiente',
+                text: 'Debes llenar el detalle de trabajo realizado para actualizar el estado a Entregado.',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#3085d6'
+            });
+
+        }
         }
     })
 }

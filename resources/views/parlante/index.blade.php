@@ -377,70 +377,73 @@
                                                 </form> 
                                             </td>
                                             <td>
-<div class="acciones">
+                                            <div class="acciones">
 
-    <!-- PDF -->
-    <a href="#"
-       class="btn-mini btn-danger btn-preview-pdf"
-       data-ver="{{ route('pdf.parlante.preview', ':id') }}"
-       data-descargar="{{ route('pdf.parlante.descargar', ':id') }}"
-       data-enviar="{{ route('pdf.parlante.enviar', ':id') }}"
-       data-id="{{ $parlante->id }}"
-       title="Formulario PDF">
-        <i class="far fa-file-pdf"></i>
-    </a>
+                                                <!-- PDF -->
+                                                <a href="#"
+                                                class="btn-mini btn-danger btn-preview-pdf"
+                                                data-ver="{{ route('pdf.parlante.preview', ':id') }}"
+                                                data-descargar="{{ route('pdf.parlante.descargar', ':id') }}"
+                                                data-enviar="{{ route('pdf.parlante.enviar', ':id') }}"
+                                                data-id="{{ $parlante->id }}"
+                                                title="Formulario PDF">
+                                                    <i class="far fa-file-pdf"></i>
+                                                </a>
 
-    <!-- VER -->
-    <button type="button"
-            data-toggle="modal"
-            data-target="#ver{{ $parlante->id }}"
-            class="btn-mini btn-primary"
-            title="Ver">
-        <i class="fa fa-eye"></i>
-    </button>
+                                                <!-- VER -->
+                                                <button type="button"
+                                                        data-toggle="modal"
+                                                        data-target="#ver{{ $parlante->id }}"
+                                                        class="btn-mini btn-primary"
+                                                        title="Ver">
+                                                    <i class="fa fa-eye"></i>
+                                                </button>
 
-    @if(auth()->check() && auth()->user()->hasAnyRole([
-        'Administrador',
-        'SuperAdministrador'
-    ]))
+                                                @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                    'Administrador',
+                                                    'SuperAdministrador'
+                                                ]))
 
-        <!-- EDITAR -->
-        <button type="button"
-                data-toggle="modal"
-                data-target="#editar{{ $parlante->id }}"
-                class="btn-mini btn-success"
-                title="Editar">
-            <i class="fa fa-edit"></i>
-        </button>
+                                                    <!-- EDITAR -->
+                                                    <button type="button"
+                                                            data-toggle="modal"
+                                                            data-target="#editar{{ $parlante->id }}"
+                                                            class="btn-mini btn-success"
+                                                            title="Editar">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
 
-        <!-- INFORME -->
-        <a href="{{ route('informe.parlante', $parlante->id) }}"
-           class="btn-mini btn-secondary"
-           title="Informe">
-            <i class="fa fa-file"></i>
-        </a>
+                                                <!-- DETALLE DEL TRABAJO REALIZADO -->
+                                                <button type="button"
+                                                        class="btn btn-sm btn-secondary"
+                                                        data-toggle="modal"
+                                                        data-target="#modalResultado{{ $parlante->id }}"
+                                                        title="Registrar detalle del trabajo realizado">
+                                                    <i class="fas fa-file-alt"></i>
+                                                </button>  
 
-        <!-- ELIMINAR -->
-        <form action="{{ route('parlantes.destroy', $parlante->id) }}"
-              method="POST"
-              class="formEliminar">
-            @csrf
-            @method('DELETE')
+                                                    <!-- ELIMINAR -->
+                                                    <form action="{{ route('parlantes.destroy', $parlante->id) }}"
+                                                        method="POST"
+                                                        class="formEliminar">
+                                                        @csrf
+                                                        @method('DELETE')
 
-            <button type="submit"
-                    class="btn-mini btn-danger"
-                    title="Eliminar">
-                <i class="fa fa-trash"></i>
-            </button>
-        </form>
+                                                        <button type="submit"
+                                                                class="btn-mini btn-danger"
+                                                                title="Eliminar">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </form>
 
-    @endif
+                                                @endif
 
-</div>
+                                            </div>
                                             </td>
                                         </tr>
                                             <!--Ventana Modal para Ver --->
                                             @include('parlante.modalVer')
+                                            @include('parlante.modalResultado')
                                             <!--Ventana Modal eRecepcion --->
                                             @include('parlante.modalRecepcion')
                                             <!--Ventana Modal eTecnico --->
@@ -659,16 +662,62 @@ Swal.fire({
 <link rel="stylesheet" href="{{ asset('estilos/fechas.css') }}">  
 <script src="{{ asset('js/equipoPdf.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('estilos/equipoPdf.css') }}"> 
+```html
 <script>
-const searchInputP = document.getElementById('search-inputP');
-const optionsP = document.getElementById('optionsP').options;
-const idSelectedInputP = document.getElementById('id-selectedP');
+document.addEventListener('DOMContentLoaded', function () {
 
-searchInputP.addEventListener('input', () => {
-    const selectedOption = Array.from(optionsP).find(option => option.value === searchInputP.value);
-    if (selectedOption) {
-        idSelectedInputP.value = selectedOption.dataset.id;
+    const input = document.getElementById('search-inputP');
+    const lista = document.getElementById('optionsP');
+    const hidden = document.getElementById('id-selectedP');
+
+    if (!input || !lista || !hidden) return;
+
+    function validarDependencia() {
+
+        const valor = input.value.trim();
+
+        // Limpiar cualquier ID anterior.
+        hidden.value = '';
+
+        if (valor === '') {
+            input.setCustomValidity('');
+            return;
+        }
+
+        const opcion = Array.from(lista.options).find(option =>
+            option.value.trim() === valor &&
+            option.dataset.id &&
+            /^[1-9]\d*$/.test(option.dataset.id)
+        );
+
+        if (opcion) {
+            hidden.value = opcion.dataset.id;
+            input.setCustomValidity('');
+        } else {
+            input.setCustomValidity(
+                'Seleccione una dependencia registrada en la lista.'
+            );
+        }
+    }
+
+    input.addEventListener('input', validarDependencia);
+    input.addEventListener('change', validarDependencia);
+
+    const formulario = input.closest('form');
+
+    if (formulario) {
+        formulario.addEventListener('submit', function (event) {
+
+            validarDependencia();
+
+            if (input.value.trim() !== '' && !hidden.value) {
+                event.preventDefault();
+                input.reportValidity();
+                input.focus();
+            }
+        });
     }
 });
 </script>
+```
 @endpush

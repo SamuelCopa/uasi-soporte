@@ -5,7 +5,7 @@
      ========================================================= -->
 
 <div class="modal fade" id="crearc" tabindex="-1" role="dialog" aria-labelledby="crearCpuLabel" aria-hidden="true">
-<div class="modal-dialog modal-xxl modal-dialog-centered" role="document">
+<div class="modal-dialog modal-xxl" role="document">
     <div class="modal-content modal-password">
         <!-- =================================================
              HEADER
@@ -66,7 +66,6 @@
                                         TIPO DE FUNCIONARIO
                                         <span class="required">*</span>
                                     </label>
-
                                     <select name="funcionario_activo"
                                             id="miSelect"
                                             class="form-control"
@@ -83,81 +82,52 @@
                                         <option value="0">
                                             EX FUNCIONARIO
                                         </option>
-
                                     </select>
-
                                 </div>
-
                             </div>
-
                         </div>
                     <!-- =================================================
                          FORMULARIO FUNCIONARIO
                          ================================================= -->
                     <div id="formularioc">
-
-
                         <!-- C.I. / EXPEDIDO / CELULAR -->
                         <div class="row">
-
                             <!-- C.I. -->
                             <div class="col-md-4">
-
                                 <div class="registro-field">
-
                                     <label for="ci">
-
                                         <i class="fas fa-id-card"></i>
-
                                         C.I.
-
                                         <span class="required">*</span>
-
                                     </label>
-
-                                    <input type="number"
+                                    <input type="text"
                                            name="ci"
                                            id="ci"
                                            class="form-control @error('ci') is-invalid @enderror"
                                            placeholder="Carnet de identidad"
                                            value="{{ old('ci') }}"
                                            required>
-
                                     {!! $errors->first(
                                         'ci',
                                         '<div class="invalid-feedback" role="alert">
                                             <strong>:message</strong>
                                         </div>'
                                     ) !!}
-
                                 </div>
-
                             </div>
 
 
                             <!-- EXPEDIDO -->
                             <div class="col-md-4">
-
                                 <div class="registro-field">
-
                                     <label for="expedido">
-
                                         <i class="fas fa-map-marker-alt"></i>
-
                                         EXPEDIDO
-
                                         <span class="required">*</span>
-
                                     </label>
+                                    <select name="expedido" id="expedido" class="form-control @error('expedido') is-invalid @enderror" required>
 
-                                    <select name="expedido"
-                                            id="expedido"
-                                            class="form-control @error('expedido') is-invalid @enderror"
-                                            required>
-
-                                        <option value=""
-                                                disabled
-                                                {{ old('expedido') ? '' : 'selected' }}>
+                                        <option value="" disabled {{ old('expedido') ? '' : 'selected' }}>
                                             SELECCIONE UNA OPCIÓN
                                         </option>
 
@@ -254,114 +224,45 @@
 
                         <!-- APELLIDOS / NOMBRE -->
                         <div class="row">
-
                             <!-- PATERNO -->
                             <div class="col-md-4">
-
                                 <div class="registro-field">
-
                                     <label for="paterno">
-
                                         <i class="fas fa-user"></i>
-
                                         APELLIDO PATERNO
-
                                         <span class="required">*</span>
-
                                     </label>
-
-                                    <input type="text"
-                                           name="paterno"
-                                           id="paterno"
-                                           class="form-control @error('paterno') is-invalid @enderror"
-                                           placeholder="Apellido paterno"
-                                           value="{{ old('paterno') }}"
-                                           oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '')"
-                                           required>
-
-                                    {!! $errors->first(
-                                        'paterno',
-                                        '<div class="invalid-feedback" role="alert">
-                                            <strong>:message</strong>
-                                        </div>'
-                                    ) !!}
-
+                                    <input type="text" name="paterno" id="paterno" class="form-control @error('paterno') is-invalid @enderror" placeholder="Apellido paterno"
+                                           value="{{ old('paterno') }}" oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '')" required>
+                                    {!! $errors->first('paterno','<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                                 </div>
-
                             </div>
-
-
                             <!-- MATERNO -->
                             <div class="col-md-4">
-
                                 <div class="registro-field">
-
                                     <label for="materno">
-
                                         <i class="fas fa-user"></i>
-
                                         APELLIDO MATERNO
-
                                         <span class="required">*</span>
-
                                     </label>
-
-                                    <input type="text"
-                                           name="materno"
-                                           id="materno"
-                                           class="form-control @error('materno') is-invalid @enderror"
-                                           placeholder="Apellido materno"
-                                           value="{{ old('materno') }}"
-                                           oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '')"
-                                           required>
-
-                                    {!! $errors->first(
-                                        'materno',
-                                        '<div class="invalid-feedback" role="alert">
-                                            <strong>:message</strong>
-                                        </div>'
-                                    ) !!}
-
+                                    <input type="text" name="materno" id="materno" class="form-control @error('materno') is-invalid @enderror" placeholder="Apellido materno"
+                                           value="{{ old('materno') }}" oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '')" required>
+                                    {!! $errors->first('materno','<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                                 </div>
-
                             </div>
-
-
                             <!-- NOMBRE -->
                             <div class="col-md-4">
-
                                 <div class="registro-field">
-
                                     <label for="nombre">
-
                                         <i class="fas fa-user-tie"></i>
-
                                         NOMBRE(S)
-
                                         <span class="required">*</span>
-
                                     </label>
-
-                                    <input type="text"
-                                           name="nombre"
-                                           id="nombre"
-                                           class="form-control @error('nombre') is-invalid @enderror"
-                                           placeholder="Nombre(s)"
-                                           value="{{ old('nombre') }}"
-                                           oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '')"
-                                           required>
-
-                                    {!! $errors->first(
-                                        'nombre',
-                                        '<div class="invalid-feedback" role="alert">
-                                            <strong>:message</strong>
-                                        </div>'
-                                    ) !!}
-
+                                    <input type="text" name="nombre" id="nombre" class="form-control @error('nombre') is-invalid @enderror" placeholder="Nombre(s)" value="{{ old('nombre') }}"
+                                           oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '')" required>
+                                    {!! $errors->first('nombre','<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                                 </div>
-
                             </div>
-
                         </div>
                         <!-- CARGO / CORREO -->
                         <div class="row">
@@ -416,35 +317,37 @@
                         <!-- DEPENDENCIA / FECHA -->
                         <div class="row">
                             <!-- DEPENDENCIA -->
-                            <div class="col-md-7">
-                                <div class="registro-field" id="search-inputCC">
-                                    <label for="search-inputC">
-                                        <i class="fas fa-building"></i>
-                                        DEPENDENCIA
-                                    </label>
-                                    <input type="text"
-                                           id="search-inputC"
-                                           list="optionsC"
-                                           placeholder="Buscar dependencia..."
-                                           class="form-control"
-                                           value="{{ old('dependencia_nombre') }}">
-                                    <datalist id="optionsC">
-                                        <option value=""></option>
-                                        @foreach ($dependencia as $item)
-                                            <option value="{{ $item->dependencias }}"
-                                                    data-id="{{ $item->id }}">
-                                            </option>
-                                        @endforeach
-                                        <option value=" ">
-                                            QUITAR
-                                        </option>
-                                    </datalist>
-                                    <input type="hidden"
-                                           id="id-selectedC"
-                                           name="dependencia_id"
-                                           value="{{ old('dependencia_id') }}">
-                                </div>
-                            </div>
+<div class="col-md-7">
+    <div class="registro-field" id="search-inputCC">
+
+        <label for="search-inputC">
+            <i class="fas fa-building"></i>
+            DEPENDENCIA
+        </label>
+
+        <input type="text"
+               id="search-inputC"
+               list="optionsC"
+               placeholder="Buscar dependencia..."
+               class="form-control"
+               autocomplete="off"
+               value="{{ old('dependencia_nombre') }}">
+
+        <datalist id="optionsC">
+            @foreach ($dependencia as $item)
+                <option value="{{ $item->dependencias }}"
+                        data-id="{{ $item->id }}">
+                </option>
+            @endforeach
+        </datalist>
+
+        <input type="hidden"
+               id="id-selectedC"
+               name="dependencia_id"
+               value="{{ old('dependencia_id') }}">
+
+    </div>
+</div>
                             <!-- FECHA -->
                             <div class="col-md-5">
 
@@ -793,53 +696,37 @@
                                         <li id="colorcase"></li>
 
                                     @endif
-
                                 </ul>
-
                             </div>
-
                         </div>
-
-
                         {{-- =========================================================
                         PROCESADOR
                         ========================================================= --}}
-
                         <div class="div title">
                         <nav class="case-selector">
-
                             <ul id="menu_principal" class="ul">
                                 <li>
-
                                     <label for="drop-2" class="text-center principales">
                                         <i class="fas fa-microchip mr-2"></i>
                                         {{ __('PROCESADOR') }}
                                     </label>
-
                                     <input type="checkbox" id="drop-2">
-
                                     <ul class="ul">
-
                                         <label for="marcaprocesador_id" class="form-label">
                                             <i class="fas fa-tag mr-1"></i>
                                             {{ __('MARCA :') }}
                                         </label>
-
                                         @foreach ($marcaprocesador as $marca)
-
                                         <li>
                                             <a href="#" class="nivel-5" data-id="{{ $marca->id }}">
                                                 <i class="fas fa-industry mr-2"></i>
                                                 {{ $marca->marca }}
                                             </a>
-
                                             <ul id="submenu-modelo" class="ul nivel-6" style="display: none;">
-
                                                 <label for="modeloprocesador_id" class="form-label">
                                                     <i class="fas fa-microchip mr-1"></i>
                                                     {{ __('MODELO :') }}
                                                 </label>
-
                                                 @php
                                                     $modelos_filtrados = $marca->marca == 'INTEL'
                                                         ? $modprocesador->filter(fn($m) => strpos($m->modelo, 'C') === 0)
@@ -847,33 +734,25 @@
                                                             ? $modprocesador->filter(fn($m) => strpos($m->modelo, 'R') === 0)
                                                             : collect());
                                                 @endphp
-
                                                 @foreach ($modelos_filtrados as $modelo)
-
                                                 <li>
                                                     <a href="#" class="nivel-7" data-id="{{ $modelo->id }}">
                                                         <i class="fas fa-cog mr-2"></i>
                                                         {{ $modelo->modelo }}
                                                     </a>
-
                                                     <ul id="submenu-generacion" class="ul nivel-8" style="display: none;">
-
                                                         <label for="genprocesador_id" class="form-label">
                                                             <i class="fas fa-layer-group mr-1"></i>
                                                             {{ __('GENERACION :') }}
                                                         </label>
-
                                                         @foreach ($genprocesador as $procesador)
-
                                                         <li>
                                                             <a href="#" class="nivel-9" data-id="{{ $procesador->id }}">
                                                                 <i class="fas fa-angle-right mr-2"></i>
                                                                 {{ $procesador->generacion }}
                                                             </a>
                                                         </li>
-
                                                         @endforeach
-
                                                         {{-- Opción "Otro" generación --}}
                                                         <li>
                                                             <a href="#" class="nivel-9" data-id="otroGenpro">
@@ -881,10 +760,8 @@
                                                                 Otro...
                                                             </a>
                                                         </li>
-
                                                     </ul>
                                                 </li>
-
                                                 @endforeach
 
                                                 {{-- Opción "Otro" modelo --}}
@@ -894,12 +771,9 @@
                                                         Otro...
                                                     </a>
                                                 </li>
-
                                             </ul>
                                         </li>
-
                                         @endforeach
-
                                         {{-- Opción "Otro" marca --}}
                                         <li>
                                             <a href="#" class="nivel-5" data-id="otroMarcapro">
@@ -907,93 +781,69 @@
                                                 Otro...
                                             </a>
                                         </li>
-
                                     </ul>
                                 </li>
                             </ul>
-
                         </nav>
-
                         {{-- =====================================================
                             CAMPOS OCULTOS
                             ===================================================== --}}
-
                         <input type="hidden"
                             id="marcaprocesador_id"
                             name="marcaprocesador_id">
-
                         <input type="hidden"
                             id="modeloprocesador_id"
                             name="modeloprocesador_id">
-
                         <input type="hidden"
                             id="genprocesador_id"
                             name="genprocesador_id">
-
                         <input type="text"
                             name="otra_marca_procesador"
                             class="otra_marca_procesador form-control mt-2"
                             placeholder="Especificar otro"
                             style="display:none;">
-
                         <input type="text"
                             name="otro_modelo_procesador"
                             class="otro_modelo_procesador form-control mt-2"
                             placeholder="Especificar otro"
                             style="display:none;">
-
                         <input type="text"
                             name="otra_generacion"
                             class="otra_generacion form-control mt-2"
                             placeholder="Especificar otro"
                             style="display:none;">
-
                         {{-- =====================================================
                             SELECCIONES REALIZADAS
                             ===================================================== --}}
-
                         <ul id="seleccionesp" class="ul">
-
                             @if(old('marcaprocesador_id') &&
                                 old('modeloprocesador_id') &&
                                 old('genprocesador_id'))
-
                                 <li>
                                     <i class="fas fa-tag mr-2"></i>
                                     MARCA:
                                     {{ $marcaprocesador->find(old('marcaprocesador_id'))->marca }}
                                 </li>
-
                                 <li>
                                     <i class="fas fa-cog mr-2"></i>
                                     MODELO:
                                     {{ $modprocesador->find(old('modeloprocesador_id'))->modelo }}
                                 </li>
-
                                 <li>
                                     <i class="fas fa-layer-group mr-2"></i>
                                     GENERACIÓN:
                                     {{ $genprocesador->find(old('genprocesador_id'))->generacion }}
                                 </li>
-
                             @else
-
                                 <li id="marcaprocesador"></li>
                                 <li id="modeloprocesador"></li>
                                 <li id="genprocesador"></li>
-
                             @endif
-
                         </ul>
-
-
                         </div>
-
-
                         {{-- =========================================================
                         DISCO DURO
                         ========================================================= --}}
-
                         <div class="div title">
                         <nav class="case-selector">
                             <ul id="menu_principal" class="ul">
@@ -1004,31 +854,24 @@
                                     </label>
                                     <input type="checkbox" id="drop-2">
                                     <ul class="ul">
-
                                         <label for="marcadisco_id" class="form-label">
                                             <i class="fas fa-tag mr-1"></i>
                                             {{ __('MARCA :') }}
                                         </label>
-
                                         @foreach ($marcadisco as $marca)
-
                                         <li>
                                             <a href="#" class="nivel-13" data-id="{{ $marca->id }}">
                                                 <i class="fas fa-industry mr-2"></i>
                                                 {{ $marca->marca }}
                                             </a>
-
                                             <ul id="submenu-cdisco"
                                                 class="ul nivel-14"
                                                 style="display: none;">
-
                                                 <label for="capacdisco_id" class="form-label">
                                                     <i class="fas fa-database mr-1"></i>
                                                     {{ __('CAPACIDAD :') }}
                                                 </label>
-
                                                 @foreach ($capdisco as $capacidad)
-
                                                 <li>
                                                     <a href="#"
                                                     class="nivel-15"
@@ -1036,7 +879,6 @@
                                                         <i class="fas fa-hdd mr-2"></i>
                                                         {{ $capacidad->capacidad }}
                                                     </a>
-
                                                     <ul id="submenu-tdisco"
                                                         class="ul nivel-16"
                                                         style="display: none;">
@@ -1045,9 +887,7 @@
                                                             <i class="fas fa-layer-group mr-1"></i>
                                                             {{ __('TIPO :') }}
                                                         </label>
-
                                                         @foreach ($tipodisco as $tipo)
-
                                                         <li>
                                                             <a href="#"
                                                             class="nivel-17 a"
@@ -1056,9 +896,7 @@
                                                                 {{ $tipo->tipo }}
                                                             </a>
                                                         </li>
-
                                                         @endforeach
-
                                                         {{-- Opción "Otro" tipo --}}
                                                         <li>
                                                             <a href="#" class="nivel-17" data-id="otroTipodisco">
@@ -1066,10 +904,8 @@
                                                                 Otro...
                                                             </a>
                                                         </li>
-
                                                     </ul>
                                                 </li>
-
                                                 @endforeach
 
                                                 {{-- Opción "Otro" capacidad --}}
@@ -1081,12 +917,9 @@
                                                         Otro...
                                                     </a>
                                                 </li>
-
                                             </ul>
                                         </li>
-
                                         @endforeach
-
                                         {{-- Opción "Otro" marca --}}
                                         <li>
                                             <a href="#"
@@ -1096,124 +929,197 @@
                                                 Otro...
                                             </a>
                                         </li>
-
                                     </ul>
                                 </li>
                             </ul>
-
                         </nav>
-
                         {{-- =====================================================
                             CAMPOS OCULTOS
                             ===================================================== --}}
-
-                        <input type="hidden"
-                            id="marcadisco_id"
-                            name="marcadisco_id">
-
-                        <input type="hidden"
-                            id="capacdisco_id"
-                            name="capacdisco_id">
-
-                        <input type="hidden"
-                            id="tipodisco_id"
-                            name="tipodisco_id">
-
-                        <input type="text"
-                            name="otra_marca_disco"
-                            class="otra_marca_disco form-control mt-2"
-                            placeholder="Especificar otro"
-                            style="display:none;">
-
-                        <input type="text"
-                            name="otra_capacidad_disco"
-                            class="otra_capacidad_disco form-control mt-2"
-                            placeholder="Especificar otro"
-                            style="display:none;">
-
-                        <input type="text"
-                            name="otro_tipo_disco"
-                            class="otro_tipo_disco form-control mt-2"
-                            placeholder="Especificar otro"
-                            style="display:none;">
-
+                        <input type="hidden" id="marcadisco_id" name="marcadisco_id"><input type="hidden" id="capacdisco_id" name="capacdisco_id">
+                        <input type="hidden" id="tipodisco_id" name="tipodisco_id">
+                        <input type="text" name="otra_marca_disco" class="otra_marca_disco form-control mt-2" placeholder="Especificar otro" style="display:none;">
+                        <input type="text" name="otra_capacidad_disco" class="otra_capacidad_disco form-control mt-2" placeholder="Especificar otro" style="display:none;">
+                        <input type="text" name="otro_tipo_disco" class="otro_tipo_disco form-control mt-2" placeholder="Especificar otro" style="display:none;">
                         {{-- =====================================================
                             SELECCIONES REALIZADAS
                             ===================================================== --}}
-
                         <ul id="seleccionesdd" class="ul">
-
-                            @if(old('marcadisco_id') &&
-                                old('capacdisco_id') &&
-                                old('tipodisco_id'))
-
+                            @if(old('marcadisco_id') && old('capacdisco_id') && old('tipodisco_id'))
                                 <li>
                                     <i class="fas fa-tag mr-2"></i>
                                     MARCA:
                                     {{ $marcadisco->find(old('marcadisco_id'))->marca }}
                                 </li>
-
                                 <li>
                                     <i class="fas fa-database mr-2"></i>
                                     CAPACIDAD:
                                     {{ $capdisco->find(old('capacdisco_id'))->capacidad }}
                                 </li>
-
                                 <li>
                                     <i class="fas fa-layer-group mr-2"></i>
                                     TIPO:
                                     {{ $tipodisco->find(old('tipodisco_id'))->tipo }}
                                 </li>
-
                             @else
-
                                 <li id="marcadisco"></li>
                                 <li id="capdisco"></li>
                                 <li id="tipodisco"></li>
-
                             @endif
-
                         </ul>
                         </div>
 
+                        {{-- =========================================================
+                        DISCO DURO 2
+                        ========================================================= --}}
+                        <div class="div title">
+                        <nav class="case-selector">
+                            <ul id="menu_principal1" class="ul">
+                                <li>
+                                    <label for="drop-2" class="text-center principales"><i class="fas fa-hdd mr-2"></i>
+                                        {{ __('DISCO DURO 2') }}
+                                    </label>
+                                    <input type="checkbox" id="drop-2">
+                                    <ul class="ul">
+                                        <label for="marcadisco2_id" class="form-label"><i class="fas fa-tag mr-1"></i>
+                                            {{ __('MARCA :') }}
+                                        </label>
+                                        @foreach ($marcadisco as $marca)
+                                        <li>
+                                            <a href="#" class="nivel-82" data-id="{{ $marca->id }}">
+                                                <i class="fas fa-industry mr-2"></i>
+                                                {{ $marca->marca }}
+                                            </a>
+                                            <ul id="submenu-cdisco"
+                                                class="ul nivel-83"
+                                                style="display: none;">
+                                                <label for="capacdisco2_id" class="form-label">
+                                                    <i class="fas fa-database mr-1"></i>
+                                                    {{ __('CAPACIDAD :') }}
+                                                </label>
+                                                @foreach ($capdisco as $capacidad)
+                                                <li>
+                                                    <a href="#"
+                                                    class="nivel-84"
+                                                    data-id="{{ $capacidad->id }}">
+                                                        <i class="fas fa-hdd mr-2"></i>
+                                                        {{ $capacidad->capacidad }}
+                                                    </a>
+                                                    <ul id="submenu-tdisco"
+                                                        class="ul nivel-85"
+                                                        style="display: none;">
 
+                                                        <label for="tipodisco2_id" class="form-label">
+                                                            <i class="fas fa-layer-group mr-1"></i>
+                                                            {{ __('TIPO :') }}
+                                                        </label>
+                                                        @foreach ($tipodisco as $tipo)
+                                                        <li>
+                                                            <a href="#" class="nivel-86" data-id="{{ $tipo->id }}">
+                                                                <i class="fas fa-cog mr-2"></i>
+                                                                {{ $tipo->tipo }}
+                                                            </a>
+                                                        </li>
+                                                        @endforeach
+                                                        {{-- Opción "Otro" tipo --}}
+                                                        <li>
+                                                            <a href="#" class="nivel-86" data-id="otroTipodisco2">
+                                                                <i class="fas fa-plus-circle mr-2"></i>
+                                                                Otro...
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                @endforeach
+
+                                                {{-- Opción "Otro" capacidad --}}
+                                                <li>
+                                                    <a href="#" class="nivel-84" data-id="otroCapdisco2">
+                                                        <i class="fas fa-plus-circle mr-2"></i>
+                                                        Otro...
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        @endforeach
+                                        {{-- Opción "Otro" marca --}}
+                                        <li>
+                                            <a href="#" class="nivel-82" data-id="otroMarcadisco2">
+                                                <i class="fas fa-plus-circle mr-2"></i>
+                                                Otro...
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </nav>
+                        {{-- =====================================================
+                            CAMPOS OCULTOS
+                            ===================================================== --}}
+                        <input type="hidden" id="marcadisco2_id" name="marcadisco2_id">
+                        <input type="hidden" id="capacdisco2_id" name="capacdisco_id">
+                        <input type="hidden" id="tipodisco2_id" name="tipodisco2_id">
+                        <input type="text" name="otra_marca_disco2" class="otra_marca_disco2 form-control mt-2" placeholder="Especificar otro" style="display:none;">
+                        <input type="text" name="otra_capacidad_disco2" class="otra_capacidad_disco2 form-control mt-2" placeholder="Especificar otro" style="display:none;">
+                        <input type="text" name="otro_tipo_disco2" class="otro_tipo_disco2 form-control mt-2" placeholder="Especificar otro" style="display:none;">
+                        {{-- =====================================================
+                            SELECCIONES REALIZADAS
+                            ===================================================== --}}
+                        <ul id="seleccionesdd2" class="ul">
+                            @if(old('marcadisco2_id') && old('capacdisco2_id') && old('tipodisco2_id'))
+                                <li>
+                                    <i class="fas fa-tag mr-2"></i>
+                                    MARCA:
+                                    {{ $marcadisco->find(old('marcadisco2_id'))->marca }}
+                                </li>
+                                <li>
+                                    <i class="fas fa-database mr-2"></i>
+                                    CAPACIDAD:
+                                    {{ $capdisco->find(old('capacdisco2_id'))->capacidad }}
+                                </li>
+                                <li>
+                                    <i class="fas fa-layer-group mr-2"></i>
+                                    TIPO:
+                                    {{ $tipodisco->find(old('tipodisco2_id'))->tipo }}
+                                </li>
+                            @else
+                                <li id="marcadisco"></li>
+                                <li id="capdisco"></li>
+                                <li id="tipodisco"></li>
+                            @endif
+                        </ul>
+                        </div>
+
+                </div>
+
+
+                <div class="fila-5">
                         {{-- =========================================================
                         TARJETA MADRE
                         ========================================================= --}}
-
                         <div class="div title">
-
                         <nav class="case-selector">
-
-                            <ul id="menu_principal1" class="ul">
+                            <ul id="menu_principal" class="ul">
                                 <li>
-
                                     <label for="drop-2" class="text-center principales">
                                         <i class="fas fa-server mr-2"></i>
                                         {{ __('TARJETA MADRE') }}
                                     </label>
-
                                     <input type="checkbox" id="drop-2">
-
                                     <ul class="ul">
-
                                         <label for="marcatmadre_id" class="form-label">
                                             <i class="fas fa-tag mr-1"></i>
                                             {{ __('MARCA :') }}
                                         </label>
-
                                         @foreach ($marcatmadre as $marca)
-
                                         <li>
                                             <a href="#" class="nivel-10" data-id="{{ $marca->id }}">
                                                 <i class="fas fa-industry mr-2"></i>
                                                 {{ $marca->marca }}
                                             </a>
-
                                             <ul id="submenu-mtmadre"
                                                 class="ul nivel-11"
                                                 style="display: none;">
-
                                                 <label for="modtmadre_id" class="form-label">
                                                     <i class="fas fa-microchip mr-1"></i>
                                                     {{ __('MODELO :') }}
@@ -1317,278 +1223,6 @@
                         </ul>
                     </div>
 
-                </div>
-
-                    {{-- =========================================================
-                    MEMORIA RAM
-                    ========================================================= --}}
-                <div class="fila-5">
-                    <div class="div title">
-
-                    <nav class="case-selector">
-
-                        <ul id="menu_principal" class="ul">
-                            <li>
-
-                                <label for="drop-2" class="text-center principales">
-                                    <i class="fas fa-memory mr-2"></i>
-                                    {{ __('MEMORIA RAM') }}
-                                </label>
-
-                                <input type="checkbox" id="drop-2">
-
-                                <ul class="ul">
-
-                                    {{-- DISIPADOR --}}
-                                    <label for="disipador_id" class="form-label">
-                                        <i class="fas fa-fan mr-1"></i>
-                                        {{ __('DISIPADOR :') }}
-                                    </label>
-
-                                    @foreach ($disipadorram as $disipador)
-
-                                    <li>
-                                        <a href="#" class="nivel-18" data-id="{{ $disipador->id }}">
-                                            <i class="fas fa-wind mr-2"></i>
-                                            {{ $disipador->opcion }}
-                                        </a>
-
-                                        {{-- MARCA --}}
-                                        <ul id="submenu-marcaram"
-                                            class="ul nivel-19"
-                                            style="display: none;">
-
-                                            <label for="marcaram_id" class="form-label">
-                                                <i class="fas fa-tag mr-1"></i>
-                                                {{ __('MARCA :') }}
-                                            </label>
-
-                                            @foreach ($marcaram as $marca)
-
-                                            <li>
-                                                <a href="#"
-                                                class="nivel-20"
-                                                data-id="{{ $marca->id }}">
-                                                    <i class="fas fa-industry mr-2"></i>
-                                                    {{ $marca->marca }}
-                                                </a>
-
-                                                {{-- CAPACIDAD --}}
-                                                <ul id="submenu-capacidadram"
-                                                    class="ul nivel-21"
-                                                    style="display: none;">
-
-                                                    <label for="capacram_id" class="form-label">
-                                                        <i class="fas fa-database mr-1"></i>
-                                                        {{ __('CAPACIDAD:') }}
-                                                    </label>
-
-                                                    @foreach ($capram as $capacidad)
-
-                                                    <li>
-                                                        <a href="#"
-                                                        class="nivel-22"
-                                                        data-id="{{ $capacidad->id }}">
-                                                            <i class="fas fa-memory mr-2"></i>
-                                                            {{ $capacidad->capacidad }}
-                                                        </a>
-
-                                                        {{-- TIPO DE CONEXIÓN --}}
-                                                        <ul id="submenu-tiporam"
-                                                            class="ul nivel-23"
-                                                            style="display: none;">
-
-                                                            <label for="tiporam_id" class="form-label">
-                                                                <i class="fas fa-plug mr-1"></i>
-                                                                {{ __('TIPO DE CONEXION :') }}
-                                                            </label>
-
-                                                            @foreach ($tiporam as $tipo)
-
-                                                            <li>
-                                                                <a href="#"
-                                                                class="nivel-24"
-                                                                data-id="{{ $tipo->id }}">
-                                                                    <i class="fas fa-microchip mr-2"></i>
-                                                                    {{ $tipo->tipo }}
-                                                                </a>
-
-                                                                {{-- CANTIDAD --}}
-                                                                <ul id="submenu-cantidadram"
-                                                                    class="ul nivel-25"
-                                                                    style="display: none;">
-
-                                                                    <label for="cantidad_id" class="form-label">
-                                                                        <i class="fas fa-layer-group mr-1"></i>
-                                                                        {{ __('CANTIDAD :') }}
-                                                                    </label>
-
-                                                                    @foreach ($cantidadram as $cantidad)
-
-                                                                    <li>
-                                                                        <a href="#"
-                                                                        class="nivel-26"
-                                                                        data-id="{{ $cantidad->id }}">
-                                                                            <i class="fas fa-cubes mr-2"></i>
-                                                                            {{ $cantidad->cantidad }}
-                                                                        </a>
-                                                                    </li>
-
-                                                                    @endforeach
-
-                                                                </ul>
-                                                            </li>
-
-                                                            @endforeach
-
-                                                            {{-- Otro tipo --}}
-                                                            <li>
-                                                                <a href="#"
-                                                                class="nivel-24"
-                                                                data-id="otroTiporam">
-                                                                    <i class="fas fa-plus-circle mr-2"></i>
-                                                                    Otro...
-                                                                </a>
-                                                            </li>
-
-                                                        </ul>
-                                                    </li>
-
-                                                    @endforeach
-
-                                                    {{-- Otra capacidad --}}
-                                                    <li>
-                                                        <a href="#"
-                                                        class="nivel-22"
-                                                        data-id="otroCapram">
-                                                            <i class="fas fa-plus-circle mr-2"></i>
-                                                            Otro...
-                                                        </a>
-                                                    </li>
-
-                                                </ul>
-                                            </li>
-
-                                            @endforeach
-
-                                            {{-- Otra marca --}}
-                                            <li>
-                                                <a href="#"
-                                                class="nivel-20"
-                                                data-id="otroMarcaram">
-                                                    <i class="fas fa-plus-circle mr-2"></i>
-                                                    Otro...
-                                                </a>
-                                            </li>
-
-                                        </ul>
-                                    </li>
-
-                                    @endforeach
-
-                                </ul>
-                            </li>
-                        </ul>
-
-                    </nav>
-
-                    {{-- =====================================================
-                        CAMPOS OCULTOS
-                        ===================================================== --}}
-
-                    <input type="hidden"
-                        id="disipador_id"
-                        name="disipador_id">
-
-                    <input type="hidden"
-                        id="marcaram_id"
-                        name="marcaram_id">
-
-                    <input type="hidden"
-                        id="capacram_id"
-                        name="capacram_id">
-
-                    <input type="hidden"
-                        id="tiporam_id"
-                        name="tiporam_id">
-
-                    <input type="hidden"
-                        id="cantidad_id"
-                        name="cantidad_id">
-
-                    <input type="text"
-                        name="otra_marca_ram"
-                        class="otra_marca_ram form-control mt-2"
-                        placeholder="Especificar otra"
-                        style="display:none;">
-
-                    <input type="text"
-                        name="otra_capacidad_ram"
-                        class="otra_capacidad_ram form-control mt-2"
-                        placeholder="Especificar otra"
-                        style="display:none;">
-
-                    <input type="text"
-                        name="otra_tipo_ram"
-                        class="otra_tipo_ram form-control mt-2"
-                        placeholder="Especificar otro"
-                        style="display:none;">
-
-                    {{-- =====================================================
-                        SELECCIONES REALIZADAS
-                        ===================================================== --}}
-
-                    <ul id="seleccionesram" class="ul">
-
-                        @if(old('disipador_id') &&
-                            old('marcaram_id') &&
-                            old('capacram_id') &&
-                            old('tiporam_id') &&
-                            old('cantidad_id'))
-
-                            <li>
-                                <i class="fas fa-fan mr-2"></i>
-                                DISIPADOR:
-                                {{ $disipadorram->find(old('disipador_id'))->opcion }}
-                            </li>
-
-                            <li>
-                                <i class="fas fa-tag mr-2"></i>
-                                MARCA:
-                                {{ $marcaram->find(old('marcaram_id'))->marca }}
-                            </li>
-
-                            <li>
-                                <i class="fas fa-database mr-2"></i>
-                                CAPACIDAD:
-                                {{ $capram->find(old('capacram_id'))->capacidad }}
-                            </li>
-
-                            <li>
-                                <i class="fas fa-plug mr-2"></i>
-                                TIPO:
-                                {{ $tiporam->find(old('tiporam_id'))->tipo }}
-                            </li>
-
-                            <li>
-                                <i class="fas fa-cubes mr-2"></i>
-                                CANTIDAD:
-                                {{ $cantidadram->find(old('cantidad_id'))->cantidad }}
-                            </li>
-
-                        @else
-
-                            <li id="disipadorram"></li>
-                            <li id="marcaram"></li>
-                            <li id="capacidadram"></li>
-                            <li id="tiporam"></li>
-                            <li id="cantidad"></li>
-
-                        @endif
-
-                    </ul>
-
-                </div>
 
 
                     {{-- =========================================================
@@ -2097,10 +1731,259 @@
         </div>
                             
 
+        <div class="fila-5">
+                    {{-- =========================================================
+                    MEMORIA RAM
+                    ========================================================= --}}
+                    <div class="div title">
+
+                    <nav class="case-selector">
+
+                        <ul id="menu_principal" class="ul">
+                            <li>
+
+                                <label for="drop-2" class="text-center principales">
+                                    <i class="fas fa-memory mr-2"></i>
+                                    {{ __('MEMORIA RAM') }}
+                                </label>
+
+                                <input type="checkbox" id="drop-2">
+
+                                <ul class="ul">
+
+                                    {{-- DISIPADOR --}}
+                                    <label for="disipador_id" class="form-label">
+                                        <i class="fas fa-fan mr-1"></i>
+                                        {{ __('DISIPADOR :') }}
+                                    </label>
+
+                                    @foreach ($disipadorram as $disipador)
+
+                                    <li>
+                                        <a href="#" class="nivel-18" data-id="{{ $disipador->id }}">
+                                            <i class="fas fa-wind mr-2"></i>
+                                            {{ $disipador->opcion }}
+                                        </a>
+
+                                        {{-- MARCA --}}
+                                        <ul id="submenu-marcaram"
+                                            class="ul nivel-19"
+                                            style="display: none;">
+
+                                            <label for="marcaram_id" class="form-label">
+                                                <i class="fas fa-tag mr-1"></i>
+                                                {{ __('MARCA :') }}
+                                            </label>
+
+                                            @foreach ($marcaram as $marca)
+
+                                            <li>
+                                                <a href="#"
+                                                class="nivel-20"
+                                                data-id="{{ $marca->id }}">
+                                                    <i class="fas fa-industry mr-2"></i>
+                                                    {{ $marca->marca }}
+                                                </a>
+
+                                                {{-- CAPACIDAD --}}
+                                                <ul id="submenu-capacidadram"
+                                                    class="ul nivel-21"
+                                                    style="display: none;">
+
+                                                    <label for="capacram_id" class="form-label">
+                                                        <i class="fas fa-database mr-1"></i>
+                                                        {{ __('CAPACIDAD:') }}
+                                                    </label>
+
+                                                    @foreach ($capram as $capacidad)
+
+                                                    <li>
+                                                        <a href="#"
+                                                        class="nivel-22"
+                                                        data-id="{{ $capacidad->id }}">
+                                                            <i class="fas fa-memory mr-2"></i>
+                                                            {{ $capacidad->capacidad }}
+                                                        </a>
+
+                                                        {{-- TIPO DE CONEXIÓN --}}
+                                                        <ul id="submenu-tiporam"
+                                                            class="ul nivel-23"
+                                                            style="display: none;">
+
+                                                            <label for="tiporam_id" class="form-label">
+                                                                <i class="fas fa-plug mr-1"></i>
+                                                                {{ __('TIPO DE CONEXION :') }}
+                                                            </label>
+
+                                                            @foreach ($tiporam as $tipo)
+
+                                                            <li>
+                                                                <a href="#"
+                                                                class="nivel-24"
+                                                                data-id="{{ $tipo->id }}">
+                                                                    <i class="fas fa-microchip mr-2"></i>
+                                                                    {{ $tipo->tipo }}
+                                                                </a>
+
+                                                                {{-- CANTIDAD --}}
+                                                                <ul id="submenu-cantidadram"
+                                                                    class="ul nivel-25"
+                                                                    style="display: none;">
+
+                                                                    <label for="cantidad_id" class="form-label">
+                                                                        <i class="fas fa-layer-group mr-1"></i>
+                                                                        {{ __('CANTIDAD :') }}
+                                                                    </label>
+
+                                                                    @foreach ($cantidadram as $cantidad)
+
+                                                                    <li>
+                                                                        <a href="#"
+                                                                        class="nivel-26"
+                                                                        data-id="{{ $cantidad->id }}">
+                                                                            <i class="fas fa-cubes mr-2"></i>
+                                                                            {{ $cantidad->cantidad }}
+                                                                        </a>
+                                                                    </li>
+
+                                                                    @endforeach
+
+                                                                </ul>
+                                                            </li>
+
+                                                            @endforeach
+
+                                                            {{-- Otro tipo --}}
+                                                            <li>
+                                                                <a href="#"
+                                                                class="nivel-24"
+                                                                data-id="otroTiporam">
+                                                                    <i class="fas fa-plus-circle mr-2"></i>
+                                                                    Otro...
+                                                                </a>
+                                                            </li>
+
+                                                        </ul>
+                                                    </li>
+
+                                                    @endforeach
+
+                                                    {{-- Otra capacidad --}}
+                                                    <li>
+                                                        <a href="#"
+                                                        class="nivel-22"
+                                                        data-id="otroCapram">
+                                                            <i class="fas fa-plus-circle mr-2"></i>
+                                                            Otro...
+                                                        </a>
+                                                    </li>
+
+                                                </ul>
+                                            </li>
+
+                                            @endforeach
+
+                                            {{-- Otra marca --}}
+                                            <li>
+                                                <a href="#"
+                                                class="nivel-20"
+                                                data-id="otroMarcaram">
+                                                    <i class="fas fa-plus-circle mr-2"></i>
+                                                    Otro...
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                    </li>
+
+                                    @endforeach
+
+                                </ul>
+                            </li>
+                        </ul>
+
+                    </nav>
+
+                    {{-- =====================================================
+                        CAMPOS OCULTOS
+                        ===================================================== --}}
+
+                    <input type="hidden" id="disipador_id" name="disipador_id">
+
+                    <input type="hidden" id="marcaram_id" name="marcaram_id"> 
+                    <input type="hidden" id="capacram_id" name="capacram_id">
+
+                    <input type="hidden" id="tiporam_id" name="tiporam_id">
+
+                    <input type="hidden" id="cantidad_id" name="cantidad_id">
+
+                    <input type="text" name="otra_marca_ram" class="otra_marca_ram form-control mt-2" placeholder="Especificar otra"
+                        style="display:none;">
+
+                    <input type="text" name="otra_capacidad_ram" class="otra_capacidad_ram form-control mt-2" placeholder="Especificar otra"
+                        style="display:none;">
+
+                    <input type="text" name="otra_tipo_ram" class="otra_tipo_ram form-control mt-2" placeholder="Especificar otro"
+                        style="display:none;">
+
+                    {{-- =====================================================
+                        SELECCIONES REALIZADAS
+                        ===================================================== --}}
+
+                    <ul id="seleccionesram" class="ul">
+
+                        @if(old('disipador_id') &&
+                            old('marcaram_id') &&
+                            old('capacram_id') &&
+                            old('tiporam_id') &&
+                            old('cantidad_id'))
+
+                            <li>
+                                <i class="fas fa-fan mr-2"></i>
+                                DISIPADOR:
+                                {{ $disipadorram->find(old('disipador_id'))->opcion }}
+                            </li>
+
+                            <li>
+                                <i class="fas fa-tag mr-2"></i>
+                                MARCA:
+                                {{ $marcaram->find(old('marcaram_id'))->marca }}
+                            </li>
+
+                            <li>
+                                <i class="fas fa-database mr-2"></i>
+                                CAPACIDAD:
+                                {{ $capram->find(old('capacram_id'))->capacidad }}
+                            </li>
+
+                            <li>
+                                <i class="fas fa-plug mr-2"></i>
+                                TIPO:
+                                {{ $tiporam->find(old('tiporam_id'))->tipo }}
+                            </li>
+
+                            <li>
+                                <i class="fas fa-cubes mr-2"></i>
+                                CANTIDAD:
+                                {{ $cantidadram->find(old('cantidad_id'))->cantidad }}
+                            </li>
+
+                        @else
+
+                            <li id="disipadorram"></li>
+                            <li id="marcaram"></li>
+                            <li id="capacidadram"></li>
+                            <li id="tiporam"></li>
+                            <li id="cantidad"></li>
+
+                        @endif
+
+                    </ul>
+
+                </div>
             {{-- =========================================================
             MEMORIA RAM 2DO SLOT
             ========================================================= --}}
-        <div class="fila-5">
             <div class="div title">
             <nav class="case-selector">
 
@@ -2378,7 +2261,7 @@
             <div class="div title">
                 <nav class="case-selector">
 
-                <ul id="menu_principal" class="ul">
+                <ul id="menu_principal1" class="ul">
 
                     <li>
 
@@ -2668,7 +2551,7 @@
             <div class="div title">
             <nav class="case-selector">
 
-                <ul id="menu_principal" class="ul">
+                <ul id="menu_principal1" class="ul">
 
                     <li>
 
@@ -2949,7 +2832,6 @@
 
             </div>
 
-            <div class="div"></div>
         </div>
 
         <div class="fila-5">

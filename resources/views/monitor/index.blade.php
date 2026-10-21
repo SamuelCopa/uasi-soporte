@@ -379,68 +379,71 @@
                                             <td>
                                                <div class="acciones">
 
-    <!-- PDF -->
-    <a href="#"
-       class="btn-mini btn-danger btn-preview-pdf"
-       data-ver="{{ route('pdf.monitor.preview', ':id') }}"
-       data-descargar="{{ route('pdf.monitor.descargar', ':id') }}"
-       data-enviar="{{ route('pdf.monitor.enviar', ':id') }}"
-       data-id="{{ $monitor->id }}"
-       title="Formulario PDF">
-        <i class="far fa-file-pdf"></i>
-    </a>
+                                            <!-- PDF -->
+                                            <a href="#"
+                                            class="btn-mini btn-danger btn-preview-pdf"
+                                            data-ver="{{ route('pdf.monitor.preview', ':id') }}"
+                                            data-descargar="{{ route('pdf.monitor.descargar', ':id') }}"
+                                            data-enviar="{{ route('pdf.monitor.enviar', ':id') }}"
+                                            data-id="{{ $monitor->id }}"
+                                            title="Formulario PDF">
+                                                <i class="far fa-file-pdf"></i>
+                                            </a>
 
-    <!-- VER -->
-    <button type="button"
-            data-toggle="modal"
-            data-target="#ver{{ $monitor->id }}"
-            class="btn-mini btn-primary"
-            title="Ver">
-        <i class="fa fa-eye"></i>
-    </button>
+                                            <!-- VER -->
+                                            <button type="button"
+                                                    data-toggle="modal"
+                                                    data-target="#ver{{ $monitor->id }}"
+                                                    class="btn-mini btn-primary"
+                                                    title="Ver">
+                                                <i class="fa fa-eye"></i>
+                                            </button>
 
-    @if(auth()->check() && auth()->user()->hasAnyRole([
-        'Administrador',
-        'SuperAdministrador'
-    ]))
+                                            @if(auth()->check() && auth()->user()->hasAnyRole([
+                                                'Administrador',
+                                                'SuperAdministrador'
+                                            ]))
 
-        <!-- EDITAR -->
-        <button type="button"
-                data-toggle="modal"
-                data-target="#editar{{ $monitor->id }}"
-                class="btn-mini btn-success"
-                title="Editar">
-            <i class="fa fa-edit"></i>
-        </button>
+                                                <!-- EDITAR -->
+                                                <button type="button"
+                                                        data-toggle="modal"
+                                                        data-target="#editar{{ $monitor->id }}"
+                                                        class="btn-mini btn-success"
+                                                        title="Editar">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
 
-        <!-- INFORME -->
-        <a href="{{ route('informe.monitor', $monitor->id) }}"
-           class="btn-mini btn-secondary"
-           title="Informe">
-            <i class="fa fa-file"></i>
-        </a>
+                                                <!-- DETALLE DEL TRABAJO REALIZADO -->
+                                                <button type="button"
+                                                        class="btn btn-sm btn-secondary"
+                                                        data-toggle="modal"
+                                                        data-target="#modalResultado{{ $monitor->id }}"
+                                                        title="Registrar detalle del trabajo realizado">
+                                                    <i class="fas fa-file-alt"></i>
+                                                </button>  
 
-        <!-- ELIMINAR -->
-        <form action="{{ route('monitors.destroy', $monitor->id) }}"
-              method="POST"
-              class="formEliminar">
-            @csrf
-            @method('DELETE')
+                                                <!-- ELIMINAR -->
+                                                <form action="{{ route('monitors.destroy', $monitor->id) }}"
+                                                    method="POST"
+                                                    class="formEliminar">
+                                                    @csrf
+                                                    @method('DELETE')
 
-            <button type="submit"
-                    class="btn-mini btn-danger"
-                    title="Eliminar">
-                <i class="fa fa-trash"></i>
-            </button>
-        </form>
+                                                    <button type="submit"
+                                                            class="btn-mini btn-danger"
+                                                            title="Eliminar">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
 
-    @endif
+                                            @endif
 
-</div>
+                                        </div>
                                             </td>
                                         </tr>
                                         <!--Ventana Modal para Ver --->
                                         @include('monitor.modalVer')
+                                        @include('monitor.modalResultado')
                                         <!--Ventana Modal eRecepcion --->
                                         @include('monitor.modalRecepcion')
                                         <!--Ventana Modal eTecnico --->
@@ -536,16 +539,24 @@ function cambiarEstado(id, estadoId, tieneResultado) {
         }
         else if (event.target.id === 'entregado') {
         if (tieneResultado) {
+
+            // Si tiene resultado, actualizar el estado a Entregado
             cambiarEstadoAjax(id, 5);
             console.log(id);
+
         } else {
-                Swal.fire({
-                    position: "top-center",
-                    icon: "error",
-                    title: 'Debes llenar el informe antes de actualizar el estado',
-                    showConfirmButton: true,
-                });
-            }
+
+            // Mostrar únicamente el mensaje
+            Swal.fire({
+                position: 'top-center',
+                icon: 'warning',
+                title: 'Detalle del trabajo pendiente',
+                text: 'Debes llenar el detalle de trabajo realizado para actualizar el estado a Entregado.',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#3085d6'
+            });
+
+        }
         }
     })
 }
@@ -658,15 +669,62 @@ Swal.fire({
 <script src="{{ asset('js/equipoPdf.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('estilos/equipoPdf.css') }}"> 
 <script>
-const searchInputM = document.getElementById('search-inputM');
-const optionsM = document.getElementById('optionsM').options;
-const idSelectedInputM = document.getElementById('id-selectedM');
+document.addEventListener('DOMContentLoaded', function () {
 
-searchInputM.addEventListener('input', () => {
-    const selectedOption = Array.from(optionsM).find(option => option.value === searchInputM.value);
-    if (selectedOption) {
-        idSelectedInputM.value = selectedOption.dataset.id;
+    const searchInputM = document.getElementById('search-inputM');
+    const optionsM = document.getElementById('optionsM');
+    const idSelectedM = document.getElementById('id-selectedM');
+
+    if (!searchInputM || !optionsM || !idSelectedM) {
+        return;
     }
+
+    function validarDependenciaM() {
+
+        const valor = searchInputM.value.trim();
+
+        // Evitar conservar un ID anterior.
+        idSelectedM.value = '';
+
+        if (valor === '') {
+            searchInputM.setCustomValidity('');
+            return;
+        }
+
+        const opcion = Array.from(optionsM.options).find(option =>
+            option.value.trim() === valor &&
+            option.dataset.id &&
+            /^[1-9]\d*$/.test(option.dataset.id)
+        );
+
+        if (opcion) {
+            idSelectedM.value = opcion.dataset.id;
+            searchInputM.setCustomValidity('');
+        } else {
+            searchInputM.setCustomValidity(
+                'Seleccione una dependencia registrada en la lista.'
+            );
+        }
+    }
+
+    searchInputM.addEventListener('input', validarDependenciaM);
+    searchInputM.addEventListener('change', validarDependenciaM);
+
+    const formulario = searchInputM.closest('form');
+
+    if (formulario) {
+        formulario.addEventListener('submit', function (event) {
+
+            validarDependenciaM();
+
+            if (searchInputM.value.trim() !== '' && !idSelectedM.value) {
+                event.preventDefault();
+                searchInputM.reportValidity();
+                searchInputM.focus();
+            }
+        });
+    }
+
 });
 </script>
 @endpush

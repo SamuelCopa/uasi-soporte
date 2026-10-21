@@ -193,9 +193,9 @@ return [
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-dark-primary elevation-4',
+    'classes_sidebar' => '',
     'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar  navbar-elegante',
+    //'classes_topnav' => 'navbar  navbar-elegante',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 
@@ -845,11 +845,13 @@ return [
     ],
     [
         'header' => 'CONFIGURACIONES',
+        'can'  => 'admin',
     ],
     [
-        'text' => 'CONFIGURACIONES',
+        'text' => 'Configuraciones',
         'url'  => '/configuracion/institucional',
         'icon' => 'fas fa-fw fa-cog',
+        'can'  => 'admin',
     ],
 
     // =========================================================

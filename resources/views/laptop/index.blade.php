@@ -381,68 +381,71 @@
                                         <td>
                                             <div class="acciones">
 
-    <!-- PDF -->
-    <a href="#"
-       class="btn-mini btn-danger btn-preview-pdf"
-       data-ver="{{ route('pdf.laptop.preview', ':id') }}"
-       data-descargar="{{ route('pdf.laptop.descargar', ':id') }}"
-       data-enviar="{{ route('pdf.laptop.enviar', ':id') }}"
-       data-id="{{ $laptop->id }}"
-       title="Formulario PDF">
-        <i class="far fa-file-pdf"></i>
-    </a>
+                                        <!-- PDF -->
+                                        <a href="#"
+                                        class="btn-mini btn-danger btn-preview-pdf"
+                                        data-ver="{{ route('pdf.laptop.preview', ':id') }}"
+                                        data-descargar="{{ route('pdf.laptop.descargar', ':id') }}"
+                                        data-enviar="{{ route('pdf.laptop.enviar', ':id') }}"
+                                        data-id="{{ $laptop->id }}"
+                                        title="Formulario PDF">
+                                            <i class="far fa-file-pdf"></i>
+                                        </a>
 
-    <!-- VER -->
-    <button type="button"
-            data-toggle="modal"
-            data-target="#ver{{ $laptop->id }}"
-            class="btn-mini btn-primary"
-            title="Ver">
-        <i class="fa fa-eye"></i>
-    </button>
+                                        <!-- VER -->
+                                        <button type="button"
+                                                data-toggle="modal"
+                                                data-target="#ver{{ $laptop->id }}"
+                                                class="btn-mini btn-primary"
+                                                title="Ver">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
 
-    @if(auth()->check() && auth()->user()->hasAnyRole([
-        'Administrador',
-        'SuperAdministrador'
-    ]))
+                                        @if(auth()->check() && auth()->user()->hasAnyRole([
+                                            'Administrador',
+                                            'SuperAdministrador'
+                                        ]))
 
-        <!-- EDITAR -->
-        <button type="button"
-                data-toggle="modal"
-                data-target="#editar{{ $laptop->id }}"
-                class="btn-mini btn-success"
-                title="Editar">
-            <i class="fa fa-edit"></i>
-        </button>
+                                            <!-- EDITAR -->
+                                            <button type="button"
+                                                    data-toggle="modal"
+                                                    data-target="#editar{{ $laptop->id }}"
+                                                    class="btn-mini btn-success"
+                                                    title="Editar">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
 
-        <!-- INFORME -->
-        <a href="{{ route('informe.laptop', $laptop->id) }}"
-           class="btn-mini btn-secondary"
-           title="Informe">
-            <i class="fa fa-file"></i>
-        </a>
+                                                <!-- DETALLE DEL TRABAJO REALIZADO -->
+                                                <button type="button"
+                                                        class="btn btn-sm btn-secondary"
+                                                        data-toggle="modal"
+                                                        data-target="#modalResultado{{ $laptop->id }}"
+                                                        title="Registrar detalle del trabajo realizado">
+                                                    <i class="fas fa-file-alt"></i>
+                                                </button>  
 
-        <!-- ELIMINAR -->
-        <form action="{{ route('laptops.destroy', $laptop->id) }}"
-              method="POST"
-              class="formEliminar">
-            @csrf
-            @method('DELETE')
+                                            <!-- ELIMINAR -->
+                                            <form action="{{ route('laptops.destroy', $laptop->id) }}"
+                                                method="POST"
+                                                class="formEliminar">
+                                                @csrf
+                                                @method('DELETE')
 
-            <button type="submit"
-                    class="btn-mini btn-danger"
-                    title="Eliminar">
-                <i class="fa fa-trash"></i>
-            </button>
-        </form>
+                                                <button type="submit"
+                                                        class="btn-mini btn-danger"
+                                                        title="Eliminar">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
 
-    @endif
+                                        @endif
 
-</div>
+                                    </div>
                                         </td>
                                     </tr>
                                     <!--Ventana Modal para Ver --->
                                     @include('laptop.modalVer')
+                                    @include('laptop.modalResultado')
                                     <!--Ventana Modal eRecepcion --->
                                     @include('laptop.modalRecepcion')
                                     <!--Ventana Modal eTecnico --->
@@ -539,16 +542,24 @@ function cambiarEstado(id, estadoId, tieneResultado) {
         }
         else if (event.target.id === 'entregado') {
         if (tieneResultado) {
+
+            // Si tiene resultado, actualizar el estado a Entregado
             cambiarEstadoAjax(id, 5);
             console.log(id);
+
         } else {
-                Swal.fire({
-                    position: "top-center",
-                    icon: "error",
-                    title: 'Debes llenar el informe antes de actualizar el estado',
-                    showConfirmButton: true,
-                });
-            }
+
+            // Mostrar únicamente el mensaje
+            Swal.fire({
+                position: 'top-center',
+                icon: 'warning',
+                title: 'Detalle del trabajo pendiente',
+                text: 'Debes llenar el detalle de trabajo realizado para actualizar el estado a Entregado.',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#3085d6'
+            });
+
+        }
         }
     })
 }
@@ -662,15 +673,62 @@ Swal.fire({
 <script src="{{ asset('js/equipoPdf.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('estilos/equipoPdf.css') }}"> 
 <script>
-const searchInputL = document.getElementById('search-inputL');
-const optionsL = document.getElementById('optionsL').options;
-const idSelectedInputL = document.getElementById('id-selectedL');
+document.addEventListener('DOMContentLoaded', function () {
 
-searchInputL.addEventListener('input', () => {
-    const selectedOption = Array.from(optionsL).find(option => option.value === searchInputL.value);
-    if (selectedOption) {
-        idSelectedInputL.value = selectedOption.dataset.id;
+    const searchInputL = document.getElementById('search-inputL');
+    const optionsL = document.getElementById('optionsL');
+    const idSelectedL = document.getElementById('id-selectedL');
+
+    if (!searchInputL || !optionsL || !idSelectedL) {
+        return;
     }
+
+    function validarDependenciaL() {
+
+        const valor = searchInputL.value.trim();
+
+        // Limpiar siempre la selección anterior.
+        idSelectedL.value = '';
+
+        if (valor === '') {
+            searchInputL.setCustomValidity('');
+            return;
+        }
+
+        const opcion = Array.from(optionsL.options).find(option =>
+            option.value.trim() === valor &&
+            option.dataset.id &&
+            /^[1-9]\d*$/.test(option.dataset.id)
+        );
+
+        if (opcion) {
+            idSelectedL.value = opcion.dataset.id;
+            searchInputL.setCustomValidity('');
+        } else {
+            searchInputL.setCustomValidity(
+                'Seleccione una dependencia registrada en la lista.'
+            );
+        }
+    }
+
+    searchInputL.addEventListener('input', validarDependenciaL);
+    searchInputL.addEventListener('change', validarDependenciaL);
+
+    const formulario = searchInputL.closest('form');
+
+    if (formulario) {
+        formulario.addEventListener('submit', function (event) {
+
+            validarDependenciaL();
+
+            if (searchInputL.value.trim() !== '' && !idSelectedL.value) {
+                event.preventDefault();
+                searchInputL.reportValidity();
+                searchInputL.focus();
+            }
+        });
+    }
+
 });
 </script>
 @endpush

@@ -413,13 +413,14 @@
                                                             title="Editar">
                                                         <i class="fa fa-edit"></i>
                                                     </button>
-
-                                                    <!-- INFORME -->
-                                                    <a href="{{ route('informe.audifono', $audifono->id) }}"
-                                                    class="btn-mini btn-secondary"
-                                                    title="Informe">
-                                                        <i class="fa fa-file"></i>
-                                                    </a>
+                                                <!-- DETALLE DEL TRABAJO REALIZADO -->
+                                                <button type="button"
+                                                        class="btn btn-sm btn-secondary"
+                                                        data-toggle="modal"
+                                                        data-target="#modalResultado{{ $audifono->id }}"
+                                                        title="Registrar detalle del trabajo realizado">
+                                                    <i class="fas fa-file-alt"></i>
+                                                </button>  
 
                                                     <!-- ELIMINAR -->
                                                     <form action="{{ route('audifonos.destroy', $audifono->id) }}"
@@ -448,6 +449,8 @@
                                         @include('audifono.registroTecnico')
                                         <!--Ventana Modal para Actualizar--->
                                         @include('audifono.modalEdit')
+                                        <!--Ventana Modal para Actualizar--->
+                                        @include('audifono.modalResultado')
                                     @endforeach
 
                                 </tbody>
@@ -541,16 +544,24 @@ function cambiarEstado(id, estadoId, tieneResultado) {
         }
         else if (event.target.id === 'entregado') {
         if (tieneResultado) {
+
+            // Si tiene resultado, actualizar el estado a Entregado
             cambiarEstadoAjax(id, 5);
             console.log(id);
+
         } else {
-                Swal.fire({
-                    position: "top-center",
-                    icon: "error",
-                    title: 'Debes llenar el informe antes de actualizar el estado',
-                    showConfirmButton: true,
-                });
-            }
+
+            // Mostrar únicamente el mensaje
+            Swal.fire({
+                position: 'top-center',
+                icon: 'warning',
+                title: 'Detalle del trabajo pendiente',
+                text: 'Debes llenar el detalle de trabajo realizado para actualizar el estado a Entregado.',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#3085d6'
+            });
+
+        }
         }
     })
 }
@@ -778,15 +789,56 @@ function cambiarEstadoAjax(id, estado_id) {
 <link rel="stylesheet" href="{{ asset('estilos/headerinicio.css') }}">  
 <link rel="stylesheet" href="{{ asset('estilos/equipoPdf.css') }}">  
 <script>
-const searchInputA = document.getElementById('search-inputA');
-const optionsA = document.getElementById('optionsA').options;
-const idSelectedInputA = document.getElementById('id-selectedA');
+document.addEventListener('DOMContentLoaded', function () {
 
-searchInputA.addEventListener('input', () => {
-    const selectedOption = Array.from(optionsA).find(option => option.value === searchInputA.value);
-    if (selectedOption) {
-        idSelectedInputA.value = selectedOption.dataset.id;
+    const searchInputA = document.getElementById('search-inputA');
+    const optionsA = document.getElementById('optionsA');
+    const idSelectedInputA = document.getElementById('id-selectedA');
+
+    function validarDependencia() {
+
+        const valor = searchInputA.value.trim();
+
+        // Invalidar siempre la selección anterior.
+        idSelectedInputA.value = '';
+
+        const opcion = Array.from(optionsA.options).find(option =>
+            option.value.trim() === valor &&
+            option.dataset.id &&
+            /^[1-9]\d*$/.test(option.dataset.id)
+        );
+
+        if (opcion && valor !== '') {
+
+            idSelectedInputA.value = opcion.dataset.id;
+            searchInputA.setCustomValidity('');
+
+        } else {
+
+            searchInputA.setCustomValidity(
+                'Seleccione una dependencia registrada en la lista.'
+            );
+        }
     }
+
+    searchInputA.addEventListener('input', validarDependencia);
+    searchInputA.addEventListener('change', validarDependencia);
+
+    const formulario = searchInputA.closest('form');
+
+    if (formulario) {
+        formulario.addEventListener('submit', function (event) {
+
+            validarDependencia();
+
+            if (!idSelectedInputA.value) {
+                event.preventDefault();
+                searchInputA.reportValidity();
+                searchInputA.focus();
+            }
+        });
+    }
+
 });
 </script>
 

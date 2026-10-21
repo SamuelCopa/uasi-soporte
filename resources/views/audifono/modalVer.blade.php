@@ -101,63 +101,43 @@
                                 </div>
 
                                 <div class="registro-view-value">
-
                                     {{ $audifono->reguser?->name }}
                                     {{ $audifono->reguser?->paterno }}
                                     {{ $audifono->reguser?->materno }}
-
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
-
-
                     <!-- NOMBRE / C.I. -->
                     <div class="row">
-
                         <div class="col-md-8">
                             <div class="registro-view-field">
-
                                 <div class="registro-view-label">
                                     <i class="fas fa-user"></i>
                                     NOMBRE
                                 </div>
-
                                 <div class="registro-view-value">
-
                                     {{ strtoupper($audifono->funcionario?->grado_academico) }}
                                     {{ $audifono->funcionario?->nombre }}
                                     {{ $audifono->funcionario?->paterno }}
                                     {{ $audifono->funcionario?->materno }}
-
                                 </div>
-
                             </div>
                         </div>
 
-
                         <div class="col-md-4">
                             <div class="registro-view-field">
-
                                 <div class="registro-view-label">
                                     <i class="fas fa-id-card"></i>
                                     C.I.
                                 </div>
-
                                 <div class="registro-view-value">
-
                                     {{ $audifono->funcionario?->ci }}
                                     {{ $audifono->funcionario?->expedido }}
-
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
-
 
                     <!-- CELULAR / CORREO / CARGO -->
                     <div class="row">
@@ -512,8 +492,23 @@
 
                     <!-- OBSERVACIONES -->
                     <div class="row">
+                        <div class="col-md-6">
 
-                        <div class="col-md-12">
+                            <div class="registro-view-field">
+
+                                <div class="registro-view-label">
+                                    <i class="fas fa-comment-alt"></i>
+                                    DETALLE DEL TRABAJO REALIZADO
+                                </div>
+
+                                <div class="registro-view-value">
+                                    {{ $audifono->detalle_trabajo ?? 'EN ESPERA' }}
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
 
                             <div class="registro-view-field">
 

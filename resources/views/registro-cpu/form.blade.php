@@ -751,21 +751,107 @@
                         '<div class="invalid-feedback"><strong>:message</strong></div>') !!}
                 </div>
 
+
+        </div>
+
+    </div>
+    {{-- =========================================================
+         COMPONENTES PRINCIPALES
+         ========================================================= --}}
+    <div class="registro-section">
+
+        {{-- CASE / PROCESADOR / TARJETA MADRE / DISCO --}}
+        <div class="row">
+
+ 
+            {{-- DISCO DURO 2--}}
+            <div class="col-md-3 registro-component">
+
+                <div class="registro-component-title">
+                    DISCO DURO 2
+                </div>
+
+                <div class="registro-field">
+                    <label>MARCA</label>
+
+                    <select name="marcadisco2_id"
+                            class="form-control @error('marcadisco2_id') is-invalid @enderror"
+                            id="marcadisco2_id">
+
+                        <option value="" disabled
+                            {{ old('marcadisco2_id',$registroCpu?->marcadisco2_id) ? '' : 'selected' }}>
+                            SELECCIONAR
+                        </option>
+
+                        @foreach ($marcadisco as $marca)
+                            <option value="{{ $marca->id }}"
+                                {{ old('marcadisco2_id',$registroCpu?->marcadisco2_id) == $marca->id ? 'selected' : '' }}>
+                                {{ $marca->marca }}
+                            </option>
+                        @endforeach
+
+                        <option value="">QUITAR</option>
+                    </select>
+
+                    <input type="text"
+                           name="marcadisco2_otro"
+                           class="form-control mt-2"
+                           id="marcadisco2_otro"
+                           style="display:none;"
+                           placeholder="Ingrese la marca">
+
+                    {!! $errors->first('marcadisco_id',
+                        '<div class="invalid-feedback"><strong>:message</strong></div>') !!}
+                </div>
+
+                <div class="registro-field">
+                    <label>CAPACIDAD</label>
+
+                    <select name="capacdisco2_id"
+                            class="form-control @error('capacdisco2_id') is-invalid @enderror"
+                            id="capacdisco2_id">
+
+                        <option value="" disabled
+                            {{ old('capacdisco2_id',$registroCpu?->capacdisco2_id) ? '' : 'selected' }}>
+                            SELECCIONAR
+                        </option>
+
+                        @foreach ($capdisco as $capacidad)
+                            <option value="{{ $capacidad->id }}"
+                                {{ old('capacdisco2_id',$registroCpu?->capacdisco2_id) == $capacidad->id ? 'selected' : '' }}>
+                                {{ $capacidad->capacidad }}
+                            </option>
+                        @endforeach
+
+                        <option value="">QUITAR</option>
+                    </select>
+
+                    <input type="text"
+                           name="capacdisco2_otro"
+                           class="form-control mt-2"
+                           id="capacdisco2_otro"
+                           style="display:none;"
+                           placeholder="Ingrese la capacidad">
+
+                    {!! $errors->first('capacdisco2_id',
+                        '<div class="invalid-feedback"><strong>:message</strong></div>') !!}
+                </div>
+
                 <div class="registro-field">
                     <label>TIPO</label>
 
-                    <select name="tipodisco_id"
-                            class="form-control @error('tipodisco_id') is-invalid @enderror"
-                            id="tipodisco_id">
+                    <select name="tipodisco2_id"
+                            class="form-control @error('tipodisco2_id') is-invalid @enderror"
+                            id="tipodisco2_id">
 
                         <option value="" disabled
-                            {{ old('tipodisco_id',$registroCpu?->tipodisco_id) ? '' : 'selected' }}>
+                            {{ old('tipodisco2_id',$registroCpu?->tipodisco2_id) ? '' : 'selected' }}>
                             SELECCIONAR
                         </option>
 
                         @foreach ($tipodisco as $tipo)
                             <option value="{{ $tipo->id }}"
-                                {{ old('tipodisco_id',$registroCpu?->tipodisco_id) == $tipo->id ? 'selected' : '' }}>
+                                {{ old('tipodisco2_id',$registroCpu?->tipodisco2_id) == $tipo->id ? 'selected' : '' }}>
                                 {{ $tipo->tipo }}
                             </option>
                         @endforeach
@@ -780,188 +866,15 @@
                            style="display:none;"
                            placeholder="Ingrese el tipo">
 
-                    {!! $errors->first('tipodisco_id',
+                    {!! $errors->first('tipodisco2_id',
                         '<div class="invalid-feedback"><strong>:message</strong></div>') !!}
                 </div>
 
             </div>
 
-        </div>
 
-    </div>
-
-
-    {{-- =========================================================
-         MEMORIAS RAM
-         ========================================================= --}}
-    <div class="registro-section">
-
-        <div class="registro-section-title">
-            <i class="fas fa-memory"></i>
-            MEMORIA RAM
-        </div>
-
-        <div class="row">
-
-            {{-- RAM 1 --}}
-            @for($ram = 1; $ram <= 4; $ram++)
-
-                @php
-                    $sufijo = $ram == 1 ? '' : $ram;
-                @endphp
-
-                <div class="col-md-3 registro-component">
-
-                    <div class="registro-component-title">
-                        MEMORIA RAM {{ $ram }}
-                    </div>
-
-                    <div class="registro-field">
-                        <label for="disipador{{ $sufijo }}_id">
-                            DISIPADOR
-                        </label>
-
-                        <select name="disipador{{ $sufijo }}_id"
-                                id="disipador{{ $sufijo }}_id"
-                                class="form-control">
-
-                            <option value="" disabled>
-                                SELECCIONAR
-                            </option>
-
-                            @foreach ($disipadorram as $disip)
-                                <option value="{{ $disip->id }}"
-                                    {{ old("disipador{$sufijo}_id", $registroCpu?->{"disipador{$sufijo}_id"}) == $disip->id ? 'selected' : '' }}>
-                                    {{ $disip->opcion }}
-                                </option>
-                            @endforeach
-
-                            @if($ram != 2 && $ram != 4)
-                                <option value="">QUITAR</option>
-                            @endif
-
-                        </select>
-                    </div>
-
-                    <div class="registro-field">
-                        <label for="marcaram{{ $sufijo }}_id">
-                            MARCA
-                        </label>
-
-                        <select name="marcaram{{ $sufijo }}_id"
-                                id="marcaram{{ $sufijo }}_id"
-                                class="form-control">
-
-                            <option value="" disabled>
-                                SELECCIONAR
-                            </option>
-
-                            @foreach ($marcaram as $marca)
-                                <option value="{{ $marca->id }}"
-                                    {{ old("marcaram{$sufijo}_id", $registroCpu?->{"marcaram{$sufijo}_id"}) == $marca->id ? 'selected' : '' }}>
-                                    {{ $marca->marca }}
-                                </option>
-                            @endforeach
-
-                            <option value="">QUITAR</option>
-                        </select>
-
-                        <input type="text"
-                               name="marcaram{{ $sufijo }}_otro"
-                               class="form-control mt-2"
-                               id="marcaram{{ $sufijo }}_otro"
-                               style="display:none;"
-                               placeholder="Ingrese la marca">
-                    </div>
-
-                    <div class="registro-field">
-                        <label for="capacram{{ $sufijo }}_id">
-                            CAPACIDAD
-                        </label>
-
-                        <select name="capacram{{ $sufijo }}_id"
-                                id="capacram{{ $sufijo }}_id"
-                                class="form-control">
-
-                            <option value="" disabled>
-                                SELECCIONAR
-                            </option>
-
-                            @foreach ($capram as $capacidad)
-                                <option value="{{ $capacidad->id }}"
-                                    {{ old("capacram{$sufijo}_id", $registroCpu?->{"capacram{$sufijo}_id"}) == $capacidad->id ? 'selected' : '' }}>
-                                    {{ $capacidad->capacidad }}
-                                </option>
-                            @endforeach
-
-                            <option value="">QUITAR</option>
-                        </select>
-
-                        <input type="text"
-                               name="capacram{{ $sufijo }}_otro"
-                               class="form-control mt-2"
-                               id="capacram{{ $sufijo }}_otro"
-                               style="display:none;"
-                               placeholder="Ingrese la capacidad">
-                    </div>
-
-                    <div class="registro-field">
-                        <label for="tiporam{{ $sufijo }}_id">
-                            TIPO DE CONEXIÓN
-                        </label>
-
-                        <select name="tiporam{{ $sufijo }}_id"
-                                id="tiporam{{ $sufijo }}_id"
-                                class="form-control">
-
-                            <option value="" disabled>
-                                SELECCIONAR
-                            </option>
-
-                            @foreach ($tiporam as $tipo)
-                                <option value="{{ $tipo->id }}"
-                                    {{ old("tiporam{$sufijo}_id", $registroCpu?->{"tiporam{$sufijo}_id"}) == $tipo->id ? 'selected' : '' }}>
-                                    {{ $tipo->tipo }}
-                                </option>
-                            @endforeach
-
-                            <option value="">QUITAR</option>
-                        </select>
-                    </div>
-
-                    <div class="registro-field">
-                        <label for="cantidad{{ $sufijo }}_id">
-                            CANTIDAD
-                        </label>
-
-                        <select name="cantidad{{ $sufijo }}_id"
-                                id="cantidad{{ $sufijo }}_id"
-                                class="form-control">
-
-                            <option value="" disabled>
-                                SELECCIONAR
-                            </option>
-
-                            @foreach ($cantidadram as $cantidad)
-                                <option value="{{ $cantidad->id }}"
-                                    {{ old("cantidad{$sufijo}_id", $registroCpu?->{"cantidad{$sufijo}_id"}) == $cantidad->id ? 'selected' : '' }}>
-                                    {{ $cantidad->cantidad }}
-                                </option>
-                            @endforeach
-
-                            <option value="">QUITAR</option>
-                        </select>
-                    </div>
-
-                </div>
-
-            @endfor
 
         </div>
-
-    </div>
-
-
     {{-- =========================================================
          TARJETAS Y CONECTIVIDAD
          ========================================================= --}}
@@ -1169,6 +1082,182 @@
                 </div>
 
             </div>
+            
+    </div>
+
+
+```blade
+{{-- =========================================================
+     MEMORIAS RAM
+     ========================================================= --}}
+
+<div class="registro-section">
+
+    <div class="registro-section-title">
+        <i class="fas fa-memory"></i>
+        MEMORIA RAM
+    </div>
+
+    <div class="row">
+
+        @for($ram = 1; $ram <= 4; $ram++)
+
+            @php
+                $sufijo = $ram == 1 ? '' : $ram;
+
+                $campoDisipador = "disipador{$sufijo}_id";
+                $campoMarca     = "marcaram{$sufijo}_id";
+                $campoCapacidad = "capacram{$sufijo}_id";
+                $campoTipo      = "tiporam{$sufijo}_id";
+                $campoCantidad  = "cantidad{$sufijo}_id";
+
+                $valorDisipador = old($campoDisipador, $registroCpu?->{$campoDisipador});
+                $valorMarca     = old($campoMarca, $registroCpu?->{$campoMarca});
+                $valorCapacidad = old($campoCapacidad, $registroCpu?->{$campoCapacidad});
+                $valorTipo      = old($campoTipo, $registroCpu?->{$campoTipo});
+                $valorCantidad  = old($campoCantidad, $registroCpu?->{$campoCantidad});
+            @endphp
+
+            <div class="col-md-3 registro-component">
+
+                <div class="registro-component-title">
+                    MEMORIA RAM {{ $ram }}
+                </div>
+
+                {{-- DISIPADOR --}}
+                <div class="registro-field">
+                    <label for="{{ $campoDisipador }}">DISIPADOR</label>
+
+                    <select name="{{ $campoDisipador }}"
+                            id="{{ $campoDisipador }}"
+                            class="form-control">
+
+                        <option value="" {{ $valorDisipador == '' ? 'selected' : '' }}>
+                            SELECCIONAR
+                        </option>
+
+                        @foreach ($disipadorram as $disip)
+                            <option value="{{ $disip->id }}"
+                                {{ (string) $valorDisipador === (string) $disip->id ? 'selected' : '' }}>
+                                {{ $disip->opcion }}
+                            </option>
+                        @endforeach
+
+                    </select>
+                </div>
+
+                {{-- MARCA --}}
+                <div class="registro-field">
+                    <label for="{{ $campoMarca }}">MARCA</label>
+
+                    <select name="{{ $campoMarca }}"
+                            id="{{ $campoMarca }}"
+                            class="form-control">
+
+                        <option value="" {{ $valorMarca == '' ? 'selected' : '' }}>
+                            SELECCIONAR
+                        </option>
+
+                        @foreach ($marcaram as $marca)
+                            <option value="{{ $marca->id }}"
+                                {{ (string) $valorMarca === (string) $marca->id ? 'selected' : '' }}>
+                                {{ $marca->marca }}
+                            </option>
+                        @endforeach
+
+                    </select>
+
+                    <input type="text"
+                           name="marcaram{{ $sufijo }}_otro"
+                           id="marcaram{{ $sufijo }}_otro"
+                           class="form-control mt-2"
+                           value="{{ old("marcaram{$sufijo}_otro") }}"
+                           style="display: none;"
+                           placeholder="Ingrese la marca">
+                </div>
+
+                {{-- CAPACIDAD --}}
+                <div class="registro-field">
+                    <label for="{{ $campoCapacidad }}">CAPACIDAD</label>
+
+                    <select name="{{ $campoCapacidad }}"
+                            id="{{ $campoCapacidad }}"
+                            class="form-control">
+
+                        <option value="" {{ $valorCapacidad == '' ? 'selected' : '' }}>
+                            SELECCIONAR
+                        </option>
+
+                        @foreach ($capram as $capacidad)
+                            <option value="{{ $capacidad->id }}"
+                                {{ (string) $valorCapacidad === (string) $capacidad->id ? 'selected' : '' }}>
+                                {{ $capacidad->capacidad }}
+                            </option>
+                        @endforeach
+
+                    </select>
+
+                    <input type="text"
+                           name="capacram{{ $sufijo }}_otro"
+                           id="capacram{{ $sufijo }}_otro"
+                           class="form-control mt-2"
+                           value="{{ old("capacram{$sufijo}_otro") }}"
+                           style="display: none;"
+                           placeholder="Ingrese la capacidad">
+                </div>
+
+                {{-- TIPO DE CONEXIÓN --}}
+                <div class="registro-field">
+                    <label for="{{ $campoTipo }}">TIPO DE CONEXIÓN</label>
+
+                    <select name="{{ $campoTipo }}"
+                            id="{{ $campoTipo }}"
+                            class="form-control">
+
+                        <option value="" {{ $valorTipo == '' ? 'selected' : '' }}>
+                            SELECCIONAR
+                        </option>
+
+                        @foreach ($tiporam as $tipo)
+                            <option value="{{ $tipo->id }}"
+                                {{ (string) $valorTipo === (string) $tipo->id ? 'selected' : '' }}>
+                                {{ $tipo->tipo }}
+                            </option>
+                        @endforeach
+
+                    </select>
+                </div>
+
+                {{-- CANTIDAD --}}
+                <div class="registro-field">
+                    <label for="{{ $campoCantidad }}">CANTIDAD</label>
+
+                    <select name="{{ $campoCantidad }}"
+                            id="{{ $campoCantidad }}"
+                            class="form-control">
+
+                        <option value="" {{ $valorCantidad == '' ? 'selected' : '' }}>
+                            SELECCIONAR
+                        </option>
+
+                        @foreach ($cantidadram as $cantidad)
+                            <option value="{{ $cantidad->id }}"
+                                {{ (string) $valorCantidad === (string) $cantidad->id ? 'selected' : '' }}>
+                                {{ $cantidad->cantidad }}
+                            </option>
+                        @endforeach
+
+                    </select>
+                </div>
+
+            </div>
+
+        @endfor
+
+    </div>
+
+</div>
+```
 
 
             {{-- FUENTE --}}
