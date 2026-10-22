@@ -11,7 +11,7 @@
         "endroid/qr-code": "4.0",
         "jeroennoten/laravel-adminlte": "^3.14",
         "laravel/framework": "^11.9",
-        "laravel/sanctum": "^4.0",
+        "laravel/sanctum": "^4.3",
         "laravel/tinker": "^2.9",
         "laravel/ui": "^4.5",
         "mews/captcha": "^3.4",

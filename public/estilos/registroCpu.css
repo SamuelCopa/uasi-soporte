@@ -470,6 +470,58 @@
 #menu_principal .mif-expand-more {
     display: none;
 }
+#menu_principal [id^="drop-procesadores"],
+#menu_principal .mif-expand-more {
+    display: none;
+}
+#menu_principal [id^="drop-disco1"],
+#menu_principal .mif-expand-more {
+    display: none;
+}
+#menu_principal [id^="drop-disco2"],
+#menu_principal .mif-expand-more {
+    display: none;
+}
+#menu_principal [id^="drop-tm"],
+#menu_principal .mif-expand-more {
+    display: none;
+}
+#menu_principal [id^="drop-tv"],
+#menu_principal .mif-expand-more {
+    display: none;
+}
+#menu_principal [id^="drop-tr"],
+#menu_principal .mif-expand-more {
+    display: none;
+}
+#menu_principal [id^="drop-tw"],
+#menu_principal .mif-expand-more {
+    display: none;
+}
+#menu_principal [id^="drop-ram"],
+#menu_principal .mif-expand-more {
+    display: none;
+}
+#menu_principal [id^="drop-ram2"],
+#menu_principal .mif-expand-more {
+    display: none;
+}
+#menu_principal [id^="drop-ram3"],
+#menu_principal .mif-expand-more {
+    display: none;
+}
+#menu_principal [id^="drop-ram4"],
+#menu_principal .mif-expand-more {
+    display: none;
+}
+#menu_principal [id^="drop-fuente"],
+#menu_principal .mif-expand-more {
+    display: none;
+}
+#menu_principal [id^="drop-cd"],
+#menu_principal .mif-expand-more {
+    display: none;
+}
 
 /* --- Responsividad --- */
 @media (max-width: 768px) {

@@ -246,8 +246,6 @@ Route::get('/buscaCpu',[App\Http\Controllers\RegistroCpuController::class,'busca
 
 //-----------------------------------------------------------------------------
 
-Route::post('/infresult/estabilizador/{id}', [InformesController::class, 'resultadoEstabilizador'])->name('resultado.estabilizador')->middleware('auth');
-
 //---------------EVALUACION DE REQUERIMIENTOS DE SERVICIOS A UNIDADES--------------------
 Route::get('/registrar/activos', [DashboardController::class, 'panelRegistro'])->name('registrar.activos')->middleware('auth');
 Route::get('/evaluar', [TecnicoController::class, 'buscarEvaluacion'])->name('evaluacion.buscar');
@@ -346,21 +344,6 @@ Route::get('/admin/asigMonitor/{id}', [TecnicoController::class, 'tecnicoMonitor
 Route::get('/admin/asigEstabilizador/{id}', [TecnicoController::class, 'tecnicoEstabilizador'])->name('admin.asigEstabilizador')->middleware('auth');
 Route::get('/admin/asigUps/{id}', [TecnicoController::class, 'tecnicoUps'])->name('admin.asigUps')->middleware('auth');
 Route::get('/admin/asigLaptop/{id}', [TecnicoController::class, 'tecnicoLaptop'])->name('admin.asigLaptop')->middleware('auth');
-
-
-//------------------CREAR INFORMES WORD------------------------------------
-Route::get('/informe/equipo/{id}', [InformesController::class, 'crearInformeEquipo'])->name('informe.equipo')->middleware('auth');
-Route::get('/informe/cpu/{id}', [InformesController::class, 'crearInformeCpu'])->name('informe.cpu')->middleware('auth');
-Route::get('/informe/impresora/{id}', [InformesController::class, 'crearInformeImpresora'])->name('informe.impresora')->middleware('auth');
-Route::get('/informe/audifono/{id}', [InformesController::class, 'crearInformeAudifono'])->name('informe.audifono')->middleware('auth');
-Route::get('/informe/teclado/{id}', [InformesController::class, 'crearInformeTeclado'])->name('informe.teclado')->middleware('auth');
-Route::get('/informe/mouse/{id}', [InformesController::class, 'crearInformeMouse'])->name('informe.mouse')->middleware('auth');
-Route::get('/informe/parlante/{id}', [InformesController::class, 'crearInformeParlante'])->name('informe.parlante')->middleware('auth');
-Route::get('/informe/monitor/{id}', [InformesController::class, 'crearInformeMonitor'])->name('informe.monitor')->middleware('auth');
-Route::get('/informe/estabilizador/{id}', [InformesController::class, 'crearInformeEstabilizador'])->name('informe.estabilizador')->middleware('auth');
-Route::get('/informe/ups/{id}', [InformesController::class, 'crearInformeUps'])->name('informe.ups')->middleware('auth');
-Route::get('/informe/laptop/{id}', [InformesController::class, 'crearInformeLaptop'])->name('informe.laptop')->middleware('auth');
-Route::post('/informe/descargar/{id}', [InformesController::class, 'descargarInforme'])->name('informe.descargar')->middleware('auth');
 
 
 //---------------ESTADISTICAS--------------------

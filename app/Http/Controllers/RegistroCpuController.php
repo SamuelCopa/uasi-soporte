@@ -411,7 +411,7 @@ public function store(Request $request,CorrelativoService $correlativoService)
             // LECTOR CD/DVD
             'marcacd_id' => [
                 'otroMarcacd', 'otro_marca_cd',
-                \App\Models\MarcaLectorcd::class, 'marca'
+                \App\Models\MarcaLectorcd::class, 'nombre'
             ],
         ];
 

@@ -514,24 +514,17 @@
                                 <!-- ÍCONO DE DESPLIEGUE -->
                                 <span class="mif-chevron-left mif-3x boton"></span>
 
-                                <nav id="boton-desplegar">
+                                <nav id="case">
 
                                     <ul id="menu_principal" class="ul">
 
                                         <li>
-
-                                            <label for="drop-2"
-                                                   class="text-center principales">
+                                            <label for="drop-2" class="text-center principales">
 
                                                 <i class="fas fa-desktop mr-2"></i>
                                                 {{ __('CASE') }}
-
                                             </label>
-
-                                            <input type="checkbox"
-                                                   id="drop-2">
-
-
+                                            <input type="checkbox" id="drop-2">
                                             <!-- ============================
                                                  MARCAS
                                                  ============================ -->
@@ -703,14 +696,14 @@
                         PROCESADOR
                         ========================================================= --}}
                         <div class="div title">
-                        <nav class="case-selector">
+                        <nav id="procesadores">
                             <ul id="menu_principal" class="ul">
                                 <li>
-                                    <label for="drop-2" class="text-center principales">
+                                    <label for="drop-procesadores" class="text-center principales">
                                         <i class="fas fa-microchip mr-2"></i>
                                         {{ __('PROCESADOR') }}
                                     </label>
-                                    <input type="checkbox" id="drop-2">
+                                    <input type="checkbox" id="drop-procesadores">
                                     <ul class="ul">
                                         <label for="marcaprocesador_id" class="form-label">
                                             <i class="fas fa-tag mr-1"></i>
@@ -845,14 +838,14 @@
                         DISCO DURO
                         ========================================================= --}}
                         <div class="div title">
-                        <nav class="case-selector">
+                        <nav id="disco1">
                             <ul id="menu_principal" class="ul">
                                 <li>
-                                    <label for="drop-2" class="text-center principales">
+                                    <label for="drop-disco1" class="text-center principales">
                                         <i class="fas fa-hdd mr-2"></i>
                                         {{ __('DISCO DURO') }}
                                     </label>
-                                    <input type="checkbox" id="drop-2">
+                                    <input type="checkbox" id="drop-disco1">
                                     <ul class="ul">
                                         <label for="marcadisco_id" class="form-label">
                                             <i class="fas fa-tag mr-1"></i>
@@ -973,13 +966,13 @@
                         DISCO DURO 2
                         ========================================================= --}}
                         <div class="div title">
-                        <nav class="case-selector">
+                        <nav id="disco2">
                             <ul id="menu_principal1" class="ul">
                                 <li>
-                                    <label for="drop-2" class="text-center principales"><i class="fas fa-hdd mr-2"></i>
+                                    <label for="drop-disco2" class="text-center principales"><i class="fas fa-hdd mr-2"></i>
                                         {{ __('DISCO DURO 2') }}
                                     </label>
-                                    <input type="checkbox" id="drop-2">
+                                    <input type="checkbox" id="drop-disco2">
                                     <ul class="ul">
                                         <label for="marcadisco2_id" class="form-label"><i class="fas fa-tag mr-1"></i>
                                             {{ __('MARCA :') }}
@@ -1098,14 +1091,14 @@
                         TARJETA MADRE
                         ========================================================= --}}
                         <div class="div title">
-                        <nav class="case-selector">
+                        <nav id="tm">
                             <ul id="menu_principal" class="ul">
                                 <li>
-                                    <label for="drop-2" class="text-center principales">
+                                    <label for="drop-tm" class="text-center principales">
                                         <i class="fas fa-server mr-2"></i>
                                         {{ __('TARJETA MADRE') }}
                                     </label>
-                                    <input type="checkbox" id="drop-2">
+                                    <input type="checkbox" id="drop-tm">
                                     <ul class="ul">
                                         <label for="marcatmadre_id" class="form-label">
                                             <i class="fas fa-tag mr-1"></i>
@@ -1230,17 +1223,17 @@
                     ========================================================= --}}
 
                     <div class="div title">
-                    <nav class="case-selector">
+                    <nav id="tv">
 
                         <ul id="menu_principal" class="ul">
                             <li>
 
-                                <label for="drop-2" class="text-center principales">
+                                <label for="drop-tv" class="text-center principales">
                                     <i class="fas fa-video mr-2"></i>
                                     {{ __('TARJETA DE VIDEO') }}
                                 </label>
 
-                                <input type="checkbox" id="drop-2">
+                                <input type="checkbox" id="drop-tv">
 
                                 <ul class="ul">
 
@@ -1408,17 +1401,17 @@
 
                     <div class="div title">
 
-                    <nav class="case-selector">
+                    <nav id="tr">
 
                         <ul id="menu_principal" class="ul">
                             <li>
 
-                                <label for="drop-2" class="text-center principales">
+                                <label for="drop-tr" class="text-center principales">
                                     <i class="fas fa-network-wired mr-2"></i>
                                     {{ __('TARJETA DE RED') }}
                                 </label>
 
-                                <input type="checkbox" id="drop-2">
+                                <input type="checkbox" id="drop-tr">
 
                                 <ul class="ul">
 
@@ -1551,17 +1544,17 @@
                     ========================================================= --}}
 
                     <div class="div title">
-                    <nav class="case-selector">
+                    <nav id="tw">
 
                         <ul id="menu_principal1" class="ul">
                             <li>
 
-                                <label for="drop-2" class="text-center principales">
+                                <label for="drop-tw" class="text-center principales">
                                     <i class="fas fa-wifi mr-2"></i>
                                     {{ __('TARJETA WIFI') }}
                                 </label>
 
-                                <input type="checkbox" id="drop-2">
+                                <input type="checkbox" id="drop-tw">
 
                                 <ul class="ul">
 
@@ -1737,17 +1730,17 @@
                     ========================================================= --}}
                     <div class="div title">
 
-                    <nav class="case-selector">
+                    <nav id="ram">
 
                         <ul id="menu_principal" class="ul">
                             <li>
 
-                                <label for="drop-2" class="text-center principales">
+                                <label for="drop-ram" class="text-center principales">
                                     <i class="fas fa-memory mr-2"></i>
                                     {{ __('MEMORIA RAM') }}
                                 </label>
 
-                                <input type="checkbox" id="drop-2">
+                                <input type="checkbox" id="drop-ram">
 
                                 <ul class="ul">
 
@@ -1985,17 +1978,17 @@
             MEMORIA RAM 2DO SLOT
             ========================================================= --}}
             <div class="div title">
-            <nav class="case-selector">
+            <nav id="ram2">
 
                 <ul id="menu_principal" class="ul">
                     <li>
 
-                        <label for="drop-2" class="text-center principales">
+                        <label for="drop-ram2" class="text-center principales">
                             <i class="fas fa-memory mr-2"></i>
                             {{ __('MEMORIA RAM 2') }}
                         </label>
 
-                        <input type="checkbox" id="drop-2">
+                        <input type="checkbox" id="drop-ram2">
 
                         <ul class="ul">
 
@@ -2259,19 +2252,19 @@
             ========================================================= --}}
 
             <div class="div title">
-                <nav class="case-selector">
+                <nav id="ram3">
 
                 <ul id="menu_principal1" class="ul">
 
                     <li>
 
                         <!-- TÍTULO -->
-                        <label for="drop-2" class="text-center principales">
+                        <label for="drop-ram3" class="text-center principales">
                             <i class="fas fa-memory mr-2"></i>
                             {{ __('MEMORIA RAM 3') }}
                         </label>
 
-                        <input type="checkbox" id="drop-2">
+                        <input type="checkbox" id="drop-ram3">
 
                         <ul class="ul">
 
@@ -2549,19 +2542,19 @@
             ========================================================= --}}
 
             <div class="div title">
-            <nav class="case-selector">
+            <nav id="ram4">
 
                 <ul id="menu_principal1" class="ul">
 
                     <li>
 
                         <!-- TÍTULO -->
-                        <label for="drop-2" class="text-center principales">
+                        <label for="drop-ram4" class="text-center principales">
                             <i class="fas fa-memory mr-2"></i>
                             {{ __('MEMORIA RAM 4') }}
                         </label>
 
-                        <input type="checkbox" id="drop-2">
+                        <input type="checkbox" id="drop-ram4">
 
                         <ul class="ul">
 
@@ -2842,19 +2835,19 @@
                     ========================================================= --}}
                 <div class="div title">
 
-                    <nav class="case-selector">
+                    <nav id="fuente">
 
                         <ul id="menu_principal" class="ul">
 
                             <li>
 
                                 <!-- TÍTULO -->
-                                <label for="drop-2" class="text-center principales">
+                                <label for="drop-fuente" class="text-center principales">
                                     <i class="fas fa-plug mr-2"></i>
                                     {{ __('FUENTE DE PODER') }}
                                 </label>
 
-                                <input type="checkbox" id="drop-2">
+                                <input type="checkbox" id="drop-fuente">
 
                                 <ul class="ul">
 
@@ -3045,30 +3038,24 @@
                 ========================================================= --}}
 
                 <div class="div title">
-                <nav class="case-selector">
+                <nav id="cd">
 
                     <ul id="menu_principal" class="ul">
 
                         <li>
-
                             <!-- TÍTULO -->
-                            <label for="drop-2" class="text-center principales">
+                            <label for="drop-cd" class="text-center principales">
                                 <i class="fas fa-compact-disc mr-2"></i>
                                 {{ __('LECTOR CD/DVD') }}
                             </label>
-
-                            <input type="checkbox" id="drop-2">
-
+                            <input type="checkbox" id="drop-cd">
                             <ul class="ul">
-
                                 <!-- MARCA -->
                                 <label for="marcacd_id" class="form-label">
                                     <i class="fas fa-tag mr-2"></i>
                                     {{ __('MARCA :') }}
                                 </label>
-
                                 @foreach ($marcalectorcd as $marca)
-
                                     <li>
                                         <a href="#"
                                         class="nivel-49"
@@ -3077,9 +3064,7 @@
                                             {{ $marca->nombre }}
                                         </a>
                                     </li>
-
                                 @endforeach
-
                                 <!-- OTRA MARCA -->
                                 <li>
                                     <a href="#"

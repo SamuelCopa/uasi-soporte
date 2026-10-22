@@ -741,6 +741,88 @@ document.addEventListener('DOMContentLoaded', function () {
 <link rel="stylesheet" href="{{ asset('estilos/fechas.css') }}">  
 <script src="{{ asset('js/equipoPdf.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('estilos/equipoPdf.css') }}"> 
+
+<!-- <script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const contenedor = document.getElementById('case');
+
+    if (!contenedor) return;
+
+    document.addEventListener('click', function (event) {
+
+        // Si el clic fue dentro de CASE, no cerrar
+        if (contenedor.contains(event.target)) {
+            return;
+        }
+
+        // Cerrar los submenús de CASE
+        contenedor.querySelectorAll('ul ul.ul').forEach(function (submenu) {
+            submenu.style.display = 'none';
+        });
+
+    });
+
+});
+</script> -->
+
+<script>
+
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const menus = [
+        { id: 'case', checkbox: 'drop-2' },
+        { id: 'procesadores', checkbox: 'drop-procesadores' },
+        { id: 'disco1', checkbox: 'drop-disco1' },
+        { id: 'disco2', checkbox: 'drop-disco2' },
+        { id: 'tm', checkbox: 'drop-tm' },
+        { id: 'tv', checkbox: 'drop-tv' },
+        { id: 'tr', checkbox: 'drop-tr' },
+        { id: 'tw', checkbox: 'drop-tw' },
+        { id: 'ram', checkbox: 'drop-ram' },
+        { id: 'ram1', checkbox: 'drop-ram1' },
+        { id: 'ram2', checkbox: 'drop-ram2' },
+        { id: 'ram3', checkbox: 'drop-ram3' },
+        { id: 'ram4', checkbox: 'drop-ram4' },
+        { id: 'fuente', checkbox: 'drop-fuente' },
+        { id: 'cd', checkbox: 'drop-cd' }
+    ];
+
+    document.addEventListener('click', function (event) {
+
+        menus.forEach(function (menu) {
+
+            const contenedor = document.getElementById(menu.id);
+
+            if (!contenedor) return;
+
+            // No cerrar si el clic fue dentro del menú.
+            if (contenedor.contains(event.target)) return;
+
+            // Cerrar el menú principal correspondiente.
+            const checkbox = document.getElementById(menu.checkbox);
+
+            if (checkbox) {
+                checkbox.checked = false;
+            }
+
+            // Cerrar los submenús anidados.
+            contenedor.querySelectorAll('ul ul.ul').forEach(function (submenu) {
+                submenu.style.display = 'none';
+            });
+
+        });
+
+    });
+
+});
+
+
+</script>
+
+
+</script>
 @endpush
 @push('css')
 <link rel="stylesheet" href="{{ asset('estilos/registroCpu.css') }}">  

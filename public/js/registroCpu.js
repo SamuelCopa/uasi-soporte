@@ -1361,7 +1361,7 @@ $(document).ready(function() {
     actualizarListaCD();
   });
 
-  // Input "Otro" para COLOR
+  // Input "Otro" 
   $('.otro_marca_cd').on('input', function() {
     marcalectorcd = $(this).val();
     $('#marcacd_id').val('otroMarcacd');
