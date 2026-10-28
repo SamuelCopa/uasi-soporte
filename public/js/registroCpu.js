@@ -389,7 +389,7 @@ $(document).ready(function() {
         let id = $(this).data('id');
         capacidad_texto = $(this).text();
         $('#capacdisco2_id').val(id);
-    // Ocultar todos los submenús de color antes de abrir el nuevo
+
     $('.nivel-85').hide();
 
         if(id == 'otroCapdisco2') {

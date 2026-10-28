@@ -206,9 +206,9 @@ $(document).ready(function() {
                             $('#marcadisco2_id').val(ultimoResultado.marcadisco2_id); 
                             $('#capacdisco2_id').val(ultimoResultado.capacdisco2_id);
                             $('#tipodisco2_id').val(ultimoResultado.tipodisco2_id);
-                            $('#marcadisco2').text(ultimoResultado.marcadisco && ultimoResultado.marcadisco.marca ? 'MARCA: ' + ultimoResultado.marcadisco.marca : '-------');
-                            $('#capdisco2').text(ultimoResultado.capacidaddisco && ultimoResultado.capacidaddisco.capacidad ? 'CAPACIDAD: ' + ultimoResultado.capacidaddisco.capacidad : '-------');
-                            $('#tipodisco2').text(ultimoResultado.tipodisco && ultimoResultado.tipodisco.tipo ? 'TIPO: ' + ultimoResultado.tipodisco.tipo : '-------');
+                            $('#marcadisco2').text(ultimoResultado.marcadisco2 && ultimoResultado.marcadisco2.marca ? 'MARCA: ' + ultimoResultado.marcadisco2.marca : '-------');
+                            $('#capdisco2').text(ultimoResultado.capacidaddisco2 && ultimoResultado.capacidaddisco2.capacidad ? 'CAPACIDAD: ' + ultimoResultado.capacidaddisco2.capacidad : '-------');
+                            $('#tipodisco2').text(ultimoResultado.tipodisco2 && ultimoResultado.tipodisco2.tipo ? 'TIPO: ' + ultimoResultado.tipodisco2.tipo : '-------');
 
                             $('#seleccionestm').show();
                             $('#marcatmadre_id').val(ultimoResultado.marcatmadre_id); 
@@ -303,6 +303,7 @@ $(document).ready(function() {
                         $('#selecciones').show();
                         $('#seleccionesp').show();
                         $('#seleccionesdd').show();
+                        $('#seleccionesdd2').show();
                         $('#seleccionestm').show();
                         $('#seleccionesram').show();
                         $('#seleccionesram2').show();

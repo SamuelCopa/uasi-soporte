@@ -43,7 +43,7 @@
         <!-- =================================================
              FORMULARIO
              ================================================= -->
-        <form method="POST" autocomplete="off" action="{{ route('registro-cpus.store') }}">
+        <form method="POST" autocomplete="off" action="{{ route('registro-cpus.store') }}" id="formRegistro">
             @csrf
             <!-- =================================================
                  BODY
@@ -1063,22 +1063,22 @@
                                 <li>
                                     <i class="fas fa-tag mr-2"></i>
                                     MARCA:
-                                    {{ $marcadisco->find(old('marcadisco2_id'))->marca }}
+                                    {{ $marcadisco2->find(old('marcadisco2_id'))->marca }}
                                 </li>
                                 <li>
                                     <i class="fas fa-database mr-2"></i>
                                     CAPACIDAD:
-                                    {{ $capdisco->find(old('capacdisco2_id'))->capacidad }}
+                                    {{ $capdisco2->find(old('capacdisco2_id'))->capacidad }}
                                 </li>
                                 <li>
                                     <i class="fas fa-layer-group mr-2"></i>
                                     TIPO:
-                                    {{ $tipodisco->find(old('tipodisco2_id'))->tipo }}
+                                    {{ $tipodisco2->find(old('tipodisco2_id'))->tipo }}
                                 </li>
                             @else
-                                <li id="marcadisco"></li>
-                                <li id="capdisco"></li>
-                                <li id="tipodisco"></li>
+                                <li id="marcadisco2"></li>
+                                <li id="capdisco2"></li>
+                                <li id="tipodisco2"></li>
                             @endif
                         </ul>
                         </div>
@@ -3373,9 +3373,7 @@
                  ================================================= -->
             <div class="modal-footer modal-password-footer">
 
-                <button type="button"
-                        class="btn btn-password-close"
-                        data-dismiss="modal">
+                <button type="button" class="btn btn-password-close" data-dismiss="modal">
 
                     <i class="fas fa-times"></i>
 
@@ -3383,8 +3381,7 @@
 
                 </button>
 
-                <button type="submit"
-                        class="btn btn-password-save">
+                <button type="submit" class="btn btn-password-save" id="btnRegistrar" >
 
                     <i class="fas fa-save"></i>
 
@@ -3437,3 +3434,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 </script>
+

@@ -16,12 +16,80 @@ use App\Http\Controllers\Api\RatonController;
 use App\Http\Controllers\Api\FuncionarioController;
 use App\Http\Controllers\Api\DependenciaController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ConsultaEquiposController;
+use App\Http\Controllers\Api\RegistroEquiposController;
+use App\Http\Controllers\Api\PdfEquipoController;
+use App\Http\Controllers\Api\AsignacionTecnicoController;
+use App\Http\Controllers\Api\EstadoEquipoController;
+use App\Http\Controllers\Api\NotificacionesDashboardController;
+
+
+// Consultar usuario autenticado
+Route::middleware('auth:sanctum')->get('/user',function (Request $request) {return $request->user();});
+
+// Listar todos los equipos
+Route::get('/equipos', [ConsultaEquiposController::class,'todos']);
+// Consultar equipos por tipo de equipo
+Route::middleware('auth:sanctum')->get('/equipos/{tipo}',[ConsultaEquiposController::class, 'index']);
 
 
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Registrar equipos genéricos
+Route::middleware('auth:sanctum')->post('/equipos/{tipo}', [RegistroEquiposController::class, 'store']);
+// {
+//   "ci": "12345678",
+//   "celular": "71234567",
+//   "email": "funcionario@ejemplo.gob.bo",
+//   "grado_academico": "LIC.",
+//   "paterno": "MAMANI",
+//   "materno": "QUISPE",
+//   "nombre": "JUAN CARLOS",
+//   "expedido": "LP",
+//   "cargo": "ANALISTA",
+//   "dependencia_id": 1,
+//   "cod_gamea": 12345,
+//   "marca": "EPSON",
+//   "modelo": "EB-X06",
+//   "falla": "El equipo no enciende",
+//   "fecha": "2026-10-27",
+//   "observaciones": "Equipo asignado a la unidad administrativa",
+//   "funcionario_activo": true,
+//   "estado_id": 1
+// }
+//Actualizar equipos genericos
+Route::middleware('auth:sanctum')->patch('/equipos/{tipo}/{id}', [RegistroEquiposController::class,'update']);
+
+// Registrar CPU
+Route::post('/cpus',[RegistroCpuController::class, 'store'])->middleware('auth:sanctum');
+// Actualizar CPU
+Route::patch('/cpus/{id}',[RegistroCpuController::class, 'update'])->middleware('auth:sanctum');
+
+
+//generar PDF DE formulario de RECEPCION 
+Route::get('/equipos/{tipo}/{id}/pdf',[PdfEquipoController::class, 'generarPdf'])->name('equipos.pdf');
+//asignar tecnico
+Route::patch('/equipos/{tipo}/{id}/asignar-tecnico',[AsignacionTecnicoController::class, 'asignar'])->middleware('auth:sanctum');
+
+//Cambio de estado
+Route::post('/equipos/{tipo}/{id}/cambiar-estado', [EstadoEquipoController::class,'cambiarEstado'])->middleware('auth:sanctum');
+
+//DASHBOARD
+Route::get('/notificaciones/dashboard',[NotificacionesDashboardController::class, 'index'])->middleware('auth:sanctum');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Route::get('/equipos/{tipo}/{id}/pdf', [PdfEquipoController::class,'generarPdf']);
 
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -47,160 +115,188 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cpus', [RegistroCpuController::class, 'index']);
     Route::get('/cpus/{id}', [RegistroCpuController::class, 'show']);
 
-});
+    Route::get('/audifono', [ImpresoraController::class, 'index']);
+    Route::get('/audifono/{id}', [ImpresoraController::class, 'show']);
 
+    Route::get('/impresora', [ImpresoraController::class, 'index']);
+    Route::get('/impresora/{id}', [ImpresoraController::class, 'show']);
 
-Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/estabilizador', [EstabilizadorController::class, 'index']);
+    Route::get('/estabilizador/{id}', [EstabilizadorController::class, 'show']);
 
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/laptop', [LaptopController::class, 'index']);
+    Route::get('/laptop/{id}', [LaptopController::class, 'show']);
 
-    Route::get('/usuario', function (Request $request) {
-        return response()->json([
-            'success' => true,
-            'user' => $request->user()
-        ]);
-    });
+    Route::get('/monitor', [MonitorController::class, 'index']);
+    Route::get('/monitor/{id}', [MonitorController::class, 'show']);
 
-    Route::get('/impresoras', [ImpresoraController::class, 'index']);
-    Route::get('/impresoras/{id}', [ImpresoraController::class, 'show']);
+    Route::get('/raton', [RatonController::class, 'index']);
+    Route::get('/raton/{id}', [RatonController::class, 'show']);
 
-});
+    Route::get('/teclado', [TecladoController::class, 'index']);
+    Route::get('/teclado/{id}', [TecladoController::class, 'show']);
 
-
-
-Route::middleware('auth:sanctum')->group(function () {
-
-    Route::post('/logout', [AuthController::class, 'logout']);
-
-    Route::get('/usuario', function (Request $request) {
-        return response()->json([
-            'success' => true,
-            'user' => $request->user()
-        ]);
-    });
-
-    Route::get('/audifonos', [ImpresoraController::class, 'index']);
-    Route::get('/audifonos/{id}', [ImpresoraController::class, 'show']);
-
-});
-
-
-Route::middleware('auth:sanctum')->group(function () {
-
-    Route::post('/logout', [AuthController::class, 'logout']);
-
-    Route::get('/usuario', function (Request $request) {
-        return response()->json([
-            'success' => true,
-            'user' => $request->user()
-        ]);
-    });
-
-    Route::get('/estabilizadors', [EstabilizadorController::class, 'index']);
-    Route::get('/estabilizadors/{id}', [EstabilizadorController::class, 'show']);
-
-});
-
-
-Route::middleware('auth:sanctum')->group(function () {
-
-    Route::post('/logout', [AuthController::class, 'logout']);
-
-    Route::get('/usuario', function (Request $request) {
-        return response()->json([
-            'success' => true,
-            'user' => $request->user()
-        ]);
-    });
-
-    Route::get('/laptops', [LaptopController::class, 'index']);
-    Route::get('/laptops/{id}', [LaptopController::class, 'show']);
-
-});
-
-
-Route::middleware('auth:sanctum')->group(function () {
-
-    Route::post('/logout', [AuthController::class, 'logout']);
-
-    Route::get('/usuario', function (Request $request) {
-        return response()->json([
-            'success' => true,
-            'user' => $request->user()
-        ]);
-    });
-
-    Route::get('/monitors', [MonitorController::class, 'index']);
-    Route::get('/monitors/{id}', [MonitorController::class, 'show']);
-
-});
-
-
-Route::middleware('auth:sanctum')->group(function () {
-
-    Route::post('/logout', [AuthController::class, 'logout']);
-
-    Route::get('/usuario', function (Request $request) {
-        return response()->json([
-            'success' => true,
-            'user' => $request->user()
-        ]);
-    });
-
-    Route::get('/ratons', [RatonController::class, 'index']);
-    Route::get('/ratons/{id}', [RatonController::class, 'show']);
-
-});
-
-
-Route::middleware('auth:sanctum')->group(function () {
-
-    Route::post('/logout', [AuthController::class, 'logout']);
-
-    Route::get('/usuario', function (Request $request) {
-        return response()->json([
-            'success' => true,
-            'user' => $request->user()
-        ]);
-    });
-
-    Route::get('/teclados', [TecladoController::class, 'index']);
-    Route::get('/teclados/{id}', [TecladoController::class, 'show']);
-
-});
-
-
-Route::middleware('auth:sanctum')->group(function () {
-
-    Route::post('/logout', [AuthController::class, 'logout']);
-
-    Route::get('/usuario', function (Request $request) {
-        return response()->json([
-            'success' => true,
-            'user' => $request->user()
-        ]);
-    });
-
-    Route::get('/parlantes', [ParlanteController::class, 'index']);
-    Route::get('/parlantes/{id}', [ParlanteController::class, 'show']);
-
-});
-
-
-Route::middleware('auth:sanctum')->group(function () {
-
-    Route::post('/logout', [AuthController::class, 'logout']);
-
-    Route::get('/usuario', function (Request $request) {
-        return response()->json([
-            'success' => true,
-            'user' => $request->user()
-        ]);
-    });
+    Route::get('/parlante', [ParlanteController::class, 'index']);
+    Route::get('/parlante/{id}', [ParlanteController::class, 'show']);
 
     Route::get('/ups', [UpeseController::class, 'index']);
     Route::get('/ups/{id}', [UpeseController::class, 'show']);
 
+    Route::get('/dependencia', [DependenciaController::class, 'index']);
+    Route::get('/dependencia/{id}', [DependenciaController::class, 'show']);
+
+    Route::get('/funcionario', [FuncionarioController::class, 'index']);
+    Route::get('/funcionario/{id}', [FuncionarioController::class, 'show']);
+
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+
+
+});
+
+//===================================================================================================================
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/usuario', function (Request $request) {
+        return response()->json([
+            'success' => true,
+            'user' => $request->user()
+        ]);
+    });
+
+
+
+});
+
+
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/usuario', function (Request $request) {
+        return response()->json([
+            'success' => true,
+            'user' => $request->user()
+        ]);
+    });
+
+
+
+});
+
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/usuario', function (Request $request) {
+        return response()->json([
+            'success' => true,
+            'user' => $request->user()
+        ]);
+    });
+
+
+
+});
+
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/usuario', function (Request $request) {
+        return response()->json([
+            'success' => true,
+            'user' => $request->user()
+        ]);
+    });
+
+
+
+});
+
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/usuario', function (Request $request) {
+        return response()->json([
+            'success' => true,
+            'user' => $request->user()
+        ]);
+    });
+
+
+
+});
+
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/usuario', function (Request $request) {
+        return response()->json([
+            'success' => true,
+            'user' => $request->user()
+        ]);
+    });
+
+
+
+});
+
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/usuario', function (Request $request) {
+        return response()->json([
+            'success' => true,
+            'user' => $request->user()
+        ]);
+    });
+
+
+
+});
+
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/usuario', function (Request $request) {
+        return response()->json([
+            'success' => true,
+            'user' => $request->user()
+        ]);
+    });
+
+
+
+});
+
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/usuario', function (Request $request) {
+        return response()->json([
+            'success' => true,
+            'user' => $request->user()
+        ]);
+    });
+
+
+
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -214,8 +310,7 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
     });
 
-    Route::get('/dependencias', [DependenciaController::class, 'index']);
-    Route::get('/dependencias/{id}', [DependenciaController::class, 'show']);
+
 
 });
 
@@ -230,8 +325,7 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
     });
 
-    Route::get('/funcionarios', [FuncionarioController::class, 'index']);
-    Route::get('/funcionarios/{id}', [FuncionarioController::class, 'show']);
+
 
     // POST para registrar un funcionario
 
@@ -254,7 +348,6 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
     });
 
-    Route::get('/users', [UserController::class, 'index']);
-    Route::get('/users/{id}', [UserController::class, 'show']);
+
 
 });

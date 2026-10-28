@@ -31,7 +31,7 @@
 <link rel="stylesheet" href="{{ asset('estilos/tabla.css') }}">
 <link rel="stylesheet" href="{{ asset('estilos/main.css') }}">
 <link rel="stylesheet" href="{{ asset('estilos/botones.css') }}">
-<link rel="stylesheet" href="{{ asset('estilos/headfijo.css') }}">
+<!-- <link rel="stylesheet" href="{{ asset('estilos/headfijo.css') }}"> -->
 <link rel="stylesheet" href="{{ asset('estilos/sidebar.css') }}">
 <link rel="stylesheet" href="{{ asset('estilos/header.css') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -314,7 +314,7 @@ $(document).ready(function () {
         scrollCollapse: true,
 
         // Paginación
-        pageLength: 25,
+        pageLength: 10,
         lengthMenu: [5, 10, 25, 50, 100],
 
         // Idioma
@@ -372,26 +372,6 @@ $(document).ready(function () {
     })
 </script>
 
-<!-- <script>
-    $('.actualizarFecha').submit(function(e){
-        e.preventDefault();
-
-        Swal.fire({
-        title: "¿Actualizar Fecha?",
-        text: "Se actualizara a la fecha actual!!!",
-        icon: "info",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Si, actualizar!",
-        cancelButtonText: "Cancelar",
-        }).then((result) => {
-        if (result.isConfirmed) {    
-            this.submit();
-        }
-        });
-    })
-</script> -->
 <script>
 
 function toggleDarkMode() {

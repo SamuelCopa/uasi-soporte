@@ -104,15 +104,12 @@
                                                 <td>
                                                     <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#ver{{ $registroCpu->id }}"><i class="fa fa-fw fa-eye"></i> {{ __('VER') }}</button>
                                                     @if($registroCpu->estado_id == 4)
-                                                        <button
-                                                            type="button"
-                                                            class="btn btn-sm btn-secondary"
-                                                            data-toggle="modal"
-                                                            data-target="#modalResultado{{ $registroCpu->id }}">
+                                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalResultado{{ $registroCpu->id }}">
                                                             <i class="fa fa-fw fa-file"></i>
                                                             DETALLE DEL TRABAJO REALIZADO
                                                         </button>
-                                                    @endif                                                </td>
+                                                    @endif                                                
+                                                </td>
                                             </tr>
                                         <!--Ventana Modal para Ver --->
                                         @include('registro-cpu.modalVer')
@@ -303,3 +300,6 @@ let texto, botonConfirm;
 <script src="{{ asset('js/fechas.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('estilos/fechas.css') }}">  
 @stop
+@push('css')
+<link rel="stylesheet" href="{{ asset('estilos/registroCpu.css') }}">  
+@endpush

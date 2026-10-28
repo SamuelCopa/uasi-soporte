@@ -125,7 +125,15 @@ public function tipoEquipo(): BelongsTo
         'id'
     );
 }
-    
+
+    protected function detalle_trabajo(): Attribute
+    {
+        return new Attribute(
+            set: function ($detalle_trabajo) {
+                return empty($detalle_trabajo) ? null : mb_strtoupper($detalle_trabajo);
+            }
+        );
+    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

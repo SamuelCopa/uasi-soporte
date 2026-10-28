@@ -732,4 +732,40 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Buscar todos los formularios que envían datos mediante POST.
+    document.querySelectorAll('form[method="POST"]').forEach(function (formulario) {
+
+        formulario.addEventListener('submit', function (event) {
+
+            // Evitar que se envíe nuevamente el mismo formulario.
+            if (formulario.dataset.enviando === 'true') {
+                event.preventDefault();
+                return;
+            }
+
+            // Respetar la validación HTML de los campos obligatorios.
+            if (!formulario.checkValidity()) {
+                return;
+            }
+
+            formulario.dataset.enviando = 'true';
+
+            // Deshabilitar el botón que inició el envío.
+            const boton = event.submitter;
+
+            if (boton) {
+                boton.disabled = true;
+                boton.textContent = 'Registrando...';
+            }
+
+        });
+
+    });
+
+});
+</script>
 @endpush

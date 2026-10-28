@@ -53,10 +53,7 @@
             <!-- =================================================
                  FORMULARIO
                  ================================================= -->
-            <form method="POST"
-                  action="{{ route('audifonos.store') }}"
-                  autocomplete="off">
-
+            <form method="POST" action="{{ route('audifonos.store') }}" autocomplete="off" formRegistro>
                 @csrf
 
 
@@ -662,7 +659,7 @@
                     </button>
 
                     <button type="submit"
-                            class="btn btn-password-save">
+                            class="btn btn-password-save" id="btnRegistrar">
 
                         <i class="fas fa-save"></i>
                         GUARDAR

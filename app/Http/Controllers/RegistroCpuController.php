@@ -415,28 +415,37 @@ public function store(Request $request,CorrelativoService $correlativoService)
             ],
         ];
 
-        foreach ($catalogos as $campoId => $configuracion) {
-            [
-                $valorOtro,
-                $campoTexto,
-                $modelo,
-                $columna
-            ] = $configuracion;
 
-            if ($request->input($campoId) !== $valorOtro) {
-                continue;
+            foreach ($catalogos as $campoId => $configuracion) {
+                [
+                    $valorOtro,
+                    $campoTexto,
+                    $modelo,
+                    $columna
+                ] = $configuracion;
+
+                // Procesar solamente cuando se selecciona "Otro".
+                if ((string) $request->input($campoId) !== (string) $valorOtro) {
+                    continue;
+                }
+
+                $texto = trim((string) $request->input($campoTexto));
+
+                if ($texto === '') {
+                    continue;
+                }
+
+                // Buscar el registro existente o crearlo si no existe.
+                $registroCatalogo = $modelo::firstOrCreate([
+                    $columna => $texto,
+                ]);
+
+                // Reemplazar "Otro" por el ID real del catálogo.
+                $request->merge([
+                    $campoId => $registroCatalogo->id,
+                ]);
             }
 
-            $texto = trim((string) $request->input($campoTexto));
-
-            $id = $texto !== ''
-                ? $modelo::create([$columna => $texto])->id
-                : null;
-
-            $request->merge([
-                $campoId => $id,
-            ]);
-        }
 
         /*
         |--------------------------------------------------------------------------

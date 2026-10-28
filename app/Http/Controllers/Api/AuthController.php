@@ -9,31 +9,37 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
 
-        $user = User::where('email', $request->email)->first();
+public function login(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Credenciales incorrectas'
-            ], 401);
-        }
+    $user = User::where('email', $request->email)->first();
 
-        $token = $user->createToken('api-token')->plainTextToken;
-
+    if (!$user || !Hash::check($request->password, $user->password)) {
         return response()->json([
-            'success' => true,
-            'message' => 'Inicio de sesión correcto',
-            'token' => $token,
-            'user' => $user
-        ]);
+            'success' => false,
+            'message' => 'Credenciales incorrectas'
+        ], 401);
     }
+
+    $token = $user->createToken('api-token')->plainTextToken;
+
+    // Obtener los roles de Spatie
+    $roles = $user->getRoleNames();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Inicio de sesión correcto',
+        'token' => $token,
+        'user' => $user,
+        'roles' => $roles
+    ]);
+}
+
 
     public function logout(Request $request)
     {

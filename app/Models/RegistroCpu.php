@@ -131,7 +131,7 @@ use Illuminate\Support\Facades\Auth;
  * @property ModeloTred $modeloTred
  * @property PotenciaFuente $potenciaFuente
  * @property TipoDisco $tipoDisco
- * @property TipoDisco $tipoDisco
+ * @property TipoDisco $tipoDisco2
  * @property TipoRam $tipoRam
  * @property TipoRam $tipoRam2
  * @property TipoRam $tipoRam3
@@ -178,7 +178,14 @@ class RegistroCpu extends Model
     {
         return $this->belongsTo(User::class, 'reguser_id','id');
     }
-
+    protected function detalle_trabajo(): Attribute
+    {
+        return new Attribute(
+            set: function ($detalle_trabajo) {
+                return empty($detalle_trabajo) ? null : mb_strtoupper($detalle_trabajo);
+            }
+        );
+    }
     public function resultado()
     {
         return $this->belongsTo(Resultado::class, 'resultado_id','id');

@@ -733,7 +733,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 <script src="{{ asset('js/funcion.js') }}"></script>
-<script src="{{ asset('js/mov.js') }}"></script>
+<!-- <script src="{{ asset('js/mov.js') }}"></script> -->
 <script src="{{ asset('js/buscar.js') }}"></script>
 <script src="{{ asset('js/registroCpu.js') }}"></script>
 <script src="{{ asset('js/cpu.js') }}"></script>
@@ -741,30 +741,6 @@ document.addEventListener('DOMContentLoaded', function () {
 <link rel="stylesheet" href="{{ asset('estilos/fechas.css') }}">  
 <script src="{{ asset('js/equipoPdf.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('estilos/equipoPdf.css') }}"> 
-
-<!-- <script>
-document.addEventListener('DOMContentLoaded', function () {
-
-    const contenedor = document.getElementById('case');
-
-    if (!contenedor) return;
-
-    document.addEventListener('click', function (event) {
-
-        // Si el clic fue dentro de CASE, no cerrar
-        if (contenedor.contains(event.target)) {
-            return;
-        }
-
-        // Cerrar los submenús de CASE
-        contenedor.querySelectorAll('ul ul.ul').forEach(function (submenu) {
-            submenu.style.display = 'none';
-        });
-
-    });
-
-});
-</script> -->
 
 <script>
 
@@ -818,10 +794,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
+    // Buscar todos los formularios que envían datos mediante POST.
+    document.querySelectorAll('form[method="POST"]').forEach(function (formulario) {
+
+        formulario.addEventListener('submit', function (event) {
+
+            // Evitar que se envíe nuevamente el mismo formulario.
+            if (formulario.dataset.enviando === 'true') {
+                event.preventDefault();
+                return;
+            }
+
+            // Respetar la validación HTML de los campos obligatorios.
+            if (!formulario.checkValidity()) {
+                return;
+            }
+
+            formulario.dataset.enviando = 'true';
+
+            // Deshabilitar el botón que inició el envío.
+            const boton = event.submitter;
+
+            if (boton) {
+                boton.disabled = true;
+                boton.textContent = 'Registrando...';
+            }
+
+        });
+
+    });
+
+});
 </script>
 @endpush
 @push('css')

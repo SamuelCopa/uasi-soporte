@@ -1,10 +1,10 @@
 
 {{-- MODAL: REGISTRAR DETALLE DEL TRABAJO REALIZADO --}}
 <div class="modal fade"
-     id="modalResultado{{ $monitor->id }}"
+     id="modalResultado{{ $equipo->id }}"
      tabindex="-1"
      role="dialog"
-     aria-labelledby="tituloModalResultado{{ $monitor->id }}"
+     aria-labelledby="tituloModalResultado{{ $equipo->id }}"
      aria-hidden="true">
 
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -13,7 +13,7 @@
             {{-- ENCABEZADO --}}
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title font-weight-bold"
-                    id="tituloModalResultado{{ $monitor->id }}">
+                    id="tituloModalResultado{{ $equipo->id }}">
                     <i class="fas fa-tools mr-2"></i>
                     Registrar trabajo realizado
                 </h5>
@@ -27,20 +27,20 @@
             </div>
 
             {{-- FORMULARIO --}}
-             <form method="POST" action="{{ route('equipos.guardarResultado', ['tipo' => 'otro','id' => $monitor->id]) }}" id="formResultado{{ $monitor->id }}">
+             <form method="POST" action="{{ route('equipos.guardarResultado', ['tipo' => 'otro','id' => $equipo->id]) }}" id="formResultado{{ $equipo->id }}">
                 @csrf
 
                 <div class="modal-body">
                     {{-- DETALLE DEL TRABAJO --}}
                     <div class="form-group">
-                        <label for="detalle_trabajo{{ $monitor->id }}">
+                        <label for="detalle_trabajo{{ $equipo->id }}">
                             Detalle del trabajo realizado
                             <span class="text-danger">*</span>
                         </label>
 
                         <textarea
                             class="form-control"
-                            id="detalle_trabajo{{ $monitor->id }}"
+                            id="detalle_trabajo{{ $equipo->id }}"
                             name="detalle_trabajo"
                             rows="4"
                             placeholder="Describe el diagnóstico, las acciones realizadas y las observaciones..."
@@ -54,13 +54,13 @@
 
                     {{-- RESULTADO --}}
                     <div class="form-group mb-0">
-                        <label for="resultado_id{{ $monitor->id }}">
+                        <label for="resultado_id{{ $equipo->id }}">
                             Resultado de la atención
                             <span class="text-danger">*</span>
                         </label>
 
                         <select class="form-control"
-                                id="resultado_id{{ $monitor->id }}"
+                                id="resultado_id{{ $equipo->id }}"
                                 name="resultado_id"
                                 required>
                             <option value="">Seleccione un resultado</option>
